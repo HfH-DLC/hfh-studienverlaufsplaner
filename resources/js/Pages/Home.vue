@@ -1,76 +1,70 @@
 <template>
-  <div>
-    <div v-for="category in plan.categories" :key="category">
-      {{ category.name }} ({{ category.placedNumber }} /
-      {{ category.requiredNumber }})
-      <ul>
-        <li
-          v-for="module in category.modules"
-          :key="module.id"
-          @click="
-            plan.hasFreeSlots() &&
-              !(
+  <div class="flex">
+    <div class="w-2/12 p-4">
+      <div v-for="category in plan.categories" :key="category" class="mb-4">
+        <h2 class="text-lg">
+          {{ category.name }} ({{ category.placedNumber }} /
+          {{ category.requiredNumber }})
+        </h2>
+        <ul>
+          <li v-for="module in category.modules" :key="module.id">
+            <button
+              @click="toggleSelection(module)"
+              class="text-left disabled:cursor-default mb-2"
+              :disabled="
+                !plan.hasFreeSlots() ||
                 category.placedNumber === category.requiredNumber ||
                 (module.errors && module.errors.length > 0)
-              ) &&
-              toggleSelection(module)
-          "
-          class="module"
-          :class="{
-            'module--selected': module.id == selectedModuleId,
-            'module--disabled':
-              !plan.hasFreeSlots() ||
-              category.placedNumber === category.requiredNumber ||
-              (module.errors && module.errors.length > 0),
-          }"
-        >
-          {{ module.id }} | {{ module.name }}
-        </li>
-      </ul>
+              "
+              :class="{
+                'module--selected': module.id == selectedModuleId,
+                'module--disabled':
+                  !plan.hasFreeSlots() ||
+                  category.placedNumber === category.requiredNumber ||
+                  (module.errors && module.errors.length > 0),
+              }"
+            >
+              {{ module.id }} | {{ module.name }}
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
-    <hr />
-    <div>
+    <div class="w-8/12 p-4 bg-gray-100">
       <ul>
-        <li
-          v-for="slot in plan.timeSlots"
-          :key="slot.id"
-          @click="
-            selectedModuleId &&
-              !slot.module &&
-              !(
-                selectionErrors[slot.id] && selectionErrors[slot.id].length > 0
-              ) &&
-              placeModule(slot)
-          "
-          class="slot"
-          :class="{
-            'slot--disabled':
-              selectionErrors[slot.id] && selectionErrors[slot.id].length > 0,
-            'slot--invalid': slot.errors && slot.errors.length > 0,
-          }"
-        >
-          <span>{{ slot.id }} | {{ slot.semester }}:</span>
-          <span v-if="slot.module">
-            {{ slot.module.id }} | {{ slot.module.name }}
-          </span>
+        <li v-for="timeSlot in plan.timeSlots" :key="timeSlot.id">
+          <TimeSlot
+            :timeSlot="timeSlot"
+            @click="placeModule(timeSlot)"
+            :disabled="
+              !selectedModuleId ||
+              timeSlot.module ||
+              (selectionErrors[timeSlot.id] &&
+                selectionErrors[timeSlot.id].length > 0)
+            "
+          />
         </li>
       </ul>
     </div>
-    <hr />
-    <div>Total Credits: {{ plan.credits }}</div>
+    <div class="w-2/12 p-4">Total Credits: {{ plan.credits }}</div>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { ref } from "vue";
 import Plan from "../Models/Plan";
 import Category from "../Models/Category";
 import Module from "../Models/Module";
-import TimeSlot from "../Models/TimeSlot";
+import TimeSlotModel from "../Models/TimeSlot";
 import PrerequisiteRule from "../Models/Rules/PrerequisiteRule";
 import OnePerSemesterRule from "../Models/Rules/OnePerSemesterRule";
 
-export default defineComponent({
+import TimeSlot from "../Components/TimeSlot.vue";
+
+export default {
+  components: {
+    TimeSlot,
+  },
   setup() {
     const categories = [
       new Category("Pflichtbereich HFE", [
@@ -138,12 +132,12 @@ export default defineComponent({
     ];
 
     const timeSlots = [
-      new TimeSlot("Slot 1", "HS21"),
-      new TimeSlot("Slot 2", "HS21"),
-      new TimeSlot("Slot 3", "FS22"),
-      new TimeSlot("Slot 4", "FS22"),
-      new TimeSlot("Slot 5", "HS22"),
-      new TimeSlot("Slot 6", "HS22"),
+      new TimeSlotModel("Slot 1", "HS21"),
+      new TimeSlotModel("Slot 2", "HS21"),
+      new TimeSlotModel("Slot 3", "FS22"),
+      new TimeSlotModel("Slot 4", "FS22"),
+      new TimeSlotModel("Slot 5", "HS22"),
+      new TimeSlotModel("Slot 6", "HS22"),
     ];
 
     const rules = [
@@ -187,7 +181,7 @@ export default defineComponent({
       selectionErrors,
     };
   },
-});
+};
 </script>
 
 <style scoped>
@@ -197,13 +191,5 @@ export default defineComponent({
 
 .module--disabled {
   color: gray;
-}
-
-.slot--disabled {
-  color: gray;
-}
-
-.slot--invalid {
-  color: red;
 }
 </style>
