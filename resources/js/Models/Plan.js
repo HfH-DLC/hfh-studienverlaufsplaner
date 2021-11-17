@@ -1,20 +1,33 @@
 export default class Plan {
 
-    constructor(modules, timeSlots, rules) {
-        this._modules = modules
+    constructor(categories, timeSlots, rules) {
+        this._categories = categories
         this._timeSlots = timeSlots
         this._rules = rules
         this._validate()
     }
 
-    get modules() {
-        const result = this._modules.map(module => {
+    get categories() {
+        return this._categories.map(category => {
             return {
-                ...module,
-                errors: this._moduleErrors[module.id]
+                ...category,
+                modules: category.modules.map(module => {
+                    return {
+                        ...module,
+                        errors: this._moduleErrors[module.id]
+                    }
+                })
             }
         })
-        return result;
+    }
+
+    get modules() {
+        return this.categories.reduce((acc, category) => {
+            category.modules.forEach(module => {
+                acc.push(module)
+            })
+            return acc;
+        }, [])
     }
 
     get timeSlots() {
@@ -38,13 +51,20 @@ export default class Plan {
 
     placeModule(slotId, moduleId) {
         const slot = this._timeSlots.find(slot => slot.id == slotId);
-        const moduleIndex = this._modules.findIndex(module => module.id == moduleId);
-        if (moduleIndex != -1) {
-            const removedElements = this._modules.splice(moduleIndex, 1);
-            const module = removedElements[0];
+        const module = this._removeModule(moduleId);
+        if (module) {
             slot.module = module;
         }
         this._validate();
+    }
+
+    _removeModule(moduleId) {
+        const category = this._categories.find((category => {
+            return category.hasModule(moduleId)
+        }))
+        if (category) {
+            return category.removeModule(moduleId)
+        }
     }
 
     _validate() {
@@ -68,6 +88,10 @@ export default class Plan {
         })
         console.log("ModuleErrors", this._moduleErrors);
         console.log("SlotErrors", this._slotErrors);
+    }
+
+    hasFreeSlots() {
+        return this._timeSlots.filter(slot => !slot.module).length > 0
     }
 
     validateSelection(moduleId) {

@@ -1,9 +1,8 @@
 export default class Module {
 
-    constructor(id, name, credits, category) {
+    constructor(id, name, credits) {
         this.id = id
         this.name = name
         this.credits = credits
-        this.category = category
     }
 }
