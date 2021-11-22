@@ -17,7 +17,6 @@ export default class Category {
     }
 
     hasModule(moduleId) {
-        console.log(this._modules.findIndex(module => module.id == moduleId) != -1)
         return this._modules.findIndex(module => module.id == moduleId) != -1
     }
 
