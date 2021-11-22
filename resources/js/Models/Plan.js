@@ -90,10 +90,6 @@ export default class Plan {
         console.log("SlotErrors", this._slotErrors);
     }
 
-    hasFreeSlots() {
-        return this._timeSlots.filter(slot => !slot.module).length > 0
-    }
-
     validateSelection(moduleId) {
         let selectionErrors = {}
         this._rules.forEach(rule => {
