@@ -68,12 +68,15 @@ export default class OnePerSemesterRule {
         const takenSemesters = []
 
         plan.timeSlots.forEach((slot) => {
-            if (takenSemesters.includes(slot.semester)) {
-                selectionErrors[slot.id] = this.getErrorMessage()
-            }
             if (slot.module && this._modulIds.includes(slot.module.id)) {
                 takenSemesters.push(slot.semester)
             }
+        })
+
+        takenSemesters.forEach(semester => {
+            plan.timeSlots.filter(slot => slot.semester == semester).forEach(slot => {
+                selectionErrors[slot.id] = this.getErrorMessage();
+            });
         })
 
         return selectionErrors
