@@ -1,7 +1,4 @@
-import { map } from "lodash"
-
 export default class OnePerSemesterRule {
-
 
     constructor(modulIds) {
         this._modulIds = modulIds
