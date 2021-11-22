@@ -49,12 +49,12 @@ export default class PrerequisiteRule {
     }
 
     doesMatchSelection(moduleId) {
-        return moduleId === this._moduleId
+        return moduleId == this._moduleId
     }
 
     validateSelection(moduleId, plan) {
         const selectionErrors = {}
-        if (moduleId != this._moduleIdId) {
+        if (moduleId != this._moduleId) {
             return selectionErrors
         }
 
