@@ -1,56 +1,55 @@
 <template>
   <button
+    v-if="timeSlot"
     class="
-      text-left
+      text-sm text-left
       disabled:cursor-default
       w-full
       p-4
-      mb-4
       border border-gray-300
       rounded
       bg-white
-      shadow-inner
+      transition-all
+      truncate
     "
     :class="{
+      'shadow-inner': !timeSlot.module,
+      'bg-gray-50': timeSlot.module,
       'slot--invalid': invalid,
-      'slot--disabled': disabled & !timeSlot.module,
-      'slot--filled': timeSlot.module && !invalid,
+      'slot--selectable': timeSlot.selectable,
     }"
-    :disabled="disabled || timeSlot.module"
+    :disabled="timeSlot.module || !timeSlot.selectable"
+    @click="$emit('placeModule', timeSlot)"
   >
-    <span>{{ timeSlot.id }} | {{ timeSlot.semester }}: </span>
     <span v-if="timeSlot.module">
       {{ timeSlot.module.id }} | {{ timeSlot.module.name }}
     </span>
+    <span v-else>&nbsp;</span>
   </button>
 </template>
 
 <script>
 export default {
+  emits: ["placeModule"],
   props: {
     timeSlot: {
       type: Object,
-      required: true,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    invalid: {
-      type: Boolean,
-      default: false,
+      default: null,
     },
   },
-  setup() {},
+  computed: {
+    invalid() {
+      return this.timeSlot.errors && this.timeSlot.errors.length > 0;
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-.slot--disabled {
-  @apply text-gray-500;
-}
-
 .slot--invalid {
   @apply text-red-500;
+}
+.slot--selectable {
+  @apply bg-green-50 ring-2 ring-green-500;
 }
 </style>

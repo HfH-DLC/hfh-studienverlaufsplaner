@@ -1,47 +1,122 @@
 <template>
   <div class="flex min-h-screen">
     <div class="w-3/12 p-4">
-      <div v-for="category in plan.categories" :key="category" class="mb-4">
-        {{ category.name }} ({{ category.placedNumber }} /
-        {{ category.requiredNumber }})
-        <ul>
-          <li v-for="module in category.modules" :key="module.id">
-            <Module
-              @click="toggleSelection(module)"
-              :module="module"
-              :disabled="
-                !plan.hasFreeSlots() ||
-                category.placedNumber === category.requiredNumber ||
-                (module.errors && module.errors.length > 0)
-              "
-              :selected="module.id == selectedModuleId"
-            />
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="w-7/12 p-4 bg-gray-100">
-      <ul>
-        <li v-for="timeSlot in plan.timeSlots" :key="timeSlot.id">
-          <TimeSlot
-            :timeSlot="timeSlot"
-            @click="placeModule(timeSlot)"
-            :disabled="
-              !selectedModuleId ||
-              timeSlot.module ||
-              (selectionErrors[timeSlot.id] &&
-                selectionErrors[timeSlot.id].length > 0)
-            "
+      <Disclosure
+        v-for="category in plan.categories"
+        :key="category"
+        as="div"
+        class="mb-4 border border-gray-300 rounded overflow-hidden"
+        v-slot="{ open }"
+        :defaultOpen="dropdownStatus[category.name]"
+      >
+        <DisclosureButton
+          class="
+            flex
+            justify-between
+            items-center
+            w-full
+            px-4
+            py-2
+            text-left
+            bg-gray-50
+          "
+          :class="{ 'border-b': open }"
+          @click="toggleDropdownStatus(category.name)"
+        >
+          <div>
+            {{ category.name }}
+            <span class="whitespace-nowrap"
+              >({{ category.placedNumber }} /
+              {{ category.requiredNumber }})</span
+            >
+          </div>
+          <ChevronUpIcon
+            :class="open ? 'transform rotate-180' : ''"
+            class="w-5 h-5 transition"
           />
-        </li>
-      </ul>
+        </DisclosureButton>
+        <DisclosurePanel class="p-4">
+          <ul>
+            <li v-for="module in category.modules" :key="module.id">
+              <Module
+                @click="toggleSelection(module)"
+                :module="module"
+                :disabled="
+                  !plan.hasFreeSlots() ||
+                  category.placedNumber === category.requiredNumber ||
+                  (module.errors && module.errors.length > 0)
+                "
+                :selected="module.id == selectedModuleId"
+              />
+            </li>
+          </ul>
+        </DisclosurePanel>
+      </Disclosure>
+    </div>
+    <div class="w-7/12 p-4 bg-gray-50">
+      <div
+        class="overflow-hidden rounded-xl border border-gray-300 mb-8"
+        v-for="(semester, index) in semesters"
+        :key="index"
+      >
+        <table class="w-full divide-y divide-gray-300 table-fixed">
+          <caption class="bg-gray-900 text-white py-2">
+            {{
+              semester.label
+            }}
+          </caption>
+          <thead class="bg-gray-50">
+            <tr class="divide-x divide-gray-300">
+              <th id="blank"></th>
+              <th
+                scope="col"
+                class="px-6 py-2 text-xs text-gray-500"
+                v-for="day in semester.days"
+                :key="day"
+              >
+                {{ day }}
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-300">
+            <template v-for="(time, index) in semester.times" :key="index">
+              <th
+                :id="`${semester}-time-${index}`"
+                colspan="3"
+                scope="colgroup"
+                class="px-6 py-2 text-xs text-center bg-gray-100 text-gray-500"
+              >
+                {{ time }}
+              </th>
+              <tr
+                class="divide-x divide-gray-300"
+                v-for="(week, index) in semester.weeks"
+                :key="index"
+              >
+                <th
+                  scope="row"
+                  class="px-6 py-2 text-xs text-left text-gray-500"
+                >
+                  {{ week }}
+                </th>
+                <td class="p-1" v-for="day in semester.days" :key="day">
+                  <TimeSlot
+                    :timeSlot="getTimeSlot(semester.label, week, day, time)"
+                    @placeModule="placeModule"
+                  />
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="w-2/12 p-4">Total Credits: {{ plan.credits }}</div>
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import Plan from "../Models/Plan";
 import Category from "../Models/Category";
 import ModuleModel from "../Models/Module";
@@ -50,13 +125,19 @@ import PrerequisiteRule from "../Models/Rules/PrerequisiteRule";
 import OnePerSemesterRule from "../Models/Rules/OnePerSemesterRule";
 
 // Components
+import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import TimeSlot from "../Components/TimeSlot.vue";
 import Module from "../Components/Module.vue";
+import { ChevronUpIcon } from "@heroicons/vue/solid";
 
 export default {
   components: {
+    Disclosure,
+    DisclosureButton,
+    DisclosurePanel,
     TimeSlot,
     Module,
+    ChevronUpIcon,
   },
   setup() {
     const categories = [
@@ -125,12 +206,140 @@ export default {
     ];
 
     const timeSlots = [
-      new TimeSlotModel("Slot 1", "HS21"),
-      new TimeSlotModel("Slot 2", "HS21"),
-      new TimeSlotModel("Slot 3", "FS22"),
-      new TimeSlotModel("Slot 4", "FS22"),
-      new TimeSlotModel("Slot 5", "HS22"),
-      new TimeSlotModel("Slot 6", "HS22"),
+      new TimeSlotModel(
+        1,
+        "HS21",
+        "Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",
+        "Montag",
+        "Vormittag"
+      ),
+      new TimeSlotModel(
+        2,
+        "HS21",
+        "Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",
+        "Montag",
+        "Nachmittag"
+      ),
+      new TimeSlotModel(
+        3,
+        "HS21",
+        "Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",
+        "Donnerstag",
+        "Vormittag"
+      ),
+      new TimeSlotModel(
+        4,
+        "HS21",
+        "Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",
+        "Donnerstag",
+        "Nachmittag"
+      ),
+      new TimeSlotModel(5, "HS21", "Wo 1, 6, 10, 14", "Montag", "Vormittag"),
+      new TimeSlotModel(6, "HS21", "Wo 1, 6, 10, 14", "Montag", "Nachmittag"),
+      new TimeSlotModel(
+        7,
+        "HS21",
+        "Wo 1, 6, 10, 14",
+        "Donnerstag",
+        "Vormittag"
+      ),
+      new TimeSlotModel(
+        8,
+        "HS21",
+        "Wo 1, 6, 10, 14",
+        "Donnerstag",
+        "Nachmittag"
+      ),
+
+      new TimeSlotModel(
+        9,
+        "FS22",
+        "Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",
+        "Montag",
+        "Vormittag"
+      ),
+      new TimeSlotModel(
+        10,
+        "FS22",
+        "Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",
+        "Montag",
+        "Nachmittag"
+      ),
+      new TimeSlotModel(
+        11,
+        "FS22",
+        "Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",
+        "Donnerstag",
+        "Vormittag"
+      ),
+      new TimeSlotModel(
+        12,
+        "FS22",
+        "Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",
+        "Donnerstag",
+        "Nachmittag"
+      ),
+      new TimeSlotModel(13, "FS22", "Wo 1, 6, 10, 14", "Montag", "Vormittag"),
+      new TimeSlotModel(14, "FS22", "Wo 1, 6, 10, 14", "Montag", "Nachmittag"),
+      new TimeSlotModel(
+        15,
+        "FS22",
+        "Wo 1, 6, 10, 14",
+        "Donnerstag",
+        "Vormittag"
+      ),
+      new TimeSlotModel(
+        16,
+        "FS22",
+        "Wo 1, 6, 10, 14",
+        "Donnerstag",
+        "Nachmittag"
+      ),
+
+      new TimeSlotModel(
+        17,
+        "HS22",
+        "Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",
+        "Montag",
+        "Vormittag"
+      ),
+      new TimeSlotModel(
+        18,
+        "HS22",
+        "Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",
+        "Montag",
+        "Nachmittag"
+      ),
+      new TimeSlotModel(
+        19,
+        "HS22",
+        "Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",
+        "Donnerstag",
+        "Vormittag"
+      ),
+      new TimeSlotModel(
+        20,
+        "HS22",
+        "Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",
+        "Donnerstag",
+        "Nachmittag"
+      ),
+      new TimeSlotModel(21, "HS22", "Wo 1, 6, 10, 14", "Montag", "Vormittag"),
+      new TimeSlotModel(22, "HS22", "Wo 1, 6, 10, 14", "Montag", "Nachmittag"),
+      new TimeSlotModel(
+        23,
+        "HS22",
+        "Wo 1, 6, 10, 14",
+        "Donnerstag",
+        "Vormittag"
+      ),
+      new TimeSlotModel(
+        24,
+        "HS22",
+        "Wo 1, 6, 10, 14",
+        "Donnerstag",
+        "Nachmittag"
+      ),
     ];
 
     const rules = [
@@ -166,23 +375,77 @@ export default {
       selectedModuleId.value = null;
     };
 
+    const dropdownStatus = ref(
+      plan.value.categories.reduce((acc, category, index) => {
+        acc[category.name] = index == 0;
+        return acc;
+      }, {})
+    );
+
+    const toggleDropdownStatus = (categoryName) => {
+      dropdownStatus.value[categoryName] = !dropdownStatus.value[categoryName];
+    };
+
+    const semesters = computed(() => {
+      return [
+        ...new Set(
+          plan.value.timeSlots.map((slot) => {
+            return slot.semester;
+          })
+        ),
+      ].map((semester) => {
+        const slotsBySemester = plan.value.timeSlots.filter(
+          (slot) => slot.semester == semester
+        );
+        return {
+          label: semester,
+          weeks: new Set(slotsBySemester.map((slot) => slot.week)),
+          days: new Set(slotsBySemester.map((slot) => slot.day)),
+          times: new Set(slotsBySemester.map((slot) => slot.time)),
+        };
+      });
+    });
+
+    const getTimeSlot = (semester, week, day, time) => {
+      let timeSlot = plan.value.timeSlots.find((slot) => {
+        return (
+          slot.semester == semester &&
+          slot.week == week &&
+          slot.day == day &&
+          slot.time == time
+        );
+      });
+      if (timeSlot) {
+        const selectable =
+          selectedModuleId.value &&
+          !timeSlot.module &&
+          (!selectionErrors.value[timeSlot.id] ||
+            selectionErrors.value[timeSlot.id].length == 0);
+
+        console.log(selectionErrors.value[timeSlot.id]);
+
+        return {
+          ...timeSlot,
+          selectable,
+        };
+      }
+      return null;
+    };
+
     return {
       plan,
+      semesters,
+      getTimeSlot,
       selectedModuleId,
       toggleSelection,
       placeModule,
       selectionErrors,
+      dropdownStatus,
+      toggleDropdownStatus,
     };
   },
 };
 </script>
 
 <style scoped>
-.module--selected {
-  color: green;
-}
-
-.module--disabled {
-  color: gray;
-}
 </style>

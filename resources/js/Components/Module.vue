@@ -34,4 +34,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.module--selected {
+  @apply font-bold text-green-600;
+}
+
+.module--disabled {
+  @apply text-gray-400;
+}
 </style>
