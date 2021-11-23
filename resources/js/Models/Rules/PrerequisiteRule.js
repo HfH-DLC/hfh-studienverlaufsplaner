@@ -6,27 +6,6 @@ export default class PrerequisiteRule {
         this._prerequisitIds = prerequisitIds
     }
 
-    validateModules(plan) {
-        const moduleErrors = {}
-
-        let beforeModules = []
-        let prerequisitsMet = false
-
-        plan.timeSlots.forEach((slot) => {
-            if (!prerequisitsMet) {
-                prerequisitsMet = this._prerequisitIds.every(module => beforeModules.includes(module));
-            }
-            if (slot.module) {
-                beforeModules.push(slot.module.id)
-            }
-        })
-        if (!prerequisitsMet) {
-            moduleErrors[this._moduleId] = this.getErrorMessage()
-        }
-
-        return moduleErrors;
-    }
-
     validateSlots(plan) {
         const slotErrors = {}
 

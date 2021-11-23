@@ -2,21 +2,6 @@ export default class DateRule {
 
     constructor() {}
 
-    validateModules(plan) {
-        const moduleErrors = {}
-
-        plan.modules.forEach(module => {
-            const hasFreeSlot = plan.timeSlots.find(slot => {
-                return !slot.module && module.dates.find(date => this._matchesDate(slot, date))
-            })
-            if (hasFreeSlot) {
-                moduleErrors[module.id] == "No free slots available on these dates"
-            }
-        })
-
-        return moduleErrors
-    }
-
     validateSlots(plan) {
         const slotErrors = {}
 
