@@ -41,13 +41,14 @@
             <th scope="row" class="px-6 py-2 text-xs text-left text-gray-500">
               {{ week }}
             </th>
-            <td class="p-1" v-for="day in semester.days" :key="day">
-              <TimeSlot
-                :timeSlot="getTimeSlot(semester.label, week, day, time)"
-                @placeModule="$emit('placeModule', $event)"
-                @selectModule="$emit('selectModule', $event)"
-              />
-            </td>
+            <TimeSlot
+              v-for="day in semester.days"
+              :key="day"
+              :ref="setTimeSlotRef"
+              :timeSlot="getTimeSlot(semester.label, week, day, time)"
+              @placeModule="$emit('placeModule', $event)"
+              @selectModule="$emit('selectModule', $event)"
+            />
           </tr>
         </template>
       </tbody>
@@ -72,6 +73,11 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      timeSlotRefs: [],
+    };
+  },
   methods: {
     getTimeSlot(semester, week, day, time) {
       return this.timeSlots.find((slot) => {
@@ -82,6 +88,17 @@ export default {
           slot.time == time
         );
       });
+    },
+    focusSlot() {
+      const slotRef = this.timeSlotRefs.find((ref) => {
+        return ref.timeSlot.selectable;
+      });
+      slotRef.focusButton();
+    },
+    setTimeSlotRef(el) {
+      if (el) {
+        this.timeSlotRefs.push(el);
+      }
     },
   },
 };

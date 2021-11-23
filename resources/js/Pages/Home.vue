@@ -8,15 +8,16 @@
         <ModuleList
           :categories="plan.categories"
           :selectedModuleId="plan.selectedModuleId"
-          @selected="(id) => plan.toggleSelect(id)"
+          @selected="onModuleSelected"
         />
       </div>
       <div class="w-7/12 p-4 bg-gray-50">
         <TimeTable
+          ref="timeTable"
           :semesters="plan.semesters"
           :timeSlots="plan.timeSlots"
           @placeModule="(id) => plan.placeModule(id)"
-          @selectModule="(slotId) => plan.selectSlotModule(slotId)"
+          @selectModule="onSlotModuleSelected"
         />
       </div>
       <div class="w-2/12 sticky top-0 p-4">
@@ -33,7 +34,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import DataAdapter from "../DataAdapter";
 
 // Components
@@ -50,8 +51,26 @@ export default {
   },
   setup() {
     const plan = ref(new DataAdapter().getPlan());
+
+    const timeTable = ref(null);
+
+    const onModuleSelected = (id) => {
+      plan.value.toggleSelect(id);
+      //focus slot
+      nextTick(() => timeTable.value.focusSlot());
+    };
+
+    const onSlotModuleSelected = (slotId) => {
+      plan.value.selectSlotModule(slotId);
+      //focus slot
+      nextTick(() => timeTable.value.focusSlot());
+    };
+
     return {
       plan,
+      timeTable,
+      onModuleSelected,
+      onSlotModuleSelected,
     };
   },
 };

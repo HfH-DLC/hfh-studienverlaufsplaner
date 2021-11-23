@@ -1,31 +1,35 @@
 <template>
-  <button
-    v-if="timeSlot"
-    class="
-      text-sm text-left
-      disabled:cursor-default
-      w-full
-      p-4
-      border border-gray-300
-      rounded
-      bg-white
-      transition-all
-      truncate
-    "
-    :class="{
-      'shadow-inner': !timeSlot.module,
-      'bg-gray-50': timeSlot.module,
-      'slot--invalid': invalid,
-      'slot--selectable': timeSlot.selectable,
-    }"
-    :disabled="!timeSlot.selectable && !timeSlot.removable"
-    @click="onClick"
-  >
-    <span v-if="timeSlot.module">
-      {{ timeSlot.module.id }} | {{ timeSlot.module.name }}
-    </span>
-    <span v-else>&nbsp;</span>
-  </button>
+  <td class="p-1">
+    <button
+      ref="button"
+      v-if="timeSlot"
+      class="
+        text-sm text-left
+        disabled:cursor-default
+        w-full
+        p-4
+        border border-gray-300
+        rounded
+        bg-white
+        transition-all
+        truncate
+        focus:outline-none focus:ring-2 focus:ring-indigo-500
+      "
+      :class="{
+        'shadow-inner': !timeSlot.module,
+        'bg-gray-50': timeSlot.module,
+        'slot--invalid': invalid,
+        'slot--selectable': timeSlot.selectable,
+      }"
+      :disabled="!timeSlot.selectable && !timeSlot.removable"
+      @click="onClick"
+    >
+      <span v-if="timeSlot.module">
+        {{ timeSlot.module.id }} | {{ timeSlot.module.name }}
+      </span>
+      <span v-else>&nbsp;</span>
+    </button>
+  </td>
 </template>
 
 <script>
@@ -45,6 +49,9 @@ export default {
         this.$emit("placeModule", this.timeSlot.id);
       }
     },
+    focusButton() {
+      this.$refs.button.focus();
+    },
   },
   computed: {
     invalid() {
@@ -59,6 +66,6 @@ export default {
   @apply text-red-500;
 }
 .slot--selectable {
-  @apply bg-green-50 ring-2 ring-green-500;
+  @apply bg-green-50;
 }
 </style>
