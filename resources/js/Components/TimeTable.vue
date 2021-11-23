@@ -47,7 +47,7 @@
               :ref="setTimeSlotRef"
               :timeSlot="getTimeSlot(semester.label, week, day, time)"
               @placeModule="$emit('placeModule', $event)"
-              @selectModule="$emit('selectModule', $event)"
+              @removeModule="$emit('removeModule', $event)"
             />
           </tr>
         </template>
@@ -62,7 +62,7 @@ export default {
   components: {
     TimeSlot,
   },
-  emits: ["placeModule", "selectModule"],
+  emits: ["placeModule", "removeModule"],
   props: {
     semesters: {
       type: Array,
@@ -93,7 +93,9 @@ export default {
       const slotRef = this.timeSlotRefs.find((ref) => {
         return ref.timeSlot.selectable;
       });
-      slotRef.focusButton();
+      if (slotRef) {
+        slotRef.focusButton();
+      }
     },
     setTimeSlotRef(el) {
       if (el) {

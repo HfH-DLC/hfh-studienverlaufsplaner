@@ -17,7 +17,7 @@
           :semesters="plan.semesters"
           :timeSlots="plan.timeSlots"
           @placeModule="(id) => plan.placeModule(id)"
-          @selectModule="onSlotModuleSelected"
+          @removeModule="onRemoveModule"
         />
       </div>
       <div class="w-2/12 sticky top-0 p-4">
@@ -55,22 +55,23 @@ export default {
     const timeTable = ref(null);
 
     const onModuleSelected = (id) => {
-      plan.value.toggleSelect(id);
-      //focus slot
-      nextTick(() => timeTable.value.focusSlot());
+      if (plan.value.selectedModuleId == id) {
+        plan.value.deselect();
+      } else {
+        plan.value.select(id);
+        nextTick(() => timeTable.value.focusSlot());
+      }
     };
 
-    const onSlotModuleSelected = (slotId) => {
-      plan.value.selectSlotModule(slotId);
-      //focus slot
-      nextTick(() => timeTable.value.focusSlot());
+    const onRemoveModule = (slotId) => {
+      plan.value.removeModule(slotId);
     };
 
     return {
       plan,
       timeTable,
       onModuleSelected,
-      onSlotModuleSelected,
+      onRemoveModule,
     };
   },
 };

@@ -87,7 +87,7 @@ export default class Plan {
 
     placeModule(slotId) {
         const slot = this._timeSlots.find(slot => slot.id == slotId);
-        const module = this._removeModule(this._selectionStatus.id);
+        const module = this._removeModuleFromCategory(this._selectionStatus.id);
         if (module) {
             slot.module = module;
         }
@@ -95,21 +95,22 @@ export default class Plan {
         this._validate();
     }
 
-    selectSlotModule(slotId) {
+    removeModule(slotId) {
         const slot = this._timeSlots.find(slot => slot.id == slotId);
         const module = slot.module;
         slot.module = null;
-        this._addModule(module);
+        this._addModuleToCategory(module);
+        this._selectionStatus = this._intialSelectionStatus();
         this._validate();
-        this.toggleSelect(module.id);
     }
 
-    toggleSelect(moduleId) {
-        if (this._selectionStatus.id == moduleId) {
-            this._selectionStatus = this._intialSelectionStatus();
-        } else {
-            this._selectionStatus = this._validateSelection(moduleId);
-        }
+
+    select(moduleId) {
+        this._selectionStatus = this._validateSelection(moduleId);
+    }
+
+    deselect() {
+        this._selectionStatus = this._intialSelectionStatus();
     }
 
     //Internal Methods
@@ -129,7 +130,7 @@ export default class Plan {
         }
     }
 
-    _addModule(module) {
+    _addModuleToCategory(module) {
         const category = this._categories.find((category => {
             return category.name == module.category
         }))
@@ -138,7 +139,7 @@ export default class Plan {
         }
     }
 
-    _removeModule(moduleId) {
+    _removeModuleFromCategory(moduleId) {
         const category = this._categories.find((category => {
             return category.hasModule(moduleId)
         }))

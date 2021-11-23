@@ -25,16 +25,31 @@
       @click="onClick"
     >
       <span v-if="timeSlot.module">
-        {{ timeSlot.module.id }} | {{ timeSlot.module.name }}
+        <ExclamationCircleIcon
+          v-if="invalid"
+          class="text-red-600 inline-block mr-2 w-5 h-5"
+        />
+        <span>{{ timeSlot.module.id }} | {{ timeSlot.module.name }}</span>
       </span>
-      <span v-else>&nbsp;</span>
+      <span v-else>
+        <CheckCircleIcon
+          v-if="timeSlot.selectable"
+          class="text-green-600 w-5 h-5"
+        />
+        <span v-else>&nbsp;</span>
+      </span>
     </button>
   </td>
 </template>
 
 <script>
+import { CheckCircleIcon, ExclamationCircleIcon } from "@heroicons/vue/outline";
 export default {
-  emits: ["placeModule", "selectModule"],
+  emits: ["placeModule", "removeModule"],
+  components: {
+    CheckCircleIcon,
+    ExclamationCircleIcon,
+  },
   props: {
     timeSlot: {
       type: Object,
@@ -44,7 +59,7 @@ export default {
   methods: {
     onClick() {
       if (this.timeSlot.module) {
-        this.$emit("selectModule", this.timeSlot.id);
+        this.$emit("removeModule", this.timeSlot.id);
       } else {
         this.$emit("placeModule", this.timeSlot.id);
       }
@@ -63,7 +78,7 @@ export default {
 
 <style lang="scss" scoped>
 .slot--invalid {
-  @apply text-red-500;
+  @apply bg-red-50 text-red-600;
 }
 .slot--selectable {
   @apply bg-green-50;
