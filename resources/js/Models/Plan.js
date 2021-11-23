@@ -131,7 +131,7 @@ export default class Plan {
 
     _addModule(module) {
         const category = this._categories.find((category => {
-            return category.id == module.category.id
+            return category.name == module.category
         }))
         if (category) {
             return category.addModule(module)
