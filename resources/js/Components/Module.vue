@@ -1,6 +1,14 @@
 <template>
   <button
-    class="text-left text-sm disabled:cursor-default mb-2"
+    class="
+      text-left text-sm
+      disabled:cursor-default
+      mb-2
+      p-1
+      w-full
+      rounded
+      focus:outline-none focus:ring-2 focus:ring-indigo-600
+    "
     :disabled="disabled"
     :class="{
       'module--selected': selected,
