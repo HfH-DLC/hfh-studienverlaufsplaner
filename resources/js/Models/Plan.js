@@ -14,7 +14,7 @@ export default class Plan {
                 modules: category.modules.map(module => {
                     return {
                         ...module,
-                        errors: this._moduleErrors[module.id]
+                        selectable: this._moduleSelectable[module.id],
                     }
                 })
             }
@@ -68,16 +68,9 @@ export default class Plan {
     }
 
     _validate() {
-        this._moduleErrors = [];
         this._slotErrors = [];
+        this._validateModules();
         this._rules.forEach(rule => {
-            const moduleErrors = rule.validateModules(this);
-            Object.entries(moduleErrors).forEach(([key, value]) => {
-                if (!this._moduleErrors[key]) {
-                    this._moduleErrors[key] = []
-                }
-                this._moduleErrors[key].push(value);
-            })
             const slotErrors = rule.validateSlots(this);
             Object.entries(slotErrors).forEach(([key, value]) => {
                 if (!this._slotErrors[key]) {
@@ -86,25 +79,30 @@ export default class Plan {
                 this._slotErrors[key].push(value);
             })
         })
-        console.log("ModuleErrors", this._moduleErrors);
         console.log("SlotErrors", this._slotErrors);
     }
 
+    _validateModules() {
+        this._moduleSelectable = {}
+        this.modules.forEach(module => {
+            const selectionStatus = this.validateSelection(module.id);
+            this._moduleSelectable[module.id] = Object.values(selectionStatus).some(status => status.selectable);
+        });
+    }
+
     validateSelection(moduleId) {
-        let selectionErrors = {}
+        let selectionStatus = this._timeSlots.reduce((acc, cur) => {
+            acc[cur.id] = {
+                selectable: !cur.module,
+                errors: []
+            }
+            return acc;
+        }, {});
         this._rules.forEach(rule => {
             if (rule.doesMatchSelection(moduleId)) {
-                const errors = rule.validateSelection(moduleId, this);
-                Object.entries(errors).forEach(([key, value]) => {
-                    if (!selectionErrors[key]) {
-                        selectionErrors[key] = []
-                    }
-                    selectionErrors[key].push(value);
-                })
+                rule.validateSelection(moduleId, this, selectionStatus);
             }
         })
-        console.log("SelectionErrors", selectionErrors);
-
-        return selectionErrors;
+        return selectionStatus;
     }
 }

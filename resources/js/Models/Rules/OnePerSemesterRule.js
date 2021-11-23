@@ -62,7 +62,7 @@ export default class OnePerSemesterRule {
         return this._modulIds.includes(moduleId)
     }
 
-    validateSelection(moduleId, plan) {
+    validateSelection(moduleId, plan, slotStatus) {
         const selectionErrors = {}
 
         const takenSemesters = []
@@ -75,6 +75,8 @@ export default class OnePerSemesterRule {
 
         takenSemesters.forEach(semester => {
             plan.timeSlots.filter(slot => slot.semester == semester).forEach(slot => {
+                slotStatus[slot.id].selectable = false;
+                slotStatus[slot.id].errors.push(this.getErrorMessage());
                 selectionErrors[slot.id] = this.getErrorMessage();
             });
         })

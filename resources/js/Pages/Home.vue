@@ -47,7 +47,7 @@
                   :module="module"
                   :disabled="
                     category.placedNumber === category.requiredNumber ||
-                    (module.errors && module.errors.length > 0)
+                    !module.selectable
                   "
                   :selected="module.id == selectedModuleId"
                 />
@@ -434,7 +434,7 @@ export default {
       });
       return foundModule;
     });
-    const selectionErrors = ref({});
+    const selectionStatus = ref({});
 
     const toggleSelection = (module) => {
       if (module) {
@@ -446,12 +446,12 @@ export default {
       } else {
         selectedModuleId.value = null;
       }
-      selectionErrors.value = plan.value.validateSelection(module.id);
+      selectionStatus.value = plan.value.validateSelection(module.id);
     };
 
     const placeModule = (slot) => {
       plan.value.placeModule(slot.id, selectedModuleId.value);
-      selectionErrors.value = {};
+      selectionStatus.value = {};
       selectedModuleId.value = null;
     };
 
@@ -498,10 +498,7 @@ export default {
       if (timeSlot) {
         const selectable =
           selectedModuleId.value &&
-          !timeSlot.module &&
-          (!selectionErrors.value[timeSlot.id] ||
-            selectionErrors.value[timeSlot.id].length == 0);
-
+          selectionStatus.value[timeSlot.id].selectable;
         return {
           ...timeSlot,
           selectable,
@@ -518,7 +515,7 @@ export default {
       selectedModule,
       toggleSelection,
       placeModule,
-      selectionErrors,
+      selectionStatus,
       dropdownStatus,
       toggleDropdownStatus,
     };

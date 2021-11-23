@@ -27,17 +27,16 @@ export default class DateRule {
         return true
     }
 
-    validateSelection(moduleId, plan) {
-        const selectionErrors = {}
+    validateSelection(moduleId, plan, slotStatus) {
         const module = plan.modules.find(module => module.id == moduleId);
         if (module) {
             plan.timeSlots.forEach(slot => {
                 if (!module.dates.find(date => this._matchesDate(slot, date))) {
-                    selectionErrors[slot.id] = "The selected module is not available on this date"
+                    slotStatus[slot.id].selectable = false;
+                    slotStatus[slot.id].errors.push("The selected module is not available on this date");
                 }
             })
         }
-        return selectionErrors
     }
 
     _matchesDate(slot, date) {

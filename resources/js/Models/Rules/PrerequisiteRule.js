@@ -52,7 +52,7 @@ export default class PrerequisiteRule {
         return moduleId == this._moduleId
     }
 
-    validateSelection(moduleId, plan) {
+    validateSelection(moduleId, plan, slotStatus) {
         const selectionErrors = {}
         if (moduleId != this._moduleId) {
             return selectionErrors
@@ -66,6 +66,8 @@ export default class PrerequisiteRule {
                 prerequisitsMet = this._prerequisitIds.every(module => beforeModules.includes(module));
             }
             if (!slot.module && !prerequisitsMet) {
+                slotStatus[slot.id].selectable = false;
+                slotStatus[slot.id].errors.push[this.getErrorMessage()];
                 selectionErrors[slot.id] = this.getErrorMessage()
             }
             if (slot.module) {
