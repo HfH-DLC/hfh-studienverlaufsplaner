@@ -8,6 +8,8 @@ export default class Plan {
         this._validate()
     }
 
+    //Getters
+
     get categories() {
         return this._categories.map(category => {
             return {
@@ -35,7 +37,7 @@ export default class Plan {
         return this._timeSlots.map(slot => {
             return {
                 ...slot,
-                selectable: this._selectionStatus[slot.id].selectable,
+                selectable: this._selectionStatus.slots[slot.id].selectable,
                 errors: this._slotErrors[slot.id]
             }
         })
@@ -51,14 +53,68 @@ export default class Plan {
         return result
     }
 
+    get selectedModuleId() {
+        return this._selectionStatus.id
+    }
+
+    get selectedModule() {
+        return this.modules.find(module => module.id == this._selectionStatus.id)
+    }
+
+    get semesters() {
+        return [
+            ...new Set(
+                this.timeSlots.map((slot) => {
+                    return slot.semester;
+                })
+            ),
+        ].map((semester) => {
+            const slotsBySemester = this.timeSlots.filter(
+                (slot) => slot.semester == semester
+            );
+            return {
+                label: semester,
+                weeks: new Set(slotsBySemester.map((slot) => slot.week)),
+                days: new Set(slotsBySemester.map((slot) => slot.day)),
+                times: new Set(slotsBySemester.map((slot) => slot.time)),
+            };
+        });
+    }
+
+    //External Methods
+
+    placeModule(slotId) {
+        const slot = this._timeSlots.find(slot => slot.id == slotId);
+        const module = this._removeModule(this._selectionStatus.id);
+        if (module) {
+            slot.module = module;
+        }
+        this._selectionStatus = this._intialSelectionStatus();
+        this._validate();
+    }
+
+    toggleSelect(moduleId) {
+        if (this._selectionStatus.id == moduleId) {
+            this._selectionStatus = this._intialSelectionStatus();
+        } else {
+            this._selectionStatus = this._validateSelection(moduleId);
+        }
+    }
+
+    //Internal Methods
     _intialSelectionStatus(moduleId) {
-        return this._timeSlots.reduce((acc, cur) => {
+        const slots = this._timeSlots.reduce((acc, cur) => {
             acc[cur.id] = {
                 selectable: moduleId && !cur.module,
                 errors: []
             }
             return acc;
         }, {});
+
+        return {
+            id: moduleId,
+            slots
+        }
     }
 
     _removeModule(moduleId) {
@@ -82,14 +138,13 @@ export default class Plan {
                 this._slotErrors[key].push(value);
             })
         })
-        console.log("SlotErrors", this._slotErrors);
     }
 
     _validateModules() {
         this._moduleSelectable = {}
         this.modules.forEach(module => {
             const selectionStatus = this._validateSelection(module.id);
-            this._moduleSelectable[module.id] = Object.values(selectionStatus).some(status => status.selectable);
+            this._moduleSelectable[module.id] = Object.values(selectionStatus.slots).some(status => status.selectable);
         });
     }
 
@@ -97,23 +152,9 @@ export default class Plan {
         let selectionStatus = this._intialSelectionStatus(moduleId)
         this._rules.forEach(rule => {
             if (rule.doesMatchSelection(moduleId)) {
-                rule.validateSelection(moduleId, this, selectionStatus);
+                rule.validateSelection(moduleId, this, selectionStatus.slots);
             }
         })
         return selectionStatus;
-    }
-
-    placeModule(slotId, moduleId) {
-        const slot = this._timeSlots.find(slot => slot.id == slotId);
-        const module = this._removeModule(moduleId);
-        if (module) {
-            slot.module = module;
-        }
-        this._selectionStatus = this._intialSelectionStatus();
-        this._validate();
-    }
-
-    select(moduleId) {
-        this._selectionStatus = this._validateSelection(moduleId);
     }
 }

@@ -36,7 +36,7 @@
       <ul>
         <li v-for="module in category.modules" :key="module.id">
           <Module
-            @click="$emit('selected', module)"
+            @click="$emit('selected', module.id)"
             :module="module"
             :disabled="
               category.placedNumber === category.requiredNumber ||

@@ -19,7 +19,7 @@
       'slot--selectable': timeSlot.selectable,
     }"
     :disabled="timeSlot.module || !timeSlot.selectable"
-    @click="$emit('placeModule', timeSlot)"
+    @click="$emit('placeModule', timeSlot.id)"
   >
     <span v-if="timeSlot.module">
       {{ timeSlot.module.id }} | {{ timeSlot.module.name }}
