@@ -3,7 +3,7 @@
     v-for="category in categories"
     :key="category"
     as="div"
-    class="mb-4 border border-gray-300 rounded overflow-hidden"
+    class="mb-4 border border-gray-300 rounded"
     v-slot="{ open }"
     :defaultOpen="dropdownStatus[category.name]"
   >
@@ -17,8 +17,10 @@
         py-2
         text-left
         bg-gray-50
+        rounded-t
+        focus:outline-none focus:ring-2 focus:ring-indigo-600
       "
-      :class="{ 'border-b': open }"
+      :class="{ 'border-b': open, 'rounded-b': !open }"
       @click="toggleDropdownStatus(category.name)"
     >
       <div>
@@ -52,7 +54,7 @@
 
 <script>
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
-import { ChevronUpIcon } from "@heroicons/vue/solid";
+import { ChevronUpIcon } from "@heroicons/vue/outline";
 import Module from "../Components/Module.vue";
 export default {
   components: {
@@ -81,7 +83,6 @@ export default {
       }, {}),
     };
   },
-
   methods: {
     toggleDropdownStatus(categoryName) {
       this.dropdownStatus[categoryName] = !this.dropdownStatus[categoryName];
