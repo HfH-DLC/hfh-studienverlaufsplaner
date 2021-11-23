@@ -45,6 +45,7 @@
               <TimeSlot
                 :timeSlot="getTimeSlot(semester.label, week, day, time)"
                 @placeModule="$emit('placeModule', $event)"
+                @selectModule="$emit('selectModule', $event)"
               />
             </td>
           </tr>
@@ -60,7 +61,7 @@ export default {
   components: {
     TimeSlot,
   },
-  emits: ["placeModule"],
+  emits: ["placeModule", "selectModule"],
   props: {
     semesters: {
       type: Array,

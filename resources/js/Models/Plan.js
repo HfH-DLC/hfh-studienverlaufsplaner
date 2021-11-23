@@ -35,9 +35,11 @@ export default class Plan {
 
     get timeSlots() {
         return this._timeSlots.map(slot => {
+            const status = this._selectionStatus.slots[slot.id]
             return {
                 ...slot,
-                selectable: this._selectionStatus.slots[slot.id].selectable,
+                removable: status.removable,
+                selectable: status.selectable,
                 errors: this._slotErrors[slot.id]
             }
         })
@@ -93,6 +95,15 @@ export default class Plan {
         this._validate();
     }
 
+    selectSlotModule(slotId) {
+        const slot = this._timeSlots.find(slot => slot.id == slotId);
+        const module = slot.module;
+        slot.module = null;
+        this._addModule(module);
+        this._validate();
+        this.toggleSelect(module.id);
+    }
+
     toggleSelect(moduleId) {
         if (this._selectionStatus.id == moduleId) {
             this._selectionStatus = this._intialSelectionStatus();
@@ -105,6 +116,7 @@ export default class Plan {
     _intialSelectionStatus(moduleId) {
         const slots = this._timeSlots.reduce((acc, cur) => {
             acc[cur.id] = {
+                removable: !moduleId && !!cur.module,
                 selectable: moduleId && !cur.module,
                 errors: []
             }
@@ -114,6 +126,15 @@ export default class Plan {
         return {
             id: moduleId,
             slots
+        }
+    }
+
+    _addModule(module) {
+        const category = this._categories.find((category => {
+            return category.id == module.category.id
+        }))
+        if (category) {
+            return category.addModule(module)
         }
     }
 

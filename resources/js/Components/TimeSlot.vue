@@ -18,8 +18,8 @@
       'slot--invalid': invalid,
       'slot--selectable': timeSlot.selectable,
     }"
-    :disabled="timeSlot.module || !timeSlot.selectable"
-    @click="$emit('placeModule', timeSlot.id)"
+    :disabled="!timeSlot.selectable && !timeSlot.removable"
+    @click="onClick"
   >
     <span v-if="timeSlot.module">
       {{ timeSlot.module.id }} | {{ timeSlot.module.name }}
@@ -30,11 +30,20 @@
 
 <script>
 export default {
-  emits: ["placeModule"],
+  emits: ["placeModule", "selectModule"],
   props: {
     timeSlot: {
       type: Object,
       default: null,
+    },
+  },
+  methods: {
+    onClick() {
+      if (this.timeSlot.module) {
+        this.$emit("selectModule", this.timeSlot.id);
+      } else {
+        this.$emit("placeModule", this.timeSlot.id);
+      }
     },
   },
   computed: {

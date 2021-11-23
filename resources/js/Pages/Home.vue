@@ -16,6 +16,7 @@
           :semesters="plan.semesters"
           :timeSlots="plan.timeSlots"
           @placeModule="(id) => plan.placeModule(id)"
+          @selectModule="(slotId) => plan.selectSlotModule(slotId)"
         />
       </div>
       <div class="w-2/12 sticky top-0 p-4">
