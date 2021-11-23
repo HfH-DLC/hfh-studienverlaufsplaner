@@ -5,145 +5,21 @@
     </div>
     <div class="flex items-start">
       <div class="w-3/12 p-4 sticky top-0">
-        <Disclosure
-          v-for="category in plan.categories"
-          :key="category"
-          as="div"
-          class="mb-4 border border-gray-300 rounded overflow-hidden"
-          v-slot="{ open }"
-          :defaultOpen="dropdownStatus[category.name]"
-        >
-          <DisclosureButton
-            class="
-              flex
-              justify-between
-              items-center
-              w-full
-              px-4
-              py-2
-              text-left
-              bg-gray-50
-            "
-            :class="{ 'border-b': open }"
-            @click="toggleDropdownStatus(category.name)"
-          >
-            <div>
-              {{ category.name }}
-              <span class="whitespace-nowrap"
-                >({{ category.placedNumber }} /
-                {{ category.requiredNumber }})</span
-              >
-            </div>
-            <ChevronUpIcon
-              :class="open ? 'transform rotate-180' : ''"
-              class="w-5 h-5 transition"
-            />
-          </DisclosureButton>
-          <DisclosurePanel class="p-4">
-            <ul>
-              <li v-for="module in category.modules" :key="module.id">
-                <Module
-                  @click="toggleSelection(module)"
-                  :module="module"
-                  :disabled="
-                    category.placedNumber === category.requiredNumber ||
-                    !module.selectable
-                  "
-                  :selected="module.id == selectedModuleId"
-                />
-              </li>
-            </ul>
-          </DisclosurePanel>
-        </Disclosure>
+        <ModuleList
+          :categories="plan.categories"
+          :selectedModuleId="selectedModuleId"
+          @selected="toggleSelection"
+        />
       </div>
       <div class="w-7/12 p-4 bg-gray-50">
-        <div
-          class="overflow-hidden rounded-xl border border-gray-300 mb-8"
-          v-for="(semester, index) in semesters"
-          :key="index"
-        >
-          <table class="w-full divide-y divide-gray-300 table-fixed">
-            <caption class="bg-gray-900 text-white py-2">
-              {{
-                semester.label
-              }}
-            </caption>
-            <thead class="bg-gray-50">
-              <tr class="divide-x divide-gray-300">
-                <th id="blank"></th>
-                <th
-                  scope="col"
-                  class="px-6 py-2 text-xs text-gray-500"
-                  v-for="day in semester.days"
-                  :key="day"
-                >
-                  {{ day }}
-                </th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-300">
-              <template v-for="(time, index) in semester.times" :key="index">
-                <th
-                  :id="`${semester}-time-${index}`"
-                  colspan="3"
-                  scope="colgroup"
-                  class="
-                    px-6
-                    py-2
-                    text-xs text-center
-                    bg-gray-100
-                    text-gray-500
-                  "
-                >
-                  {{ time }}
-                </th>
-                <tr
-                  class="divide-x divide-gray-300"
-                  v-for="(week, index) in semester.weeks"
-                  :key="index"
-                >
-                  <th
-                    scope="row"
-                    class="px-6 py-2 text-xs text-left text-gray-500"
-                  >
-                    {{ week }}
-                  </th>
-                  <td class="p-1" v-for="day in semester.days" :key="day">
-                    <TimeSlot
-                      :timeSlot="getTimeSlot(semester.label, week, day, time)"
-                      @placeModule="placeModule"
-                    />
-                  </td>
-                </tr>
-              </template>
-            </tbody>
-          </table>
-        </div>
+        <TimeTable
+          :semesters="semesters"
+          :timeSlots="plan.timeSlots"
+          @placeModule="placeModule"
+        />
       </div>
       <div class="w-2/12 p-4 sticky top-0">
-        <div v-if="selectedModule">
-          <h2 class="text-xl">{{ selectedModule.name }}</h2>
-          <dl class="mt-4">
-            <dt class="text-sm text-gray-500 font-bold uppercase">
-              Modulnummer
-            </dt>
-            <dd>{{ selectedModule.id }}</dd>
-            <dt class="mt-2 text-sm text-gray-500 font-bold uppercase">
-              Kreditpunkte
-            </dt>
-            <dd>{{ selectedModule.credits }}</dd>
-            <dt class="mt-2 text-sm text-gray-500 font-bold uppercase">
-              Termine
-            </dt>
-            <dd>
-              <ul>
-                <li v-for="(date, index) in selectedModule.dates" :key="index">
-                  {{ date.semester }} {{ date.day }} {{ date.time }}
-                </li>
-              </ul>
-            </dd>
-          </dl>
-        </div>
+        <ModuleInformation :selectedModule="selectedModule" />
       </div>
     </div>
   </div>
@@ -160,19 +36,16 @@ import PrerequisiteRule from "../Models/Rules/PrerequisiteRule";
 import OnePerSemesterRule from "../Models/Rules/OnePerSemesterRule";
 
 // Components
-import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
-import TimeSlot from "../Components/TimeSlot.vue";
-import Module from "../Components/Module.vue";
-import { ChevronUpIcon } from "@heroicons/vue/solid";
+
+import ModuleInformation from "../Components/ModuleInformation.vue";
+import ModuleList from "../Components/ModuleList.vue";
+import TimeTable from "../Components/TimeTable.vue";
 
 export default {
   components: {
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
-    TimeSlot,
-    Module,
-    ChevronUpIcon,
+    TimeTable,
+    ModuleInformation,
+    ModuleList,
   },
   setup() {
     const categories = [
@@ -434,7 +307,6 @@ export default {
       });
       return foundModule;
     });
-    const selectionStatus = ref({});
 
     const toggleSelection = (module) => {
       if (module) {
@@ -446,24 +318,12 @@ export default {
       } else {
         selectedModuleId.value = null;
       }
-      selectionStatus.value = plan.value.validateSelection(module.id);
+      plan.value.select(module.id);
     };
 
     const placeModule = (slot) => {
       plan.value.placeModule(slot.id, selectedModuleId.value);
-      selectionStatus.value = {};
       selectedModuleId.value = null;
-    };
-
-    const dropdownStatus = ref(
-      plan.value.categories.reduce((acc, category, index) => {
-        acc[category.name] = index == 0;
-        return acc;
-      }, {})
-    );
-
-    const toggleDropdownStatus = (categoryName) => {
-      dropdownStatus.value[categoryName] = !dropdownStatus.value[categoryName];
     };
 
     const semesters = computed(() => {
@@ -486,38 +346,13 @@ export default {
       });
     });
 
-    const getTimeSlot = (semester, week, day, time) => {
-      let timeSlot = plan.value.timeSlots.find((slot) => {
-        return (
-          slot.semester == semester &&
-          slot.week == week &&
-          slot.day == day &&
-          slot.time == time
-        );
-      });
-      if (timeSlot) {
-        const selectable =
-          selectedModuleId.value &&
-          selectionStatus.value[timeSlot.id].selectable;
-        return {
-          ...timeSlot,
-          selectable,
-        };
-      }
-      return null;
-    };
-
     return {
       plan,
       semesters,
-      getTimeSlot,
       selectedModuleId,
       selectedModule,
       toggleSelection,
       placeModule,
-      selectionStatus,
-      dropdownStatus,
-      toggleDropdownStatus,
     };
   },
 };
