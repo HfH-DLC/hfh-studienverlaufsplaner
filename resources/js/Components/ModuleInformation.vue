@@ -16,6 +16,18 @@
           </li>
         </ul>
       </dd>
+      <template v-if="selectedModule.prerequisites.length > 0">
+        <dt class="mt-2 text-sm text-gray-500 font-bold uppercase">
+          Vorausetzungen
+        </dt>
+        <dd>
+          <ul>
+            <li v-for="id in selectedModule.prerequisites" :key="id">
+              {{ id }}
+            </li>
+          </ul>
+        </dd>
+      </template>
     </dl>
   </div>
 </template>
