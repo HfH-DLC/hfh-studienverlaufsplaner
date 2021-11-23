@@ -3,7 +3,7 @@ import Category from "./Models/Category";
 import ModuleModel from "./Models/Module";
 import TimeSlotModel from "./Models/TimeSlot";
 import DateRule from "./Models/Rules/DateRule";
-import PrerequisiteRule from "./Models/Rules/PrerequisiteRule";
+import PrerequisitesRule from "./Models/Rules/PrerequisitesRule";
 import OnePerSemesterRule from "./Models/Rules/OnePerSemesterRule";
 
 export default class DataAdapter {
@@ -33,12 +33,12 @@ export default class DataAdapter {
                 new ModuleModel(
                     "P4_07",
                     "Entwicklungsorientierte Intervention in der Heilpädagogischen Früherziehung",
-                    5, [{ semester: "HS", day: "Donnerstag", time: "Nachmittag" }]
+                    5, [{ semester: "HS", day: "Donnerstag", time: "Nachmittag" }], ["P4_02"]
                 ),
                 new ModuleModel(
                     "P4_08",
                     "Beratung und Begleitung von Eltern und weiteren Bezugs- und Fachpersonen in der Heilpädagogischen Früherziehung",
-                    5, [{ semester: "HS", day: "Donnerstag", time: "Vormittag" }]
+                    5, [{ semester: "HS", day: "Donnerstag", time: "Vormittag" }], ["P4_02"]
                 ),
                 new ModuleModel(
                     "P4_09",
@@ -54,12 +54,12 @@ export default class DataAdapter {
                 new ModuleModel("BP5_01.2.HFE", "Berufspraxis II & Portfolio", 5, [
                     { semester: "HS", day: "Donnerstag", time: "Vormittag" },
                     { semester: "FS", day: "Donnerstag", time: "Vormittag" },
-                ]),
+                ], ["BP5_01.1.HFE"]),
                 new ModuleModel("BP5_01.3.HFE", "Berufspraxis III & Portfolio", 10, [
                     { semester: "HS", day: "Donnerstag", time: "Nachmittag" },
                     { semester: "FS", day: "Donnerstag", time: "Vormittag" },
                     { semester: "FS", day: "Donnerstag", time: "Nachmittag" },
-                ]),
+                ], ["BP5_01.1.HFE", "BP5_01.2.HFE"]),
             ]),
             new Category(
                 "Wahlpflichtbereich HFE", [
@@ -68,7 +68,7 @@ export default class DataAdapter {
                     ]),
                     new ModuleModel("WP2_04.2", "Heilpädagogik im Bereich Hören II", 5, [
                         { semester: "FS", day: "Donnerstag", time: "Nachmittag" },
-                    ]),
+                    ], ["WP2_04.1"]),
                     new ModuleModel("WP2_05.1", "Heilpädagogik im Bereich Sehen I", 5, [
                         { semester: "HS", day: "Donnerstag", time: "Nachmittag" },
                     ]),
@@ -242,12 +242,8 @@ export default class DataAdapter {
 
         const rules = [
             new DateRule(),
-            new PrerequisiteRule("P4_07", ["P4_02"]),
-            new PrerequisiteRule("P4_08", ["P4_02"]),
-            new PrerequisiteRule("BP5_01.2.HFE", ["BP5_01.1.HFE"]),
-            new PrerequisiteRule("BP5_01.3.HFE", ["BP5_01.1.HFE", "BP5_01.2.HFE"]),
+            new PrerequisitesRule(),
             new OnePerSemesterRule(["BP5_01.1.HFE", "BP5_01.2.HFE", "BP5_01.3.HFE"]),
-            new PrerequisiteRule("WP2_04.2", ["WP2_04.1"]),
         ];
 
         return new Plan(categories, timeSlots, rules);

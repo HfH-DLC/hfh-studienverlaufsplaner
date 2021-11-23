@@ -1,22 +1,16 @@
-export default class PrerequisiteRule {
+export default class PrerequisitesRule {
 
-
-    constructor(moduleId, prerequisitIds) {
-        this._moduleId = moduleId
-        this._prerequisitIds = prerequisitIds
-    }
+    constructor() {}
 
     validateSlots(plan) {
         const slotErrors = {}
 
         let beforeModules = []
-        let prerequisitsMet = false
 
         plan.timeSlots.forEach((slot) => {
-            if (!prerequisitsMet) {
-                prerequisitsMet = this._prerequisitIds.every(module => beforeModules.includes(module));
-            }
-            if (slot.module && slot.module.id == this._moduleId && !prerequisitsMet) {
+            const prerequisites = slot.module ? slot.module.prerequisites : [];
+            const prerequisitesMet = prerequisites.every(moduleId => beforeModules.includes(moduleId));
+            if (!prerequisitesMet) {
                 slotErrors[slot.id] = this.getErrorMessage()
             }
             if (slot.module) {
@@ -28,23 +22,22 @@ export default class PrerequisiteRule {
     }
 
     doesMatchSelection(moduleId) {
-        return moduleId == this._moduleId
+        return true
     }
 
     validateSelection(moduleId, plan, slotStatus) {
         const selectionErrors = {}
-        if (moduleId != this._moduleId) {
-            return selectionErrors
-        }
+        const module = plan.modules.find(module => module.id == moduleId);
 
         let beforeModules = []
-        let prerequisitsMet = false
+        let prerequisitesMet = false
 
         plan.timeSlots.forEach((slot) => {
-            if (!prerequisitsMet) {
-                prerequisitsMet = this._prerequisitIds.every(module => beforeModules.includes(module));
+            if (!prerequisitesMet) {
+                console.log(module);
+                prerequisitesMet = module.prerequisites.every(module => beforeModules.includes(module));
             }
-            if (!slot.module && !prerequisitsMet) {
+            if (!slot.module && !prerequisitesMet) {
                 slotStatus[slot.id].selectable = false;
                 slotStatus[slot.id].errors.push[this.getErrorMessage()];
                 selectionErrors[slot.id] = this.getErrorMessage()
@@ -57,7 +50,7 @@ export default class PrerequisiteRule {
     }
 
     getErrorMessage() {
-        return `Missing one or more prerequisites: ${this._prerequisitIds.join(',')}`;
+        return `Missing one or more prerequisites`;
     }
 
 }
