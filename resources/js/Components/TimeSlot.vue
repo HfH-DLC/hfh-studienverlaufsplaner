@@ -1,44 +1,46 @@
 <template>
-  <td class="p-1">
-    <button
-      ref="button"
-      v-if="timeSlot"
-      class="
-        text-sm text-left
-        disabled:cursor-default
-        w-full
-        p-4
-        border border-gray-300
-        rounded
-        bg-white
-        transition-all
-        truncate
-        focus:outline-none focus:ring-2 focus:ring-indigo-500
-      "
-      :class="{
-        'shadow-inner': !timeSlot.module,
-        'bg-gray-50': timeSlot.module,
-        'slot--invalid': invalid,
-        'slot--selectable': timeSlot.selectable,
-      }"
-      :disabled="!timeSlot.selectable && !timeSlot.removable"
-      @click="onClick"
-    >
-      <span v-if="timeSlot.module">
-        <ExclamationCircleIcon
-          v-if="invalid"
-          class="text-red-600 inline-block mr-2 w-5 h-5"
-        />
-        <span>{{ timeSlot.module.id }} | {{ timeSlot.module.name }}</span>
-      </span>
-      <span v-else>
-        <CheckCircleIcon
-          v-if="timeSlot.selectable"
-          class="text-green-600 w-5 h-5"
-        />
-        <span v-else>&nbsp;</span>
-      </span>
-    </button>
+  <td>
+    <div v-if="timeSlot" class="min-h-16 p-1 flex items-center">
+      <button
+        ref="button"
+        v-if="timeSlot.module || !disabled"
+        class="
+          text-sm text-left
+          disabled:cursor-default
+          w-full
+          p-4
+          border border-gray-300
+          rounded
+          bg-white
+          transition-all
+          truncate
+          focus:outline-none focus:ring-2 focus:ring-indigo-500
+        "
+        :class="{
+          'shadow-inner': !timeSlot.module,
+          'bg-gray-50': timeSlot.module,
+          'slot--invalid': invalid,
+          'slot--selectable': timeSlot.selectable,
+        }"
+        :disabled="!timeSlot.selectable && !timeSlot.removable"
+        @click="onClick"
+      >
+        <span v-if="timeSlot.module">
+          <ExclamationCircleIcon
+            v-if="invalid"
+            class="text-red-600 inline-block mr-2 w-5 h-5"
+          />
+          <span>{{ timeSlot.module.id }} {{ timeSlot.module.name }}</span>
+        </span>
+        <span v-else>
+          <CheckCircleIcon
+            v-if="timeSlot.selectable"
+            class="text-green-600 w-5 h-5"
+          />
+          <span v-else>&nbsp;</span>
+        </span>
+      </button>
+    </div>
   </td>
 </template>
 
@@ -69,6 +71,9 @@ export default {
     },
   },
   computed: {
+    disabled() {
+      return !this.timeSlot.selectable && !this.timeSlot.removable;
+    },
     invalid() {
       return this.timeSlot.errors && this.timeSlot.errors.length > 0;
     },

@@ -15,7 +15,7 @@
       'module--disabled': disabled,
     }"
   >
-    {{ module.id }} | {{ module.name }}
+    {{ module.id }} {{ module.name }}
   </button>
 </template>
 

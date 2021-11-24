@@ -23,12 +23,12 @@
       :class="{ 'border-b': open, 'rounded-b': !open }"
       @click="toggleDropdownStatus(category.name)"
     >
-      <div>
+      <h2>
         {{ category.name }}
         <span class="whitespace-nowrap"
           >({{ category.placedNumber }} / {{ category.requiredNumber }})</span
         >
-      </div>
+      </h2>
       <ChevronUpIcon
         :class="open ? 'transform rotate-180' : ''"
         class="w-5 h-5 transition"
