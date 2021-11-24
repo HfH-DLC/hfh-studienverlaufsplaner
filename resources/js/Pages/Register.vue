@@ -1,5 +1,5 @@
 <template>
-  <Head title="Login" />
+  <Head title="Register" />
   <div class="p-4">
     <form @submit.prevent="submit" class="max-w-xs mx-auto mt-8">
       <div>
@@ -11,6 +11,19 @@
           type="text"
           name="name"
           id="name"
+          class="w-full p-2 rounded shadow-inner border border-gray-300"
+          required
+        />
+      </div>
+      <div>
+        <label for="email" class="block mb-2 text-sm uppercase text-gray-600"
+          >E-Mail</label
+        >
+        <input
+          v-model="form.email"
+          type="email"
+          name="email"
+          id="email"
           class="w-full p-2 rounded shadow-inner border border-gray-300"
           required
         />
@@ -33,7 +46,7 @@
         class="mt-6 w-full rounded p-2 border bg-gray-50 border-gray-300"
         :disabled="form.processing"
       >
-        Anmelden
+        Registrieren
       </button>
     </form>
   </div>
@@ -45,13 +58,14 @@ export default {
     return {
       form: this.$inertia.form({
         name: "",
+        email: "",
         password: "",
       }),
     };
   },
   methods: {
     submit() {
-      this.form.post("/login");
+      this.form.post("/register");
     },
   },
 };
