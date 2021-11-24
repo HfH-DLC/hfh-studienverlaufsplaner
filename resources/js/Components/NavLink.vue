@@ -14,7 +14,7 @@ export default {
       type: String,
       required: true,
     },
-    acitve: {
+    active: {
       type: Boolean,
       default: false,
     },
