@@ -1,5 +1,7 @@
 <template>
-  <Head title="Studienverlaufsplaner" />
+  <Head>
+    <title></title>
+  </Head>
   <div class="min-h-screen">
     <header>
       <Navigation />

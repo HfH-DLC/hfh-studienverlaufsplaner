@@ -1,5 +1,4 @@
 <template>
-  <Head title="Studienverlaufsplaner" />
   <div class="flex items-start">
     <div class="w-3/12 p-4 sticky top-0">
       <ModuleList

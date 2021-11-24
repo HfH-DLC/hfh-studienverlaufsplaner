@@ -19,6 +19,13 @@ createInertiaApp({
             .component('Head', Head)
             .mount(el);
     },
+    title: (title) => {
+        const staticTitle = 'Studienverlaufsplaner';
+        if (title) {
+            return `${title} | ${staticTitle}`;
+        }
+        return staticTitle;
+    }
 });
 
 InertiaProgress.init()
