@@ -2,26 +2,26 @@ export default class DateRule {
 
     constructor() {}
 
-    validateSlots(plan) {
-        const slotErrors = {}
-
-        return slotErrors
+    validateSlots(timeSlots, errors) {
+        timeSlots.forEach((slot) => {
+            if (slot.module) {
+                if (!slot.module.dates.find(date => this._matchesDate(slot, date))) {
+                    errors[slot.id] = "This module is not available on this date";
+                }
+            }
+        })
     }
 
     doesMatchSelection(moduleId) {
         return true
     }
 
-    validateSelection(moduleId, plan, slotStatus) {
-        const module = plan.modules.find(module => module.id == moduleId);
-        if (module) {
-            plan.timeSlots.forEach(slot => {
-                if (!module.dates.find(date => this._matchesDate(slot, date))) {
-                    slotStatus[slot.id].selectable = false;
-                    slotStatus[slot.id].errors.push("The selected module is not available on this date");
-                }
-            })
-        }
+    validateSelection(module, timeSlots, errors) {
+        timeSlots.forEach(slot => {
+            if (!module.dates.find(date => this._matchesDate(slot, date))) {
+                errors[slot.id].push("The selected module is not available on this date");
+            }
+        })
     }
 
     _matchesDate(slot, date) {

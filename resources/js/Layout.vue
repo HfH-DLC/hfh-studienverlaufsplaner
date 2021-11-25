@@ -2,11 +2,11 @@
   <Head>
     <title></title>
   </Head>
-  <div class="min-h-screen">
+  <div class="min-h-screen flex flex-col">
     <header>
       <Navigation />
     </header>
-    <main>
+    <main class="flex-1 flex flex-col">
       <slot />
     </main>
   </div>

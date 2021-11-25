@@ -33,12 +33,10 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
-  props: {
-    selectedModule: {
-      type: Object,
-      default: null,
-    },
+  computed: {
+    ...mapGetters(["selectedModule"]),
   },
 };
 </script>

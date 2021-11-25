@@ -1,11 +1,11 @@
 <template>
   <Disclosure
-    v-for="category in categories"
-    :key="category"
+    v-for="(category, index) in categories"
+    :key="category.id"
     as="div"
     class="mb-4 border border-gray-300 rounded"
     v-slot="{ open }"
-    :defaultOpen="dropdownStatus[category.name]"
+    :defaultOpen="index == 0"
   >
     <DisclosureButton
       class="
@@ -21,7 +21,6 @@
         focus:outline-none focus:ring-2 focus:ring-indigo-600
       "
       :class="{ 'border-b': open, 'rounded-b': !open }"
-      @click="toggleDropdownStatus(category.name)"
     >
       <h2>
         {{ category.name }}
@@ -38,13 +37,11 @@
       <ul>
         <li v-for="module in category.modules" :key="module.id">
           <Module
-            @click="$emit('selected', module.id)"
             :module="module"
             :disabled="
               category.placedNumber === category.requiredNumber ||
               !module.selectable
             "
-            :selected="module.id == selectedModuleId"
           />
         </li>
       </ul>
@@ -56,6 +53,7 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { ChevronUpIcon } from "@heroicons/vue/outline";
 import Module from "../Components/Module.vue";
+import { mapGetters } from "vuex";
 export default {
   components: {
     ChevronUpIcon,
@@ -64,29 +62,8 @@ export default {
     DisclosurePanel,
     Module,
   },
-  emits: ["selected"],
-  props: {
-    categories: {
-      type: Array,
-      required: true,
-    },
-    selectedModuleId: {
-      type: String,
-      default: null,
-    },
-  },
-  data() {
-    return {
-      dropdownStatus: this.categories.reduce((acc, category, index) => {
-        acc[category.name] = index == 0;
-        return acc;
-      }, {}),
-    };
-  },
-  methods: {
-    toggleDropdownStatus(categoryName) {
-      this.dropdownStatus[categoryName] = !this.dropdownStatus[categoryName];
-    },
+  computed: {
+    ...mapGetters(["categories"]),
   },
 };
 </script>

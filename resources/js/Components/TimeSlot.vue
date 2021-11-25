@@ -46,8 +46,8 @@
 
 <script>
 import { CheckCircleIcon, ExclamationCircleIcon } from "@heroicons/vue/outline";
+import { mapActions } from "vuex";
 export default {
-  emits: ["placeModule", "removeModule"],
   components: {
     CheckCircleIcon,
     ExclamationCircleIcon,
@@ -59,11 +59,12 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["removeModule", "placeModule"]),
     onClick() {
       if (this.timeSlot.module) {
-        this.$emit("removeModule", this.timeSlot.id);
+        this.removeModule(this.timeSlot.id);
       } else {
-        this.$emit("placeModule", this.timeSlot.id);
+        this.placeModule(this.timeSlot.id);
       }
     },
     focusButton() {

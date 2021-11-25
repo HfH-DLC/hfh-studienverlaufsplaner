@@ -1,7 +1,11 @@
 import { createApp, h } from 'vue';
 import { createInertiaApp, Link, Head } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress'
+import store from "./Store/index";
 import Layout from "./Layout.vue"
+
+
+
 
 createInertiaApp({
     resolve: async name => {
@@ -15,9 +19,11 @@ createInertiaApp({
     setup({ el, app, props, plugin }) {
         createApp({ render: () => h(app, props) })
             .use(plugin)
+            .use(store)
             .component('Link', Link)
             .component('Head', Head)
-            .mount(el);
+
+        .mount(el);
     },
     title: (title) => {
         const staticTitle = 'Studienverlaufsplaner';

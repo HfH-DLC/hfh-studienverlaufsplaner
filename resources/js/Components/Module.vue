@@ -11,32 +11,37 @@
     "
     :disabled="disabled"
     :class="{
-      'module--selected': selected,
+      'module--selected': module.selected,
       'module--disabled': disabled,
     }"
+    @click="onClick"
   >
     {{ module.id }} {{ module.name }}
   </button>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   props: {
     module: {
       type: Object,
       required: true,
     },
-    selected: {
-      type: Boolean,
-      default: false,
-    },
     disabled: {
       type: Boolean,
       default: false,
     },
   },
-  setup() {
-    return {};
+  methods: {
+    ...mapActions(["deselectModule", "selectModule"]),
+    onClick() {
+      if (this.module.selected) {
+        this.deselectModule();
+      } else {
+        this.selectModule(this.module.id);
+      }
+    },
   },
 };
 </script>

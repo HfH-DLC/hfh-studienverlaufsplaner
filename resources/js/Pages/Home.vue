@@ -1,36 +1,28 @@
 <template>
-  <div class="flex items-start">
-    <div class="w-3/12 p-4 sticky top-0">
-      <ModuleList
-        :categories="plan.categories"
-        :selectedModuleId="plan.selectedModuleId"
-        @selected="onModuleSelected"
-      />
-    </div>
-    <div class="w-7/12 p-4 bg-gray-50">
-      <TimeTable
-        ref="timeTable"
-        :semesters="plan.semesters"
-        :timeSlots="plan.timeSlots"
-        @placeModule="(id) => plan.placeModule(id)"
-        @removeModule="onRemoveModule"
-      />
-    </div>
-    <div class="w-2/12 sticky top-0 p-4" aria-live="polite">
-      <div class="mb-4 pb-4 border-b border-gray-300">
-        <h2 class="text-sm text-gray-500 font-bold uppercase">
-          Total Kreditpunkte
-        </h2>
-        <div>{{ plan.credits }} / 90</div>
+  <div class="flex flex-1">
+    <template v-if="initialized">
+      <div class="w-3/12 p-4 sticky top-0">
+        <ModuleList />
       </div>
-      <ModuleInformation :selectedModule="plan.selectedModule" />
-    </div>
+      <div class="w-7/12 p-4 bg-gray-50">
+        <TimeTable ref="timeTable" />
+      </div>
+      <div class="w-2/12 sticky top-0 p-4" aria-live="polite">
+        <div class="mb-4 pb-4 border-b border-gray-300">
+          <h2 class="text-sm text-gray-500 font-bold uppercase">
+            Total Kreditpunkte
+          </h2>
+          <div>{{ credits }} / 90</div>
+        </div>
+        <ModuleInformation />
+      </div>
+    </template>
+    <div v-else class="text-2xl text-center p-4 flex-1">Loading...</div>
   </div>
 </template>
 
 <script>
-import { ref, nextTick } from "vue";
-import DataAdapter from "../DataAdapter";
+import { mapGetters, mapActions, mapState } from "vuex";
 
 // Components
 import ModuleInformation from "../Components/ModuleInformation.vue";
@@ -43,30 +35,15 @@ export default {
     ModuleInformation,
     ModuleList,
   },
-  setup() {
-    const plan = ref(new DataAdapter().getPlan());
-
-    const timeTable = ref(null);
-
-    const onModuleSelected = (id) => {
-      if (plan.value.selectedModuleId == id) {
-        plan.value.deselect();
-      } else {
-        plan.value.select(id);
-        nextTick(() => timeTable.value.focusSlot());
-      }
-    };
-
-    const onRemoveModule = (slotId) => {
-      plan.value.removeModule(slotId);
-    };
-
-    return {
-      plan,
-      timeTable,
-      onModuleSelected,
-      onRemoveModule,
-    };
+  created() {
+    this.init();
+  },
+  computed: {
+    ...mapState(["initialized"]),
+    ...mapGetters(["credits"]),
+  },
+  methods: {
+    ...mapActions(["init"]),
   },
 };
 </script>

@@ -49,9 +49,7 @@
               v-for="day in semester.days"
               :key="day"
               :ref="setTimeSlotRef"
-              :timeSlot="getTimeSlot(semester.label, week, day, time)"
-              @placeModule="$emit('placeModule', $event)"
-              @removeModule="$emit('removeModule', $event)"
+              :timeSlot="timeSlotByDate(semester.id, week, day, time)"
             />
           </tr>
         </template>
@@ -62,37 +60,20 @@
 
 <script>
 import TimeSlot from "../Components/TimeSlot.vue";
+import { mapGetters } from "vuex";
 export default {
   components: {
     TimeSlot,
-  },
-  emits: ["placeModule", "removeModule"],
-  props: {
-    semesters: {
-      type: Array,
-      required: true,
-    },
-    timeSlots: {
-      type: Array,
-      required: true,
-    },
   },
   data() {
     return {
       timeSlotRefs: [],
     };
   },
+  computed: {
+    ...mapGetters(["semesters", "timeSlots", "timeSlotByDate"]),
+  },
   methods: {
-    getTimeSlot(semester, week, day, time) {
-      return this.timeSlots.find((slot) => {
-        return (
-          slot.semester == semester &&
-          slot.week == week &&
-          slot.day == day &&
-          slot.time == time
-        );
-      });
-    },
     focusSlot() {
       const slotRef = this.timeSlotRefs.find((ref) => {
         return ref.timeSlot.selectable;
