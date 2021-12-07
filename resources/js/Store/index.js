@@ -2,16 +2,17 @@ import { createStore } from 'vuex'
 import DataAdapter from '../DataAdapter'
 
 const RESET_STATE = "RESET_STATE"
+const SET_PLAN = "SET_PLAN"
 const SET_TIMESLOTS = "SET_TIMESLOTS"
-const SET_TIMESLOT = "SET_TIMESLOT"
 const SET_MODULES = "SET_MODULES"
-const SET_MODULE = "SET_MODULE"
 const SET_CATEGORIES = "SET_CATEGORIES"
 const SET_RULES = "SET_RULES"
 const SET_SELECTION_STATUS = "SET_SELECTION_STATUS"
 const SET_MODULE_ERRORS = "SET_MODULE_ERRORS"
 const SET_TIMESLOT_ERRORS = "SET_TIMESLOTE_ERROS"
 const INIT_FINISHED = "INIT_FINISHED"
+const ADD_PLACEMENT = "ADD_PLACEMENT"
+const REMOVE_PLACEMENT = "REMOVE_PLACEMENT"
 
 const initialState = {
     initialized: false,
@@ -21,7 +22,8 @@ const initialState = {
     rules: [],
     selectionStatus: {},
     moduleErrors: {},
-    timeSlotErrors: {}
+    timeSlotErrors: {},
+    plan: null,
 }
 
 const store = createStore({
@@ -33,17 +35,14 @@ const store = createStore({
         [RESET_STATE](state) {
             state = initialState
         },
+        [SET_PLAN](state, plan) {
+            state.plan = plan
+        },
         [SET_TIMESLOTS](state, timeSlots) {
             state.timeSlots = timeSlots
         },
-        [SET_TIMESLOT](state, timeSlot) {
-            state.timeSlots[timeSlot.id] = timeSlot
-        },
         [SET_MODULES](state, modules) {
             state.modules = modules
-        },
-        [SET_MODULE](state, module) {
-            state.modules[module.id] = module
         },
         [SET_CATEGORIES](state, categories) {
             state.categories = categories
@@ -59,18 +58,33 @@ const store = createStore({
         },
         [SET_TIMESLOT_ERRORS](state, timeSlotErrors) {
             state.timeSlotErrors = timeSlotErrors
+        },
+        [ADD_PLACEMENT](state, placement) {
+            state.plan.placements.push(placement);
+        },
+        [REMOVE_PLACEMENT](state, timeSlotId) {
+            state.plan.placements = state.plan.placements.filter(placement => placement.timeSlotId !== timeSlotId);
         }
     },
     actions: {
-        async init({ commit, dispatch }) {
-            const { timeSlots, modules, categories, rules } = await new DataAdapter().getData();
+        async init({ commit, dispatch }, { plan, timeSlots, modules, categories, rules }) {
+            console.log(modules);
             commit(RESET_STATE)
+            commit(SET_PLAN, plan);
             commit(SET_TIMESLOTS, timeSlots)
             commit(SET_MODULES, modules)
             commit(SET_CATEGORIES, categories)
             commit(SET_RULES, rules)
             dispatch("validate")
             commit(INIT_FINISHED);
+        },
+        async save({ state }) {
+            try {
+                //await new DataAdapter().savePlan(state.plan);
+            } catch (error) {
+                //todo error state
+                console.error(error);
+            }
         },
         selectModule({ commit, state, getters }, moduleId) {
             commit(SET_SELECTION_STATUS, {
@@ -85,16 +99,15 @@ const store = createStore({
             })
         },
         placeModule({ commit, dispatch, state, }, timeSlotId) {
-            const timeSlot = state.timeSlots.find(timeSlot => timeSlot.id == timeSlotId)
-            const module = state.modules.find(module => module.id == state.selectionStatus.moduleId)
-            commit(SET_TIMESLOT, {...timeSlot, moduleId: module.id })
+            commit(ADD_PLACEMENT, { timeSlotId, moduleId: state.selectionStatus.moduleId })
             dispatch("deselectModule")
             dispatch("validate")
+            dispatch("save");
         },
         removeModule({ commit, dispatch, state }, timeSlotId) {
-            const timeSlot = state.timeSlots.find(timeSlot => timeSlot.id == timeSlotId)
-            commit(SET_TIMESLOT, {...timeSlot, moduleId: null })
+            commit(REMOVE_PLACEMENT, timeSlotId)
             dispatch("validate")
+            dispatch("save");
         },
         validate({ dispatch }) {
             dispatch("validateModules")
@@ -130,7 +143,7 @@ const store = createStore({
                     ...module,
                     selectable: selectable,
                     selected: state.selectionStatus.moduleId == module.id,
-                    placed: !!state.timeSlots.find(timeSlot => timeSlot.moduleId == module.id)
+                    placed: !!state.plan.placements.find(placement => placement.moduleId == module.id)
                 }
             })
         },
@@ -139,12 +152,21 @@ const store = createStore({
         },
         timeSlots(state, { selectedModule, moduleById }) {
             return state.timeSlots.map(timeSlot => {
-                const module = moduleById(timeSlot.moduleId);
+                const placement = state.plan.placements.find(placement => placement.timeSlotId === timeSlot.id);
+                let module;
+                let moduleId;
+                if (placement) {
+                    module = moduleById(placement.moduleId);
+                    if (module) {
+                        moduleId = module.id;
+                    }
+                }
                 return {
                     ...timeSlot,
                     removable: !selectedModule && module,
                     selectable: selectedModule && !module && state.selectionStatus.errors[timeSlot.id].length == 0,
                     module,
+                    moduleId,
                     errors: state.timeSlotErrors[timeSlot.id]
                 }
             })
@@ -164,11 +186,13 @@ const store = createStore({
         },
         categories(state, { modules }) {
             return state.categories.map(category => {
+                const categoryModules = modules.filter(module => module.categoryId === category.id);
+                const requiredNumber = category.requiredNumber != null ? category.requiredNumber : categoryModules.length;
                 return {
                     ...category,
-                    placedNumber: modules.filter(module => module.placed).length,
-                    requiredNumber: category.requiredNumber || modules.length,
-                    modules: modules.filter(module => module.categoryId == category.id && !module.placed)
+                    placedNumber: categoryModules.filter(module => module.placed).length,
+                    requiredNumber,
+                    modules: categoryModules.filter(module => !module.placed)
                 }
             })
         },

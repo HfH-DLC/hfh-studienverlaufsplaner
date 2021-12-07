@@ -16,7 +16,7 @@
     }"
     @click="onClick"
   >
-    {{ module.id }} {{ module.name }}
+    {{ module.number }} {{ module.name }}
   </button>
 </template>
 

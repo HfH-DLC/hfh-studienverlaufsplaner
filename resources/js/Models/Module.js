@@ -1,7 +1,8 @@
 export default class Module {
 
-    constructor(id, name, categoryId, credits, dates = [], prerequisites = []) {
+    constructor(id, number, name, categoryId, credits, dates = [], prerequisites = []) {
         this.id = id
+        this.number = number
         this.name = name
         this.categoryId = categoryId
         this.credits = credits

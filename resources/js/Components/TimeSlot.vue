@@ -30,7 +30,7 @@
             v-if="invalid"
             class="text-red-600 inline-block mr-2 w-5 h-5"
           />
-          <span>{{ timeSlot.module.id }} {{ timeSlot.module.name }}</span>
+          <span>{{ timeSlot.module.number }} {{ timeSlot.module.name }}</span>
         </span>
         <span v-else>
           <CheckCircleIcon
