@@ -1,6 +1,9 @@
-export default class PrerequisitesRule {
+import Rule from "./Rule"
+export default class PrerequisitesRule extends Rule {
 
-    constructor() {}
+    constructor() {
+        super("prerequisites")
+    }
 
     validateSlots(timeSlots, errors) {
 

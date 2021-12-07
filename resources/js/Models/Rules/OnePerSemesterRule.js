@@ -1,7 +1,9 @@
-export default class OnePerSemesterRule {
+import Rule from "./Rule"
+export default class OnePerSemesterRule extends Rule {
 
     constructor(modulIds) {
-        this._modulIds = modulIds
+        super("onePerSemester")
+        this.modulIds = modulIds
     }
 
     validateSlots(timeSlots, errors) {
@@ -9,7 +11,7 @@ export default class OnePerSemesterRule {
         const takenSemesters = []
 
         timeSlots.forEach((slot) => {
-            if (this._modulIds.includes(slot.moduleId)) {
+            if (this.modulIds.includes(slot.moduleId)) {
                 if (takenSemesters.includes(slot.semester)) {
                     slotErrors[slot.id] = this.getErrorMessage()
                 }
@@ -19,13 +21,13 @@ export default class OnePerSemesterRule {
     }
 
     doesMatchSelection(moduleId) {
-        return this._modulIds.includes(moduleId)
+        return this.modulIds.includes(moduleId)
     }
 
     validateSelection(module, timeSlots, errors) {
         const takenSemesters = []
         timeSlots.forEach((slot) => {
-            if (this._modulIds.includes(slot.moduleId)) {
+            if (this.modulIds.includes(slot.moduleId)) {
                 takenSemesters.push(slot.semester)
             }
         })
@@ -37,7 +39,7 @@ export default class OnePerSemesterRule {
     }
 
     getErrorMessage() {
-        return `Only one of ${this._modulIds.join(', ')} is allowed per semester`
+        return `Only one of ${this.modulIds.join(', ')} is allowed per semester`
     }
 
 }

@@ -1,6 +1,9 @@
-export default class DateRule {
+import Rule from "./Rule"
+export default class DateRule extends Rule {
 
-    constructor() {}
+    constructor() {
+        super("date")
+    }
 
     validateSlots(timeSlots, errors) {
         timeSlots.forEach((slot) => {
