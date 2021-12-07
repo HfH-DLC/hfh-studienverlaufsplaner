@@ -4,10 +4,11 @@ import TimeSlot from "./Models/TimeSlot";
 import DateRule from "./Models/Rules/DateRule";
 import PrerequisitesRule from "./Models/Rules/PrerequisitesRule";
 import OnePerSemesterRule from "./Models/Rules/OnePerSemesterRule";
+import axios from "axios";
 
 export default class DataAdapter {
 
-    getData() {
+    async getData() {
         const categories = [
             new Category(0, "Pflichtbereich HFE"),
             new Category(1, "Berufspraxis HFE"),
@@ -242,5 +243,13 @@ export default class DataAdapter {
         ];
 
         return { timeSlots, modules, categories, rules };
+    }
+
+    async createPlan() {
+        return axios.post('/plans');
+    }
+
+    async savePlan(plan) {
+        return axios.put(`/plans/${plan.id}`, plan);
     }
 }
