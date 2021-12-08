@@ -1,5 +1,7 @@
 import { createStore } from 'vuex'
 import DataAdapter from '../DataAdapter'
+import PrerequisitesRule from '../Models/Rules/PrerequisitesRule';
+import DateRule from '../Models/Rules/DateRule';
 
 const RESET_STATE = "RESET_STATE"
 const SET_PLAN = "SET_PLAN"
@@ -68,19 +70,19 @@ const store = createStore({
     },
     actions: {
         async init({ commit, dispatch }, { plan, timeSlots, modules, categories, rules }) {
-            console.log(modules);
             commit(RESET_STATE)
             commit(SET_PLAN, plan);
             commit(SET_TIMESLOTS, timeSlots)
             commit(SET_MODULES, modules)
             commit(SET_CATEGORIES, categories)
+            rules = [...rules, new PrerequisitesRule(), new DateRule()]
             commit(SET_RULES, rules)
             dispatch("validate")
             commit(INIT_FINISHED);
         },
         async save({ state }) {
             try {
-                //await new DataAdapter().savePlan(state.plan);
+                await new DataAdapter().savePlan(state.plan);
             } catch (error) {
                 //todo error state
                 console.error(error);
@@ -174,9 +176,10 @@ const store = createStore({
         timeSlotById: (state, { timeSlots }) => (id) => {
             return timeSlots.find(timeSlot => timeSlot.id == id)
         },
-        timeSlotByDate: (state, { timeSlots }) => (semester, week, day, time) => {
+        timeSlotByDate: (state, { timeSlots }) => (year, semester, week, day, time) => {
             return timeSlots.find((slot) => {
                 return (
+                    slot.year == year &&
                     slot.semester == semester &&
                     slot.week == week &&
                     slot.day == day &&
@@ -196,22 +199,33 @@ const store = createStore({
                 }
             })
         },
-        semesters(state, { timeSlots }) {
+        years(state, { timeSlots }) {
             return [
                 ...new Set(
                     timeSlots.map((timeSlot) => {
-                        return timeSlot.semester
+                        return timeSlot.year
                     })
                 ),
-            ].map((semester) => {
-                const slotsBySemester = timeSlots.filter(
-                    (timeSlot) => timeSlot.semester == semester
-                )
+            ].map((year) => {
+                const slotsByYear = timeSlots.filter(timeSlot => timeSlot.year === year);
+
+                let semesters = new Set(slotsByYear.map(timeSlot => {
+                    return timeSlot.semester
+                }))
+
+                semesters = [...semesters].map(semester => {
+                    const slotsBySemester = slotsByYear.filter(timeSlot => timeSlot.semester === semester);
+                    return {
+                        semester,
+                        weeks: new Set(slotsBySemester.map((slot) => slot.week)),
+                        days: new Set(slotsBySemester.map((slot) => slot.day)),
+                        times: new Set(slotsBySemester.map((slot) => slot.time)),
+                    }
+                })
+
                 return {
-                    id: semester,
-                    weeks: new Set(slotsBySemester.map((slot) => slot.week)),
-                    days: new Set(slotsBySemester.map((slot) => slot.day)),
-                    times: new Set(slotsBySemester.map((slot) => slot.time)),
+                    year,
+                    semesters
                 }
             })
         },

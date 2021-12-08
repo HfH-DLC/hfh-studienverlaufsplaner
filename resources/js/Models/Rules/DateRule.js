@@ -8,7 +8,7 @@ export default class DateRule extends Rule {
     validateSlots(timeSlots, errors) {
         timeSlots.forEach((slot) => {
             if (slot.module) {
-                if (!slot.module.dates.find(date => this._matchesDate(slot, date))) {
+                if (!slot.module.timeSlots.find(timeSlot => timeSlot.id == slot.id)) {
                     errors[slot.id] = "This module is not available on this date";
                 }
             }
@@ -21,17 +21,9 @@ export default class DateRule extends Rule {
 
     validateSelection(module, timeSlots, errors) {
         timeSlots.forEach(slot => {
-            if (!module.dates.find(date => this._matchesDate(slot, date))) {
+            if (!module.timeSlots.find(timeSlot => timeSlot.id == slot.id)) {
                 errors[slot.id].push("The selected module is not available on this date");
             }
         })
     }
-
-    _matchesDate(slot, date) {
-        return slot.semester.startsWith(date.semester) &&
-            slot.day == date.day &&
-            //slot.week == date.week &&
-            slot.time == date.time
-    }
-
 }

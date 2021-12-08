@@ -7,18 +7,31 @@ export default class PrerequisitesRule extends Rule {
 
     validateSlots(timeSlots, errors) {
 
-        let beforeModules = []
+        let beforeSlots = []
 
+        //todo ensure sorting
         timeSlots.forEach((slot) => {
             const prerequisites = slot.module ? slot.module.prerequisites : [];
-            const prerequisitesMet = prerequisites.every(moduleId => beforeModules.includes(moduleId));
+            const prerequisitesMet = prerequisites.every(moduleId => beforeSlots.find(beforeSlot => {
+                return moduleId === beforeSlot.module.id && this.isPreviousSemester(beforeSlot, slot);
+            }));
             if (!prerequisitesMet) {
                 errors[slot.id] = this.getErrorMessage()
             }
             if (slot.module) {
-                beforeModules.push(slot.module.id)
+                beforeSlots.push(slot)
             }
         })
+    }
+
+    isPreviousSemester(before, after) {
+        if (before.year > after.year) {
+            return false;
+        }
+        if (before.year === after.year) {
+            return before.semester === 'HS' && after.semester === 'FS'
+        }
+        return true;
     }
 
     doesMatchSelection(moduleId) {
@@ -27,18 +40,21 @@ export default class PrerequisitesRule extends Rule {
 
     validateSelection(module, timeSlots, errors) {
 
-        let beforeModules = []
+        let beforeSlots = []
         let prerequisitesMet = false
 
+        //todo ensure sorting
         timeSlots.forEach((slot) => {
             if (!prerequisitesMet) {
-                prerequisitesMet = module.prerequisites.every(module => beforeModules.includes(module));
+                prerequisitesMet = module.prerequisites.every(moduleId => beforeSlots.find(beforeSlot => {
+                    return moduleId === beforeSlot.module.id && this.isPreviousSemester(beforeSlot, slot);
+                }));
             }
             if (!prerequisitesMet) {
                 errors[slot.id].push(this.getErrorMessage());
             }
             if (slot.module) {
-                beforeModules.push(slot.module.id)
+                beforeSlots.push(slot)
             }
         })
     }
