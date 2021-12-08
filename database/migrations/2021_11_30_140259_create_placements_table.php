@@ -16,10 +16,10 @@ class CreatePlacementsTable extends Migration
         Schema::create('placements', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-
             $table->foreignId('plan_id')->constrained();
             $table->foreignId('module_id')->constrained();
-            $table->foreignId('timeSlot_id')->constrained();
+            $table->foreignId('time_slot_id')->constrained();
+            $table->unique(['plan_id',  'time_slot_id']);
         });
     }
 
