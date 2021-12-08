@@ -51,10 +51,32 @@ Route::post('/plans', function () {
 
 Route::put('/plans/{plan}', function (Request $request, Plan $plan) {
     $attributes = $request->validate([
-        'placements' => ['required'],
+        'placements' => ['present','array'],
     ]);
 
-    return $plan;
+    $placements = $attributes['placements'];
+
+    $placements_without_id = collect($placements)->where('id', '');
+    $placements_with_id = (clone collect($placements))->where('id', '!=', '');
+    $placements_ids = $placements_with_id->pluck('id');
+
+    foreach ($placements_with_id as $placement) {
+        $obj = $plan->placements()->find($placement['id']);
+        if ($obj) {
+            $obj->module()->associate($placement['moduleId']);
+            $obj->save();
+        }
+    }
+
+    $plan->placements()->whereNotIn('id', $placements_ids)->delete();
+
+    $placements_without_id->each(function ($placement) use ($plan) {
+        $obj = new Placement();
+        $obj->timeSlot()->associate($placement['timeSlotId']);
+        $obj->module()->associate($placement['moduleId']);
+        $plan->placements()->save($obj);
+    });
+    return new PlanResource($plan);
 });
 
 Route::middleware('auth')->group(function () {
@@ -119,7 +141,7 @@ Route::middleware('auth')->group(function () {
         $module->credits = $attributes['credits'];
         $module->save();
         $module->timeSlots()->sync($attributes['timeSlots']);
-        //$module->prerequisites()->sync($attributes['prerequisites']);
+        $module->prerequisites()->sync($attributes['prerequisites']);
         $module->save();
         return redirect()->route('admin');
     });
