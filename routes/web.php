@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ModuleResource;
 use App\Http\Resources\PlanResource;
+use App\Http\Resources\RuleResource;
+use App\Http\Resources\TimeSlotResource;
 use App\Models\Category;
 use App\Models\Module;
 use App\Models\Placement;
@@ -32,11 +35,11 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/plans/{plan}', function (Plan $plan) {
-    $plan->load('placements');
-    $catogries = Category::all();
-    $timeSlots = TimeSlot::all();
+    $plan = new PlanResource($plan);
+    $catogries = CategoryResource::collection(Category::all());
+    $timeSlots = TimeSlotResource::collection(TimeSlot::all());
     $modules = ModuleResource::collection(Module::all());
-    $rules = Rule::all();
+    $rules = RuleResource::collection(Rule::all());
     return Inertia::render('Plan', array('plan' => $plan, 'categories' => $catogries, 'timeSlots' => $timeSlots, 'modules' => $modules, 'rules' => $rules));
 })->name('plan');
 

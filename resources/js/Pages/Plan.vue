@@ -38,11 +38,11 @@ export default {
   async created() {
     const { categories, modules, timeSlots, rules, plan } = this.$page.props;
     await this.init({
-      categories,
+      categories: categories.data,
       modules: modules.data,
-      timeSlots,
-      rules,
-      plan,
+      timeSlots: timeSlots.data,
+      rules: rules.data,
+      plan: plan.data,
     });
   },
   computed: {

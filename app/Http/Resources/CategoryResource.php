@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ModuleResource extends JsonResource
+class CategoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,13 +14,10 @@ class ModuleResource extends JsonResource
      */
     public function toArray($request)
     {
-        return   [
+        return [
             'id' => $this->id,
             'name' => $this->name,
-            'number' => $this->number,
-            'credits' => $this->credits,
-            'categoryId' => $this->category_id,
-            'prerequisites' => ModuleResource::collection($this->prerequisites)
+            'requiredNumber' => $this->required_number
         ];
     }
 }
