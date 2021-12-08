@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 import DataAdapter from '../DataAdapter'
 import PrerequisitesRule from '../Models/Rules/PrerequisitesRule';
 import DateRule from '../Models/Rules/DateRule';
+import { getRule } from '../Models/Rules/RuleFactory';
 
 const RESET_STATE = "RESET_STATE"
 const SET_PLAN = "SET_PLAN"
@@ -50,7 +51,11 @@ const store = createStore({
             state.categories = categories
         },
         [SET_RULES](state, rules) {
-            state.rules = rules
+            const ruleObjects = rules.map(rule => {
+                return getRule(rule);
+            })
+            ruleObjects.push(new DateRule(), new PrerequisitesRule());
+            state.rules = ruleObjects
         },
         [SET_SELECTION_STATUS](state, selectionStatus) {
             state.selectionStatus = selectionStatus
@@ -75,7 +80,6 @@ const store = createStore({
             commit(SET_TIMESLOTS, timeSlots)
             commit(SET_MODULES, modules)
             commit(SET_CATEGORIES, categories)
-            rules = [...rules, new PrerequisitesRule(), new DateRule()]
             commit(SET_RULES, rules)
             dispatch("validate")
             commit(INIT_FINISHED);
