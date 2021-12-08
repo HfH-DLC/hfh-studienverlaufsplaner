@@ -12,10 +12,10 @@ export default class OnePerSemesterRule extends Rule {
 
         timeSlots.forEach((slot) => {
             if (this.modulIds.includes(slot.moduleId)) {
-                if (takenSemesters.includes(slot.semester)) {
+                if (takenSemesters.find(semester => semester.year === slot.year && semester.semester === slot.semester)) {
                     slotErrors[slot.id] = this.getErrorMessage()
                 }
-                takenSemesters.push(slot.semester)
+                takenSemesters.push({ year: slot.year, semester: slot.semester });
             }
         })
     }
@@ -28,11 +28,11 @@ export default class OnePerSemesterRule extends Rule {
         const takenSemesters = []
         timeSlots.forEach((slot) => {
             if (this.modulIds.includes(slot.moduleId)) {
-                takenSemesters.push(slot.semester)
+                takenSemesters.push({ year: slot.year, semester: slot.semester })
             }
         })
         takenSemesters.forEach(semester => {
-            timeSlots.filter(slot => slot.semester == semester).forEach(slot => {
+            timeSlots.filter(slot => slot.year == semester.year && slot.semester == semester.semester).forEach(slot => {
                 errors[slot.id].push(this.getErrorMessage());
             });
         })
