@@ -29,5 +29,5 @@ class Module extends Model
         return $this->belongsToMany('App\Models\Module', 'module_prerequisite', 'prerequisite_id', 'module_id');
     }
 
-    protected $casts = [ 'category_id' => 'integer' ];
+    protected $casts = [ 'category_id' => 'integer', 'credits' => 'integer' ];
 }
