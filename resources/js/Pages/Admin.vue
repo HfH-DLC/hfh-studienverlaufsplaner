@@ -77,7 +77,6 @@
 
         <label for="week" class="block uppercase text-sm mt-3">Woche</label>
         <select
-          type="text"
           id="week"
           v-model="timeSlotsForm.week"
           class="block border border-gray-600 rounded shadow-inner p-1"
@@ -177,7 +176,7 @@
           class="block border border-gray-600 rounded shadow-inner p-1"
           required
         >
-          <option disabled value="">Bitte auswählen</option>
+          <option disabled value="">Bitte wählen...</option>
           <option
             :value="category.id"
             v-for="category in categories"
@@ -211,6 +210,7 @@
           id="timeSlots"
           class="block border border-gray-600 rounded shadow-inner p-1"
           :options="timeSlots"
+          track-by="id"
           placeholder="Termin auswählen..."
           :multiple="true"
           :customLabel="timeSlotLabel"
@@ -228,6 +228,7 @@
           v-model="modulesForm.prerequisites"
           class="block border border-gray-600 rounded shadow-inner p-1"
           :options="modules"
+          track-by="id"
           placeholder="Modul auswählen..."
           :multiple="true"
           label="number"
@@ -250,6 +251,56 @@
         <ul>
           <li v-for="module in modules" :key="module.id">
             {{ module.name }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div>
+      <h2 class="text-lg mb-2">Neue Regel</h2>
+      <form @submit.prevent="createRule">
+        <label for="type" class="block uppercase text-sm">Art</label>
+        <select
+          id="type"
+          v-model="rulesForm.type"
+          class="block border border-gray-600 rounded shadow-inner p-1"
+          required
+        >
+          <option value="" disabled>Bitte wählen...</option>
+          <option value="onePerSemester">Nur ein Modul pro Semester</option>
+        </select>
+        <div v-if="rulesForm.errors.type">
+          {{ rulesForm.errors.type }}
+        </div>
+        <div v-if="rulesForm.type === 'onePerSemester'">
+          <MultiSelect
+            id="params"
+            v-model="ruleParams"
+            class="block border border-gray-600 rounded shadow-inner p-1"
+            :options="modules"
+            track-by="id"
+            placeholder="Modul auswählen..."
+            :multiple="true"
+            label="number"
+          >
+          </MultiSelect>
+        </div>
+        <div v-if="rulesForm.errors.params">
+          {{ rulesForm.errors.params }}
+        </div>
+        <button
+          type="submit"
+          :disabled="categoriesForm.processing"
+          class="mt-3 rounded p-2 border-2 border-black font-bold"
+        >
+          Regel erstellen
+        </button>
+      </form>
+      <div v-if="rules">
+        <h2 class="text-lg mb-2">Regeln</h2>
+        <ul>
+          <li v-for="rule in rules" :key="rule.id">
+            {{ rule.id }} - {{ rule.type }}
           </li>
         </ul>
       </div>
@@ -284,6 +335,10 @@ export default {
         timeSlots: [],
         prerequisites: [],
       }),
+      rulesForm: this.$inertia.form({
+        type: "",
+        params: null,
+      }),
     };
   },
   computed: {
@@ -296,6 +351,9 @@ export default {
     modules() {
       return this.$page.props.modules;
     },
+    rules() {
+      return this.$page.props.rules;
+    },
     moduleTimeSlots: {
       set(value) {
         this.modulesForm.timeSlots = value.map((slot) => slot.id);
@@ -304,6 +362,20 @@ export default {
         return this.modulesForm.timeSlots.map((id) =>
           this.timeSlots.find((slot) => slot.id == id)
         );
+      },
+    },
+    ruleParams: {
+      set(value) {
+        console.log(value);
+        this.rulesForm.params = { moduleIds: value.map((module) => module.id) };
+      },
+      get() {
+        const result = this.rulesForm.params
+          ? this.rulesForm.params.moduleIds.map((id) =>
+              this.modules.find((module) => module.id === id)
+            )
+          : [];
+        return result;
       },
     },
   },
@@ -321,6 +393,11 @@ export default {
     createModule() {
       this.modulesForm.post("/modules", {
         onSuccess: () => this.modulesForm.reset(),
+      });
+    },
+    createRule() {
+      this.rulesForm.post("/rules", {
+        onSuccess: () => this.rulesForm.reset(),
       });
     },
     timeSlotLabel(timeSlot) {
