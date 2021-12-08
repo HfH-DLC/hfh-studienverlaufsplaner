@@ -16,11 +16,14 @@ class Placement extends Model
 
     public function module()
     {
-        return $this->hasOne(Module::class);
+        return $this->belongsTo(Module::class);
     }
 
     public function timeSlot()
     {
-        return $this->hasOne(TimeSlot::class);
+        return $this->belongsTo(TimeSlot::class);
     }
+
+
+    protected $casts = ['plan_id' => 'integer', 'module_id' => 'integer',  'time_slot_id' => 'integer' ];
 }
