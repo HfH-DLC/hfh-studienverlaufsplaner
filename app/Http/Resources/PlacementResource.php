@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Placement;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PlanResource extends JsonResource
+class PlacementResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +14,10 @@ class PlanResource extends JsonResource
      */
     public function toArray($request)
     {
-        return   [
+        return [
             'id' => $this->id,
-            'placements' => PlacementResource::collection($this->placements)
+            'timeSlotId' => $this->time_slot_id,
+            'moduleId' => $this->module_id
         ];
     }
 }
