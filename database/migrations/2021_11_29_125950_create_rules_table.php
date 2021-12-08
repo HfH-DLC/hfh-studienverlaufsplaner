@@ -17,7 +17,7 @@ class CreateRulesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('type');
-            $table->text('params');
+            $table->text('params')->nullable();
         });
     }
 
