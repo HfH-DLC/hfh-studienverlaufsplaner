@@ -145,4 +145,18 @@ Route::middleware('auth')->group(function () {
         $module->save();
         return redirect()->route('admin');
     });
+
+    Route::post('/rules', function (Request $request) {
+        //todo validation
+        $attributes = $request->validate([
+            'type' => ['required'],
+            'params' => ['nullable', 'array']
+        ]);
+
+        $rule = new Rule();
+        $rule->type = $attributes['type'];
+        $rule->params = $attributes['params'];
+        $rule->save();
+        return redirect()->route('admin');
+    });
 });
