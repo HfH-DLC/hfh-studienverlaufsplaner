@@ -290,7 +290,7 @@
         </div>
         <button
           type="submit"
-          :disabled="categoriesForm.processing"
+          :disabled="rulesForm.processing"
           class="mt-3 rounded p-2 border-2 border-black font-bold"
         >
           Regel erstellen
