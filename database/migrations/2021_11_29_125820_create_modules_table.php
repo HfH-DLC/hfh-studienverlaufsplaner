@@ -21,6 +21,7 @@ class CreateModulesTable extends Migration
             $table->integer('credits');
             
             $table->foreignId('category_id')->constrained();
+            $table->foreignId('planer_id')->constrained();
         });
     }
 

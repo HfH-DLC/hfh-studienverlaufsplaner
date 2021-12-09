@@ -21,6 +21,7 @@ class CreateTimeSlotsTable extends Migration
             $table->string('week');
             $table->string('day');
             $table->string('time');
+            $table->foreignId('planer_id')->constrained();
         });
     }
 
