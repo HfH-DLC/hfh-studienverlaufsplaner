@@ -16,6 +16,8 @@ class CreatePlansTable extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+
+            $table->year('start_year');
         });
     }
 

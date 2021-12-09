@@ -36,15 +36,25 @@ Route::get('/', function () {
 
 Route::get('/plans/{plan}', function (Plan $plan) {
     $plan = new PlanResource($plan);
+
     $catogries = CategoryResource::collection(Category::all());
-    $timeSlots = TimeSlotResource::collection(TimeSlot::all());
-    $modules = ModuleResource::collection(Module::all());
+    $timeSlots = TimeSlotResource::collection(TimeSlot::where('year', '>', $plan->start_year)->orWhere(function ($query) use ($plan) {
+        $query->where('year', $plan->start_year);
+        $query->where('semester', 'HS');
+    })->get());
+    $modules = ModuleResource::collection(Module::whereHas('timeSlots', function ($query) use ($timeSlots) {
+        $query->whereIn('id', $timeSlots->pluck('id'));
+    })->get());
     $rules = RuleResource::collection(Rule::all());
     return Inertia::render('Plan', array('plan' => $plan, 'categories' => $catogries, 'timeSlots' => $timeSlots, 'modules' => $modules, 'rules' => $rules));
 })->name('plan');
 
-Route::post('/plans', function () {
+Route::post('/plans', function (Request $request) {
+    $attributes = $request->validate([
+        'startYear' => ['required', 'integer']
+    ]);
     $plan = new Plan();
+    $plan->start_year = $attributes['startYear'];
     $plan->save();
     return Redirect::route('plan', array('plan' => $plan->id));
 });
