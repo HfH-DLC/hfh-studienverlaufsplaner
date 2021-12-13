@@ -66,6 +66,8 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
     Route::put('/plans/{plan}', function (Request $request, Planer $planer, Plan $plan) {
         $attributes = $request->validate([
             'placements' => ['present','array'],
+            'placements.*.timeSlotId' => ['required', 'exists:time_slots,id'],
+            'placements.*.moduleId' => ['required', 'exists:modules,id']
         ]);
     
         $placements = $attributes['placements'];
