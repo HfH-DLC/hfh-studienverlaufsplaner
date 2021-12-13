@@ -1,8 +1,3 @@
-import OnePerSemesterRule from "./OnePerSemesterRule"
-
-export const getRule = ({ type, params }) => {
-    if (type === 'onePerSemester') {
-        return new OnePerSemesterRule(params.moduleIds);
-    }
+export const getRule = (state, { type, params }) => {
     throw "Unknown rules type: " + type;
 }

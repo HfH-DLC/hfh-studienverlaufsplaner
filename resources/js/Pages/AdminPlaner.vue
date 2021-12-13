@@ -267,23 +267,9 @@
           required
         >
           <option value="" disabled>Bitte wählen...</option>
-          <option value="onePerSemester">Nur ein Modul pro Semester</option>
         </select>
         <div v-if="rulesForm.errors.type">
           {{ rulesForm.errors.type }}
-        </div>
-        <div v-if="rulesForm.type === 'onePerSemester'">
-          <MultiSelect
-            id="params"
-            v-model="ruleParams"
-            class="block border border-gray-600 rounded shadow-inner p-1"
-            :options="modules"
-            track-by="id"
-            placeholder="Modul auswählen..."
-            :multiple="true"
-            label="number"
-          >
-          </MultiSelect>
         </div>
         <div v-if="rulesForm.errors.params">
           {{ rulesForm.errors.params }}
@@ -372,7 +358,6 @@ export default {
     },
     ruleParams: {
       set(value) {
-        console.log(value);
         this.rulesForm.params = { moduleIds: value.map((module) => module.id) };
       },
       get() {
