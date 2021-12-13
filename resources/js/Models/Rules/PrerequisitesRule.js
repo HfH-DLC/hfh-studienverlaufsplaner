@@ -12,11 +12,18 @@ export default class PrerequisitesRule extends Rule {
         //todo ensure sorting
         timeSlots.forEach((slot) => {
             const prerequisites = slot.module ? slot.module.prerequisites : [];
-            const prerequisitesMet = prerequisites.every(moduleId => beforeSlots.find(beforeSlot => {
-                return moduleId === beforeSlot.module.id && this.isPreviousSemester(beforeSlot, slot);
-            }));
-            if (!prerequisitesMet) {
-                errors[slot.id] = this.getErrorMessage()
+            const missingPrerequisites = [];
+            prerequisites.forEach(prerequisite => {
+                const module = beforeSlots.find(beforeSlot => {
+                    return prerequisite.id === beforeSlot.module.id && this.isPreviousSemester(beforeSlot, slot);
+                })
+                if (!module) {
+                    missingPrerequisites.push(prerequisite)
+                }
+            });
+
+            if (missingPrerequisites.length > 0) {
+                errors[slot.id].push(this.getErrorMessage(slot.module, missingPrerequisites));
             }
             if (slot.module) {
                 beforeSlots.push(slot)
@@ -41,17 +48,21 @@ export default class PrerequisitesRule extends Rule {
     validateSelection(module, timeSlots, errors) {
 
         let beforeSlots = []
-        let prerequisitesMet = false
 
         //todo ensure sorting
         timeSlots.forEach((slot) => {
-            if (!prerequisitesMet) {
-                prerequisitesMet = module.prerequisites.every(moduleId => beforeSlots.find(beforeSlot => {
-                    return moduleId === beforeSlot.module.id && this.isPreviousSemester(beforeSlot, slot);
-                }));
-            }
-            if (!prerequisitesMet) {
-                errors[slot.id].push(this.getErrorMessage());
+            const missingPrerequisites = [];
+            module.prerequisites.forEach(prerequisite => {
+                const module = beforeSlots.find(beforeSlot => {
+                    return prerequisite.id === beforeSlot.module.id && this.isPreviousSemester(beforeSlot, slot);
+                })
+                if (!module) {
+                    missingPrerequisites.push(prerequisite)
+                }
+            });
+
+            if (missingPrerequisites.length > 0) {
+                errors[slot.id].push(this.getErrorMessage(module, missingPrerequisites));
             }
             if (slot.module) {
                 beforeSlots.push(slot)
@@ -59,8 +70,12 @@ export default class PrerequisitesRule extends Rule {
         })
     }
 
-    getErrorMessage() {
-        return `Missing one or more prerequisites`;
+    getErrorMessage(module, missingPrerequisites) {
+            if (missingPrerequisites.length === 1) {
+                const prerequisite = missingPrerequisites[0];
+                return `${prerequisite.number} ${prerequisite.name} muss vor ${module.number} ${module.name} belegt werden.`
+            }
+            return `Die Module ${missingPrerequisites.map(prerequisite => `${prerequisite.number} ${prerequisite.name}`).join(", ")} müssen vor ${module.number} ${module.name} belegt werden.`
     }
 
 }
