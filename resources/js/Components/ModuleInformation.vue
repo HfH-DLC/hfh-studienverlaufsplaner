@@ -10,20 +10,27 @@
       <dd>{{ selectedModule.credits }}</dd>
       <dt class="mt-2 text-sm text-gray-500 font-bold uppercase">Termine</dt>
       <dd>
-        <ul>
-          <li v-for="(date, index) in selectedModule.dates" :key="index">
-            {{ date.semester }} {{ date.day }} {{ date.time }}
+        <ul class="space-y-1">
+          <li
+            v-for="(timeSlot, index) in selectedModule.timeSlots"
+            :key="index"
+          >
+            {{ timeSlot.semester }} {{ timeSlot.year }} {{ timeSlot.day }}
+            {{ timeSlot.time }}
           </li>
         </ul>
       </dd>
       <template v-if="selectedModule.prerequisites.length > 0">
         <dt class="mt-2 text-sm text-gray-500 font-bold uppercase">
-          Vorausetzungen
+          Voraussetzungen
         </dt>
         <dd>
           <ul>
-            <li v-for="id in selectedModule.prerequisites" :key="id">
-              {{ id }}
+            <li
+              v-for="prerequisite in selectedModule.prerequisites"
+              :key="prerequisite.id"
+            >
+              {{ prerequisite.number }} {{ prerequisite.name }}
             </li>
           </ul>
         </dd>
