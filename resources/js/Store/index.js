@@ -53,9 +53,14 @@ const store = createStore({
             state.categories = categories
         },
         [SET_RULES](state, rules) {
-            const ruleObjects = rules.map(rule => {
-                return getRule(rule);
-            })
+            const ruleObjects = rules.reduce((array, rule) => {
+                try {
+                    array.push(getRule(state, rule));
+                } catch (error) {
+                    console.error(error)
+                }
+                return array;
+            }, [])
             ruleObjects.push(new DateRule(), new PrerequisitesRule());
             state.rules = ruleObjects
         },
