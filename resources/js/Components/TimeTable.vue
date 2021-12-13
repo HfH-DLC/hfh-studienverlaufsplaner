@@ -81,20 +81,29 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["years", "timeSlots", "timeSlotByDate"]),
+    ...mapGetters(["years", "timeSlots", "timeSlotByDate", "selectedModule"]),
   },
   methods: {
     focusSlot() {
-      const slotRef = this.timeSlotRefs.find((ref) => {
-        return ref.timeSlot.selectable;
+      this.$nextTick(() => {
+        const slotRef = this.timeSlotRefs.find((ref) => {
+          return ref.timeSlot.selectable;
+        });
+        if (slotRef) {
+          slotRef.focusButton();
+        }
       });
-      if (slotRef) {
-        slotRef.focusButton();
-      }
     },
     setTimeSlotRef(el) {
       if (el) {
         this.timeSlotRefs.push(el);
+      }
+    },
+  },
+  watch: {
+    selectedModule(newValue, oldValue) {
+      if (newValue) {
+        this.focusSlot();
       }
     },
   },
