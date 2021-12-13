@@ -50,7 +50,7 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
             $query->whereIn('id', $timeSlots->pluck('id'));
         })->get());
         $rules = RuleResource::collection($planer->rules()->get());
-        return Inertia::render('Plan', array('plan' => $plan, 'categories' => $catogries, 'timeSlots' => $timeSlots, 'modules' => $modules, 'rules' => $rules));
+        return Inertia::render('Plan', array('planerSlug'=> $planer->slug, 'plan' => $plan, 'categories' => $catogries, 'timeSlots' => $timeSlots, 'modules' => $modules, 'rules' => $rules));
     })->name('plan');
     
     Route::post('/plans', function (Request $request, Planer $planer) {
@@ -63,7 +63,7 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
         return Redirect::route('plan', array('planer' => new PlanerResource($planer), 'plan' => $plan->id));
     });
     
-    Route::put('/plans/{plan}', function (Request $request, Plan $plan) {
+    Route::put('/plans/{plan}', function (Request $request, Planer $planer, Plan $plan) {
         $attributes = $request->validate([
             'placements' => ['present','array'],
         ]);

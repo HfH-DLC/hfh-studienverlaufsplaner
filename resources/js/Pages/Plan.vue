@@ -36,13 +36,15 @@ export default {
     ModuleList,
   },
   async created() {
-    const { categories, modules, timeSlots, rules, plan } = this.$page.props;
+    const { categories, modules, timeSlots, rules, plan, planerSlug } =
+      this.$page.props;
     await this.init({
       categories: categories.data,
       modules: modules.data,
       timeSlots: timeSlots.data,
       rules: rules.data,
       plan: plan.data,
+      planerSlug,
     });
   },
   computed: {

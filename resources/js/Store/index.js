@@ -4,6 +4,8 @@ import PrerequisitesRule from '../Models/Rules/PrerequisitesRule';
 import DateRule from '../Models/Rules/DateRule';
 import { getRule } from '../Models/Rules/RuleFactory';
 
+let dataAdapter;
+
 const RESET_STATE = "RESET_STATE"
 const SET_PLAN = "SET_PLAN"
 const SET_TIMESLOTS = "SET_TIMESLOTS"
@@ -74,19 +76,20 @@ const store = createStore({
         }
     },
     actions: {
-        async init({ commit, dispatch }, { plan, timeSlots, modules, categories, rules }) {
+        async init({ commit, dispatch }, { planerSlug, plan, timeSlots, modules, categories, rules }) {
+            dataAdapter = new DataAdapter(planerSlug)
             commit(RESET_STATE)
-            commit(SET_PLAN, plan);
+            commit(SET_PLAN, plan)
             commit(SET_TIMESLOTS, timeSlots)
             commit(SET_MODULES, modules)
             commit(SET_CATEGORIES, categories)
             commit(SET_RULES, rules)
             dispatch("validate")
-            commit(INIT_FINISHED);
+            commit(INIT_FINISHED)
         },
         async save({ state }) {
             try {
-                await new DataAdapter().savePlan(state.plan);
+                await dataAdapter.savePlan(state.plan);
             } catch (error) {
                 //todo error state
                 console.error(error);
@@ -235,6 +238,7 @@ const store = createStore({
         },
         selectedModule(state, { moduleById }) {
             return moduleById(state.selectionStatus.moduleId)
+                const timeSlot = timeSlotById(timeSlotId);
         }
     }
 })
