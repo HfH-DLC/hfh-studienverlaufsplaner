@@ -14,6 +14,10 @@ class PrerequisiteResource extends JsonResource
      */
     public function toArray($request)
     {
-        return $this->id;
+        return [
+            'id' => $this->id,
+            'number' => $this->number,
+            'name' => $this->name
+        ];
     }
 }
