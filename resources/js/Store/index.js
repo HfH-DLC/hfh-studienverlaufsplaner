@@ -243,7 +243,19 @@ const store = createStore({
         },
         selectedModule(state, { moduleById }) {
             return moduleById(state.selectionStatus.moduleId)
+        },
+        errors(state, { timeSlotById }) {
+            const result = [];
+            Object.entries(state.timeSlotErrors).forEach(([timeSlotId, errors]) => {
                 const timeSlot = timeSlotById(timeSlotId);
+                errors.forEach(error => {
+                    result.push({
+                        timeSlot,
+                        text: error
+                    })
+                })
+            });
+            return result;
         }
     }
 })

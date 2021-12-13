@@ -1,6 +1,13 @@
 <template>
-  <div class="flex flex-1">
-    <template v-if="initialized">
+  <template v-if="initialized">
+    <div class="mb-4 p-4" role="alert" v-if="errors.length > 0">
+      <ul class="space-y-2">
+        <li v-for="(error, index) in errors" :key="index">
+          <Error :error="error" />
+        </li>
+      </ul>
+    </div>
+    <div class="flex flex-1">
       <div class="w-3/12 p-4 sticky top-0">
         <ModuleList />
       </div>
@@ -16,21 +23,23 @@
         </div>
         <ModuleInformation />
       </div>
-    </template>
-    <div v-else class="text-2xl text-center p-4 flex-1">Loading...</div>
-  </div>
+    </div>
+  </template>
+  <div v-else class="text-2xl text-center p-4 flex-1">Loading...</div>
 </template>
 
 <script>
 import { mapGetters, mapActions, mapState } from "vuex";
 
 // Components
+import Error from "../Components/Error.vue";
 import ModuleInformation from "../Components/ModuleInformation.vue";
 import ModuleList from "../Components/ModuleList.vue";
 import TimeTable from "../Components/TimeTable.vue";
 
 export default {
   components: {
+    Error,
     TimeTable,
     ModuleInformation,
     ModuleList,
@@ -49,7 +58,7 @@ export default {
   },
   computed: {
     ...mapState(["initialized"]),
-    ...mapGetters(["credits"]),
+    ...mapGetters(["credits", "errors"]),
   },
   methods: {
     ...mapActions(["init"]),
