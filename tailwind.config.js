@@ -1,6 +1,8 @@
 module.exports = {
-    purge: [],
-    darkMode: false, // or 'media' or 'class'
+    content: [
+        "./resources/**/*.vue",
+    ],
+
     theme: {
         extend: {
             minHeight: {
@@ -8,11 +10,4 @@ module.exports = {
             }
         },
     },
-    variants: {
-        extend: {
-            cursor: ['disabled'],
-            textColor: ['disabled']
-        },
-        plugins: [],
-    }
 }
