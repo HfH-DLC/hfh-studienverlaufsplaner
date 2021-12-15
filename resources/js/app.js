@@ -2,9 +2,7 @@ import { createApp, h } from 'vue';
 import { createInertiaApp, Link, Head } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress'
 import store from "./Store/index";
-import Layout from "./Layout.vue"
-
-
+import Layout from "./Layouts/Layout.vue"
 
 
 createInertiaApp({
