@@ -9,6 +9,8 @@ class Rule extends Model
 {
     use HasFactory;
 
+    public static $types = [];
+
     protected $casts = [
         'params' => 'array'
     ];

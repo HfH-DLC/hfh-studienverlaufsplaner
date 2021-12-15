@@ -165,9 +165,8 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         });
     
         Route::post('/rules', function (Request $request, Planer $planer) {
-            //todo validation
             $attributes = $request->validate([
-                'type' => ['required'],
+                'type' => ['required', ValidationRule::in(Rule::$types)],
                 'params' => ['nullable', 'array']
             ]);
     
