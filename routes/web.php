@@ -50,7 +50,7 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
             $query->whereIn('id', $timeSlots->pluck('id'));
         })->get());
         $rules = RuleResource::collection($planer->rules()->get());
-        return Inertia::render('Plan', array('planerSlug'=> $planer->slug, 'plan' => $plan, 'categories' => $catogries, 'timeSlots' => $timeSlots, 'modules' => $modules, 'rules' => $rules));
+        return Inertia::render('Plan', array('planerSlug'=> $planer->slug, 'plan' => $plan, 'categories' => $catogries, 'timeSlots' => $timeSlots, 'modules' => $modules, 'rules' => $rules, 'requiredCredits' => $planer->required_credits));
     })->name('plan');
     
     Route::post('/plans', function (Request $request, Planer $planer) {

@@ -41,13 +41,40 @@ export default class PrerequisitesRule extends Rule {
         return true;
     }
 
-    doesMatchSelection(moduleId) {
-        return true
+    validateModule(module, timeSlots, errors) {
+
+        const beforeSlots = []
+
+        let hasValidSlot;
+
+        //todo ensure sorting
+        timeSlots.forEach((slot) => {
+            const missingPrerequisites = [];
+            module.prerequisites.forEach(prerequisite => {
+                const module = beforeSlots.find(beforeSlot => {
+                    return prerequisite.id === beforeSlot.module.id && this.isPreviousSemester(beforeSlot, slot);
+                })
+                if (!module) {
+                    missingPrerequisites.push(prerequisite)
+                }
+            });
+
+            if (missingPrerequisites.length === 0 && !slot.module) {
+                hasValidSlot = true
+            }
+            if (slot.module) {
+                beforeSlots.push(slot)
+            }
+        })
+
+        if (!hasValidSlot) {
+            errors.push(this.getErrorMessage(module, module.prerequisites))
+        }
     }
 
-    validateSelection(module, timeSlots, errors) {
+    validateSelection(module, timeSlots, selectableStatus) {
 
-        let beforeSlots = []
+        const beforeSlots = []
 
         //todo ensure sorting
         timeSlots.forEach((slot) => {
@@ -62,7 +89,7 @@ export default class PrerequisitesRule extends Rule {
             });
 
             if (missingPrerequisites.length > 0) {
-                errors[slot.id].push(this.getErrorMessage(module, missingPrerequisites));
+                selectableStatus[slot.id] = false;
             }
             if (slot.module) {
                 beforeSlots.push(slot)

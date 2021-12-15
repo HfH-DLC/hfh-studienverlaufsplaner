@@ -1,9 +1,9 @@
 <template>
   <template v-if="initialized">
-    <div class="mb-4 p-4" role="alert" v-if="errors.length > 0">
+    <div class="mb-4 p-4" role="alert" v-if="timeSlotErrors.length > 0">
       <ul class="space-y-2">
-        <li v-for="(error, index) in errors" :key="index">
-          <Error :error="error" />
+        <li v-for="(error, index) in timeSlotErrors" :key="index">
+          <Error :error="error.text" />
         </li>
       </ul>
     </div>
@@ -19,7 +19,13 @@
           <h2 class="text-sm text-gray-500 font-bold uppercase">
             Total Kreditpunkte
           </h2>
-          <div>{{ credits }} / 90</div>
+          <div class="flex items-center gap-2">
+            {{ credits }} / {{ requiredCredits }}
+            <CheckCircleIcon
+              v-if="credits === requiredCredits"
+              class="text-green-600 w-5 h-5"
+            />
+          </div>
         </div>
         <ModuleInformation />
       </div>
@@ -36,29 +42,59 @@ import Error from "../Components/Error.vue";
 import ModuleInformation from "../Components/ModuleInformation.vue";
 import ModuleList from "../Components/ModuleList.vue";
 import TimeTable from "../Components/TimeTable.vue";
+import { CheckCircleIcon } from "@heroicons/vue/outline";
 
 export default {
   components: {
+    CheckCircleIcon,
     Error,
     TimeTable,
     ModuleInformation,
     ModuleList,
   },
+  props: {
+    categories: {
+      type: Object,
+      required: true,
+    },
+    timeSlots: {
+      type: Object,
+      required: true,
+    },
+    modules: {
+      type: Object,
+      required: true,
+    },
+    rules: {
+      type: Object,
+      required: true,
+    },
+    plan: {
+      type: Object,
+      required: true,
+    },
+    requiredCredits: {
+      type: Number,
+      required: true,
+    },
+    planerSlug: {
+      type: String,
+      required: true,
+    },
+  },
   async created() {
-    const { categories, modules, timeSlots, rules, plan, planerSlug } =
-      this.$page.props;
     await this.init({
-      categories: categories.data,
-      modules: modules.data,
-      timeSlots: timeSlots.data,
-      rules: rules.data,
-      plan: plan.data,
-      planerSlug,
+      categories: this.categories.data,
+      modules: this.modules.data,
+      timeSlots: this.timeSlots.data,
+      rules: this.rules.data,
+      plan: this.plan.data,
+      planerSlug: this.planerSlug,
     });
   },
   computed: {
     ...mapState(["initialized"]),
-    ...mapGetters(["credits", "errors"]),
+    ...mapGetters(["credits", "timeSlotErrors"]),
   },
   methods: {
     ...mapActions(["init"]),

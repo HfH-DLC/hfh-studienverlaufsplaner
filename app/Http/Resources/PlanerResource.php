@@ -20,7 +20,8 @@ class PlanerResource extends JsonResource
             'categories' => CategoryResource::collection($this->categories),
             'timeSlots' => TimeSlotResource::collection($this->timeSlots),
             'modules' => ModuleResource::collection($this->modules),
-            'rules' => RuleResource::collection($this->rules)
+            'rules' => RuleResource::collection($this->rules),
+            'requiredCredits' => $this->required_credits
         ];
     }
 }

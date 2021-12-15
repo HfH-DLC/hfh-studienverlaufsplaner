@@ -22,11 +22,15 @@
       "
       :class="{ 'border-b': open, 'rounded-b': !open }"
     >
-      <h2>
-        {{ category.name }}
-        <span class="whitespace-nowrap"
-          >({{ category.placedNumber }} / {{ category.requiredNumber }})</span
-        >
+      <h2 class="flex items-center justify-between gap-2">
+        <div>{{ category.name }}</div>
+        <div class="whitespace-nowrap">
+          ({{ category.placedNumber }} / {{ category.requiredNumber }})
+        </div>
+        <CheckCircleIcon
+          v-if="category.placedNumber === category.requiredNumber"
+          class="text-green-600 w-5 h-5"
+        />
       </h2>
       <ChevronUpIcon
         :class="open ? 'transform rotate-180' : ''"
@@ -38,10 +42,7 @@
         <li v-for="module in category.modules" :key="module.id">
           <Module
             :module="module"
-            :disabled="
-              category.placedNumber === category.requiredNumber ||
-              !module.selectable
-            "
+            :disabled="category.placedNumber === category.requiredNumber"
           />
         </li>
       </ul>
@@ -51,11 +52,12 @@
 
 <script>
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
-import { ChevronUpIcon } from "@heroicons/vue/outline";
+import { ChevronUpIcon, CheckCircleIcon } from "@heroicons/vue/outline";
 import Module from "../Components/Module.vue";
 import { mapGetters } from "vuex";
 export default {
   components: {
+    CheckCircleIcon,
     ChevronUpIcon,
     Disclosure,
     DisclosureButton,

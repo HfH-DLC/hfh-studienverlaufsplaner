@@ -1,17 +1,7 @@
 <template>
-  <div
-    class="
-      bg-red-50
-      text-red-600
-      border border-red-300
-      rounded-md
-      p-1
-      flex
-      items-center
-    "
-  >
-    <ExclamationCircleIcon class="inline-block mr-2 w-5 h-5 flex-shrink-0" />
-    {{ error.text }}
+  <div class="bg-red-50 text-red-600 border border-red-300 rounded-md p-1">
+    <ExclamationCircleIcon class="inline-block w-5 h-5 flex-shrink-0" />
+    {{ error }}
   </div>
 </template>
 
@@ -23,7 +13,7 @@ export default {
   },
   props: {
     error: {
-      type: Object,
+      type: String,
       required: true,
     },
   },

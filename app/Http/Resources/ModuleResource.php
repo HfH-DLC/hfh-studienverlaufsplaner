@@ -19,7 +19,7 @@ class ModuleResource extends JsonResource
             'name' => $this->name,
             'number' => $this->number,
             'credits' => $this->credits,
-            'categoryId' => $this->category_id,
+            'category' => new CategoryResource($this->category),
             'prerequisites' => PrerequisiteResource::collection($this->prerequisites),
             'timeSlots' => TimeSlotResource::collection($this->timeSlots),
         ];

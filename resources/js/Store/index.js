@@ -103,13 +103,13 @@ const store = createStore({
         selectModule({ commit, state, getters }, moduleId) {
             commit(SET_SELECTION_STATUS, {
                 moduleId,
-                errors: validateSelection(moduleId, state.modules, getters.timeSlots, state.rules)
+                selectableStatus: validateSelection(moduleId, state.modules, getters.timeSlots, state.rules)
             })
         },
         deselectModule({ commit, state }) {
             commit(SET_SELECTION_STATUS, {
                 id: null,
-                errors: getEmptyErrorsObject(state.timeSlots)
+                selectableStatus: getSelectableStatus(state.timeSlots)
             })
         },
         placeModule({ commit, dispatch, state, }, timeSlotId) {
@@ -130,7 +130,7 @@ const store = createStore({
         validateModules({ commit, state, getters }) {
             const moduleErrors = {}
             state.modules.forEach(module => {
-                moduleErrors[module.id] = validateSelection(module.id, state.modules, getters.timeSlots, state.rules)
+                moduleErrors[module.id] = validateModule(module.id, state.modules, getters.timeSlots, state.rules)
             })
             commit(SET_MODULE_ERRORS, moduleErrors)
         },
@@ -152,10 +152,9 @@ const store = createStore({
         modules(state) {
             return state.modules.map(module => {
                 const moduleErrors = state.moduleErrors[module.id]
-                const selectable = !moduleErrors || Object.values(moduleErrors).some(errorsPerTimeSlot => errorsPerTimeSlot.length == 0)
                 return {
                     ...module,
-                    selectable: selectable,
+                    errors: moduleErrors,
                     selected: state.selectionStatus.moduleId == module.id,
                     placed: !!state.plan.placements.find(placement => placement.moduleId == module.id)
                 }
@@ -178,7 +177,7 @@ const store = createStore({
                 return {
                     ...timeSlot,
                     removable: !selectedModule && module,
-                    selectable: selectedModule && !module && state.selectionStatus.errors[timeSlot.id].length == 0,
+                    selectable: selectedModule && !module && state.selectionStatus.selectableStatus[timeSlot.id],
                     module,
                     moduleId,
                     errors: state.timeSlotErrors[timeSlot.id]
@@ -201,7 +200,7 @@ const store = createStore({
         },
         categories(state, { modules }) {
             return state.categories.map(category => {
-                const categoryModules = modules.filter(module => module.categoryId === category.id);
+                const categoryModules = modules.filter(module => module.category.id === category.id);
                 const requiredNumber = category.requiredNumber != null ? category.requiredNumber : categoryModules.length;
                 return {
                     ...category,
@@ -244,7 +243,7 @@ const store = createStore({
         selectedModule(state, { moduleById }) {
             return moduleById(state.selectionStatus.moduleId)
         },
-        errors(state, { timeSlotById }) {
+        timeSlotErrors(state, { timeSlotById }) {
             const result = [];
             Object.entries(state.timeSlotErrors).forEach(([timeSlotId, errors]) => {
                 const timeSlot = timeSlotById(timeSlotId);
@@ -260,22 +259,29 @@ const store = createStore({
     }
 })
 
-function getEmptyErrorsObject(timeSlots) {
+function getSelectableStatus(timeSlots) {
     return timeSlots.reduce((acc, cur) => {
-        acc[cur.id] = []
+        acc[cur.id] = true
         return acc
     }, {})
 }
 
-function validateSelection(moduleId, modules, timeSlots, rules) {
-    const errors = getEmptyErrorsObject(timeSlots)
+function validateModule(moduleId, modules, timeSlots, rules) {
     const module = modules.find(module => module.id == moduleId);
+    const errors = [];
     rules.forEach(rule => {
-        if (rule.doesMatchSelection(moduleId)) {
-            rule.validateSelection(module, timeSlots, errors)
-        }
+        rule.validateModule(module, timeSlots, errors)
     })
     return errors
+}
+
+function validateSelection(moduleId, modules, timeSlots, rules) {
+    const selectableStatus = getSelectableStatus(timeSlots)
+    const module = modules.find(module => module.id == moduleId);
+    rules.forEach(rule => {
+        rule.validateSelection(module, timeSlots, selectableStatus)
+    })
+    return selectableStatus
 }
 
 export default store

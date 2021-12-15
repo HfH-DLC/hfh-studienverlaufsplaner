@@ -17,6 +17,7 @@ class CreatePlanersTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
+            $table->integer('required_credits');
             $table->string('slug')->unique();
         });
     }

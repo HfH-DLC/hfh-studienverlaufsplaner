@@ -12,11 +12,12 @@ export default class Rule {
         throw new Error("Method not implemented");
     }
 
-    doesMatchSelection(moduleId) {
+
+    validateModule() {
         throw new Error("Method not implemented");
     }
 
-    validateSelection(module, timeSlots, errors) {
+    validateSelection(module, timeSlots, selectableStatus) {
         throw new Error("Method not implemented");
     }
 }
