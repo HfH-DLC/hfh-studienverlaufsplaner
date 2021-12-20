@@ -18,6 +18,7 @@ class CreatePlansTable extends Migration
             $table->timestamps();
 
             $table->year('start_year');
+            $table->string('slug')->nullable()->unique();
             $table->foreignId('planer_id')->constrained();
         });
     }

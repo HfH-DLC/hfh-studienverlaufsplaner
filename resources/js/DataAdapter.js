@@ -7,6 +7,6 @@ export default class DataAdapter {
     }
 
     async savePlan(plan) {
-        return axios.put(`/planers/${this.planerSlug}/plans/${plan.id}`, plan);
+        return axios.put(`/planers/${this.planerSlug}/plans/${plan.slug}`, plan);
     }
 }

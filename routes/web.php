@@ -40,7 +40,7 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
         return Inertia::render('Planer', ['slug' => $planer->slug]);
     })->name('planer');
 
-    Route::get('/plans/{plan}', function (Planer $planer, Plan $plan) {
+    Route::get('/plans/{plan:slug}', function (Planer $planer, Plan $plan) {
         $plan = new PlanResource($plan);
         $catogries = CategoryResource::collection($planer->categories()->get());
         $timeSlots = TimeSlotResource::collection($planer->timeSlots()->where('year', '>', $plan->start_year)->orWhere(function ($query) use ($plan) {
@@ -61,10 +61,10 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
         $plan = new Plan();
         $plan->start_year = $attributes['startYear'];
         $planer->plans()->save($plan);
-        return Redirect::route('plan', array('planer' => new PlanerResource($planer), 'plan' => $plan->id));
+        return Redirect::route('plan', array('planer' => new PlanerResource($planer), 'plan' => $plan->slug));
     });
     
-    Route::put('/plans/{plan}', function (Request $request, Planer $planer, Plan $plan) {
+    Route::put('/plans/{plan:slug}', function (Request $request, Planer $planer, Plan $plan) {
         $attributes = $request->validate([
             'placements' => ['present','array'],
             'placements.*.timeSlotId' => ['required', 'exists:time_slots,id'],
