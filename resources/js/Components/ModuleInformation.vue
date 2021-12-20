@@ -2,9 +2,7 @@
   <div v-if="selectedModule">
     <h2 class="text-xl">{{ selectedModule.name }}</h2>
     <ul class="mt-4 space-y-2" v-if="selectedModule.errors.length > 0">
-      <li v-for="(error, index) in selectedModule.errors" :key="index">
-        <Error :error="error" />
-      </li>
+      <ErrorList :errors="selectedModule.errors" />
     </ul>
     <dl class="mt-4">
       <dt class="text-sm text-gray-500 font-bold uppercase">Modulnummer</dt>
@@ -46,11 +44,11 @@
 </template>
 
 <script>
-import Error from "../Components/Error.vue";
+import ErrorList from "../Components/ErrorList.vue";
 import { mapGetters } from "vuex";
 export default {
   components: {
-    Error,
+    ErrorList,
   },
   computed: {
     ...mapGetters(["selectedModule"]),

@@ -2,9 +2,7 @@
   <template v-if="initialized">
     <div class="mb-4 p-4" role="alert" v-if="timeSlotErrors.length > 0">
       <ul class="space-y-2">
-        <li v-for="(error, index) in timeSlotErrors" :key="index">
-          <Error :error="error.text" />
-        </li>
+        <ErrorList :errors="errors" />
       </ul>
     </div>
     <div class="flex flex-1">
@@ -38,7 +36,7 @@
 import { mapGetters, mapActions, mapState } from "vuex";
 
 // Components
-import Error from "../Components/Error.vue";
+import ErrorList from "../Components/ErrorList.vue";
 import ModuleInformation from "../Components/ModuleInformation.vue";
 import ModuleList from "../Components/ModuleList.vue";
 import TimeTable from "../Components/TimeTable.vue";
@@ -47,7 +45,7 @@ import { CheckCircleIcon } from "@heroicons/vue/outline";
 export default {
   components: {
     CheckCircleIcon,
-    Error,
+    ErrorList,
     TimeTable,
     ModuleInformation,
     ModuleList,
@@ -95,6 +93,9 @@ export default {
   computed: {
     ...mapState(["initialized"]),
     ...mapGetters(["credits", "timeSlotErrors"]),
+    errors() {
+      return this.timeSlotErrors.map((error) => error.text);
+    },
   },
   methods: {
     ...mapActions(["init"]),
