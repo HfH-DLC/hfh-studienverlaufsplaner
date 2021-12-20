@@ -13,9 +13,7 @@
         >
       </li>
       <li v-if="$page.props.auth">
-        <a href="/shibboleth-logout" class="text-blue-600 hover:underline"
-          >Logout</a
-        >
+        <a href="/logout" class="text-blue-600 hover:underline">Logout</a>
       </li>
     </ul>
   </nav>

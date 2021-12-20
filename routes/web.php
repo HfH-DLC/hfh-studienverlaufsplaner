@@ -29,10 +29,12 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::name('login')->get('/login', '\\'.Route::getRoutes()->getByName('shibboleth-login')->getActionName());
+Route::name('login')->get('/login', function () {
+    return Inertia::render('Login');
+})->name('login');
 
 Route::get('/', function () {
-    return Inertia::render('Home', []);
+    return Inertia::render('Home');
 })->name('home');
 
 Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {

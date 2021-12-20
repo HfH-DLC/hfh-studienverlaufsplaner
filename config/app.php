@@ -175,11 +175,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        /*
-        * Laravel Shibalike
-        */
-        StudentAffairsUwm\Shibboleth\ShibalikeServiceProvider::class,
-
     ],
 
     /*
