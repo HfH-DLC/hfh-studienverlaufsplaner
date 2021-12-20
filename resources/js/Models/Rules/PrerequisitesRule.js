@@ -23,7 +23,7 @@ export default class PrerequisitesRule extends Rule {
             });
 
             if (missingPrerequisites.length > 0) {
-                errors[slot.id].push(this.getErrorMessage(slot.module, missingPrerequisites));
+                errors[slot.id].push(this.getSlotErrorMessage(slot.module, missingPrerequisites));
             }
             if (slot.module) {
                 beforeSlots.push(slot)
@@ -68,7 +68,7 @@ export default class PrerequisitesRule extends Rule {
         })
 
         if (!hasValidSlot) {
-            errors.push(this.getErrorMessage(module, module.prerequisites))
+            errors.push(this.getModuleErrorMessage(module, module.prerequisites))
         }
     }
 
@@ -97,12 +97,20 @@ export default class PrerequisitesRule extends Rule {
         })
     }
 
-    getErrorMessage(module, missingPrerequisites) {
+    getModuleErrorMessage(module, missingPrerequisites) {
             if (missingPrerequisites.length === 1) {
                 const prerequisite = missingPrerequisites[0];
-                return `${prerequisite.number} ${prerequisite.name} muss vor ${module.number} ${module.name} belegt werden.`
+                return `<a href="#module-${prerequisite.id}">${prerequisite.number} ${prerequisite.name}</a> muss vor diesem Modul belegt werden.`
             }
-            return `Die Module ${missingPrerequisites.map(prerequisite => `${prerequisite.number} ${prerequisite.name}`).join(", ")} müssen vor ${module.number} ${module.name} belegt werden.`
+            return `Die Module ${missingPrerequisites.map(prerequisite => `<a href="#module-${prerequisite.id}">${prerequisite.number} ${prerequisite.name}</a>`).join(", ")} müssen vor diesem Modul belegt werden.`
+}
+
+    getSlotErrorMessage(module, missingPrerequisites) {
+            if (missingPrerequisites.length === 1) {
+                const prerequisite = missingPrerequisites[0];
+                return `<a href="#module-${prerequisite.id}">${prerequisite.number} ${prerequisite.name}</a> muss vor <a href="#module-${module.id}">${module.number} ${module.name}</a> belegt werden.`
+            }
+            return `Die Module ${missingPrerequisites.map(prerequisite => `<a href="#module-${prerequisite.id}">${prerequisite.number} ${prerequisite.name}</a>`).join(", ")} müssen vor <a href="#module-${module.id}">${module.number} ${module.name}</a> belegt werden.`
     }
 
 }

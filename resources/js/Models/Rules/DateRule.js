@@ -9,7 +9,7 @@ export default class DateRule extends Rule {
         timeSlots.forEach((slot) => {
             if (slot.module) {
                 if (!slot.module.timeSlots.find(timeSlot => timeSlot.id == slot.id)) {
-                    errors[slot.id].push(`${slot.module.number} ${slot.module.name} ist am Datum ${slot.semester} ${slot.year}, ${slot.week}, ${slot.day} ${slot.time} nicht verfügbar.`);
+                    errors[slot.id].push(`<a href="#module-${slot.module.id}">${slot.module.number} ${slot.module.name}</a> ist am Datum ${slot.semester} ${slot.year}, ${slot.week}, ${slot.day} ${slot.time} nicht verfügbar.`);
                 }
             }
         })

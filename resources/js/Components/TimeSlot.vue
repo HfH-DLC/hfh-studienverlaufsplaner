@@ -4,6 +4,7 @@
       <button
         ref="button"
         v-if="timeSlot.module || !disabled"
+        :id="timeSlot.module ? `module-${timeSlot.module.id}` : ''"
         class="
           text-sm text-left
           disabled:cursor-default

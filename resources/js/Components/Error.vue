@@ -1,7 +1,7 @@
 <template>
   <div class="bg-red-50 text-red-600 border border-red-300 rounded-md p-1">
-    <ExclamationCircleIcon class="inline-block w-5 h-5 flex-shrink-0" />
-    {{ error }}
+    <ExclamationCircleIcon class="inline-block w-5 h-5 flex-shrink-0 mb-0.5" />
+    <span class="error-message ml-1" v-html="error" />
   </div>
 </template>
 
@@ -20,5 +20,5 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 </style>

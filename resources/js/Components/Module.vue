@@ -1,5 +1,6 @@
 <template>
   <button
+    :id="`module-${module.id}`"
     class="
       text-left text-sm
       mb-2
@@ -19,7 +20,7 @@
   >
     <ExclamationCircleIcon
       v-if="hasErrors"
-      class=" inline-block w-5 h-5 flex-shrink-0"
+      class="inline-block w-5 h-5 flex-shrink-0"
     />
     {{ module.number }} {{ module.name }}
   </button>
