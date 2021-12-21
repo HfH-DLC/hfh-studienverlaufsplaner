@@ -46,4 +46,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Plan::class);
     }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
 }

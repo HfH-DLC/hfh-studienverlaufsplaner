@@ -15,6 +15,8 @@ use App\Models\Rule;
 use App\Models\TimeSlot;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule as ValidationRule;
 use Inertia\Inertia;
@@ -29,9 +31,24 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::name('login')->get('/login', function () {
+Route::get('/login', function () {
     return Inertia::render('Login');
 })->name('login');
+
+Route::post('login', function (Request $request) {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+        return redirect()->intended('/admin');
+    }
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
+});
 
 Route::get('/', function () {
     return Inertia::render('Home');
@@ -41,7 +58,7 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
     Route::get('/', function (Planer $planer) {
         return Inertia::render('Planer', ['slug' => $planer->slug]);
     })->name('planer');
-
+    
     Route::get('/plans/{plan:slug}', function (Planer $planer, Plan $plan) {
         $plan = new PlanResource($plan);
         $catogries = CategoryResource::collection($planer->categories()->get());
@@ -53,7 +70,7 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
             $query->whereIn('id', $timeSlots->pluck('id'));
         })->get());
         $rules = RuleResource::collection($planer->rules()->get());
-        return Inertia::render('Plan', array('planerSlug'=> $planer->slug, 'plan' => $plan, 'categories' => $catogries, 'timeSlots' => $timeSlots, 'modules' => $modules, 'rules' => $rules, 'requiredCredits' => $planer->required_credits));
+        return Inertia::render('Plan', array('planerName'=> $planer->name, 'planerSlug'=> $planer->slug, 'plan' => $plan, 'categories' => $catogries, 'timeSlots' => $timeSlots, 'modules' => $modules, 'rules' => $rules, 'requiredCredits' => $planer->required_credits));
     })->name('plan');
     
     Route::post('/plans', function (Request $request, Planer $planer) {
@@ -72,13 +89,13 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
             'placements.*.timeSlotId' => ['required', 'exists:time_slots,id'],
             'placements.*.moduleId' => ['required', 'exists:modules,id']
         ]);
-    
+        
         $placements = $attributes['placements'];
-    
+        
         $placements_without_id = collect($placements)->where('id', '');
         $placements_with_id = (clone collect($placements))->where('id', '!=', '');
         $placements_ids = $placements_with_id->pluck('id');
-    
+        
         foreach ($placements_with_id as $placement) {
             $obj = $plan->placements()->find($placement['id']);
             if ($obj) {
@@ -86,9 +103,9 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
                 $obj->save();
             }
         }
-    
+        
         $plan->placements()->whereNotIn('id', $placements_ids)->delete();
-    
+        
         $placements_without_id->each(function ($placement) use ($plan) {
             $obj = new Placement();
             $obj->timeSlot()->associate($placement['timeSlotId']);
@@ -103,53 +120,53 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/', function () {
         return Inertia::render('Admin');
     })->name('admin');
-
+    
     Route::prefix('planers/{planer:slug}')->scopeBindings()->group(function () {
-
+        
         Route::get('/', function (Request $request, Planer $planer) {
             return Inertia::render('AdminPlaner', ['planerSlug'=> $planer->slug, 'planer' => new PlanerResource($planer)]);
         })->name('admin-planer');
-
+        
         Route::get('/categories', function (Request $request, Planer $planer) {
             $categories = CategoryResource::collection($planer->categories()->get());
             return Inertia::render('AdminCategories', ['categoriesResource' => $categories, 'planerSlug'=> $planer->slug]);
         })->name('admin-categories');
-
+        
         Route::post('/categories', function (Request $request, Planer $planer) {
             $attributes = $request->validate([
                 'name' => ['required'],
                 'requiredNumber' => ['nullable','numeric', 'integer', 'min:0']
             ]);
-    
+            
             $category = new Category();
             $category->name = $attributes['name'];
             $category->required_number = $attributes['requiredNumber'];
             $planer->categories()->save($category);
             return redirect()->route('admin-categories', ['planer' => $planer]);
         });
-
+        
         Route::put('/categories/{category}', function (Request $request, Planer $planer, Category $category) {
             $attributes = $request->validate([
                 'name' => ['required'],
                 'requiredNumber' => ['nullable','numeric', 'integer', 'min:0']
             ]);
-    
+            
             $category->name = $attributes['name'];
             $category->required_number = $attributes['requiredNumber'];
             $category->save();
             return redirect()->route('admin-categories', ['planer' => $planer]);
         });
-
+        
         Route::delete('/categories/{category}', function (Request $request, Planer $planer, Category $category) {
             $category->delete();
             return redirect()->route('admin-categories', ['planer' => $planer]);
         });
-
+        
         Route::get('/timeslots', function (Request $request, Planer $planer) {
             $timeSlots = TimeSlotResource::collection($planer->timeSlots()->get());
             return Inertia::render('AdminTimeSlots', ['timeSlotsResource' => $timeSlots, 'planerSlug'=> $planer->slug]);
         })->name('admin-timeslots');
-    
+        
         Route::post('/timeslots', function (Request $request, Planer $planer) {
             //todo validation
             $attributes = $request->validate([
@@ -159,7 +176,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
                 'day' => ['required'],
                 'time' => ['required'],
             ]);
-    
+            
             $timeSlot = new TimeSlot();
             $timeSlot->year = $attributes['year'];
             $timeSlot->semester = $attributes['semester'];
@@ -169,7 +186,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             $planer->timeSlots()->save($timeSlot);
             return redirect()->route('admin-timeslots', ['planer' => $planer]);
         });
-
+        
         Route::put('/timeslots/{timeSlot}', function (Request $request, Planer $planer, TimeSlot $timeSlot) {
             //todo validation
             $attributes = $request->validate([
@@ -179,7 +196,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
                 'day' => ['required'],
                 'time' => ['required'],
             ]);
-    
+            
             $timeSlot->year = $attributes['year'];
             $timeSlot->semester = $attributes['semester'];
             $timeSlot->week = $attributes['week'];
@@ -188,14 +205,14 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             $timeSlot->save();
             return redirect()->route('admin-timeslots', ['planer' => $planer]);
         });
-
+        
         Route::get('/modules', function (Request $request, Planer $planer) {
             $modules = ModuleResource::collection($planer->modules()->get());
             $categories = CategoryResource::collection($planer->categories()->get());
             $timeSlots = TimeSlotResource::collection($planer->timeSlots()->get());
             return Inertia::render('AdminModules', ['modulesResource' => $modules, 'categoriesResource' => $categories, 'timeSlotsResource' => $timeSlots, 'planerSlug'=> $planer->slug]);
         })->name('admin-modules');
-    
+        
         Route::post('/modules', function (Request $request, Planer $planer) {
             $attributes = $request->validate([
                 'number' => ['required'],
@@ -206,7 +223,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
                 'prerequisites' => ['nullable', 'array'],
                 'prerequisites.*.id' => ['exists:modules,id']
             ]);
-    
+            
             $module = new Module();
             $module->number = $attributes['number'];
             $module->name = $attributes['name'];
@@ -218,7 +235,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             $module->save();
             return redirect()->route('admin-modules', ['planer' => $planer]);
         });
-
+        
         Route::put('/modules/{module}', function (Request $request, Planer $planer, Module $module) {
             $attributes = $request->validate([
                 'number' => ['required'],
@@ -229,7 +246,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
                 'prerequisites' => ['nullable', 'array'],
                 'prerequisites.*.id' => ['exists:modules,id']
             ]);
-    
+            
             $module->number = $attributes['number'];
             $module->name = $attributes['name'];
             $module->category()->associate($attributes['category']);
@@ -240,13 +257,13 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             $module->save();
             return redirect()->route('admin-modules', ['planer' => $planer]);
         });
-    
+        
         Route::post('/rules', function (Request $request, Planer $planer) {
             $attributes = $request->validate([
                 'type' => ['required', ValidationRule::in(Rule::$types)],
                 'params' => ['nullable', 'array']
             ]);
-    
+            
             $rule = new Rule();
             $rule->type = $attributes['type'];
             $rule->params = $attributes['params'];

@@ -1,6 +1,6 @@
 <template>
   <li v-for="(error, index) in errors" :key="index" ref="list" tabindex="-1">
-    <Error :error="error" />
+    <Error><span v-html="error" /></Error>
   </li>
 </template>
 
