@@ -9,7 +9,7 @@
       <div class="w-3/12 p-4 sticky top-0">
         <ModuleList />
       </div>
-      <div class="w-7/12 p-4 bg-gray-50">
+      <div class="w-7/12 p-4">
         <TimeTable ref="timeTable" />
       </div>
       <div class="w-2/12 sticky top-0 p-4" aria-live="polite">
