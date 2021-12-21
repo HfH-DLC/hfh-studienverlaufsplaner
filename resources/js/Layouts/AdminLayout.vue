@@ -20,20 +20,7 @@ export default {
   },
   data() {
     return {
-      links: [
-        {
-          href: `/admin/planers/${this.$page.props.planerSlug}/categories`,
-          label: "Kategorien",
-        },
-        {
-          href: `/admin/planers/${this.$page.props.planerSlug}/timeslots`,
-          label: "Termine",
-        },
-        {
-          href: `/admin/planers/${this.$page.props.planerSlug}/modules`,
-          label: "Module",
-        },
-      ],
+      links: [],
     };
   },
 };
