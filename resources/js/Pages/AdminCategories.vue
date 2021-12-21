@@ -51,11 +51,11 @@
             id="name"
             v-model="categoriesForm.name"
             class="w-full block border border-gray-600 rounded shadow-inner p-1"
-            required
+            :aria-describedby="planersForm.errors.name && 'error-name'"
           />
-          <div v-if="categoriesForm.errors.name">
+          <Error v-if="categoriesForm.errors.name" id="error-name" class="mt-2">
             {{ categoriesForm.errors.name }}
-          </div>
+          </Error>
           <label for="required-number" class="block uppercase text-sm mt-3"
             >Anzahl benötigter Module</label
           >
@@ -64,10 +64,17 @@
             id="required-number"
             v-model="categoriesForm.requiredNumber"
             class="w-full block border border-gray-600 rounded shadow-inner p-1"
+            :aria-describedby="
+              planersForm.errors.name && 'error-required-number'
+            "
           />
-          <div v-if="categoriesForm.errors.requiredNumber">
+          <Error
+            v-if="categoriesForm.errors.requiredNumber"
+            id="error-required-number"
+            class="mt"
+          >
             {{ categoriesForm.errors.requiredNumber }}
-          </div>
+          </Error>
           <button
             type="submit"
             :disabled="categoriesForm.processing"

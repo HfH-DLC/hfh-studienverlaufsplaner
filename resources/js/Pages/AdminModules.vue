@@ -54,10 +54,15 @@
             v-model="modulesForm.number"
             class="w-full block border border-gray-600 rounded shadow-inner p-1"
             required
+            :aria-describedby="modulesForm.errors.number && 'error-number'"
           />
-          <div v-if="modulesForm.errors.number">
+          <Error
+            id="error-number"
+            class="mt-2"
+            v-if="modulesForm.errors.number"
+          >
             {{ modulesForm.errors.number }}
-          </div>
+          </Error>
           <label for="name" class="block uppercase text-sm mt-3">Name</label>
           <input
             type="name"
@@ -65,10 +70,11 @@
             v-model="modulesForm.name"
             class="w-full block border border-gray-600 rounded shadow-inner p-1"
             required
+            :aria-describedby="modulesForm.errors.name && 'error-name'"
           />
-          <div v-if="modulesForm.errors.name">
+          <Error id="error-name" class="mt-2" v-if="modulesForm.errors.name">
             {{ modulesForm.errors.name }}
-          </div>
+          </Error>
 
           <label for="category" class="block uppercase text-sm mt-3"
             >Kategorie</label
@@ -77,6 +83,7 @@
             v-model="modulesForm.category"
             class="w-full block border border-gray-600 rounded shadow-inner p-1"
             required
+            :aria-describedby="modulesForm.errors.category && 'error-category'"
           >
             <option disabled value="">Bitte wählen...</option>
             <option
@@ -87,9 +94,13 @@
               {{ category.name }}
             </option>
           </select>
-          <div v-if="modulesForm.errors.category">
+          <Error
+            id="error-category"
+            class="mt-2"
+            v-if="modulesForm.errors.category"
+          >
             {{ modulesForm.errors.category }}
-          </div>
+          </Error>
 
           <label for="credits" class="block uppercase text-sm mt-3"
             >Credits</label
@@ -99,15 +110,20 @@
             id="credits"
             v-model="modulesForm.credits"
             class="w-full block border border-gray-600 rounded shadow-inner p-1"
+            :aria-describedby="modulesForm.errors.credits && 'error-credits'"
           />
-          <div v-if="modulesForm.errors.credits">
+          <Error
+            id="error-credits"
+            class="mt-2"
+            v-if="modulesForm.errors.credits"
+          >
             {{ modulesForm.errors.credits }}
-          </div>
+          </Error>
 
           <label for="timeSlots" class="block uppercase text-sm mt-3"
             >Termine</label
           >
-          <!--   <MultiSelect
+          <MultiSelect
             v-model="moduleTimeSlots"
             id="timeSlots"
             class="
@@ -124,11 +140,18 @@
             placeholder="Termin auswählen..."
             :multiple="true"
             :customLabel="timeSlotLabel"
+            :aria-describedby="
+              modulesForm.errors.timeSlots && 'error-timeslots'
+            "
           >
           </MultiSelect>
-          <div v-if="modulesForm.errors.timeSlots">
+          <Error
+            v-if="modulesForm.errors.timeSlots"
+            id="error-timeslots"
+            class="mt-2"
+          >
             {{ modulesForm.errors.timeSlots }}
-          </div> -->
+          </Error>
 
           <label for="prerequisites" class="block uppercase text-sm mt-3"
             >Vorausetzungen</label
@@ -150,11 +173,18 @@
             placeholder="Modul auswählen..."
             :multiple="true"
             label="number"
+            :aria-describedby="
+              modulesForm.errors.prerequisites && 'error-prerequisites'
+            "
           >
           </MultiSelect>
-          <div v-if="modulesForm.errors.prerequisites">
+          <Error
+            id="error-prerequisites"
+            class="mt-2"
+            v-if="modulesForm.errors.prerequisites"
+          >
             {{ modulesForm.errors.prerequisites }}
-          </div>
+          </Error>
 
           <button
             type="submit"

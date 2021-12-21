@@ -55,10 +55,11 @@
             v-model="timeSlotsForm.year"
             class="w-full block border border-gray-600 rounded shadow-inner p-1"
             required
+            :aria-describedby="timeSlotsForm.errors.year && 'error-year'"
           />
-          <div v-if="timeSlotsForm.errors.year">
+          <Error id="error-year" class="mt-2" v-if="timeSlotsForm.errors.year">
             {{ timeSlotsForm.errors.year }}
-          </div>
+          </Error>
           <label for="semester" class="block uppercase text-sm mt-3"
             >Semester</label
           >
@@ -67,14 +68,21 @@
             v-model="timeSlotsForm.semester"
             class="w-full block border border-gray-600 rounded shadow-inner p-1"
             required
+            :aria-describedby="
+              timeSlotsForm.errors.semester && 'error-semester'
+            "
           >
             <option value="" disabled>Bitte wählen...</option>
             <option value="HS">HS</option>
             <option value="FS">FS</option>
           </select>
-          <div v-if="timeSlotsForm.errors.semester">
+          <Error
+            id="error-semester"
+            class="mt-2"
+            v-if="timeSlotsForm.errors.semester"
+          >
             {{ timeSlotsForm.errors.semester }}
-          </div>
+          </Error>
 
           <label for="week" class="block uppercase text-sm mt-3">Woche</label>
           <select
@@ -82,6 +90,7 @@
             v-model="timeSlotsForm.week"
             class="w-full block border border-gray-600 rounded shadow-inner p-1"
             required
+            :aria-describedby="timeSlotsForm.errors.week && 'error-week'"
           >
             <option value="" disabled>Bitte wählen...</option>
             <option value="Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13">
@@ -89,9 +98,9 @@
             </option>
             <option value="Wo 1, 6, 10, 14">Wo 1, 6, 10, 14</option>
           </select>
-          <div v-if="timeSlotsForm.errors.week">
+          <Error id="error-week" class="mt-2" v-if="timeSlotsForm.errors.week">
             {{ timeSlotsForm.errors.week }}
-          </div>
+          </Error>
 
           <label for="day" class="block uppercase text-sm mt-3">Tag</label>
           <select
@@ -99,14 +108,15 @@
             v-model="timeSlotsForm.day"
             class="w-full block border border-gray-600 rounded shadow-inner p-1"
             required
+            :aria-describedby="timeSlotsForm.errors.day && 'error-day'"
           >
             <option value="" disabled>Bitte wählen...</option>
             <option value="Montag">Montag</option>
             <option value="Donnerstag">Donnerstag</option>
           </select>
-          <div v-if="timeSlotsForm.errors.day">
+          <Error id="error-day" class="mt-2" v-if="timeSlotsForm.errors.day">
             {{ timeSlotsForm.errors.day }}
-          </div>
+          </Error>
 
           <label for="time" class="block uppercase text-sm mt-3">Zeit</label>
           <select
@@ -114,14 +124,15 @@
             v-model="timeSlotsForm.time"
             class="w-full block border border-gray-600 rounded shadow-inner p-1"
             required
+            :aria-describedby="timeSlotsForm.errors.time && 'error-time'"
           >
             <option value="" disabled>Bitte wählen...</option>
             <option value="Vormittag">Vormittag</option>
             <option value="Nachmittag">Nachmittag</option>
           </select>
-          <div v-if="timeSlotsForm.errors.time">
+          <Error id="error-time" class="mt-2" v-if="timeSlotsForm.errors.time">
             {{ timeSlotsForm.errors.time }}
-          </div>
+          </Error>
 
           <button
             type="submit"
