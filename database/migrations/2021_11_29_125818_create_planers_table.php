@@ -16,7 +16,7 @@ class CreatePlanersTable extends Migration
         Schema::create('planers', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->integer('required_credits');
             $table->string('slug')->unique();
         });
