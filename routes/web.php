@@ -118,14 +118,45 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
 
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/', function () {
-        return Inertia::render('Admin');
+        $planers = PlanerResource::collection(Planer::all());
+        return Inertia::render('Admin', ['planersResource' => $planers]);
     })->name('admin');
+
+    Route::post('/planers', function (Request $request) {
+        $attributes = $request->validate([
+            'name' => ['required', 'unique:planers'],
+            'requiredCredits' => ['required','numeric', 'integer', 'min:0']
+        ]);
+        
+        $planer = new Planer();
+        $planer->name = $attributes['name'];
+        $planer->required_credits = $attributes['requiredCredits'];
+        $planer->save();
+        return redirect()->route('admin');
+    });
     
     Route::prefix('planers/{planer:slug}')->scopeBindings()->group(function () {
         
         Route::get('/', function (Request $request, Planer $planer) {
             return Inertia::render('AdminPlaner', ['planerSlug'=> $planer->slug, 'planer' => new PlanerResource($planer)]);
         })->name('admin-planer');
+
+        Route::put('/', function (Request $request, Planer $planer) {
+            $attributes = $request->validate([
+                'name' => ['required','unique:planers'],
+                'requiredCredits' => ['required','numeric', 'integer', 'min:0']
+            ]);
+            
+            $planer->name = $attributes['name'];
+            $planer->required_credits = $attributes['requiredCredits'];
+            $planer->save();
+            return redirect()->route('admin');
+        });
+
+        Route::delete('/', function (Request $request, Planer $planer) {
+            $planer->delete();
+            return redirect()->route('admin');
+        });
         
         Route::get('/categories', function (Request $request, Planer $planer) {
             $categories = CategoryResource::collection($planer->categories()->get());
