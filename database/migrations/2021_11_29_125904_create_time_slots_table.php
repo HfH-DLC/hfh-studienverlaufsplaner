@@ -22,6 +22,8 @@ class CreateTimeSlotsTable extends Migration
             $table->string('day');
             $table->string('time');
             $table->foreignId('planer_id')->constrained();
+
+            $table->unique(['year', 'semester', 'week', 'day', 'time', 'planer_id']);
         });
     }
 

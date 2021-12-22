@@ -12,6 +12,23 @@ class Planer extends Model
     use HasFactory;
     use HasSlug;
 
+    protected $casts = [
+        'options_week' => 'array',
+        'options_day' => 'array',
+        'options_time' => 'array'
+    ];
+
+     /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'options_week' => '["Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13", "Wo 1, 6, 10, 14"]',
+        'options_day' => '[]',
+        'options_time' => '["Vormittag", "Nachmittag"]'
+    ];
+
     public function plans()
     {
         return $this->hasMany(Plan::class);

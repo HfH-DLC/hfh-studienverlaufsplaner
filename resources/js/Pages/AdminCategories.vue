@@ -19,13 +19,13 @@
             <div class="space-x-2 whitespace-nowrap">
               <button
                 @click="showEditForm(category)"
-                class="p-1 hover:text-blue-600"
+                class="p-1 focus:text-blue-600 hover:text-blue-600"
               >
                 <PencilIcon class="inline-block w-5 h-5 flex-shrink-0" />
               </button>
               <button
                 @click="deleteCategory(category)"
-                class="p-1 hover:text-red-600"
+                class="p-1 focus:red-blue-600 hover:text-red-600"
               >
                 <TrashIcon class="inline-block w-5 h-5 flex-shrink-0" />
               </button>
@@ -51,7 +51,7 @@
             id="name"
             v-model="categoriesForm.name"
             class="w-full block border border-gray-600 rounded shadow-inner p-1"
-            :aria-describedby="planersForm.errors.name && 'error-name'"
+            :aria-describedby="categoriesForm.errors.name && 'error-name'"
           />
           <Error v-if="categoriesForm.errors.name" id="error-name" class="mt-2">
             {{ categoriesForm.errors.name }}
@@ -65,7 +65,7 @@
             v-model="categoriesForm.requiredNumber"
             class="w-full block border border-gray-600 rounded shadow-inner p-1"
             :aria-describedby="
-              planersForm.errors.name && 'error-required-number'
+              categoriesForm.errors.name && 'error-required-number'
             "
           />
           <Error
@@ -98,10 +98,12 @@
 
 <script>
 import { PencilIcon, TrashIcon, XIcon } from "@heroicons/vue/outline";
-import AdminLayout from "../Layouts/AdminLayout.vue";
+import AdminPlanerLayout from "../Layouts/AdminPlanerLayout.vue";
+import Error from "../Components/Error.vue";
 export default {
-  layout: AdminLayout,
+  layout: AdminPlanerLayout,
   components: {
+    Error,
     PencilIcon,
     TrashIcon,
     XIcon,

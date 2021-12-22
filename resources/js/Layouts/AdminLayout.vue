@@ -4,7 +4,7 @@
   </Head>
   <div class="min-h-screen flex flex-col">
     <header>
-      <Navigation logoHref="" :links="links" />
+      <AdminNavigation logoHref="" :links="links" />
     </header>
     <main class="flex-1 flex flex-col">
       <slot />
@@ -13,10 +13,16 @@
 </template>
 
 <script>
-import Navigation from "../Components/Navigation.vue";
+import AdminNavigation from "../Components/AdminNavigation.vue";
 export default {
   components: {
-    Navigation,
+    AdminNavigation,
+  },
+  props: {
+    planerSlug: {
+      type: String,
+      default: null,
+    },
   },
   data() {
     return {

@@ -15,17 +15,21 @@
           class="even:bg-gray-200 odd:bg-gray-100"
         >
           <div class="text-left p-2 flex justify-between items-center gap-12">
-            <span>{{ planer.name }}</span>
+            <Link
+              :href="`/admin/planers/${planer.slug}`"
+              class="focus:text-blue-600 hover:text-blue-600"
+              >{{ planer.name }}</Link
+            >
             <div class="space-x-2 whitespace-nowrap">
               <button
                 @click="showEditForm(planer)"
-                class="p-1 hover:text-blue-600"
+                class="p-1 focus:text-blue-600 hover:text-blue-600"
               >
                 <PencilIcon class="inline-block w-5 h-5 flex-shrink-0" />
               </button>
               <button
                 @click="deletePlaner(planer)"
-                class="p-1 hover:text-red-600"
+                class="p-1 focus:red-blue-600 hover:text-red-600"
               >
                 <TrashIcon class="inline-block w-5 h-5 flex-shrink-0" />
               </button>
@@ -77,6 +81,22 @@
           >
             {{ planersForm.errors.requiredCredits }}
           </Error>
+          <fieldset class="mt-3">
+            <legend class="block uppercase text-sm">Tage</legend>
+            <div
+              class="flex items-center gap-x-2"
+              v-for="day in days"
+              :key="day.id"
+            >
+              <input
+                type="checkbox"
+                :id="day.id"
+                :value="day.label"
+                v-model="planersForm.optionsDay"
+              />
+              <label :for="day.id">{{ day.label }}</label>
+            </div>
+          </fieldset>
           <button
             type="submit"
             :disabled="planersForm.processing"
@@ -99,12 +119,14 @@
 </template>
 
 <script>
+import { Link } from "@inertiajs/inertia-vue3";
 import { PencilIcon, TrashIcon, XIcon } from "@heroicons/vue/outline";
 import AdminLayout from "../Layouts/AdminLayout.vue";
 import Error from "../Components/Error.vue";
 export default {
   layout: AdminLayout,
   components: {
+    Link,
     Error,
     PencilIcon,
     TrashIcon,
@@ -121,9 +143,19 @@ export default {
       planersForm: this.$inertia.form({
         name: null,
         requiredCredits: null,
+        optionsDay: [],
       }),
       editedPlaner: null,
       formVisible: false,
+      days: [
+        { id: "montag", label: "Montag" },
+        { id: "dienstag", label: "Dienstag" },
+        { id: "mittwoch", label: "Mittwoch" },
+        { id: "donnerstag", label: "Donnerstag" },
+        { id: "freitag", label: "Freitag" },
+        { id: "samstag", label: "Samstag" },
+        { id: "sonntag", label: "Sonntag" },
+      ],
     };
   },
   computed: {
@@ -153,6 +185,7 @@ export default {
       this.editedPlaner = planer;
       this.planersForm.name = this.editedPlaner.name;
       this.planersForm.requiredCredits = this.editedPlaner.requiredCredits;
+      this.planersForm.optionsDay = this.editedPlaner.optionsDay;
       this.showForm();
     },
     hideForm() {

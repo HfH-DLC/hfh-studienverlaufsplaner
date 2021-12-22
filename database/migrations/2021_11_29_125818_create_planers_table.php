@@ -19,6 +19,9 @@ class CreatePlanersTable extends Migration
             $table->string('name')->unique();
             $table->integer('required_credits');
             $table->string('slug')->unique();
+            $table->json('options_week');
+            $table->json('options_day');
+            $table->json('options_time');
         });
     }
 

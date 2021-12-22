@@ -9,6 +9,8 @@ class TimeSlot extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['year', 'semester', 'week', 'day', 'time'];
+
     public function modules()
     {
         $this->belongsToMany(Module::class);

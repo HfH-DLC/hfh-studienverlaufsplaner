@@ -19,13 +19,13 @@
             <div class="space-x-2 whitespace-nowrap">
               <button
                 @click="showEditForm(module)"
-                class="p-1 hover:text-blue-600"
+                class="p-1 focus:text-blue-600 hover:text-blue-600"
               >
                 <PencilIcon class="inline-block w-5 h-5 flex-shrink-0" />
               </button>
               <button
                 @click="deleteModule(module)"
-                class="p-1 hover:text-red-600"
+                class="p-1 focus:text-red-600 hover:text-red-600"
               >
                 <TrashIcon class="inline-block w-5 h-5 flex-shrink-0" />
               </button>
@@ -210,9 +210,9 @@
 <script>
 import { PencilIcon, TrashIcon, XIcon } from "@heroicons/vue/outline";
 import MultiSelect from "vue-multiselect";
-import AdminLayout from "../Layouts/AdminLayout.vue";
+import AdminPlanerLayout from "../Layouts/AdminPlanerLayout.vue";
 export default {
-  layout: AdminLayout,
+  layout: AdminPlanerLayout,
   components: {
     PencilIcon,
     TrashIcon,
