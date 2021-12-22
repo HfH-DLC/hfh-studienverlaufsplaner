@@ -118,9 +118,13 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
 
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/', function () {
-        $planers = PlanerResource::collection(Planer::all());
-        return Inertia::render('Admin', ['planersResource' => $planers]);
+        return redirect()->route('admin-planers');
     })->name('admin');
+
+    Route::get('/planers', function () {
+        $planers = PlanerResource::collection(Planer::all());
+        return Inertia::render('AdminPlaners', ['planersResource' => $planers]);
+    })->name('admin-planers');
 
     Route::post('/planers', function (Request $request) {
         $attributes = $request->validate([
@@ -132,23 +136,25 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         $planer->name = $attributes['name'];
         $planer->required_credits = $attributes['requiredCredits'];
         $planer->save();
-        return redirect()->route('admin');
+        return redirect()->route('admin-planers');
     });
     
     Route::prefix('planers/{planer:slug}')->scopeBindings()->group(function () {
         
         Route::get('/', function (Request $request, Planer $planer) {
-            return Inertia::render('AdminPlaner', ['planerSlug'=> $planer->slug, 'planer' => new PlanerResource($planer)]);
+            return redirect()->route('admin-categories', ['planer' => $planer]);
         })->name('admin-planer');
 
         Route::put('/', function (Request $request, Planer $planer) {
             $attributes = $request->validate([
-                'name' => ['required','unique:planers'],
-                'requiredCredits' => ['required','numeric', 'integer', 'min:0']
+                'name' => ['required','unique:planers,'.$planer->id],
+                'requiredCredits' => ['required','numeric', 'integer', 'min:0'],
+                'optionsDay' => ['required', 'array', Illuminate\Validation\Rule::in(['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'])]
             ]);
             
             $planer->name = $attributes['name'];
             $planer->required_credits = $attributes['requiredCredits'];
+            $planer->options_day = $attributes['optionsDay'];
             $planer->save();
             return redirect()->route('admin');
         });
@@ -160,7 +166,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         
         Route::get('/categories', function (Request $request, Planer $planer) {
             $categories = CategoryResource::collection($planer->categories()->get());
-            return Inertia::render('AdminCategories', ['categoriesResource' => $categories, 'planerSlug'=> $planer->slug]);
+            return Inertia::render('AdminCategories', ['categoriesResource' => $categories, 'planerName' => $planer->name, 'planerSlug'=> $planer->slug]);
         })->name('admin-categories');
         
         Route::post('/categories', function (Request $request, Planer $planer) {
@@ -195,7 +201,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         
         Route::get('/timeslots', function (Request $request, Planer $planer) {
             $timeSlots = TimeSlotResource::collection($planer->timeSlots()->get());
-            return Inertia::render('AdminTimeSlots', ['timeSlotsResource' => $timeSlots, 'planerSlug'=> $planer->slug]);
+            return Inertia::render('AdminTimeSlots', ['timeSlotsResource' => $timeSlots, 'planerName' => $planer->name, 'planerSlug'=> $planer->slug, 'planerOptionsDay' => $planer->options_day]);
         })->name('admin-timeslots');
         
         Route::post('/timeslots', function (Request $request, Planer $planer) {
@@ -217,6 +223,39 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             $planer->timeSlots()->save($timeSlot);
             return redirect()->route('admin-timeslots', ['planer' => $planer]);
         });
+
+        Route::post('/timeslots/generate', function (Request $request, Planer $planer) {
+            //todo validation
+            $attributes = $request->validate([
+                'startYear' => ['required', 'numeric', 'integer'],
+                'endYear' => ['required', 'numeric', 'integer', 'gt:startYear'],
+            ]);
+            $start_year = $attributes['startYear'];
+            $end_year = $attributes['endYear'];
+            $timeSlots = [];
+            $years = range($start_year, $end_year);
+            foreach ($years as $year) {
+                $semesters = [];
+                if ($year !== $end_year) {
+                    $semesters[] = 'HS';
+                }
+                if ($year !== $start_year) {
+                    $semesters[] = 'FS';
+                }
+                foreach ($semesters as $semester) {
+                    foreach ($planer->options_week as $week) {
+                        foreach ($planer->options_day as $day) {
+                            foreach ($planer->options_time as $time) {
+                                $timeSlots[] = ['year' => $year, 'semester' => $semester, 'week' => $week, 'day' => $day, 'time' => $time];
+                            }
+                        }
+                    }
+                }
+            }
+
+            $planer->timeSlots()->createMany($timeSlots);
+            return redirect()->route('admin-timeslots', ['planer' => $planer]);
+        });
         
         Route::put('/timeslots/{timeSlot}', function (Request $request, Planer $planer, TimeSlot $timeSlot) {
             //todo validation
@@ -236,12 +275,17 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             $timeSlot->save();
             return redirect()->route('admin-timeslots', ['planer' => $planer]);
         });
+
+        Route::delete('/timeslots/{timeSlot}', function (Request $request, Planer $planer, TimeSlot $timeSlot) {
+            $timeSlot->delete();
+            return redirect()->route('admin-timeslots', ['planer' => $planer]);
+        });
         
         Route::get('/modules', function (Request $request, Planer $planer) {
             $modules = ModuleResource::collection($planer->modules()->get());
             $categories = CategoryResource::collection($planer->categories()->get());
             $timeSlots = TimeSlotResource::collection($planer->timeSlots()->get());
-            return Inertia::render('AdminModules', ['modulesResource' => $modules, 'categoriesResource' => $categories, 'timeSlotsResource' => $timeSlots, 'planerSlug'=> $planer->slug]);
+            return Inertia::render('AdminModules', ['modulesResource' => $modules, 'categoriesResource' => $categories, 'timeSlotsResource' => $timeSlots, 'planerName' => $planer->name, 'planerSlug'=> $planer->slug]);
         })->name('admin-modules');
         
         Route::post('/modules', function (Request $request, Planer $planer) {
@@ -286,6 +330,11 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             $module->timeSlots()->sync($attributes['timeSlots']);
             $module->prerequisites()->sync($attributes['prerequisites']);
             $module->save();
+            return redirect()->route('admin-modules', ['planer' => $planer]);
+        });
+
+        Route::delete('/modules/{modul}', function (Request $request, Planer $planer, Module $module) {
+            $module->delete();
             return redirect()->route('admin-modules', ['planer' => $planer]);
         });
         
