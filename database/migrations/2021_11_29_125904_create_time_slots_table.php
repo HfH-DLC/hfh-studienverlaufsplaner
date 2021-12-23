@@ -17,10 +17,10 @@ class CreateTimeSlotsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->year('year');
-            $table->string('semester');
-            $table->string('week');
-            $table->string('day');
-            $table->string('time');
+            $table->string('semester', 2);
+            $table->string('week', 50);
+            $table->string('day', 20);
+            $table->string('time',20);
             $table->foreignId('planer_id')->constrained();
 
             $table->unique(['year', 'semester', 'week', 'day', 'time', 'planer_id']);
