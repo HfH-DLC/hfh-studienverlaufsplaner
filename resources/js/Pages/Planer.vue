@@ -41,9 +41,7 @@
             class="block border border-gray-600 rounded shadow-inner p-2 w-full"
           >
             <option value="" disabled>Bitte wählen...</option>
-            <option :value="2021">2021</option>
             <option :value="2022">2022</option>
-            <option :value="2023">2023</option>
           </select>
           <div v-if="createForm.errors.startYear">
             {{ createForm.errors.startYear }}
