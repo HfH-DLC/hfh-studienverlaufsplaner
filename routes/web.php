@@ -16,7 +16,6 @@ use App\Models\TimeSlot;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule as ValidationRule;
 use Inertia\Inertia;
@@ -31,11 +30,12 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/login', function () {
+
+Route::get('/admin/login', function () {
     return Inertia::render('Login');
 })->name('login');
 
-Route::post('login', function (Request $request) {
+Route::post('/admin/login', function (Request $request) {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
@@ -49,10 +49,6 @@ Route::post('login', function (Request $request) {
             'email' => 'The provided credentials do not match our records.',
         ]);
 });
-
-Route::get('/', function () {
-    return Inertia::render('Home');
-})->name('home');
 
 Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
     Route::get('/', function (Planer $planer) {
@@ -121,6 +117,13 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         return redirect()->route('admin-planers');
     })->name('admin');
 
+    Route::post('/logout', function (Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('login');
+    });
+
     Route::get('/planers', function () {
         $planers = PlanerResource::collection(Planer::all());
         return Inertia::render('AdminPlaners', ['planersResource' => $planers]);
@@ -129,12 +132,14 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::post('/planers', function (Request $request) {
         $attributes = $request->validate([
             'name' => ['required', 'unique:planers'],
-            'requiredCredits' => ['required','numeric', 'integer', 'min:0']
+            'requiredCredits' => ['required','numeric', 'integer', 'min:0'],
+            'optionsDay' => ['required', 'array', Illuminate\Validation\Rule::in(['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'])]
         ]);
         
         $planer = new Planer();
         $planer->name = $attributes['name'];
         $planer->required_credits = $attributes['requiredCredits'];
+        $planer->options_day = $attributes['optionsDay'];
         $planer->save();
         return redirect()->route('admin-planers');
     });

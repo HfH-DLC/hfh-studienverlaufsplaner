@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     submit() {
-      this.form.post("/login");
+      this.form.post("/admin/login");
     },
   },
 };

@@ -2,7 +2,7 @@
   <form @submit.prevent="processForm">
     <label for="year" class="block uppercase text-sm">Jahr</label>
     <input
-      ref="yearInput"
+      ref="firstInput"
       type="number"
       id="year"
       v-model="form.year"
@@ -80,28 +80,26 @@
       {{ form.errors.time }}
     </Error>
 
-    <button
-      type="submit"
-      :disabled="form.processing"
-      class="w-full mt-3 rounded p-2 bg-gray-700 text-white hover:bg-gray-900"
-    >
+    <Button type="submit" :disabled="form.processing" class="w-full mt-3">
       Speichern
-    </button>
+    </Button>
   </form>
 </template>
 
 <script>
 import Error from "./Error.vue";
+import Button from "./Button.vue";
 export default {
   emits: ["success"],
+  components: {
+    Error,
+    Button,
+  },
   props: {
     planerSlug: {
       type: String,
       required: true,
     },
-  },
-  mounted() {
-    this.focusYearInput();
   },
   data() {
     return {
@@ -114,9 +112,7 @@ export default {
       }),
     };
   },
-  components: {
-    Error,
-  },
+
   props: {
     editedTimeSlot: {
       type: Object,
@@ -144,11 +140,11 @@ export default {
         this.form.day = this.editedTimeSlot.day;
         this.form.time = this.editedTimeSlot.time;
       }
-      this.focusYearInput();
+      this.focusFirstInput();
     },
-    focusYearInput() {
+    focusFirstInput() {
       this.$nextTick(() => {
-        this.$refs.yearInput.focus();
+        this.$refs.firstInput.focus();
       });
     },
     processForm() {

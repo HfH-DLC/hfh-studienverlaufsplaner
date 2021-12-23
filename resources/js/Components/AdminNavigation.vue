@@ -17,7 +17,9 @@
         >
       </li>
       <li v-if="$page.props.auth">
-        <a href="/logout" class="text-blue-600 hover:underline">Logout</a>
+        <button @click="logout" class="text-blue-600 hover:underline">
+          Logout
+        </button>
       </li>
     </ul>
   </nav>
@@ -41,6 +43,11 @@ export default {
     planerName: {
       type: String,
       default: null,
+    },
+  },
+  methods: {
+    logout() {
+      this.$inertia.post("/admin/logout");
     },
   },
 };

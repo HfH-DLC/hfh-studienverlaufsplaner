@@ -27,20 +27,21 @@
     <Error id="error-end-year" class="mt-2" v-if="form.errors.endYear">
       {{ form.errors.endYear }}
     </Error>
-    <button
-      type="submit"
-      :disabled="form.processing"
-      class="w-full mt-3 rounded p-2 bg-gray-700 text-white hover:bg-gray-900"
-    >
+    <Button type="submit" :disabled="form.processing" class="w-full mt-3">
       Termine Generieren
-    </button>
+    </Button>
   </form>
 </template>
 
 <script>
 import Error from "./Error.vue";
+import Button from "./Button.vue";
 export default {
   emits: ["success"],
+  components: {
+    Error,
+    Button,
+  },
   props: {
     planerSlug: {
       type: String,
@@ -54,9 +55,6 @@ export default {
         endYear: "",
       }),
     };
-  },
-  components: {
-    Error,
   },
   methods: {
     processForm() {
