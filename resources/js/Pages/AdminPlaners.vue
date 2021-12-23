@@ -173,7 +173,7 @@ export default {
       }
     },
     createPlaner() {
-      this.planersForm.post(`/admin/planers/`, {
+      this.planersForm.post(`/admin/planers`, {
         onSuccess: () => this.hideForm(),
       });
     },
