@@ -1,6 +1,6 @@
 <template>
   <nav class="flex justify-between items-end p-4 border-b border-gray-300">
-    <Link :href="`/planers/${planer}`"
+    <Link :href="`/planers/${page.props.planerSlug}`"
       ><h1 class="text-3xl">
         Studienverlaufsplaner
         <span v-if="$page.props.planerName">{{ $page.props.planerName }}</span>
