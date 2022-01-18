@@ -16,7 +16,7 @@ class TimeSlotResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'year' => $this->year,
+            'year' => intval($this->year),
             'semester' => $this->semester,
             'week' => $this->week,
             'day' => $this->day,
