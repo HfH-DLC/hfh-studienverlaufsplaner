@@ -28,11 +28,11 @@
 </template>
 
 <script>
-import AdminPlanerLayout from "../Layouts/AdminPlanerLayout.vue";
-import Button from "../Components/Button.vue";
-import EntityList from "../Components/EntityList.vue";
-import Sidebar from "../Components/Sidebar.vue";
-import CategoriesForm from "../Components/CategoriesForm.vue";
+import AdminPlanerLayout from "../../Layouts/AdminPlanerLayout.vue";
+import Button from "../../Components/Button.vue";
+import EntityList from "../../Components/EntityList.vue";
+import Sidebar from "../../Components/Sidebar.vue";
+import CategoriesForm from "../../Components/Admin/CategoriesForm.vue";
 export default {
   layout: AdminPlanerLayout,
   components: {

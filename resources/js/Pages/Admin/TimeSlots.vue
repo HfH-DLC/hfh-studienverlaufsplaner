@@ -25,7 +25,9 @@
     <Sidebar v-if="action" :title="formTitle" @close="hideForm" class="w-4/12">
       <TimeSlotsForm
         :planerSlug="planerSlug"
+        :planerOptionsWeek="planerOptionsWeek"
         :planerOptionsDay="planerOptionsDay"
+        :planerOptionsTime="planerOptionsTime"
         v-if="action === 'create' || action === 'edit'"
         @success="hideForm"
         :editedTimeSlot="editedTimeSlot"
@@ -40,12 +42,12 @@
 </template>
 
 <script>
-import AdminPlanerLayout from "../Layouts/AdminPlanerLayout.vue";
-import TimeSlotsForm from "../Components/TimeSlotsForm.vue";
-import TimeSlotsGenerateForm from "../Components/TimeSlotsGenerateForm.vue";
-import Button from "../Components/Button.vue";
-import EntityList from "../Components/EntityList.vue";
-import Sidebar from "../Components/Sidebar.vue";
+import AdminPlanerLayout from "../../Layouts/AdminPlanerLayout.vue";
+import TimeSlotsForm from "../../Components/Admin/TimeSlotsForm.vue";
+import TimeSlotsGenerateForm from "../../Components/Admin/TimeSlotsGenerateForm.vue";
+import Button from "../../Components/Button.vue";
+import EntityList from "../../Components/EntityList.vue";
+import Sidebar from "../../Components/Sidebar.vue";
 export default {
   layout: AdminPlanerLayout,
   components: {
@@ -64,7 +66,15 @@ export default {
       type: String,
       required: true,
     },
+    planerOptionsWeek: {
+      type: Array,
+      required: true,
+    },
     planerOptionsDay: {
+      type: Array,
+      required: true,
+    },
+    planerOptionsTime: {
       type: Array,
       required: true,
     },

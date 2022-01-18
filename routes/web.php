@@ -32,7 +32,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/admin/login', function () {
-    return Inertia::render('Login');
+    return Inertia::render('Admin/Login');
 })->name('login');
 
 Route::post('/admin/login', function (Request $request) {
@@ -43,7 +43,7 @@ Route::post('/admin/login', function (Request $request) {
 
     if (Auth::attempt($credentials)) {
         $request->session()->regenerate();
-        return redirect()->intended('/admin');
+        return redirect()->intended('/admin/planers');
     }
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
@@ -126,7 +126,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     Route::get('/planers', function () {
         $planers = PlanerResource::collection(Planer::all());
-        return Inertia::render('AdminPlaners', ['planersResource' => $planers]);
+        return Inertia::render('Admin/Planers', ['planersResource' => $planers]);
     })->name('admin-planers');
 
     Route::post('/planers', function (Request $request) {
@@ -171,7 +171,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         
         Route::get('/categories', function (Request $request, Planer $planer) {
             $categories = CategoryResource::collection($planer->categories()->get());
-            return Inertia::render('AdminCategories', ['categoriesResource' => $categories, 'planerName' => $planer->name, 'planerSlug'=> $planer->slug]);
+            return Inertia::render('Admin/Categories', ['categoriesResource' => $categories, 'planerName' => $planer->name, 'planerSlug'=> $planer->slug]);
         })->name('admin-categories');
         
         Route::post('/categories', function (Request $request, Planer $planer) {
@@ -206,7 +206,15 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         
         Route::get('/timeslots', function (Request $request, Planer $planer) {
             $timeSlots = TimeSlotResource::collection($planer->timeSlots()->get());
-            return Inertia::render('AdminTimeSlots', ['timeSlotsResource' => $timeSlots, 'planerName' => $planer->name, 'planerSlug'=> $planer->slug, 'planerOptionsDay' => $planer->options_day]);
+            return Inertia::render(
+                'Admin/TimeSlots',
+                [
+                'timeSlotsResource' => $timeSlots,
+                'planerName' => $planer->name,
+                'planerSlug'=> $planer->slug,
+                'planerOptionsDay' => $planer->options_day,
+                ]
+            );
         })->name('admin-timeslots');
         
         Route::post('/timeslots', function (Request $request, Planer $planer) {
@@ -290,7 +298,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             $modules = ModuleResource::collection($planer->modules()->get());
             $categories = CategoryResource::collection($planer->categories()->get());
             $timeSlots = TimeSlotResource::collection($planer->timeSlots()->get());
-            return Inertia::render('AdminModules', ['modulesResource' => $modules, 'categoriesResource' => $categories, 'timeSlotsResource' => $timeSlots, 'planerName' => $planer->name, 'planerSlug'=> $planer->slug]);
+            return Inertia::render('Admin/Modules', ['modulesResource' => $modules, 'categoriesResource' => $categories, 'timeSlotsResource' => $timeSlots, 'planerName' => $planer->name, 'planerSlug'=> $planer->slug]);
         })->name('admin-modules');
         
         Route::post('/modules', function (Request $request, Planer $planer) {

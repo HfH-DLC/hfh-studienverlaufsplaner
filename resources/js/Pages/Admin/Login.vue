@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import Error from "../Components/Error.vue";
+import Error from "../../Components/Error.vue";
 export default {
   components: {
     Error,

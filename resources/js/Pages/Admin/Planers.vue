@@ -89,11 +89,11 @@
 <script>
 import { Link } from "@inertiajs/inertia-vue3";
 import { XIcon } from "@heroicons/vue/outline";
-import AdminLayout from "../Layouts/AdminLayout.vue";
-import Error from "../Components/Error.vue";
-import Button from "../Components/Button.vue";
-import Sidebar from "../Components/Sidebar.vue";
-import EntityList from "../Components/EntityList.vue";
+import AdminLayout from "../../Layouts/AdminLayout.vue";
+import Error from "../../Components/Error.vue";
+import Button from "../../Components/Button.vue";
+import Sidebar from "../../Components/Sidebar.vue";
+import EntityList from "../../Components/EntityList.vue";
 export default {
   layout: AdminLayout,
   components: {

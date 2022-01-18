@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import AdminNavigation from "../Components/AdminNavigation.vue";
+import AdminNavigation from "../Components/Admin/AdminNavigation.vue";
 export default {
   components: {
     AdminNavigation,

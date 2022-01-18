@@ -121,8 +121,8 @@
 </template>
 
 <script>
-import Button from "../Components/Button.vue";
-import Error from "../Components/Error.vue";
+import Button from "../Button.vue";
+import Error from "../Error.vue";
 import MultiSelect from "vue-multiselect";
 export default {
   emits: ["success"],

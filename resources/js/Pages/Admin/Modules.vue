@@ -33,11 +33,11 @@
 </template>
 
 <script>
-import AdminPlanerLayout from "../Layouts/AdminPlanerLayout.vue";
-import Button from "../Components/Button.vue";
-import EntityList from "../Components/EntityList.vue";
-import ModulesForm from "../Components/ModulesForm.vue";
-import Sidebar from "../Components/Sidebar.vue";
+import AdminPlanerLayout from "../../Layouts/AdminPlanerLayout.vue";
+import Button from "../../Components/Button.vue";
+import EntityList from "../../Components/EntityList.vue";
+import ModulesForm from "../../Components/Admin/ModulesForm.vue";
+import Sidebar from "../../Components/Sidebar.vue";
 export default {
   layout: AdminPlanerLayout,
   components: {

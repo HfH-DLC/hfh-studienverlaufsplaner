@@ -38,10 +38,9 @@
       :aria-describedby="form.errors.week && 'error-week'"
     >
       <option value="" disabled>Bitte wählen...</option>
-      <option value="Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13">
-        Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13
+      <option v-for="week in planerOptionsWeek" :value="week" :key="week">
+        {{ week }}
       </option>
-      <option value="Wo 1, 6, 10, 14">Wo 1, 6, 10, 14</option>
     </select>
     <Error id="error-week" class="mt-2" v-if="form.errors.week">
       {{ form.errors.week }}
@@ -73,8 +72,9 @@
       :aria-describedby="form.errors.time && 'error-time'"
     >
       <option value="" disabled>Bitte wählen...</option>
-      <option value="Vormittag">Vormittag</option>
-      <option value="Nachmittag">Nachmittag</option>
+      <option v-for="time in planerOptionsTime" :value="time" :key="time">
+        {{ time }}
+      </option>
     </select>
     <Error id="error-time" class="mt-2" v-if="form.errors.time">
       {{ form.errors.time }}
@@ -87,8 +87,8 @@
 </template>
 
 <script>
-import Error from "./Error.vue";
-import Button from "./Button.vue";
+import Error from "../Error.vue";
+import Button from "../Button.vue";
 export default {
   emits: ["success"],
   components: {
@@ -122,7 +122,15 @@ export default {
       type: String,
       required: true,
     },
+    planerOptionsWeek: {
+      type: Array,
+      required: true,
+    },
     planerOptionsDay: {
+      type: Array,
+      required: true,
+    },
+    planerOptionsTime: {
       type: Array,
       required: true,
     },
