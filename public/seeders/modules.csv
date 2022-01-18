@@ -1,0 +1,19 @@
+id,number,name,credits,category_id,planer_id
+3,P1_01,Grundfragen der Heilpädagogik,5,1,1
+4,P1_03,Heilpädagogik im Vorschulbereich,5,1,1
+5,P4_02,Grundlagen der Heilpädagogischen Früherziehung,5,1,1
+6,P4_06,Diagnostik und Früherfassung in der Heilpädagogischen Früherziehung,5,1,1
+7,P4_07,Entwicklungsorientierte Intervention in der Heilpädagogischen Früherziehung,5,1,1
+8,P4_08,Beratung und Begleitung von Eltern und weiteren Bezugs- und Fachpersonen in der Heilpädagogischen Früherziehung,5,1,1
+9,P4_09,Interdisziplinarität und Kooperation im Kontext der Heilpädagogischen Früherziehung,5,1,1
+10,WP2_04.1,Heilpädagogik im Bereich Hören 1,5,2,1
+11,WP2_04.2,Heilpädagogik im Bereich Hören 2,5,2,1
+12,WP2_05.1,Heilpädagogik im Bereich Sehen 1,5,2,1
+13,WP2_06.1,Heilpädagogik im Bereich körperlich-motorische Entwicklung. Motorische Beeinträchtigungen,5,2,1
+14,WP2_06.2,Heilpädagogik im Bereich körperlich-motorische Entwicklung. Chronische Erkrankungen,5,2,1
+15,WP2_07,Schwere mehrfache Beeinträchtigungen,5,2,1
+16,WP2_11,Autismus im Kontext der Heilpädagogischen Früherziehung,5,2,1
+17,BP5_01.1.HFE,Berufspraxis 1,5,3,1
+18,BP5_01.2.HFE,Berufspraxis 2,5,3,1
+19,BP5_01.3.HFE,Berufspraxis 3,10,3,1
+20,M5_03,Masterarbeit,20,4,1

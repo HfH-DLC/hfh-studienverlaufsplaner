@@ -1,0 +1,65 @@
+id,year,semester,week,day,time,planer_id
+108,2022,HS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Montag,Vormittag,1
+109,2022,HS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Montag,Nachmittag,1
+110,2022,HS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Donnerstag,Vormittag,1
+111,2022,HS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Donnerstag,Nachmittag,1
+112,2022,HS,"Wo 1, 6, 10, 14",Montag,Vormittag,1
+113,2022,HS,"Wo 1, 6, 10, 14",Montag,Nachmittag,1
+114,2022,HS,"Wo 1, 6, 10, 14",Donnerstag,Vormittag,1
+115,2022,HS,"Wo 1, 6, 10, 14",Donnerstag,Nachmittag,1
+116,2023,FS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Montag,Vormittag,1
+117,2023,FS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Montag,Nachmittag,1
+118,2023,FS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Donnerstag,Vormittag,1
+119,2023,FS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Donnerstag,Nachmittag,1
+120,2023,FS,"Wo 1, 6, 10, 14",Montag,Vormittag,1
+121,2023,FS,"Wo 1, 6, 10, 14",Montag,Nachmittag,1
+122,2023,FS,"Wo 1, 6, 10, 14",Donnerstag,Vormittag,1
+123,2023,FS,"Wo 1, 6, 10, 14",Donnerstag,Nachmittag,1
+124,2023,HS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Montag,Vormittag,1
+125,2023,HS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Montag,Nachmittag,1
+126,2023,HS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Donnerstag,Vormittag,1
+127,2023,HS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Donnerstag,Nachmittag,1
+128,2023,HS,"Wo 1, 6, 10, 14",Montag,Vormittag,1
+129,2023,HS,"Wo 1, 6, 10, 14",Montag,Nachmittag,1
+130,2023,HS,"Wo 1, 6, 10, 14",Donnerstag,Vormittag,1
+131,2023,HS,"Wo 1, 6, 10, 14",Donnerstag,Nachmittag,1
+132,2024,FS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Montag,Vormittag,1
+133,2024,FS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Montag,Nachmittag,1
+134,2024,FS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Donnerstag,Vormittag,1
+135,2024,FS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Donnerstag,Nachmittag,1
+136,2024,FS,"Wo 1, 6, 10, 14",Montag,Vormittag,1
+137,2024,FS,"Wo 1, 6, 10, 14",Montag,Nachmittag,1
+138,2024,FS,"Wo 1, 6, 10, 14",Donnerstag,Vormittag,1
+139,2024,FS,"Wo 1, 6, 10, 14",Donnerstag,Nachmittag,1
+140,2024,HS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Montag,Vormittag,1
+141,2024,HS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Montag,Nachmittag,1
+142,2024,HS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Donnerstag,Vormittag,1
+143,2024,HS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Donnerstag,Nachmittag,1
+144,2024,HS,"Wo 1, 6, 10, 14",Montag,Vormittag,1
+145,2024,HS,"Wo 1, 6, 10, 14",Montag,Nachmittag,1
+146,2024, HS,"Wo 1, 6, 10, 14",Donnerstag,Vormittag,1
+147,2024,HS,"Wo 1, 6, 10, 14",Donnerstag,Nachmittag,1
+148,2025,FS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Montag,Vormittag,1
+149,2025,FS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Montag,Nachmittag,1
+150,2025,FS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Donnerstag,Vormittag,1
+151,2025,FS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Donnerstag,Nachmittag,1
+152,2025,FS,"Wo 1, 6, 10, 14",Montag,Vormittag,1
+153,2025,FS,"Wo 1, 6, 10, 14",Montag,Nachmittag,1
+154,2025,FS,"Wo 1, 6, 10, 14",Donnerstag,Vormittag,1
+155,2025,FS,"Wo 1, 6, 10, 14",Donnerstag,Nachmittag,1
+156,2025,HS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Montag,Vormittag,1
+157,2025,HS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Montag,Nachmittag,1
+158,2025,HS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Donnerstag,Vormittag,1
+159,2025,HS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Donnerstag,Nachmittag,1
+160,2025,HS,"Wo 1, 6, 10, 14",Montag,Vormittag,1
+161,2025,HS,"Wo 1, 6, 10, 14",Montag,Nachmittag,1
+162,2025,HS,"Wo 1, 6, 10, 14",Donnerstag,Vormittag,1
+163,2025,HS,"Wo 1, 6, 10, 14",Donnerstag,Nachmittag,1
+164,2026,FS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Montag,Vormittag,1
+165,2026,FS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Montag,Nachmittag,1
+166,2026,FS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Donnerstag,Vormittag,1
+167,2026,FS,"Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",Donnerstag,Nachmittag,1
+168,2026,FS,"Wo 1, 6, 10, 14",Montag,Vormittag,1
+169,2026,FS,"Wo 1, 6, 10, 14",Montag,Nachmittag,1
+170,2026,FS,"Wo 1, 6, 10, 14",Donnerstag,Vormittag,1
+171,2026,FS,"Wo 1, 6, 10, 14",Donnerstag,Nachmittag,1
