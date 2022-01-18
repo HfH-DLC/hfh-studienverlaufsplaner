@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Requests\StorePlanRequest;
+use App\Http\Requests\UpdatePlanRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ModuleResource;
 use App\Http\Resources\PlanerResource;
@@ -82,25 +84,18 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
         );
     })->name('plan');
     
-    Route::post('/plans', function (Request $request, Planer $planer) {
-        $attributes = $request->validate([
-            'startYear' => ['required', 'integer']
-        ]);
+    Route::post('/plans', function (StorePlanRequest $request, Planer $planer) {
+        $validated = $request->validated();
         $plan = new Plan();
-        $plan->start_year = $attributes['startYear'];
+        $plan->start_year = $validated['startYear'];
         $planer->plans()->save($plan);
         return Redirect::route('plan', array('planer' => new PlanerResource($planer), 'plan' => $plan->slug));
     });
     
-    Route::put('/plans/{plan:slug}', function (Request $request, Planer $planer, Plan $plan) {
-        $attributes = $request->validate([
-            'placements' => ['present','array'],
-            'placements.*.timeSlotId' => ['required', 'exists:time_slots,id'],
-            'placements.*.moduleId' => ['required', 'exists:modules,id']
-        ]);
+    Route::put('/plans/{plan:slug}', function (UpdatePlanRequest $request, Planer $planer, Plan $plan) {
+        $validated = $request->validated();
         
-        $placements = $attributes['placements'];
-        
+        $placements = $validated['placements'];
         $placements_without_id = collect($placements)->where('id', '');
         $placements_with_id = (clone collect($placements))->where('id', '!=', '');
         $placements_ids = $placements_with_id->pluck('id');
@@ -366,17 +361,17 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             return redirect()->route('admin-modules', ['planer' => $planer]);
         });
         
-        Route::post('/rules', function (Request $request, Planer $planer) {
+/*         Route::post('/rules', function (Request $request, Planer $planer) {
             $attributes = $request->validate([
                 'type' => ['required', ValidationRule::in(Rule::$types)],
                 'params' => ['nullable', 'array']
             ]);
-            
+
             $rule = new Rule();
             $rule->type = $attributes['type'];
             $rule->params = $attributes['params'];
             $planer->rules()->save($rule);
             return redirect()->route('admin-planer', ['planer' => $planer]);
-        });
+        }); */
     });
 });
