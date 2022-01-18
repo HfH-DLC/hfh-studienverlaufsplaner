@@ -9,6 +9,11 @@ class Module extends Model
 {
     use HasFactory;
 
+    public function planer()
+    {
+        return $this->belongsTo(Planer::class);
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

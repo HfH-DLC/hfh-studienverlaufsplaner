@@ -11,6 +11,11 @@ class TimeSlot extends Model
 
     protected $fillable = ['year', 'semester', 'week', 'day', 'time'];
 
+    public function planer()
+    {
+        return $this->belongsTo(Planer::class);
+    }
+
     public function modules()
     {
         $this->belongsToMany(Module::class);

@@ -11,6 +11,11 @@ class Plan extends Model
 {
     use HasFactory;
 
+    public function planer()
+    {
+        return $this->belongsTo(Planer::class);
+    }
+
     public function placements()
     {
         return $this->hasMany(Placement::class);
