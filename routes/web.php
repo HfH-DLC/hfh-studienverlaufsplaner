@@ -66,7 +66,20 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
             $query->whereIn('id', $timeSlots->pluck('id'));
         })->get());
         $rules = RuleResource::collection($planer->rules()->get());
-        return Inertia::render('Plan', array('planerName'=> $planer->name, 'planerSlug'=> $planer->slug, 'plan' => $plan, 'categories' => $catogries, 'timeSlots' => $timeSlots, 'modules' => $modules, 'rules' => $rules, 'requiredCredits' => $planer->required_credits));
+        return Inertia::render(
+            'Plan',
+            array('planerName'=> $planer->name,
+            'planerSlug'=> $planer->slug,
+            'plan' => $plan,
+            'categories' => $catogries,
+            'timeSlots' => $timeSlots,
+            'modules' => $modules,
+            'rules' => $rules,
+            'requiredCredits' => $planer->required_credits,
+            'optionsWeek' => $planer->options_week,
+            'optionsDay' => $planer->options_day,
+            'optionsTime' => $planer->options_time)
+        );
     })->name('plan');
     
     Route::post('/plans', function (Request $request, Planer $planer) {
@@ -133,7 +146,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         $attributes = $request->validate([
             'name' => ['required', 'unique:planers'],
             'requiredCredits' => ['required','numeric', 'integer', 'min:0'],
-            'optionsDay' => ['required', 'array', Illuminate\Validation\Rule::in(['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'])]
+            'optionsDay' => ['required', 'array', 'min:1', Illuminate\Validation\Rule::in(['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'])]
         ]);
         
         $planer = new Planer();
@@ -212,7 +225,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
                 'timeSlotsResource' => $timeSlots,
                 'planerName' => $planer->name,
                 'planerSlug'=> $planer->slug,
+                'planerOptionsWeek' => $planer->options_week,
                 'planerOptionsDay' => $planer->options_day,
+                'planerOptionsTime' => $planer->options_time
                 ]
             );
         })->name('admin-timeslots');

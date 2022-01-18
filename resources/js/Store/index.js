@@ -12,6 +12,7 @@ const SET_TIMESLOTS = "SET_TIMESLOTS"
 const SET_MODULES = "SET_MODULES"
 const SET_CATEGORIES = "SET_CATEGORIES"
 const SET_RULES = "SET_RULES"
+const SET_DATE_OPTIONS = "SET_DATE_OPTIONS"
 const SET_SELECTION_STATUS = "SET_SELECTION_STATUS"
 const SET_MODULE_ERRORS = "SET_MODULE_ERRORS"
 const SET_TIMESLOT_ERRORS = "SET_TIMESLOTE_ERROS"
@@ -25,6 +26,9 @@ const initialState = {
     modules: [],
     categories: [],
     rules: [],
+    optionsWeek: [],
+    optionsDay: [],
+    optionsTime: [],
     selectionStatus: {},
     moduleErrors: {},
     timeSlotErrors: {},
@@ -64,6 +68,11 @@ const store = createStore({
             ruleObjects.push(new DateRule(), new PrerequisitesRule());
             state.rules = ruleObjects
         },
+        [SET_DATE_OPTIONS](state, { optionsWeek, optionsDay, optionsTime }) {
+            state.optionsWeek = optionsWeek;
+            state.optionsDay = optionsDay;
+            state.optionsTime = optionsTime;
+        },
         [SET_SELECTION_STATUS](state, selectionStatus) {
             state.selectionStatus = selectionStatus
         },
@@ -81,7 +90,7 @@ const store = createStore({
         }
     },
     actions: {
-        async init({ commit, dispatch }, { planerSlug, plan, timeSlots, modules, categories, rules }) {
+        async init({ commit, dispatch }, { planerSlug, plan, timeSlots, modules, categories, rules, optionsWeek, optionsDay, optionsTime }) {
             dataAdapter = new DataAdapter(planerSlug)
             commit(RESET_STATE)
             commit(SET_PLAN, plan)
@@ -89,6 +98,7 @@ const store = createStore({
             commit(SET_MODULES, modules)
             commit(SET_CATEGORIES, categories)
             commit(SET_RULES, rules)
+            commit(SET_DATE_OPTIONS, { optionsDay, optionsTime, optionsWeek })
             dispatch("validate")
             commit(INIT_FINISHED)
         },
@@ -217,20 +227,20 @@ const store = createStore({
                         return timeSlot.year
                     })
                 ),
-            ].map((year) => {
+            ].sort((a, b) => a - b).map((year) => {
                 const slotsByYear = timeSlots.filter(timeSlot => timeSlot.year === year);
 
                 let semesters = new Set(slotsByYear.map(timeSlot => {
                     return timeSlot.semester
                 }))
 
-                semesters = [...semesters].map(semester => {
+                semesters = [...semesters].sort().map(semester => {
                     const slotsBySemester = slotsByYear.filter(timeSlot => timeSlot.semester === semester);
                     return {
                         semester,
-                        weeks: new Set(slotsBySemester.map((slot) => slot.week)),
-                        days: new Set(slotsBySemester.map((slot) => slot.day)),
-                        times: new Set(slotsBySemester.map((slot) => slot.time)),
+                        weeks: [...new Set(slotsBySemester.map((slot) => slot.week))].sort((a, b) => state.optionsWeek.indexOf(a) - state.optionsWeek.indexOf(b)),
+                        days: [...new Set(slotsBySemester.map((slot) => slot.day))].sort((a, b) => state.optionsDay.indexOf(a) - state.optionsDay.indexOf(b)),
+                        times: [...new Set(slotsBySemester.map((slot) => slot.time))].sort((a, b) => state.optionsTime.indexOf(a) - state.optionsTime.indexOf(b)),
                     }
                 })
 

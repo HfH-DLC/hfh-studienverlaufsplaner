@@ -79,6 +79,18 @@ export default {
       type: String,
       required: true,
     },
+    optionsWeek: {
+      type: Array,
+      required: true,
+    },
+    optionsDay: {
+      type: Array,
+      required: true,
+    },
+    optionsTime: {
+      type: Array,
+      required: true,
+    },
   },
   async created() {
     await this.init({
@@ -88,6 +100,9 @@ export default {
       rules: this.rules.data,
       plan: this.plan.data,
       planerSlug: this.planerSlug,
+      optionsWeek: this.optionsWeek,
+      optionsDay: this.optionsDay,
+      optionsTime: this.optionsTime,
     });
   },
   computed: {
