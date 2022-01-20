@@ -143,13 +143,20 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         $attributes = $request->validate([
             'name' => ['required', 'unique:planers'],
             'requiredCredits' => ['required', 'numeric', 'integer', 'min:0'],
-            'optionsDay' => ['required', 'array', 'min:1', Illuminate\Validation\Rule::in(['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'])]
+            'optionsWeek' => ['required', 'array', 'min:1'],
+            'optionsWeek.*' => ['required', 'string', 'min:1', 'distinct'],
+            'optionsDay' => ['required', 'array', 'min:1', Illuminate\Validation\Rule::in(['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'])],
+            'optionsDay.*' => ['required', 'distinct'],
+            'optionsTime' => ['required', 'array', 'min:1'],
+            'optionsTime.*' => ['required', 'string', 'min:1', 'distinct'],
         ]);
 
         $planer = new Planer();
         $planer->name = $attributes['name'];
         $planer->required_credits = $attributes['requiredCredits'];
+        $planer->options_week = $attributes['optionsWeek'];
         $planer->options_day = $attributes['optionsDay'];
+        $planer->options_time = $attributes['optionsTime'];
         $planer->save();
         return redirect()->route('admin-planers');
     });
@@ -164,12 +171,19 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             $attributes = $request->validate([
                 'name' => ['required', 'unique:planers,' . $planer->id],
                 'requiredCredits' => ['required', 'numeric', 'integer', 'min:0'],
-                'optionsDay' => ['required', 'array', Illuminate\Validation\Rule::in(['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'])]
+                'optionsWeek' => ['required', 'array', 'min:1'],
+                'optionsWeek.*' => ['required', 'string', 'min:1', 'distinct'],
+                'optionsDay' => ['required', 'array', 'min:1', Illuminate\Validation\Rule::in(['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'])],
+                'optionsDay.*' => ['required', 'distinct'],
+                'optionsTime' => ['required', 'array', 'min:1'],
+                'optionsTime.*' => ['required', 'string', 'min:1', 'distinct'],
             ]);
 
             $planer->name = $attributes['name'];
             $planer->required_credits = $attributes['requiredCredits'];
+            $planer->options_week = $attributes['optionsWeek'];
             $planer->options_day = $attributes['optionsDay'];
+            $planer->options_time = $attributes['optionsTime'];
             $planer->save();
             return redirect()->route('admin');
         });

@@ -58,6 +58,10 @@
         >
           {{ planersForm.errors.requiredCredits }}
         </Error>
+        <label for="options_week" class="block uppercase text-sm mt-3"
+          >Wochen</label
+        >
+        <MultiInput v-model="planersForm.optionsWeek" id="options_week" />
         <fieldset class="mt-3">
           <legend class="block uppercase text-sm">Tage</legend>
           <div
@@ -74,6 +78,10 @@
             <label :for="day.id">{{ day.label }}</label>
           </div>
         </fieldset>
+        <label for="options_times" class="block uppercase text-sm mt-3"
+          >Zeiten</label
+        >
+        <MultiInput v-model="planersForm.optionsTime" id="options_time" />
         <Button
           type="submit"
           :disabled="planersForm.processing"
@@ -88,12 +96,12 @@
 
 <script>
 import { Link } from "@inertiajs/inertia-vue3";
-import { XIcon } from "@heroicons/vue/outline";
 import AdminLayout from "../../Layouts/AdminLayout.vue";
 import Error from "../../Components/Error.vue";
 import Button from "../../Components/Button.vue";
 import Sidebar from "../../Components/Sidebar.vue";
 import EntityList from "../../Components/EntityList.vue";
+import MultiInput from "../../Components/Admin/MultiInput.vue";
 export default {
   layout: AdminLayout,
   components: {
@@ -102,7 +110,7 @@ export default {
     EntityList,
     Error,
     Sidebar,
-    XIcon,
+    MultiInput,
   },
   props: {
     planersResource: {
@@ -115,7 +123,9 @@ export default {
       planersForm: this.$inertia.form({
         name: null,
         requiredCredits: null,
+        optionsWeek: [],
         optionsDay: [],
+        optionsTime: [],
       }),
       editedPlaner: null,
       formVisible: false,
@@ -157,7 +167,9 @@ export default {
       this.editedPlaner = planer;
       this.planersForm.name = this.editedPlaner.name;
       this.planersForm.requiredCredits = this.editedPlaner.requiredCredits;
+      this.planersForm.optionsWeek = this.editedPlaner.optionsWeek;
       this.planersForm.optionsDay = this.editedPlaner.optionsDay;
+      this.planersForm.optionsTime = this.editedPlaner.optionsTime;
       this.showForm();
     },
     hideForm() {

@@ -18,15 +18,15 @@ class Planer extends Model
         'options_time' => 'array'
     ];
 
-     /**
+    /**
      * The model's default values for attributes.
      *
      * @var array
      */
     protected $attributes = [
-        'options_week' => '["Wo 2, 3, 4, 5, 7, 8, 9, 11, 12, 13", "Wo 1, 6, 10, 14"]',
+        'options_week' => '[]',
         'options_day' => '[]',
-        'options_time' => '["Vormittag", "Nachmittag"]'
+        'options_time' => '[]'
     ];
 
     public function plans()
@@ -58,7 +58,7 @@ class Planer extends Model
     /**
      * Get the options for generating the slug.
      */
-    public function getSlugOptions() : SlugOptions
+    public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
             ->generateSlugsFrom('name')
