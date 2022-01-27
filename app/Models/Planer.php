@@ -15,7 +15,8 @@ class Planer extends Model
     protected $casts = [
         'options_week' => 'array',
         'options_day' => 'array',
-        'options_time' => 'array'
+        'options_time' => 'array',
+        'required_credits' => 'integer'
     ];
 
     /**
