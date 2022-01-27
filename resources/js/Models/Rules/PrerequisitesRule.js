@@ -10,7 +10,10 @@ export default class PrerequisitesRule extends Rule {
         let beforeSlots = []
 
         //todo ensure sorting
-        timeSlots.forEach((slot) => {
+        const sortedTimeSlots = timeSlots.sort((a, b) => {
+            return a.year - b.year || a.semester.localeCompare(b.semester)
+        });
+        sortedTimeSlots.forEach((slot) => {
             const prerequisites = slot.module ? slot.module.prerequisites : [];
             const missingPrerequisites = [];
             prerequisites.forEach(prerequisite => {
@@ -48,7 +51,10 @@ export default class PrerequisitesRule extends Rule {
         let hasValidSlot;
 
         //todo ensure sorting
-        timeSlots.forEach((slot) => {
+        const sortedTimeSlots = timeSlots.sort((a, b) => {
+            return a.year - b.year || a.semester.localeCompare(b.semester)
+        });
+        sortedTimeSlots.forEach((slot) => {
             const missingPrerequisites = [];
             module.prerequisites.forEach(prerequisite => {
                 const module = beforeSlots.find(beforeSlot => {
@@ -77,7 +83,10 @@ export default class PrerequisitesRule extends Rule {
         const beforeSlots = []
 
         //todo ensure sorting
-        timeSlots.forEach((slot) => {
+        const sortedTimeSlots = timeSlots.sort((a, b) => {
+            return a.year - b.year || a.semester.localeCompare(b.semester)
+        });
+        sortedTimeSlots.forEach((slot) => {
             const missingPrerequisites = [];
             module.prerequisites.forEach(prerequisite => {
                 const module = beforeSlots.find(beforeSlot => {

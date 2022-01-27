@@ -16,14 +16,16 @@ export default class DateRule extends Rule {
     }
 
     validateModule(module, timeSlots, errors) {
-        if (!timeSlots.some(slot => module.timeSlots.find(timeSlot => timeSlot.id == slot.id && !slot.module))) {
+        if (!module.placed && !timeSlots.some(slot => module.timeSlots.find(timeSlot => timeSlot.id == slot.id && !slot.module))) {
             errors.push("Alle Termine für dieses Modul sind bereits besetzt.");
         }
     }
 
     validateSelection(module, timeSlots, selectable) {
         timeSlots.forEach(slot => {
-            if (!module.timeSlots.find(timeSlot => timeSlot.id == slot.id)) {
+            if (!module.timeSlots.find(timeSlot => {
+                    return timeSlot.id == slot.id
+                })) {
                 selectable[slot.id] = false
             }
         })
