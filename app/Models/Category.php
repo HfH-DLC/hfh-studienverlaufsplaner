@@ -13,4 +13,6 @@ class Category extends Model
     {
         return $this->belongsTo(Planer::class);
     }
+
+    protected $casts = ['required_number' => 'integer'];
 }
