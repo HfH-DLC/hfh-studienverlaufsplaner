@@ -1,28 +1,33 @@
 <template>
   <template v-if="initialized">
-    <div class="mb-4 p-4" role="alert" v-if="timeSlotErrors.length > 0">
-      <ul class="space-y-2">
-        <ErrorList :errors="errors" />
-      </ul>
-    </div>
-    <div class="flex flex-1">
-      <div class="w-3/12 p-4 sticky top-0">
-        <ModuleList />
+    <div>
+      <div class="mb-4 p-4" role="alert" v-if="timeSlotErrors.length > 0">
+        <ul class="space-y-2">
+          <ErrorList :errors="errors" />
+        </ul>
       </div>
-      <div class="w-7/12 p-4">
-        <TimeTable ref="timeTable" />
-      </div>
-      <div class="w-2/12 sticky top-0 p-4" aria-live="polite">
-        <div class="mb-4 pb-4 border-b border-gray-300">
-          <h2 class="text-sm text-gray-500 font-bold uppercase">
-            Total Kreditpunkte
-          </h2>
-          <div class="flex items-center gap-2">
-            {{ credits }} / {{ requiredCredits }}
-            <CheckCircleIcon
-              v-if="credits === requiredCredits"
-              class="text-green-600 w-5 h-5"
-            />
+      <div class="flex flex-1 items-start">
+        <div id="module-list" class="w-3/12 p-4 sticky top-0">
+          <ModuleList />
+        </div>
+        <div id="time-table" class="w-7/12 p-4">
+          <TimeTable ref="timeTable" />
+        </div>
+        <div class="w-2/12 p-4 sticky top-0" aria-live="polite">
+          <div id="total-credits" class="mb-4 pb-4 border-b border-gray-300">
+            <h2 class="text-sm text-gray-500 font-bold uppercase">
+              Total Kreditpunkte
+            </h2>
+            <div class="flex items-center gap-2">
+              {{ credits }} / {{ requiredCredits }}
+              <CheckCircleIcon
+                v-if="credits === requiredCredits"
+                class="text-green-700 w-5 h-5"
+              />
+            </div>
+          </div>
+          <div id="module-information">
+            <ModuleInformation />
           </div>
         </div>
         <ModuleInformation />
@@ -30,6 +35,7 @@
     </div>
   </template>
   <div v-else class="text-2xl text-center p-4 flex-1">Loading...</div>
+  <div v-else class="text-2xl text-center p-4 flex-1">Plan wird geladen...</div>
 </template>
 
 <script>
