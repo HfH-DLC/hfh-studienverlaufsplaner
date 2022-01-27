@@ -12,26 +12,32 @@
     "
     :class="{
       'module--selected': module.selected,
-      'module--error': module.selected && hasErrors,
+      'module--placed': module.placed && !module.misplaced,
       'module--disabled': disabled,
+      'module--error': module.misplaced,
     }"
     :disabled="disabled"
     @click="onClick"
   >
-    <ExclamationCircleIcon
-      v-if="hasErrors"
-      class="inline-block w-5 h-5 flex-shrink-0"
+    <XCircleIcon
+      v-if="module.misplaced"
+      class="inline-block w-5 h-5 flex-shrink-0 text-red-600"
+    />
+    <CheckCircleIcon
+      v-if="module.placed && !module.misplaced"
+      class="inline-block w-5 h-5 flex-shrink-0 text-green-700"
     />
     {{ module.number }} {{ module.name }}
   </button>
 </template>
 
 <script>
-import { ExclamationCircleIcon } from "@heroicons/vue/outline";
+import { XCircleIcon, CheckCircleIcon } from "@heroicons/vue/outline";
 import { mapActions } from "vuex";
 export default {
   components: {
-    ExclamationCircleIcon,
+    CheckCircleIcon,
+    XCircleIcon,
   },
   props: {
     module: {
@@ -44,8 +50,8 @@ export default {
     },
   },
   computed: {
-    hasErrors() {
-      return this.module.errors.length > 0;
+    hasInfos() {
+      return this.module.infos.length > 0;
     },
   },
   methods: {
@@ -63,10 +69,14 @@ export default {
 
 <style lang="scss" scoped>
 .module--selected {
-  @apply font-bold text-green-600;
+  @apply font-bold;
+  @apply tracking-tighter;
 }
 .module--error {
-  @apply font-bold text-red-600;
+  @apply text-red-600;
+}
+.module--placed {
+  @apply text-green-700;
 }
 .module--disabled {
   @apply text-gray-400;
