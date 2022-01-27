@@ -14,7 +14,7 @@ const SET_CATEGORIES = "SET_CATEGORIES"
 const SET_RULES = "SET_RULES"
 const SET_DATE_OPTIONS = "SET_DATE_OPTIONS"
 const SET_SELECTION_STATUS = "SET_SELECTION_STATUS"
-const SET_MODULE_ERRORS = "SET_MODULE_ERRORS"
+const SET_MODULE_INFOS = "SET_MODULE_INFOS"
 const SET_TIMESLOT_ERRORS = "SET_TIMESLOTE_ERROS"
 const INIT_FINISHED = "INIT_FINISHED"
 const ADD_PLACEMENT = "ADD_PLACEMENT"
@@ -30,7 +30,7 @@ const initialState = {
     optionsDay: [],
     optionsTime: [],
     selectionStatus: {},
-    moduleErrors: {},
+    moduleInfos: {},
     timeSlotErrors: {},
     plan: null,
 }
@@ -76,8 +76,8 @@ const store = createStore({
         [SET_SELECTION_STATUS](state, selectionStatus) {
             state.selectionStatus = selectionStatus
         },
-        [SET_MODULE_ERRORS](state, moduleErrors) {
-            state.moduleErrors = moduleErrors
+        [SET_MODULE_INFOS](state, moduleInfos) {
+            state.moduleInfos = moduleInfos
         },
         [SET_TIMESLOT_ERRORS](state, timeSlotErrors) {
             state.timeSlotErrors = timeSlotErrors
@@ -85,8 +85,8 @@ const store = createStore({
         [ADD_PLACEMENT](state, placement) {
             state.plan.placements.push(placement);
         },
-        [REMOVE_PLACEMENT](state, timeSlotId) {
-            state.plan.placements = state.plan.placements.filter(placement => placement.timeSlotId !== timeSlotId);
+        [REMOVE_PLACEMENT](state, placement) {
+            state.plan.placements = state.plan.placements.filter(p => p.timeSlotId !== placement.timeSlotId);
         }
     },
     actions: {
@@ -122,27 +122,36 @@ const store = createStore({
                 selectableStatus: getSelectableStatus(state.timeSlots)
             })
         },
-        placeModule({ commit, dispatch, state, }, timeSlotId) {
+        placeModule({ commit, dispatch, state, getters }, timeSlotId) {
+            const existingPlacement = state.plan.placements.find(placement => placement.moduleId == state.selectionStatus.moduleId);
+            if (existingPlacement) {
+                commit(REMOVE_PLACEMENT, existingPlacement);
+            }
             commit(ADD_PLACEMENT, { timeSlotId, moduleId: state.selectionStatus.moduleId })
             dispatch("deselectModule")
             dispatch("validate")
             dispatch("save");
         },
         removeModule({ commit, dispatch, state }, timeSlotId) {
-            commit(REMOVE_PLACEMENT, timeSlotId)
-            dispatch("validate")
-            dispatch("save");
+            const existingPlacement = state.plan.placements.find(placement => placement.timeSlotId == timeSlotId);
+            if (existingPlacement) {
+                commit(REMOVE_PLACEMENT, existingPlacement)
+                dispatch("deselectModule")
+                dispatch("validate")
+                dispatch("save")
+            }
         },
         validate({ dispatch }) {
             dispatch("validateModules")
             dispatch("validateTimeSlots")
         },
         validateModules({ commit, state, getters }) {
-            const moduleErrors = {}
-            state.modules.forEach(module => {
-                moduleErrors[module.id] = validateModule(module.id, state.modules, getters.timeSlots, state.rules)
+            const moduleInfos = {}
+            const modules = getters.modules;
+            modules.forEach(module => {
+                moduleInfos[module.id] = validateModule(module.id, modules, getters.timeSlots, state.rules)
             })
-            commit(SET_MODULE_ERRORS, moduleErrors)
+            commit(SET_MODULE_INFOS, moduleInfos)
         },
         validateTimeSlots({ commit, state, getters }) {
             const timeSlotErrors = state.timeSlots.reduce((acc, cur) => {
@@ -161,12 +170,16 @@ const store = createStore({
         },
         modules(state) {
             return state.modules.map(module => {
-                const moduleErrors = state.moduleErrors[module.id]
+                const moduleInfos = state.moduleInfos[module.id]
+                const placement = state.plan.placements.find(placement => placement.moduleId == module.id);
+                const misplaced = !!(placement && state.timeSlotErrors[placement.timeSlotId] && state.timeSlotErrors[placement.timeSlotId].length > 0);
                 return {
                     ...module,
-                    errors: moduleErrors,
+                    infos: moduleInfos,
+                    misplaced,
                     selected: state.selectionStatus.moduleId == module.id,
-                    placed: !!state.plan.placements.find(placement => placement.moduleId == module.id)
+                    placed: !!placement,
+                    timeSlotId: placement && placement.timeSlotId
                 }
             })
         },
@@ -186,8 +199,8 @@ const store = createStore({
                 }
                 return {
                     ...timeSlot,
-                    removable: !selectedModule && module,
                     selectable: selectedModule && !module && state.selectionStatus.selectableStatus[timeSlot.id],
+                    dateAllowed: selectedModule && !!selectedModule.timeSlots.find(t => t.id == timeSlot.id),
                     module,
                     moduleId,
                     errors: state.timeSlotErrors[timeSlot.id]
@@ -216,27 +229,30 @@ const store = createStore({
                     ...category,
                     placedNumber: categoryModules.filter(module => module.placed).length,
                     requiredNumber,
-                    modules: categoryModules.filter(module => !module.placed)
+                    modules: categoryModules
                 }
             })
         },
-        years(state, { timeSlots }) {
+        schoolYears(state, { timeSlots }) {
             return [
                 ...new Set(
                     timeSlots.map((timeSlot) => {
                         return timeSlot.year
                     })
                 ),
-            ].sort((a, b) => a - b).map((year) => {
-                const slotsByYear = timeSlots.filter(timeSlot => timeSlot.year === year);
+            ].sort((a, b) => a - b).map((calendarYear) => {
+                const slotsBySchoolYear = timeSlots.filter(timeSlot => {
+                    return timeSlot.year === calendarYear && timeSlot.semester === 'HS' || timeSlot.year === calendarYear + 1 && timeSlot.semester === 'FS'
+                });
 
-                let semesters = new Set(slotsByYear.map(timeSlot => {
+                let semesters = new Set(slotsBySchoolYear.map(timeSlot => {
                     return timeSlot.semester
                 }))
 
-                semesters = [...semesters].sort().map(semester => {
-                    const slotsBySemester = slotsByYear.filter(timeSlot => timeSlot.semester === semester);
+                semesters = [...semesters].sort().reverse().map(semester => {
+                    const slotsBySemester = slotsBySchoolYear.filter(timeSlot => timeSlot.semester === semester);
                     return {
+                        calendarYear: semester === 'HS' ? calendarYear : calendarYear + 1,
                         semester,
                         weeks: [...new Set(slotsBySemester.map((slot) => slot.week))].sort((a, b) => state.optionsWeek.indexOf(a) - state.optionsWeek.indexOf(b)),
                         days: [...new Set(slotsBySemester.map((slot) => slot.day))].sort((a, b) => state.optionsDay.indexOf(a) - state.optionsDay.indexOf(b)),
@@ -245,7 +261,6 @@ const store = createStore({
                 })
 
                 return {
-                    year,
                     semesters
                 }
             })
