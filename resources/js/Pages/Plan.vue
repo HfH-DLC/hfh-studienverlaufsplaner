@@ -30,17 +30,14 @@
             <ModuleInformation />
           </div>
         </div>
-        <ModuleInformation />
       </div>
     </div>
   </template>
-  <div v-else class="text-2xl text-center p-4 flex-1">Loading...</div>
   <div v-else class="text-2xl text-center p-4 flex-1">Plan wird geladen...</div>
 </template>
 
 <script>
 import { mapGetters, mapActions, mapState } from "vuex";
-
 // Components
 import ErrorList from "../Components/ErrorList.vue";
 import ModuleInformation from "../Components/ModuleInformation.vue";
