@@ -1,3 +1,12 @@
+import ExcludeSemesterRule from "./ExcludeSemesterRule"
+
 export const getRule = (state, { type, params }) => {
-    throw "Unknown rules type: " + type;
+    switch (type) {
+        case 'ExcludeSemester':
+            {
+                return new ExcludeSemesterRule(params);
+            }
+        default:
+            throw "Unknown rules type: " + type;
+    }
 }
