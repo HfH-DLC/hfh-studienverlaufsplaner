@@ -21,12 +21,12 @@ export default class DateRule extends Rule {
         }
     }
 
-    validateSelection(module, timeSlots, selectable) {
+    validateSelection(module, timeSlots, status) {
         timeSlots.forEach(slot => {
             if (!module.timeSlots.find(timeSlot => {
                     return timeSlot.id == slot.id
                 })) {
-                selectable[slot.id] = false
+                status[slot.id].selectable = false
             }
         })
     }

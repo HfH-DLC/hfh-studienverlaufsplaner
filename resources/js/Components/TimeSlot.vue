@@ -57,7 +57,7 @@
       </button>
       <button
         ref="button"
-        v-if="timeSlot.selectable"
+        v-if="timeSlot.dateAllowed && timeSlot.selectable"
         class="
           text-sm text-left
           disabled:cursor-default

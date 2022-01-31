@@ -17,7 +17,7 @@ export default class Rule {
         throw new Error("Method not implemented");
     }
 
-    validateSelection(module, timeSlots, selectableStatus) {
+    validateSelection(module, timeSlots, status) {
         throw new Error("Method not implemented");
     }
 }

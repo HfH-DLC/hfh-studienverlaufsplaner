@@ -78,7 +78,7 @@ export default class PrerequisitesRule extends Rule {
         }
     }
 
-    validateSelection(module, timeSlots, selectableStatus) {
+    validateSelection(module, timeSlots, status) {
 
         const beforeSlots = []
 
@@ -98,7 +98,7 @@ export default class PrerequisitesRule extends Rule {
             });
 
             if (missingPrerequisites.length > 0) {
-                selectableStatus[slot.id] = false;
+                status[slot.id].selectable = false;
             }
             if (slot.module) {
                 beforeSlots.push(slot)
