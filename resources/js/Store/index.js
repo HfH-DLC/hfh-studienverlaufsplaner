@@ -113,13 +113,13 @@ const store = createStore({
         selectModule({ commit, state, getters }, moduleId) {
             commit(SET_SELECTION_STATUS, {
                 moduleId,
-                selectableStatus: validateSelection(moduleId, state.modules, getters.timeSlots, state.rules)
+                status: validateSelection(moduleId, state.modules, getters.timeSlots, state.rules)
             })
         },
         deselectModule({ commit, state }) {
             commit(SET_SELECTION_STATUS, {
                 id: null,
-                selectableStatus: getSelectableStatus(state.timeSlots)
+                status: getStatus(state.timeSlots)
             })
         },
         placeModule({ commit, dispatch, state, getters }, timeSlotId) {
@@ -199,8 +199,8 @@ const store = createStore({
                 }
                 return {
                     ...timeSlot,
-                    selectable: selectedModule && !module && state.selectionStatus.selectableStatus[timeSlot.id],
-                    dateAllowed: selectedModule && !!selectedModule.timeSlots.find(t => t.id == timeSlot.id),
+                    selectable: selectedModule && !module && state.selectionStatus.status[timeSlot.id].selectable,
+                    dateAllowed: selectedModule && !!selectedModule.timeSlots.find(t => t.id == timeSlot.id) && state.selectionStatus.status[timeSlot.id].dateAllowed,
                     module,
                     moduleId,
                     errors: state.timeSlotErrors[timeSlot.id]
@@ -284,9 +284,12 @@ const store = createStore({
     }
 })
 
-function getSelectableStatus(timeSlots) {
+function getStatus(timeSlots) {
     return timeSlots.reduce((acc, cur) => {
-        acc[cur.id] = true
+        acc[cur.id] = {
+            selectable: true,
+            dateAllowed: true
+        }
         return acc
     }, {})
 }
@@ -301,12 +304,12 @@ function validateModule(moduleId, modules, timeSlots, rules) {
 }
 
 function validateSelection(moduleId, modules, timeSlots, rules) {
-    const selectableStatus = getSelectableStatus(timeSlots)
+    const status = getStatus(timeSlots)
     const module = modules.find(module => module.id == moduleId);
     rules.forEach(rule => {
-        rule.validateSelection(module, timeSlots, selectableStatus)
+        rule.validateSelection(module, timeSlots, status)
     })
-    return selectableStatus
+    return status
 }
 
 export default store
