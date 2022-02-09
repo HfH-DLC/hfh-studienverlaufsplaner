@@ -32,6 +32,7 @@
         </div>
       </div>
     </div>
+    <!-- <Tour /> -->
   </template>
   <div v-else class="text-2xl text-center p-4 flex-1">Plan wird geladen...</div>
 </template>
@@ -44,6 +45,7 @@ import ModuleInformation from "../Components/ModuleInformation.vue";
 import ModuleList from "../Components/ModuleList.vue";
 import TimeTable from "../Components/TimeTable.vue";
 import { CheckCircleIcon } from "@heroicons/vue/outline";
+import Tour from "../Components/Tour.vue";
 
 export default {
   components: {
@@ -52,6 +54,7 @@ export default {
     TimeTable,
     ModuleInformation,
     ModuleList,
+    Tour,
   },
   props: {
     categories: {
