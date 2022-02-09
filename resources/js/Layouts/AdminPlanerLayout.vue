@@ -48,6 +48,10 @@ export default {
           label: "Module",
           href: `/admin/planers/${this.planerSlug}/modules`,
         },
+        {
+          label: "Regeln",
+          href: `/admin/planers/${this.planerSlug}/rules`,
+        },
       ],
     };
   },
