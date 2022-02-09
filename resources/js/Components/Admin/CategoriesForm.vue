@@ -55,7 +55,7 @@ export default {
     },
   },
   mounted() {
-    this.setCategory();
+    this.setCategory(this.editedCategory);
   },
   data() {
     return {
@@ -66,9 +66,9 @@ export default {
     };
   },
   methods: {
-    setCategory() {
-      this.form.name = this.editedCategory.name;
-      this.form.requiredNumber = this.form.requiredNumber;
+    setCategory(category) {
+      this.form.name = category ? category.name : null;
+      this.form.requiredNumber = category ? category.requiredNumber : null;
       this.$nextTick(() => {
         this.$refs.firstInput.focus();
       });
