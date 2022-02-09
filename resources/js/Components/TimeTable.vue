@@ -92,7 +92,7 @@ export default {
     focusSelectableSlot() {
       this.$nextTick(() => {
         const slotRef = this.timeSlotRefs.find((ref) => {
-          return ref.timeSlot.selectable;
+          return ref.timeSlot.selectable && ref.timeSlot.dateAllowed;
         });
         if (slotRef) {
           slotRef.focusButton();
