@@ -9,7 +9,9 @@ class Rule extends Model
 {
     use HasFactory;
 
-    public static $types = [];
+    public static $types = [
+        'ExcludeSemester'
+    ];
 
     protected $casts = [
         'params' => 'array'

@@ -377,7 +377,14 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             return redirect()->route('admin-modules', ['planer' => $planer]);
         });
 
-        /*         Route::post('/rules', function (Request $request, Planer $planer) {
+        Route::get('/rules', function (Request $request, Planer $planer) {
+            $rules = RuleResource::collection($planer->rules);
+            return Inertia::render('Admin/Rules', [
+                'rulesResource' => $rules, 'types' => Rule::$types, 'planerName' => $planer->name, 'planerSlug' => $planer->slug,
+            ]);
+        })->name('admin-rules');
+
+        Route::post('/rules', function (Request $request, Planer $planer) {
             $attributes = $request->validate([
                 'type' => ['required', ValidationRule::in(Rule::$types)],
                 'params' => ['nullable', 'array']
@@ -387,8 +394,8 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             $rule->type = $attributes['type'];
             $rule->params = $attributes['params'];
             $planer->rules()->save($rule);
-            return redirect()->route('admin-planer', ['planer' => $planer]);
-        }); */
+            return redirect()->route('admin-rules', ['planer' => $planer]);
+        });
     });
 });
 
