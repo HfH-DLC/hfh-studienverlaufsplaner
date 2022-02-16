@@ -1,19 +1,17 @@
+import { isSameDate, semesterCount, semesterPosition } from "../../helpers"
 import Rule from "./Rule"
 export default class SemesterRule extends Rule {
 
-    constructor(params) {
+    constructor(params, startYear) {
         super("semester")
         this.excludePositions = params.excludePositions
         this.moduleId = params.moduleId
+        this.startYear = startYear
     }
 
     validatePlacements(placements, errors) {
-        const semesters = this.getSemesters(placements);
-        const allowedSemesters = semesters.filter((semester, index) => {
-            return !this.excludePositions.includes(index);
-        })
         placements.filter(placement => placement.moduleId == this.moduleId).forEach((placement) => {
-            if (!allowedSemesters.includes(this.getSemesterKey(placement.year, placement.semester))) {
+            if (!this.isAllowedSemester(placement)) {
                 const text = this.excludePositions.reduce((acc, cur, i, array) => {
                     return acc + (cur + 1) + '.' + (i < array.length - 2 ? ', ' : i < array.length - 1 ? ' oder ' : '')
                 }, "");
@@ -22,28 +20,24 @@ export default class SemesterRule extends Rule {
         })
     }
 
-    validateModule(module, placements, errors) {}
+    validateModule(module, placements, errors) {
+        if (!module.placement && module.events.every(event => this.isAllowedSemester(event) || placements.find(placement => isSameDate(placement, event)))) {
+            errors.push("Alle Termine in den erlaubten Semestern für dieses Modul sind bereits besetzt.");
+        }
+    }
 
     validateSelection(module, placements, status) {
         if (module.id !== this.moduleId) {
             return
         }
-        const semesters = this.getSemesters(module.events);
-        const allowedSemesters = semesters.filter((semester, index) => {
-            return !this.excludePositions.includes(index);
-        })
         module.events.forEach((event) => {
-            status[event.id].dateAllowed = allowedSemesters.includes(this.getSemesterKey(event.year, event.semester));
+            status[event.id].dateAllowed = this.isAllowedSemester(event);
         })
     }
 
-    getSemesterKey(year, semester) {
-        return `${year}-${semester}`;
-    }
-
-    getSemesters(date) {
-        return [...new Set(date.map(date => {
-            return this.getSemesterKey(date.year, date.semester);
-        }))].sort((a, b) => a.localeCompare(b))
+    isAllowedSemester(date) {
+        const yearDiff = date.year - this.startYear;
+        const position = yearDiff * semesterCount() + semesterPosition(date.semester);
+        return !this.excludePositions.includes(position);
     }
 }
