@@ -26,7 +26,28 @@ export default {
   },
   data() {
     return {
-      links: [],
+      links: [
+        {
+          label: "Import",
+          href: `/admin/import`,
+        },
+        {
+          label: "Studiengänge",
+          href: `/admin/planers`,
+        },
+        {
+          label: "Kategorien",
+          href: `/admin/categories`,
+        },
+        {
+          label: "Module",
+          href: `/admin/modules`,
+        },
+        {
+          label: "Regeln",
+          href: `/admin/rules`,
+        },
+      ],
     };
   },
 };

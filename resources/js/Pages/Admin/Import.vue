@@ -1,10 +1,23 @@
 <template>
-  <div>
-    <h2>Import</h2>
-    <form @submit.prevent="submit">
-      <input type="text" v-model="form.year" required />
-      <input type="file" name="file" id="file" @change="setFile" required />
-      <Button type="submit">Importieren</Button>
+  <div class="p-4">
+    <h2 class="text-xl">Import</h2>
+    <form @submit.prevent="submit" class="mt-4">
+      <div>
+        <label for="year" class="block uppercase text-sm">Jahr</label>
+        <input
+          type="number"
+          v-model="form.year"
+          name="year"
+          id="year"
+          required
+          class="block border border-gray-600 rounded shadow-inner p-1"
+        />
+      </div>
+      <div class="mt-2">
+        <label for="file" class="block uppercase text-sm">Datei</label>
+        <input type="file" name="file" id="file" @change="setFile" required />
+      </div>
+      <Button type="submit" class="mt-4">Importieren</Button>
     </form>
   </div>
 </template>
@@ -35,7 +48,9 @@ export default {
       }
     },
     submit() {
-      this.form.post(`/admin/import`);
+      this.form.post(`/admin/import`, {
+        onSuccess: () => form.reset(),
+      });
     },
   },
 };

@@ -1,7 +1,7 @@
 <template>
   <div class="flex-1 flex justify-between">
     <div class="w-full p-4">
-      <h2 class="text-xl">Planer</h2>
+      <h2 class="text-xl">Studiengänge</h2>
       <EntityList :entities="planers">
         <template v-slot:label="slotProps">
           {{ slotProps.entity.name }}
