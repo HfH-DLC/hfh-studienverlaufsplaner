@@ -18,9 +18,11 @@ export const isPreviousSemester = (before, after) => {
 
 const HS = 'HS';
 const FS = 'FS';
-
 const semesters = [HS, FS];
 export const orderSemester = (a, b) => orderBy(semesters, a, b);
+export const semesterCount = () => semesters.length;
+export const semesterPosition = (semester) => semesters.indexOf(semester);
+
 const weeks = ['A', 'B'];
 export const orderWeek = (a, b) => orderBy(weeks, a, b);
 
