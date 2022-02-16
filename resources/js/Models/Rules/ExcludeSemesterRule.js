@@ -7,33 +7,33 @@ export default class SemesterRule extends Rule {
         this.moduleId = params.moduleId
     }
 
-    validateSlots(timeSlots, errors) {
-        const semesters = this.getSemesters(timeSlots);
+    validatePlacements(placements, errors) {
+        const semesters = this.getSemesters(placements);
         const allowedSemesters = semesters.filter((semester, index) => {
             return !this.excludePositions.includes(index);
         })
-        timeSlots.filter(slot => slot.module && slot.module.id == this.moduleId).forEach((slot) => {
-            if (!allowedSemesters.includes(this.getSemesterKey(slot.year, slot.semester))) {
+        placements.filter(placement => placement.moduleId == this.moduleId).forEach((placement) => {
+            if (!allowedSemesters.includes(this.getSemesterKey(placement.year, placement.semester))) {
                 const text = this.excludePositions.reduce((acc, cur, i, array) => {
                     return acc + (cur + 1) + '.' + (i < array.length - 2 ? ', ' : i < array.length - 1 ? ' oder ' : '')
                 }, "");
-                errors[slot.id].push(`<a href="#module-${slot.module.id}">${slot.module.number} ${slot.module.name}</a> kann nicht im ${text} Semester belegt werden.`);
+                errors[placement.id].push(`<a href="#module-${placement.module.id}">${placement.module.number} ${placement.module.name}</a> kann nicht im ${text} Semester belegt werden.`);
             }
         })
     }
 
-    validateModule(module, timeSlots, errors) {}
+    validateModule(module, placements, errors) {}
 
-    validateSelection(module, timeSlots, status) {
+    validateSelection(module, placements, status) {
         if (module.id !== this.moduleId) {
             return
         }
-        const semesters = this.getSemesters(timeSlots);
+        const semesters = this.getSemesters(module.events);
         const allowedSemesters = semesters.filter((semester, index) => {
             return !this.excludePositions.includes(index);
         })
-        timeSlots.forEach((slot) => {
-            status[slot.id].dateAllowed = allowedSemesters.includes(this.getSemesterKey(slot.year, slot.semester));
+        module.events.forEach((event) => {
+            status[event.id].dateAllowed = allowedSemesters.includes(this.getSemesterKey(event.year, event.semester));
         })
     }
 
@@ -41,9 +41,9 @@ export default class SemesterRule extends Rule {
         return `${year}-${semester}`;
     }
 
-    getSemesters(timeSlots) {
-        return [...new Set(timeSlots.map(timeSlot => {
-            return this.getSemesterKey(timeSlot.year, timeSlot.semester);
+    getSemesters(date) {
+        return [...new Set(date.map(date => {
+            return this.getSemesterKey(date.year, date.semester);
         }))].sort((a, b) => a.localeCompare(b))
     }
 }

@@ -5,19 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TimeSlot extends Model
+class Event extends Model
 {
     use HasFactory;
 
     protected $fillable = ['year', 'semester', 'week', 'day', 'time'];
+    protected $casts = ['year' => 'integer'];
 
-    public function planer()
+    public function module()
     {
-        return $this->belongsTo(Planer::class);
-    }
-
-    public function modules()
-    {
-        $this->belongsToMany(Module::class);
+        return $this->belongsTo(Module::class);
     }
 }

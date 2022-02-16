@@ -46,7 +46,7 @@ class PlanerTest extends TestCase
             ->where('planerSlug', $planer->slug)
             ->has('plan')
             ->has('categories')
-            ->has('timeSlots')
+            ->has('events')
             ->has('modules')
             ->has('rules')
             ->has('requiredCredits')
@@ -91,7 +91,7 @@ class PlanerTest extends TestCase
         foreach ($this->validPlacements() as $placement) {
             $placements[] = [
                 'moduleId' => $placement[0],
-                'timeSlotId' => $placement[1]
+                'eventId' => $placement[1]
             ];
         }
         $data = array('placements' => $placements);
@@ -132,14 +132,14 @@ class PlanerTest extends TestCase
         foreach ($this->invalidPlacements() as $placement) {
             $placements[] = [
                 'moduleId' => $placement[0],
-                'timeSlotId' => $placement[1]
+                'eventId' => $placement[1]
             ];
         }
         $data = array('placements' => $placements);
 
         $response = $this->json('put', $url, $data);
         $response->assertUnprocessable();
-        $response->assertJsonValidationErrors(array('placements.0.timeSlotId', 'placements.0.moduleId'));
+        $response->assertJsonValidationErrors(array('placements.0.eventId', 'placements.0.moduleId'));
         $plan = $plan->fresh();
         $this->assertEquals(0, $plan->placements()->count());
     }

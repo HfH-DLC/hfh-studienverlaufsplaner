@@ -16,8 +16,13 @@ class PlacementResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'timeSlotId' => $this->time_slot_id,
-            'moduleId' => $this->module_id
+            'moduleId' => $this->module_id,
+            'year' => intval($this->year),
+            'semester' => $this->semester,
+            'week' => $this->week,
+            'day' => $this->day,
+            'time' => $this->time,
+            'location' => $this->location,
         ];
     }
 }

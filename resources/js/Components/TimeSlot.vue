@@ -1,10 +1,10 @@
 <template>
   <td>
-    <div v-if="timeSlot" class="min-h-16 relative p-1">
+    <div class="min-h-16 relative p-1">
       <button
         ref="button"
-        v-if="timeSlot.module"
-        :id="`module-${timeSlot.module.id}`"
+        v-if="placement"
+        :id="`module-${placement.moduleId}`"
         class="
           text-sm text-left
           disabled:cursor-default
@@ -18,22 +18,18 @@
           focus:outline-none focus:ring-2 focus:ring-indigo-500
         "
         :class="{
-          'slot--invalid': invalid,
+          'slot--invalid': invalidPlacement,
         }"
         @click="onModuleClick"
       >
-        <span v-if="timeSlot.module">
-          <XCircleIcon
-            v-if="invalid"
-            class="text-red-600 inline-block mr-2 w-5 h-5"
-          />
-          <span>{{ timeSlot.module.number }} {{ timeSlot.module.name }}</span>
-        </span>
+        <XCircleIcon
+          v-if="invalidPlacement"
+          class="text-red-600 inline-block mr-2 w-5 h-5"
+        />
+        <span>{{ placement.module.number }} {{ placement.module.name }}</span>
       </button>
       <button
-        v-if="
-          timeSlot.module && timeSlot.module.selected && timeSlot.module.placed
-        "
+        v-if="placement && placement.module.selected"
         class="
           -bottom-8
           right-2
@@ -50,14 +46,14 @@
           focus:bg-gray-900
           shadow
         "
-        @click="removeModule(timeSlot.id)"
+        @click="removeModule(placement)"
       >
         <div class="sr-only">Modul entfernen</div>
         <TrashIcon class="w-4 h-4" />
       </button>
       <button
         ref="button"
-        v-if="timeSlot.dateAllowed && timeSlot.selectable"
+        v-if="event && !placement"
         class="
           text-sm text-left
           disabled:cursor-default
@@ -70,34 +66,14 @@
           truncate
           focus:outline-none focus:ring-2 focus:ring-indigo-500
           shadow-inner
-          slot--selectable
         "
-        @click="onClick"
+        :class="event.valid ? 'slot--valid' : 'slot--invalid'"
+        @click="onPlaceModule"
       >
         <span>
-          <CheckCircleIcon class="text-green-700 w-5 h-5" />
+          <CheckCircleIcon v-if="event.valid" class="text-green-700 w-5 h-5" />
+          <XCircleIcon v-else class="text-red-600 inline-block mr-2 w-5 h-5" />
         </span>
-      </button>
-      <button
-        v-if="!timeSlot.module && invalid"
-        ref="button"
-        class="
-          text-sm text-left
-          disabled:cursor-default
-          w-full
-          p-4
-          border border-gray-300
-          rounded
-          bg-white
-          transition-all
-          truncate
-          focus:outline-none focus:ring-2 focus:ring-indigo-500
-          shadow-inner
-          slot--invalid
-        "
-        @click="onClick"
-      >
-        <XCircleIcon class="text-red-600 inline-block mr-2 w-5 h-5" />
       </button>
     </div>
   </td>
@@ -117,7 +93,11 @@ export default {
     TrashIcon,
   },
   props: {
-    timeSlot: {
+    event: {
+      type: Object,
+      default: null,
+    },
+    placement: {
       type: Object,
       default: null,
     },
@@ -130,27 +110,22 @@ export default {
       "deselectModule",
     ]),
     onModuleClick() {
-      if (this.timeSlot.module.selected) {
+      if (this.placement.module.selected) {
         this.deselectModule();
       } else {
-        this.selectModule(this.timeSlot.module.id);
+        this.selectModule(this.placement.module.id);
       }
     },
-    onClick() {
-      this.placeModule(this.timeSlot.id);
+    onPlaceModule() {
+      this.placeModule(this.event);
     },
     focusButton() {
       this.$refs.button.focus();
     },
   },
   computed: {
-    invalid() {
-      return (
-        (this.timeSlot.errors && this.timeSlot.errors.length > 0) ||
-        (this.timeSlot.dateAllowed &&
-          !this.timeSlot.module &&
-          !this.timeSlot.selectable)
-      );
+    invalidPlacement() {
+      return this.placement.errors && this.placement.errors.length > 0;
     },
   },
 };
@@ -160,7 +135,7 @@ export default {
 .slot--invalid {
   @apply bg-red-50 text-red-600;
 }
-.slot--selectable {
+.slot--valid {
   @apply bg-green-50;
 }
 </style>

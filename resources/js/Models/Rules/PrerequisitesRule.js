@@ -1,109 +1,69 @@
 import Rule from "./Rule"
+import { isPreviousSemester, isSameDate } from "../../helpers"
 export default class PrerequisitesRule extends Rule {
 
     constructor() {
         super("prerequisites")
     }
 
-    validateSlots(timeSlots, errors) {
-
-        let beforeSlots = []
-
-        //todo ensure sorting
-        const sortedTimeSlots = timeSlots.sort((a, b) => {
-            return a.year - b.year || a.semester.localeCompare(b.semester)
-        });
-        sortedTimeSlots.forEach((slot) => {
-            const prerequisites = slot.module ? slot.module.prerequisites : [];
+    validatePlacements(placements, errors) {
+        placements.forEach(placement => {
             const missingPrerequisites = [];
+            const prerequisites = placement.module.prerequisites;
+
             prerequisites.forEach(prerequisite => {
-                const module = beforeSlots.find(beforeSlot => {
-                    return prerequisite.id === beforeSlot.module.id && this.isPreviousSemester(beforeSlot, slot);
-                })
-                if (!module) {
-                    missingPrerequisites.push(prerequisite)
+                const meetsPrerequisite = placements
+                    .filter(prerequisitePlacement => {
+                        return prerequisitePlacement.moduleId == prerequisite.id
+                    })
+                    .some(prerequisitePlacement => {
+                        return isPreviousSemester(prerequisitePlacement, placement);
+                    })
+                if (!meetsPrerequisite) {
+                    missingPrerequisites.push(prerequisite);
                 }
             });
 
             if (missingPrerequisites.length > 0) {
-                errors[slot.id].push(this.getSlotErrorMessage(slot.module, missingPrerequisites));
-            }
-            if (slot.module) {
-                beforeSlots.push(slot)
+                errors[placement.id].push(this.getPlacementErrorMessage(placement.module, missingPrerequisites))
             }
         })
     }
 
-    isPreviousSemester(before, after) {
-        if (before.year > after.year) {
-            return false;
-        }
-        if (before.year === after.year) {
-            return before.semester === 'HS' && after.semester === 'FS'
-        }
-        return true;
-    }
 
-    validateModule(module, timeSlots, errors) {
-
-        const beforeSlots = []
-
-        let hasValidSlot;
-
-        //todo ensure sorting
-        const sortedTimeSlots = timeSlots.sort((a, b) => {
-            return a.year - b.year || a.semester.localeCompare(b.semester)
-        });
-        sortedTimeSlots.forEach((slot) => {
-            const missingPrerequisites = [];
-            module.prerequisites.forEach(prerequisite => {
-                const module = beforeSlots.find(beforeSlot => {
-                    return prerequisite.id === beforeSlot.module.id && this.isPreviousSemester(beforeSlot, slot);
-                })
-                if (!module) {
-                    missingPrerequisites.push(prerequisite)
-                }
-            });
-
-            if (missingPrerequisites.length === 0 && !slot.module) {
-                hasValidSlot = true
-            }
-            if (slot.module) {
-                beforeSlots.push(slot)
-            }
-        })
-
-        if (!hasValidSlot) {
+    validateModule(module, placements, errors) {
+        const prerequisites = module.prerequisites;
+        const prerequisitesMet = module.events.some(event => this.eventMeetsPrerequisites(event, placements, prerequisites))
+        if (!prerequisitesMet) {
             errors.push(this.getModuleErrorMessage(module, module.prerequisites))
         }
     }
 
-    validateSelection(module, timeSlots, status) {
+    validateSelection(module, placements, status) {
+        const prerequisites = module.prerequisites;
 
-        const beforeSlots = []
-
-        //todo ensure sorting
-        const sortedTimeSlots = timeSlots.sort((a, b) => {
-            return a.year - b.year || a.semester.localeCompare(b.semester)
-        });
-        sortedTimeSlots.forEach((slot) => {
-            const missingPrerequisites = [];
-            module.prerequisites.forEach(prerequisite => {
-                const module = beforeSlots.find(beforeSlot => {
-                    return prerequisite.id === beforeSlot.module.id && this.isPreviousSemester(beforeSlot, slot);
-                })
-                if (!module) {
-                    missingPrerequisites.push(prerequisite)
-                }
-            });
-
-            if (missingPrerequisites.length > 0) {
-                status[slot.id].selectable = false;
-            }
-            if (slot.module) {
-                beforeSlots.push(slot)
+        module.events.forEach(event => {
+            if (!this.eventMeetsPrerequisites(event, placements, prerequisites)) {
+                status[event.id].valid = false
             }
         })
+    }
+
+    eventMeetsPrerequisites(event, placements, prerequisites) {
+        //Fail if the event's time slot is already taken
+        if (placements.find(placement => isSameDate(placement, event))) {
+            return false;
+        }
+        //check if all preqs are met
+        return prerequisites.every(prerequisite => {
+            return placements
+                .filter(placement => {
+                    return placement.moduleId == prerequisite.id
+                })
+                .some(placement => {
+                    return isPreviousSemester(placement, event);
+                })
+        });
     }
 
     getModuleErrorMessage(module, missingPrerequisites) {
@@ -114,7 +74,7 @@ export default class PrerequisitesRule extends Rule {
             return `Die Module ${missingPrerequisites.map(prerequisite => `<a href="#module-${prerequisite.id}">${prerequisite.number} ${prerequisite.name}</a>`).join(", ")} müssen vor diesem Modul belegt werden.`
 }
 
-    getSlotErrorMessage(module, missingPrerequisites) {
+    getPlacementErrorMessage(module, missingPrerequisites) {
             if (missingPrerequisites.length === 1) {
                 const prerequisite = missingPrerequisites[0];
                 return `<a href="#module-${prerequisite.id}">${prerequisite.number} ${prerequisite.name}</a> muss vor <a href="#module-${module.id}">${module.number} ${module.name}</a> belegt werden.`

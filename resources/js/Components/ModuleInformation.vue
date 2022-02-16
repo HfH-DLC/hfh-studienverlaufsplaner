@@ -27,16 +27,6 @@
       </dt>
       <dd>{{ selectedModule.credits }}</dd>
     </dl>
-    <!-- <dt class="mt-2 text-sm text-gray-500 font-bold uppercase">Termine</dt>
-    <dd>
-      <ul class="space-y-1">
-        <li v-for="(timeSlot, index) in selectedModule.timeSlots" :key="index">
-          {{ timeSlot.semester }} {{ timeSlot.year }}
-          {{ timeSlot.day }}
-          {{ timeSlot.time }}
-        </li>
-      </ul>
-    </dd> -->
   </div>
 </template>
 

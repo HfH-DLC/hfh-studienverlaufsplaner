@@ -9,10 +9,8 @@ class Category extends Model
 {
     use HasFactory;
 
-    public function planer()
+    public function planers()
     {
-        return $this->belongsTo(Planer::class);
+        return $this->belongsToMany(Planer::class);
     }
-
-    protected $casts = ['required_number' => 'integer'];
 }

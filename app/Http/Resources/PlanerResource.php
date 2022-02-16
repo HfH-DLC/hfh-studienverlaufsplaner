@@ -18,13 +18,9 @@ class PlanerResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'categories' => CategoryResource::collection($this->categories),
-            'timeSlots' => TimeSlotResource::collection($this->timeSlots),
             'modules' => ModuleResource::collection($this->modules),
             'rules' => RuleResource::collection($this->rules),
             'requiredCredits' => $this->required_credits,
-            'optionsWeek' => $this->options_week,
-            'optionsDay' => $this->options_day,
-            'optionsTime' => $this->options_time,
         ];
     }
 }

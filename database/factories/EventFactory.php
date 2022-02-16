@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class TimeSlotFactory extends Factory
+class EventFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -23,10 +23,11 @@ class TimeSlotFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($planer) {
 
-            $result = ['planer_id' => $planer->id,
-            'week' => $this->faker->randomElement($planer->options_week),
-            'day' => $this->faker->randomElement($planer->options_day),
-            'time' => $this->faker->randomElement($planer->options_time),
+            $result = [
+                'planer_id' => $planer->id,
+                'week' => $this->faker->randomElement($planer->options_week),
+                'day' => $this->faker->randomElement($planer->options_day),
+                'time' => $this->faker->randomElement($planer->options_time),
             ];
             return $result;
         });

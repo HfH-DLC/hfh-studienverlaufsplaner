@@ -11,6 +11,8 @@ class Plan extends Model
 {
     use HasFactory;
 
+    protected $casts = ['start_year' => 'integer'];
+
     public function planer()
     {
         return $this->belongsTo(Planer::class);
@@ -30,7 +32,7 @@ class Plan extends Model
         }
     }
 
-        /**
+    /**
      * The "booted" method of the model.
      *
      * @return void

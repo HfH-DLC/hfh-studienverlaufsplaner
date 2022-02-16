@@ -33,7 +33,7 @@
           <Module
             :module="module"
             :disabled="
-              !module.placed &&
+              !module.placement &&
               category.placedNumber === category.requiredNumber
             "
           />

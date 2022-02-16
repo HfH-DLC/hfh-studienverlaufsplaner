@@ -3,35 +3,31 @@ import DataAdapter from '../DataAdapter'
 import PrerequisitesRule from '../Models/Rules/PrerequisitesRule';
 import DateRule from '../Models/Rules/DateRule';
 import { getRule } from '../Models/Rules/RuleFactory';
+import { v4 } from "uuid";
+import { getCalendarYear, orderDay, orderSemester, orderTime, orderWeek } from '../helpers';
 
 let dataAdapter;
 
 const RESET_STATE = "RESET_STATE"
 const SET_PLAN = "SET_PLAN"
-const SET_TIMESLOTS = "SET_TIMESLOTS"
 const SET_MODULES = "SET_MODULES"
 const SET_CATEGORIES = "SET_CATEGORIES"
 const SET_RULES = "SET_RULES"
-const SET_DATE_OPTIONS = "SET_DATE_OPTIONS"
 const SET_SELECTION_STATUS = "SET_SELECTION_STATUS"
 const SET_MODULE_INFOS = "SET_MODULE_INFOS"
-const SET_TIMESLOT_ERRORS = "SET_TIMESLOTE_ERROS"
+const SET_PLACEMENT_ERRORS = "SET_PLACEMENT_ERRORS"
 const INIT_FINISHED = "INIT_FINISHED"
 const ADD_PLACEMENT = "ADD_PLACEMENT"
 const REMOVE_PLACEMENT = "REMOVE_PLACEMENT"
 
 const initialState = {
     initialized: false,
-    timeSlots: [],
     modules: [],
     categories: [],
     rules: [],
-    optionsWeek: [],
-    optionsDay: [],
-    optionsTime: [],
     selectionStatus: {},
     moduleInfos: {},
-    timeSlotErrors: {},
+    placementErrors: {},
     plan: null,
 }
 
@@ -46,9 +42,6 @@ const store = createStore({
         },
         [SET_PLAN](state, plan) {
             state.plan = plan
-        },
-        [SET_TIMESLOTS](state, timeSlots) {
-            state.timeSlots = timeSlots
         },
         [SET_MODULES](state, modules) {
             state.modules = modules
@@ -65,13 +58,11 @@ const store = createStore({
                 }
                 return array;
             }, [])
-            ruleObjects.push(new DateRule(), new PrerequisitesRule());
+            ruleObjects.push(
+                new DateRule(),
+                new PrerequisitesRule()
+            );
             state.rules = ruleObjects
-        },
-        [SET_DATE_OPTIONS](state, { optionsWeek, optionsDay, optionsTime }) {
-            state.optionsWeek = optionsWeek;
-            state.optionsDay = optionsDay;
-            state.optionsTime = optionsTime;
         },
         [SET_SELECTION_STATUS](state, selectionStatus) {
             state.selectionStatus = selectionStatus
@@ -79,26 +70,24 @@ const store = createStore({
         [SET_MODULE_INFOS](state, moduleInfos) {
             state.moduleInfos = moduleInfos
         },
-        [SET_TIMESLOT_ERRORS](state, timeSlotErrors) {
-            state.timeSlotErrors = timeSlotErrors
+        [SET_PLACEMENT_ERRORS](state, placementErrors) {
+            state.placementErrors = placementErrors
         },
         [ADD_PLACEMENT](state, placement) {
             state.plan.placements.push(placement);
         },
         [REMOVE_PLACEMENT](state, placement) {
-            state.plan.placements = state.plan.placements.filter(p => p.timeSlotId !== placement.timeSlotId);
+            state.plan.placements = state.plan.placements.filter(p => p.id !== placement.id);
         }
     },
     actions: {
-        async init({ commit, dispatch }, { planerSlug, plan, timeSlots, modules, categories, rules, optionsWeek, optionsDay, optionsTime }) {
+        async init({ commit, dispatch }, { planerSlug, plan, modules, categories, rules }) {
             dataAdapter = new DataAdapter(planerSlug)
             commit(RESET_STATE)
             commit(SET_PLAN, plan)
-            commit(SET_TIMESLOTS, timeSlots)
             commit(SET_MODULES, modules)
             commit(SET_CATEGORIES, categories)
             commit(SET_RULES, rules)
-            commit(SET_DATE_OPTIONS, { optionsDay, optionsTime, optionsWeek })
             dispatch("validate")
             commit(INIT_FINISHED)
         },
@@ -113,113 +102,111 @@ const store = createStore({
         selectModule({ commit, state, getters }, moduleId) {
             commit(SET_SELECTION_STATUS, {
                 moduleId,
-                status: validateSelection(moduleId, state.modules, getters.timeSlots, state.rules)
+                status: validateSelection(moduleId, state.modules, getters.placements, state.rules)
             })
         },
-        deselectModule({ commit, state }) {
+        deselectModule({ commit }) {
             commit(SET_SELECTION_STATUS, {
-                id: null,
-                status: getStatus(state.timeSlots)
+                moduleId: null,
+                status: {}
             })
         },
-        placeModule({ commit, dispatch, state, getters }, timeSlotId) {
+        placeModule({ commit, dispatch, state, getters }, event) {
             const existingPlacement = state.plan.placements.find(placement => placement.moduleId == state.selectionStatus.moduleId);
             if (existingPlacement) {
                 commit(REMOVE_PLACEMENT, existingPlacement);
             }
-            commit(ADD_PLACEMENT, { timeSlotId, moduleId: state.selectionStatus.moduleId })
+            commit(ADD_PLACEMENT, {
+                id: v4(),
+                moduleId: state.selectionStatus.moduleId,
+                year: event.year,
+                semester: event.semester,
+                week: event.week,
+                day: event.day,
+                time: event.time,
+                location: event.location
+            })
             dispatch("deselectModule")
             dispatch("validate")
             dispatch("save");
         },
-        removeModule({ commit, dispatch, state }, timeSlotId) {
-            const existingPlacement = state.plan.placements.find(placement => placement.timeSlotId == timeSlotId);
-            if (existingPlacement) {
-                commit(REMOVE_PLACEMENT, existingPlacement)
-                dispatch("deselectModule")
-                dispatch("validate")
-                dispatch("save")
-            }
+        removeModule({ commit, dispatch, state }, placement) {
+            commit(REMOVE_PLACEMENT, placement)
+            dispatch("deselectModule")
+            dispatch("validate")
+            dispatch("save")
+
         },
         validate({ dispatch }) {
             dispatch("validateModules")
-            dispatch("validateTimeSlots")
+            dispatch("validatePlacements")
         },
         validateModules({ commit, state, getters }) {
             const moduleInfos = {}
             const modules = getters.modules;
             modules.forEach(module => {
-                moduleInfos[module.id] = validateModule(module.id, modules, getters.timeSlots, state.rules)
+                moduleInfos[module.id] = validateModule(module.id, modules, getters.placements, state.rules)
             })
             commit(SET_MODULE_INFOS, moduleInfos)
         },
-        validateTimeSlots({ commit, state, getters }) {
-            const timeSlotErrors = state.timeSlots.reduce((acc, cur) => {
+        validatePlacements({ commit, state, getters }) {
+            const placementErrors = state.plan.placements.reduce((acc, cur) => {
                 acc[cur.id] = []
                 return acc
             }, {})
             state.rules.forEach(rule => {
-                rule.validateSlots(getters.timeSlots, timeSlotErrors)
+                rule.validatePlacements(getters.placements, placementErrors)
             })
-            commit(SET_TIMESLOT_ERRORS, timeSlotErrors)
+            commit(SET_PLACEMENT_ERRORS, placementErrors)
         }
     },
     getters: {
-        credits(state, { timeSlots }) {
-            return timeSlots.map(slot => slot.module).reduce((total, module) => module ? total + module.credits : total, 0)
+        credits(state, { placements }) {
+            return placements.map(placements => placements.module).reduce((total, module) => module ? total + module.credits : total, 0)
         },
         modules(state) {
             return state.modules.map(module => {
                 const moduleInfos = state.moduleInfos[module.id]
                 const placement = state.plan.placements.find(placement => placement.moduleId == module.id);
-                const misplaced = !!(placement && state.timeSlotErrors[placement.timeSlotId] && state.timeSlotErrors[placement.timeSlotId].length > 0);
+                const misplaced = !!(placement && state.placementErrors[placement.id] && state.placementErrors[placement.id].length > 0);
                 return {
                     ...module,
                     infos: moduleInfos,
+                    selected: state.selectionStatus && state.selectionStatus.moduleId == module.id,
+                    placement: placement,
                     misplaced,
-                    selected: state.selectionStatus.moduleId == module.id,
-                    placed: !!placement,
-                    timeSlotId: placement && placement.timeSlotId
                 }
             })
         },
         moduleById: (state, { modules }) => (id) => {
             return modules.find(module => module.id == id)
         },
-        timeSlots(state, { selectedModule, moduleById }) {
-            return state.timeSlots.map(timeSlot => {
-                const placement = state.plan.placements.find(placement => placement.timeSlotId === timeSlot.id);
-                let module;
-                let moduleId;
-                if (placement) {
-                    module = moduleById(placement.moduleId);
-                    if (module) {
-                        moduleId = module.id;
-                    }
-                }
+        selectableEvents(state, { selectedModule }) {
+            if (!selectedModule) {
+                return [];
+            }
+            return selectedModule.events.filter(event => {
+                const status = state.selectionStatus.status[event.id];
+                return status.dateAllowed
+            }).map(event => {
+                const status = state.selectionStatus.status[event.id];
                 return {
-                    ...timeSlot,
-                    selectable: selectedModule && !module && state.selectionStatus.status[timeSlot.id].selectable,
-                    dateAllowed: selectedModule && !!selectedModule.timeSlots.find(t => t.id == timeSlot.id) && state.selectionStatus.status[timeSlot.id].dateAllowed,
-                    module,
-                    moduleId,
-                    errors: state.timeSlotErrors[timeSlot.id]
+                    ...event,
+                    valid: status.valid
                 }
-            })
+            });
         },
-        timeSlotById: (state, { timeSlots }) => (id) => {
-            return timeSlots.find(timeSlot => timeSlot.id == id)
-        },
-        timeSlotByDate: (state, { timeSlots }) => (year, semester, week, day, time) => {
-            return timeSlots.find((slot) => {
+        selectableEventByDate: (state, { selectableEvents }) => (year, semester, week, day, time) => {
+            const result = selectableEvents.find((event) => {
                 return (
-                    slot.year == year &&
-                    slot.semester == semester &&
-                    slot.week == week &&
-                    slot.day == day &&
-                    slot.time == time
+                    event.year == year &&
+                    event.semester == semester &&
+                    event.week == week &&
+                    event.day == day &&
+                    event.time == time
                 );
             });
+            return result;
         },
         categories(state, { modules }) {
             return state.categories.map(category => {
@@ -227,40 +214,38 @@ const store = createStore({
                 const requiredNumber = category.requiredNumber != null ? category.requiredNumber : categoryModules.length;
                 return {
                     ...category,
-                    placedNumber: categoryModules.filter(module => module.placed).length,
+                    placedNumber: categoryModules.filter(module => module.placement).length,
                     requiredNumber,
                     modules: categoryModules
                 }
             })
         },
-        schoolYears(state, { timeSlots }) {
-            return [
+        years(state, { modules, placements, optionsWeek, optionsDay, optionsTime }) {
+            const events = modules.reduce((acc, cur) => {
+                acc.push(...cur.events)
+                return acc
+            }, []);
+            const dates = [...events, ...placements];
+            const years = [
                 ...new Set(
-                    timeSlots.map((timeSlot) => {
-                        return timeSlot.year
-                    })
+                    dates.map((date) => date.year)
                 ),
-            ].sort((a, b) => a - b).map((calendarYear) => {
-                const slotsBySchoolYear = timeSlots.filter(timeSlot => {
-                    return timeSlot.year === calendarYear && timeSlot.semester === 'HS' || timeSlot.year === calendarYear + 1 && timeSlot.semester === 'FS'
+            ].sort()
+            return years.sort((a, b) => a - b).map((year) => {
+                const yearDates = dates.filter(date => date.year === year);
+                const semesters = [...new Set(yearDates.map((date) => date.semester))].sort(orderSemester).map(semester => {
+                    const semesterDates = yearDates.filter(date => date.semester === semester);
+                    return {
+                        value: semester,
+                        calendarYear: getCalendarYear(semester, year),
+                        weeks: [...new Set(semesterDates.map((date) => date.week))].sort(orderWeek),
+                        days: [...new Set(semesterDates.map((date) => date.day))].sort(orderDay),
+                        times: [...new Set(semesterDates.map((date) => date.time))].sort(orderTime),
+                    }
                 });
 
-                let semesters = new Set(slotsBySchoolYear.map(timeSlot => {
-                    return timeSlot.semester
-                }))
-
-                semesters = [...semesters].sort().reverse().map(semester => {
-                    const slotsBySemester = slotsBySchoolYear.filter(timeSlot => timeSlot.semester === semester);
-                    return {
-                        calendarYear: semester === 'HS' ? calendarYear : calendarYear + 1,
-                        semester,
-                        weeks: [...new Set(slotsBySemester.map((slot) => slot.week))].sort((a, b) => state.optionsWeek.indexOf(a) - state.optionsWeek.indexOf(b)),
-                        days: [...new Set(slotsBySemester.map((slot) => slot.day))].sort((a, b) => state.optionsDay.indexOf(a) - state.optionsDay.indexOf(b)),
-                        times: [...new Set(slotsBySemester.map((slot) => slot.time))].sort((a, b) => state.optionsTime.indexOf(a) - state.optionsTime.indexOf(b)),
-                    }
-                })
-
                 return {
+                    value: year,
                     semesters
                 }
             })
@@ -268,13 +253,36 @@ const store = createStore({
         selectedModule(state, { moduleById }) {
             return moduleById(state.selectionStatus.moduleId)
         },
-        timeSlotErrors(state, { timeSlotById }) {
+        placements(state, { moduleById }) {
+            return state.plan.placements.map(placement => {
+                return {
+                    ...placement,
+                    module: moduleById(placement.moduleId),
+                    errors: state.placementErrors[placement.id]
+                }
+            })
+        },
+        placementById: (state, { placements }) => (id) => {
+            return placements.find(placements => placements.id == id)
+        },
+        placementByDate: (state, { placements }) => (year, semester, week, day, time) => {
+            return placements.find((placement) => {
+                return (
+                    placement.year == year &&
+                    placement.semester == semester &&
+                    placement.week == week &&
+                    placement.day == day &&
+                    placement.time == time
+                );
+            });
+        },
+        placementErrors(state, { placementById }) {
             const result = [];
-            Object.entries(state.timeSlotErrors).forEach(([timeSlotId, errors]) => {
-                const timeSlot = timeSlotById(timeSlotId);
+            Object.entries(state.placementErrors).forEach(([placementId, errors]) => {
+                const placement = placementById(placementId);
                 errors.forEach(error => {
                     result.push({
-                        timeSlot,
+                        placement,
                         text: error
                     })
                 })
@@ -284,30 +292,30 @@ const store = createStore({
     }
 })
 
-function getStatus(timeSlots) {
-    return timeSlots.reduce((acc, cur) => {
+function getStatus(events) {
+    return events.reduce((acc, cur) => {
         acc[cur.id] = {
-            selectable: true,
+            valid: true,
             dateAllowed: true
         }
         return acc
     }, {})
 }
 
-function validateModule(moduleId, modules, timeSlots, rules) {
+function validateModule(moduleId, modules, placements, rules) {
     const module = modules.find(module => module.id == moduleId);
     const errors = [];
     rules.forEach(rule => {
-        rule.validateModule(module, timeSlots, errors)
+        rule.validateModule(module, placements, errors)
     })
     return errors
 }
 
-function validateSelection(moduleId, modules, timeSlots, rules) {
-    const status = getStatus(timeSlots)
+function validateSelection(moduleId, modules, placements, rules) {
     const module = modules.find(module => module.id == moduleId);
+    const status = getStatus(module.events);
     rules.forEach(rule => {
-        rule.validateSelection(module, timeSlots, status)
+        rule.validateSelection(module, placements, status)
     })
     return status
 }

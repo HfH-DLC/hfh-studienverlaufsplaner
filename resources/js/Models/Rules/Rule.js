@@ -8,7 +8,7 @@ export default class Rule {
         this.type = type;
     }
 
-    validateSlots() {
+    validatePlacements() {
         throw new Error("Method not implemented");
     }
 
@@ -17,7 +17,7 @@ export default class Rule {
         throw new Error("Method not implemented");
     }
 
-    validateSelection(module, timeSlots, status) {
+    validateSelection(module, status) {
         throw new Error("Method not implemented");
     }
 }

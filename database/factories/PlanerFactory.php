@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Models\Category;
 use App\Models\Module;
 use App\Models\Planer;
-use App\Models\TimeSlot;
+use App\Models\Event;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PlanerFactory extends Factory
@@ -35,10 +35,10 @@ class PlanerFactory extends Factory
         });
     }
 
-    public function withTimeSlots(int $timeSlots = 1)
+    public function withEvents(int $events = 1)
     {
-        return $this->afterCreating(function (Planer $planer) use ($timeSlots) {
-            TimeSlot::factory()->forPlaner($planer)->count($timeSlots)->create();
+        return $this->afterCreating(function (Planer $planer) use ($events) {
+            Event::factory()->forPlaner($planer)->count($events)->create();
         });
     }
 
@@ -46,13 +46,13 @@ class PlanerFactory extends Factory
     {
         return $this->afterCreating(function (Planer $planer) use ($modules) {
             $category = $this->faker->randomElement($planer->categories()->get());
-            $timeSlots = $this->faker->randomElements($planer->timeSlots()->get(), random_int(1, count($planer->timeSlots()->get())));
+            $events = $this->faker->randomElements($planer->events()->get(), random_int(1, count($planer->events()->get())));
             Module::factory()
-            ->for($planer)
-            ->withCategory($category)
-            ->hasAttached($timeSlots)
-            ->count($modules)
-            ->create();
+                ->for($planer)
+                ->withCategory($category)
+                ->hasAttached($events)
+                ->count($modules)
+                ->create();
         });
     }
 }

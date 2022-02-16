@@ -21,7 +21,7 @@ class ModuleResource extends JsonResource
             'credits' => $this->credits,
             'category' => new CategoryResource($this->category),
             'prerequisites' => PrerequisiteResource::collection($this->prerequisites),
-            'timeSlots' => TimeSlotResource::collection($this->timeSlots),
+            'events' => EventResource::collection($this->events),
         ];
     }
 }

@@ -9,9 +9,11 @@ class Module extends Model
 {
     use HasFactory;
 
-    public function planer()
+    protected $casts = ['category_id' => 'integer', 'credits' => 'integer'];
+
+    public function planers()
     {
-        return $this->belongsTo(Planer::class);
+        return $this->belongsToMany(Planer::class);
     }
 
     public function category()
@@ -19,9 +21,9 @@ class Module extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function timeSlots()
+    public function events()
     {
-        return $this->belongsToMany(TimeSlot::class);
+        return $this->hasMany(Event::class);
     }
 
     public function prerequisites()
@@ -33,6 +35,4 @@ class Module extends Model
     {
         return $this->belongsToMany('App\Models\Module', 'module_prerequisite', 'prerequisite_id', 'module_id');
     }
-
-    protected $casts = [ 'category_id' => 'integer', 'credits' => 'integer' ];
 }

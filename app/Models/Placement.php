@@ -19,11 +19,5 @@ class Placement extends Model
         return $this->belongsTo(Module::class);
     }
 
-    public function timeSlot()
-    {
-        return $this->belongsTo(TimeSlot::class);
-    }
-
-
-    protected $casts = ['plan_id' => 'integer', 'module_id' => 'integer',  'time_slot_id' => 'integer' ];
+    protected $casts = ['plan_id' => 'integer', 'module_id' => 'integer', 'year' => 'integer'];
 }

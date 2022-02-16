@@ -1,7 +1,7 @@
 <template>
-  <div v-for="(year, yearIndex) in schoolYears" :key="yearIndex" class="mb-24">
+  <div v-for="(year, yearIndex) in years" :key="yearIndex" class="mb-24">
     <div
-      class="overflow-hidden rounded-xl border border-gray-300 mb-4"
+      class="mb-4 border border-gray-300"
       v-for="(semester, semesterIndex) in year.semesters"
       :key="semesterIndex"
     >
@@ -11,7 +11,7 @@
           :class="[semesterIndex % 2 === 0 ? 'bg-gray-900' : 'bg-gray-600']"
         >
           {{
-            semester.semester
+            semester.value
           }}
           {{
             semester.calendarYear
@@ -23,41 +23,48 @@
             <th
               scope="col"
               class="px-6 py-2 text-xs text-gray-500"
-              v-for="day in semester.days"
-              :key="day"
+              v-for="week in semester.weeks"
+              :key="week"
             >
-              {{ day }}
+              {{ week }}
             </th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-300">
-          <template
-            v-for="(time, timeIndex) in semester.times"
-            :key="timeIndex"
-          >
+          <template v-for="day in semester.days" :key="day">
             <tr
+              v-for="time in semester.times"
+              :key="time"
               class="divide-x divide-gray-300"
-              v-for="(week, weekIndex) in semester.weeks"
-              :key="weekIndex"
             >
               <th
                 scope="row"
-                class="px-6 py-2 text-xs text-left bg-gray-50 text-gray-500"
+                class="
+                  px-6
+                  py-2
+                  text-xs text-left
+                  bg-gray-50
+                  text-gray-500
+                  w-px
+                "
               >
-                {{ week }} {{ time }}
+                {{ day }} {{ time }}
               </th>
               <TimeSlot
-                v-for="day in semester.days"
-                :key="day"
-                :ref="setTimeSlotRef"
-                :timeSlot="
-                  timeSlotByDate(
-                    semester.calendarYear,
-                    semester.semester,
+                v-for="week in semester.weeks"
+                :key="week"
+                :ref="setSlotRef"
+                :event="
+                  selectableEventByDate(
+                    year.value,
+                    semester.value,
                     week,
                     day,
                     time
                   )
+                "
+                :placement="
+                  placementByDate(year.value, semester.value, week, day, time)
                 "
               />
             </tr>
@@ -69,7 +76,7 @@
 </template>
 
 <script>
-import TimeSlot from "../Components/TimeSlot.vue";
+import TimeSlot from "./TimeSlot.vue";
 import { mapGetters } from "vuex";
 export default {
   components: {
@@ -77,50 +84,51 @@ export default {
   },
   data() {
     return {
-      timeSlotRefs: [],
+      slotRefs: [],
     };
   },
   computed: {
     ...mapGetters([
-      "schoolYears",
-      "timeSlots",
-      "timeSlotByDate",
+      "years",
+      "selectableEventByDate",
+      "placementByDate",
       "selectedModule",
     ]),
   },
   methods: {
     focusSelectableSlot() {
+      //todo focus invalid slot if no valid ones are available?
       this.$nextTick(() => {
-        const slotRef = this.timeSlotRefs.find((ref) => {
-          return ref.timeSlot.selectable && ref.timeSlot.dateAllowed;
+        const slotRef = this.slotRefs.find((ref) => {
+          return ref.event && ref.event.valid;
         });
         if (slotRef) {
           slotRef.focusButton();
         }
       });
     },
-    focusSlot(id) {
+    focusSlot(placementId) {
       this.$nextTick(() => {
-        const slotRef = this.timeSlotRefs.find((ref) => {
-          return ref.timeSlot.id === id;
+        const slotRef = this.slotRefs.find((ref) => {
+          return ref.placement && ref.placement.id === placementId;
         });
         if (slotRef) {
           slotRef.focusButton();
         }
       });
     },
-    setTimeSlotRef(el) {
+    setSlotRef(el) {
       if (el) {
-        this.timeSlotRefs.push(el);
+        this.slotRefs.push(el);
       }
     },
   },
   watch: {
     selectedModule(newValue, oldValue) {
       if (newValue) {
-        if (newValue.placed) {
-          this.focusSlot(newValue.timeSlotId);
-        } else if (!newValue.placed) {
+        if (newValue.placement) {
+          this.focusSlot(newValue.placement.id);
+        } else {
           this.focusSelectableSlot();
         }
       }

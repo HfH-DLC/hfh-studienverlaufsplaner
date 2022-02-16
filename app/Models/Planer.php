@@ -13,21 +13,7 @@ class Planer extends Model
     use HasSlug;
 
     protected $casts = [
-        'options_week' => 'array',
-        'options_day' => 'array',
-        'options_time' => 'array',
-        'required_credits' => 'integer'
-    ];
-
-    /**
-     * The model's default values for attributes.
-     *
-     * @var array
-     */
-    protected $attributes = [
-        'options_week' => '[]',
-        'options_day' => '[]',
-        'options_time' => '[]'
+        'required_credits' => 'integer',
     ];
 
     public function plans()
@@ -37,17 +23,12 @@ class Planer extends Model
 
     public function categories()
     {
-        return $this->hasMany(Category::class);
+        return $this->belongsToMany(Category::class);
     }
 
     public function modules()
     {
-        return $this->hasMany(Module::class);
-    }
-
-    public function timeSlots()
-    {
-        return $this->hasMany(TimeSlot::class);
+        return $this->belongsToMany(Module::class);
     }
 
     public function rules()
@@ -64,5 +45,18 @@ class Planer extends Model
         return SlugOptions::create()
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug');
+    }
+
+    public function getModulesForPlan(Plan $plan)
+    {
+        $years = array();
+        $numberOfYears = 4;
+
+        for ($i = 0; $i < $numberOfYears; $i++) {
+            $years[] = $plan->start_year + $i;
+        }
+        return $this->modules()->whereHas('events', function ($q) use ($years) {
+            $q->where('year', $years);
+        })->get();
     }
 }

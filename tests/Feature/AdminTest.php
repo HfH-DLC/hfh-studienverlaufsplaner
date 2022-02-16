@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use App\Models\Planer;
-use App\Models\TimeSlot;
+use App\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\Assert;
 use App\Models\User;
@@ -14,14 +14,14 @@ class AdminTest extends TestCase
 {
     use RefreshDatabase;
 
-        /**
+    /**
      * @test
      */
     public function show_login_page()
     {
         $response = $this->get('/admin/login');
         $response->assertSuccessful();
-        $response->assertInertia(fn(Assert $page) => $page->component('Admin/Login'));
+        $response->assertInertia(fn (Assert $page) => $page->component('Admin/Login'));
     }
 
     /**
@@ -99,9 +99,9 @@ class AdminTest extends TestCase
         $user = User::factory()->create();
         $response = $this->actingAs($user)->get('admin/planers');
         $response->assertSuccessful();
-        $response->assertInertia(fn(Assert $page) => $page
-        ->component('Admin/Planers')
-        ->has('planersResource', 1));
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Admin/Planers')
+            ->has('planersResource', 1));
     }
 
 
@@ -142,13 +142,13 @@ class AdminTest extends TestCase
     {
         $user = User::factory()->create();
         $planer = Planer::factory()->create();
-        $response = $this->actingAs($user)->get("/admin/planers/$planer->slug/categories");
+        $response = $this->actingAs($user)->get("/admin/categories");
         $response->assertSuccessful();
-        $response->assertInertia(fn(Assert $page) => $page
-        ->component('Admin/Categories')
-        ->has('categoriesResource')
-        ->has('planerName')
-        ->has('planerSlug'));
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Admin/Categories')
+            ->has('categoriesResource')
+            ->has('planerName')
+            ->has('planerSlug'));
     }
 
     /**
@@ -174,7 +174,7 @@ class AdminTest extends TestCase
         ];
         $response = $this->actingAs($user)->post("/admin/planers/$planer->slug/categories", $data);
         $response->assertRedirect("/admin/planers/$planer->slug/categories");
-        
+
         $this->assertEquals(1, $planer->categories()->count());
         $category = $planer->categories()->first();
         $this->assertNotNull($category);
@@ -192,7 +192,7 @@ class AdminTest extends TestCase
         $response->assertRedirect('/admin/login');
     }
 
-        /**
+    /**
      * @test
      */
     public function update_category()
@@ -213,7 +213,7 @@ class AdminTest extends TestCase
         ];
         $response = $this->actingAs($user)->put("/admin/planers/$planer->slug/categories/$category->id", $data);
         $response->assertRedirect("/admin/planers/$planer->slug/categories");
-        
+
         $updatedCategory = $planer->categories()->find($category->id);
         $this->assertNotNull($updatedCategory);
         $this->assertEquals($data['name'], $updatedCategory->name);
@@ -256,7 +256,7 @@ class AdminTest extends TestCase
         $response->assertRedirect("/admin/planers/$planer->slug/categories");
 
         $this->assertEquals(1, $planer->categories()->count());
-        
+
         $deletedCategory = $planer->categories()->find($category->id);
         $this->assertNull($deletedCategory);
 
@@ -289,14 +289,14 @@ class AdminTest extends TestCase
         $planer = Planer::factory()->create();
         $response = $this->actingAs($user)->get("/admin/planers/$planer->slug/timeslots");
         $response->assertSuccessful();
-        $response->assertInertia(fn(Assert $page) => $page
-        ->component('Admin/TimeSlots')
-        ->has('timeSlotsResource')
-        ->has('planerName')
-        ->has('planerSlug')
-        ->has('planerOptionsWeek')
-        ->has('planerOptionsDay')
-        ->has('planerOptionsTime'));
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Admin/Events')
+            ->has('eventsResource')
+            ->has('planerName')
+            ->has('planerSlug')
+            ->has('planerOptionsWeek')
+            ->has('planerOptionsDay')
+            ->has('planerOptionsTime'));
     }
 
     /**
@@ -329,9 +329,9 @@ class AdminTest extends TestCase
         ];
         $response = $this->actingAs($user)->post("/admin/planers/$planer->slug/timeslots", $data);
         $response->assertRedirect("/admin/planers/$planer->slug/timeslots");
-        $this->assertEquals(1, $planer->timeSlots()->count());
-        $createdTimeSlot = $planer->timeSlots()->first();
-        $this->assertEquals($data, $createdTimeSlot->only('year', 'semester', 'week', 'day', 'time'));
+        $this->assertEquals(1, $planer->events()->count());
+        $createdEvent = $planer->events()->first();
+        $this->assertEquals($data, $createdEvent->only('year', 'semester', 'week', 'day', 'time'));
     }
 
     /**
@@ -354,10 +354,10 @@ class AdminTest extends TestCase
             [
                 'options_week' => ['Wo 1,2,3', 'Wo 4,5,6'],
                 'options_day' => ['Montag', 'Donnerstag'],
-                'options_time' => ['Vormittag','Nachmittag']
+                'options_time' => ['Vormittag', 'Nachmittag']
             ]
         );
-        $timeSlot = TimeSlot::factory()->create(
+        $event = Event::factory()->create(
             [
                 'planer_id' => $planer->id,
                 'year' => '2022',
@@ -367,13 +367,15 @@ class AdminTest extends TestCase
                 'time' => $planer->options_time[0],
             ]
         );
-        $otherOriginalData = ['year' => '2023',
-        'semester' => 'HS',
-        'week' => $planer->options_week[0],
-        'day' => $planer->options_day[0],
-        'time' => $planer->options_time[0]];
+        $otherOriginalData = [
+            'year' => '2023',
+            'semester' => 'HS',
+            'week' => $planer->options_week[0],
+            'day' => $planer->options_day[0],
+            'time' => $planer->options_time[0]
+        ];
 
-        $otherTimeSlot = TimeSlot::factory()->create(
+        $otherEvent = Event::factory()->create(
             array_merge($otherOriginalData, ['planer_id' => $planer->id])
         );
         $data = [
@@ -383,18 +385,18 @@ class AdminTest extends TestCase
             'day' => $planer->options_day[1],
             'time' => $planer->options_time[1],
         ];
-        $response = $this->actingAs($user)->put("/admin/planers/$planer->slug/timeslots/$timeSlot->id", $data);
+        $response = $this->actingAs($user)->put("/admin/planers/$planer->slug/timeslots/$event->id", $data);
         $response->assertRedirect("/admin/planers/$planer->slug/timeslots");
-        $this->assertEquals(2, $planer->timeSlots()->count());
-        $updatedTimeSlot = $planer->timeSlots()->find($timeSlot->id);
-        $this->assertEquals($data, $updatedTimeSlot->only('year', 'semester', 'week', 'day', 'time'));
+        $this->assertEquals(2, $planer->events()->count());
+        $updatedEvent = $planer->events()->find($event->id);
+        $this->assertEquals($data, $updatedEvent->only('year', 'semester', 'week', 'day', 'time'));
 
-        //Make sure other timeSlot was not updated
-        $otherTimeSlot = $planer->timeSlots()->find($otherTimeSlot->id);
-        $this->assertEquals($otherOriginalData, $otherTimeSlot->only('year', 'semester', 'week', 'day', 'time'));
+        //Make sure other event was not updated
+        $otherEvent = $planer->events()->find($otherEvent->id);
+        $this->assertEquals($otherOriginalData, $otherEvent->only('year', 'semester', 'week', 'day', 'time'));
     }
 
-        /**
+    /**
      * @test
      */
     public function redirect_unauthenticated_users_from_update_timeslot_to_login()
@@ -403,10 +405,10 @@ class AdminTest extends TestCase
             [
                 'options_week' => ['Wo 1,2,3', 'Wo 4,5,6'],
                 'options_day' => ['Montag', 'Donnerstag'],
-                'options_time' => ['Vormittag','Nachmittag']
+                'options_time' => ['Vormittag', 'Nachmittag']
             ]
         );
-        $timeSlot = TimeSlot::factory()->create(
+        $event = Event::factory()->create(
             [
                 'planer_id' => $planer->id,
                 'year' => '2022',
@@ -416,7 +418,7 @@ class AdminTest extends TestCase
                 'time' => $planer->options_time[0],
             ]
         );
-        $response = $this->put("/admin/planers/$planer->slug/timeslots/$timeSlot->id", []);
+        $response = $this->put("/admin/planers/$planer->slug/timeslots/$event->id", []);
         $response->assertRedirect('/admin/login');
     }
 
@@ -430,19 +432,19 @@ class AdminTest extends TestCase
             [
                 'options_week' => ['Wo 1,2,3', 'Wo 4,5,6'],
                 'options_day' => ['Montag', 'Donnerstag'],
-                'options_time' => ['Vormittag','Nachmittag']
+                'options_time' => ['Vormittag', 'Nachmittag']
             ]
         );
-        $timeSlot = TimeSlot::factory()->for($planer)->create(
+        $event = Event::factory()->for($planer)->create(
             [
-            'year' => '2022',
-            'semester' => 'HS',
-            'week' => $planer->options_week[0],
-            'day' => $planer->options_day[0],
-            'time' => $planer->options_time[0]
+                'year' => '2022',
+                'semester' => 'HS',
+                'week' => $planer->options_week[0],
+                'day' => $planer->options_day[0],
+                'time' => $planer->options_time[0]
             ]
         );
-        $otherTimeSlot = TimeSlot::factory()->for($planer)->create(
+        $otherEvent = Event::factory()->for($planer)->create(
             [
                 'year' => '2023',
                 'semester' => 'HS',
@@ -451,20 +453,20 @@ class AdminTest extends TestCase
                 'time' => $planer->options_time[0]
             ]
         );
-        $response = $this->actingAs($user)->delete("/admin/planers/$planer->slug/timeslots/$timeSlot->id");
+        $response = $this->actingAs($user)->delete("/admin/planers/$planer->slug/timeslots/$event->id");
         $response->assertRedirect("/admin/planers/$planer->slug/timeslots");
 
-        $this->assertEquals(1, $planer->timeSlots()->count());
-        
-        $deletedTimeSlot = $planer->timeSlots()->find($timeSlot->id);
-        $this->assertNull($deletedTimeSlot);
+        $this->assertEquals(1, $planer->events()->count());
+
+        $deletedEvent = $planer->events()->find($event->id);
+        $this->assertNull($deletedEvent);
 
         //Make sure other category has not been deleted
-        $otherTimeSlot = $planer->timeSlots()->find($otherTimeSlot->id);
-        $this->assertNotNull($otherTimeSlot);
+        $otherEvent = $planer->events()->find($otherEvent->id);
+        $this->assertNotNull($otherEvent);
     }
 
-        /**
+    /**
      * @test
      */
     public function redirect_unautheticated_user_from_delete_timeslot_to_login()
@@ -476,16 +478,16 @@ class AdminTest extends TestCase
                 'options_time' => ['Vormittag']
             ]
         );
-        $timeSlot = TimeSlot::factory()->for($planer)->create(
+        $event = Event::factory()->for($planer)->create(
             [
-            'year' => '2022',
-            'semester' => 'HS',
-            'week' => $planer->options_week[0],
-            'day' => $planer->options_day[0],
-            'time' => $planer->options_time[0]
+                'year' => '2022',
+                'semester' => 'HS',
+                'week' => $planer->options_week[0],
+                'day' => $planer->options_day[0],
+                'time' => $planer->options_time[0]
             ]
         );
-        $response = $this->delete("/admin/planers/$planer->slug/timeslots/$timeSlot->id");
+        $response = $this->delete("/admin/planers/$planer->slug/timeslots/$event->id");
         $response->assertRedirect("/admin/login");
     }
 
@@ -498,13 +500,13 @@ class AdminTest extends TestCase
         $planer = Planer::factory()->create();
         $response = $this->actingAs($user)->get("/admin/planers/$planer->slug/modules");
         $response->assertSuccessful();
-        $response->assertInertia(fn(Assert $page) => $page
-        ->component('Admin/Modules')
-        ->has('modulesResource')
-        ->has('categoriesResource')
-        ->has('timeSlotsResource')
-        ->has('planerName')
-        ->has('planerSlug'));
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Admin/Modules')
+            ->has('modulesResource')
+            ->has('categoriesResource')
+            ->has('eventsResource')
+            ->has('planerName')
+            ->has('planerSlug'));
     }
 
     /**

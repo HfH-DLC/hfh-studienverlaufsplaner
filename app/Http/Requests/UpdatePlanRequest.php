@@ -23,9 +23,15 @@ class UpdatePlanRequest extends FormRequest
      */
     public function rules()
     {
+        //todo validation of date parts
         return [
             'placements' => 'present|array',
-            'placements.*.timeSlotId' => 'required|exists:time_slots,id',
+            'placements.*.year' => 'required',
+            'placements.*.semester' => 'required',
+            'placements.*.week' => 'required',
+            'placements.*.day' => 'required',
+            'placements.*.time' => 'required',
+            'placements.*.location' => 'required',
             'placements.*.moduleId' => 'required|exists:modules,id'
         ];
     }

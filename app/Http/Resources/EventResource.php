@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TimeSlotResource extends JsonResource
+class EventResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,7 +20,8 @@ class TimeSlotResource extends JsonResource
             'semester' => $this->semester,
             'week' => $this->week,
             'day' => $this->day,
-            'time' => $this->time
+            'time' => $this->time,
+            'location' => $this->location,
         ];
     }
 }

@@ -1,11 +1,7 @@
 <template>
   <nav class="flex justify-between items-end p-4 border-b border-gray-300">
     <h1 class="text-3xl">
-      <Link href="/admin/planers">Studienverlaufsplaner</Link>
-      <span v-if="planerSlug && planerName">
-        >
-        {{ planerName }}
-      </span>
+      <Link href="/admin">Studienverlaufsplaner</Link>
     </h1>
     <ul class="flex gap-8 justify-end">
       <li v-for="(link, index) in links" :key="index">
@@ -35,14 +31,6 @@ export default {
     links: {
       type: Array,
       default: [],
-    },
-    planerSlug: {
-      type: String,
-      default: null,
-    },
-    planerName: {
-      type: String,
-      default: null,
     },
   },
   methods: {

@@ -25,8 +25,8 @@
 <script>
 import AdminPlanerLayout from "../../Layouts/AdminPlanerLayout.vue";
 import Button from "../../Components/Button.vue";
-import EntityList from "../../Components/EntityList.vue";
-import Sidebar from "../../Components/Sidebar.vue";
+import EntityList from "../../Components/Admin/EntityList.vue";
+import Sidebar from "../../Components/Admin/Sidebar.vue";
 import RulesForm from "../../Components/Admin/RulesForm.vue";
 export default {
   layout: AdminPlanerLayout,

@@ -1,33 +1,32 @@
 import Rule from "./Rule"
+import { isSameDate } from "../../helpers"
 export default class DateRule extends Rule {
 
     constructor() {
         super("date")
     }
 
-    validateSlots(timeSlots, errors) {
-        timeSlots.forEach((slot) => {
-            if (slot.module) {
-                if (!slot.module.timeSlots.find(timeSlot => timeSlot.id == slot.id)) {
-                    errors[slot.id].push(`<a href="#module-${slot.module.id}">${slot.module.number} ${slot.module.name}</a> ist am Datum ${slot.semester} ${slot.year}, ${slot.week}, ${slot.day} ${slot.time} nicht verfügbar.`);
-                }
+    validatePlacements(placements, errors) {
+        placements.forEach((placement) => {
+            if (!placement.module.events.find(event => isSameDate(placement, event))) {
+                errors[placement.id].push(`<a href="#module-${placement.module.id}">${placement.module.number} ${placement.module.name}</a> ist am Datum ${placement.semester} ${placement.year}, ${placement.week}, ${placement.day} ${placement.time} nicht verfügbar.`);
             }
         })
     }
 
-    validateModule(module, timeSlots, errors) {
-        if (!module.placed && !timeSlots.some(slot => module.timeSlots.find(timeSlot => timeSlot.id == slot.id && !slot.module))) {
+    validateModule(module, placements, errors) {
+        if (!module.placement && module.events.every(event => placements.find(placement => isSameDate(placement, event)))) {
             errors.push("Alle Termine für dieses Modul sind bereits besetzt.");
         }
     }
 
-    validateSelection(module, timeSlots, status) {
-        timeSlots.forEach(slot => {
-            if (!module.timeSlots.find(timeSlot => {
-                    return timeSlot.id == slot.id
-                })) {
-                status[slot.id].selectable = false
-            }
-        })
+    validateSelection(module, placements, status) {}
+
+    isSameDate(a, b) {
+        return a.year === b.year &&
+            a.semester === b.semester &&
+            a.week === b.week &&
+            a.day === b.day &&
+            a.time === b.time
     }
 }

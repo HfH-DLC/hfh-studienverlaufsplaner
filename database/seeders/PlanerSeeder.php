@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Module;
 use App\Models\Planer;
-use App\Models\TimeSlot;
+use App\Models\Event;
 use Illuminate\Database\Seeder;
 
 class PlanerSeeder extends Seeder
@@ -23,29 +23,29 @@ class PlanerSeeder extends Seeder
             'options_day' => '["Montag","Donnerstag"]'
         ]);
         $this->import_records(Category::class);
-        $this->import_records(TimeSlot::class);
+        $this->import_records(Event::class);
         $this->import_records(Module::class);
-        $this->import_module_timeslots();
+        $this->import_module_events();
         $this->import_module_prerequisites();
     }
 
     private function import_records($class)
     {
         $table = (new $class())->getTable();
-        $file = public_path("/seeders/$table".".csv");
+        $file = public_path("/seeders/$table" . ".csv");
         $records = $this->read_CSV($file);
         foreach ($records as $key => $record) {
             $class::create($record);
         }
     }
 
-    private function import_module_timeslots()
+    private function import_module_events()
     {
-        $file = public_path("/seeders/module_time_slot.csv");
+        $file = public_path("/seeders/module_events.csv");
         $records = $this->read_CSV($file);
         foreach ($records as $key => $record) {
             $module = Module::find($record['module_id']);
-            $module->timeSlots()->attach($record['time_slot_id']);
+            $module->events()->attach($record['event_id']);
             $module->save();
         }
     }

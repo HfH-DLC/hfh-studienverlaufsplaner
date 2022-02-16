@@ -16,12 +16,10 @@ class CreateModulesTable extends Migration
         Schema::create('modules', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('number');
-            $table->string('name');
+            $table->string('number')->unique();
+            $table->string('name')->unique();
             $table->integer('credits');
-            
             $table->foreignId('category_id')->constrained();
-            $table->foreignId('planer_id')->constrained();
         });
     }
 

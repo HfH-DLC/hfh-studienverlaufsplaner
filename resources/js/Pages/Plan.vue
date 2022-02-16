@@ -1,7 +1,7 @@
 <template>
   <template v-if="initialized">
     <div>
-      <div class="mb-4 p-4" role="alert" v-if="timeSlotErrors.length > 0">
+      <div class="mb-4 p-4" role="alert" v-if="errors.length > 0">
         <ul class="space-y-2">
           <ErrorList :errors="errors" />
         </ul>
@@ -61,10 +61,6 @@ export default {
       type: Object,
       required: true,
     },
-    timeSlots: {
-      type: Object,
-      required: true,
-    },
     modules: {
       type: Object,
       required: true,
@@ -85,37 +81,21 @@ export default {
       type: String,
       required: true,
     },
-    optionsWeek: {
-      type: Array,
-      required: true,
-    },
-    optionsDay: {
-      type: Array,
-      required: true,
-    },
-    optionsTime: {
-      type: Array,
-      required: true,
-    },
   },
   async created() {
     await this.init({
       categories: this.categories.data,
       modules: this.modules.data,
-      timeSlots: this.timeSlots.data,
       rules: this.rules.data,
       plan: this.plan.data,
       planerSlug: this.planerSlug,
-      optionsWeek: this.optionsWeek,
-      optionsDay: this.optionsDay,
-      optionsTime: this.optionsTime,
     });
   },
   computed: {
     ...mapState(["initialized"]),
-    ...mapGetters(["credits", "timeSlotErrors"]),
+    ...mapGetters(["credits", "placementErrors"]),
     errors() {
-      return this.timeSlotErrors.map((error) => error.text);
+      return this.placementErrors.map((error) => error.text);
     },
   },
   methods: {
