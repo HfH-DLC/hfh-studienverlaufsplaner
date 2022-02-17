@@ -25,7 +25,8 @@ class Import implements WithMultipleSheets
             'Studiengänge' => new PlanerImport($this->year),
             'Kategorien' => new CategoryImport(),
             'Module' => new ModuleImport(),
-            'Durchführungen' => new EventImport($this->year, $this->locations, $this->times)
+            'Durchführungen' => new EventImport($this->year, $this->locations, $this->times),
+            'Studiengänge_Kategorien_Meta' => new CategoryPlanerMetaImport()
         ];
     }
 }
