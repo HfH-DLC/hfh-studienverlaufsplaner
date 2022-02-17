@@ -46,12 +46,16 @@ class Planer extends Model
     {
         $years = array();
         $numberOfYears = 4;
-
         for ($i = 0; $i < $numberOfYears; $i++) {
             $years[] = $plan->start_year + $i;
         }
-        return $this->modules()->whereHas('events', function ($q) use ($years) {
-            $q->where('year', $years);
-        })->get();
+
+        $filter = function ($query) use ($years) {
+            $query->whereIn('year', $years);
+        };
+
+        return $this->modules()->with(['events' => $filter])
+            ->whereHas('events', $filter)
+            ->get();
     }
 }
