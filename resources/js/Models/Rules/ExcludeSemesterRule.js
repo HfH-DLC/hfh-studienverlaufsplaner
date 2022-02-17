@@ -1,9 +1,9 @@
 import { isSameDate, semesterCount, semesterPosition } from "../../helpers"
 import Rule from "./Rule"
-export default class SemesterRule extends Rule {
+export default class ExcludeSemesterRule extends Rule {
 
     constructor(params, startYear) {
-        super("semester")
+        super("ExcludeSemester")
         this.excludePositions = params.excludePositions
         this.moduleId = params.moduleId
         this.startYear = startYear
@@ -30,6 +30,7 @@ export default class SemesterRule extends Rule {
         if (module.id !== this.moduleId) {
             return
         }
+        console.log("validateSelection")
         module.events.forEach((event) => {
             status[event.id].dateAllowed = this.isAllowedSemester(event);
         })

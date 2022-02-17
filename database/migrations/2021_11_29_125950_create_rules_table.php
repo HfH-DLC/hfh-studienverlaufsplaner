@@ -17,8 +17,7 @@ class CreateRulesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('type');
-            $table->text('params')->nullable();
-            $table->foreignId('planer_id')->constrained();
+            $table->text('params');
         });
     }
 

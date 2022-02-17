@@ -20,7 +20,6 @@ class PlanerSeeder extends Seeder
         Planer::factory()->create([
             'name' => 'HFE',
             'required_credits' => 90,
-            'options_day' => '["Montag","Donnerstag"]'
         ]);
         $this->import_records(Category::class);
         $this->import_records(Event::class);

@@ -31,11 +31,6 @@ class Planer extends Model
         return $this->belongsToMany(Module::class);
     }
 
-    public function rules()
-    {
-        return $this->hasMany(Rule::class);
-    }
-
 
     /**
      * Get the options for generating the slug.

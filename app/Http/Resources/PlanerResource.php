@@ -18,8 +18,6 @@ class PlanerResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'categories' => CategoryResource::collection($this->categories),
-            'modules' => ModuleResource::collection($this->modules),
-            'rules' => RuleResource::collection($this->rules),
             'requiredCredits' => $this->required_credits,
         ];
     }

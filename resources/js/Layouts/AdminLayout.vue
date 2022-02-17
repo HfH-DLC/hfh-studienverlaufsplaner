@@ -18,12 +18,6 @@ export default {
   components: {
     AdminNavigation,
   },
-  props: {
-    planerSlug: {
-      type: String,
-      default: null,
-    },
-  },
   data() {
     return {
       links: [
