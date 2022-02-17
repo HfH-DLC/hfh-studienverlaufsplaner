@@ -7,7 +7,6 @@ use App\Http\Resources\ModuleResource;
 use App\Http\Resources\PlanerResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\RuleResource;
-use App\Http\Resources\EventResource;
 use App\Imports\Import;
 use App\Imports\TempImport;
 use App\Models\Category;
@@ -16,13 +15,11 @@ use App\Models\Placement;
 use App\Models\Plan;
 use App\Models\Planer;
 use App\Models\Rule;
-use App\Models\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rule as ValidationRule;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -65,7 +62,7 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
         $planResource = new PlanResource($plan);
         $categoriesResource = CategoryResource::collection($planer->categories()->get());
         $modulesResource = ModuleResource::collection($planer->getModulesForPlan($plan));
-        $rulesResource = RuleResource::collection($planer->rules()->get());
+        $rulesResource = RuleResource::collection(Rule::all());
         return Inertia::render(
             'Plan',
             array(
@@ -85,7 +82,7 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
         $plan = new Plan();
         $plan->start_year = $validated['startYear'];
         $planer->plans()->save($plan);
-        return Redirect::route('plan', array('planer' => new PlanerResource($planer), 'plan' => $plan->slug));
+        return Redirect::route('plan', array('planer' => $planer, 'plan' => $plan->slug));
     });
 
     Route::put('/plans/{plan:slug}', function (UpdatePlanRequest $request, Planer $planer, Plan $plan) {
@@ -131,17 +128,19 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     })->name('admin-import');
 
     Route::post('/import', function (Request $request) {
-        $file = $request->file('import');
         $attributes = $request->validate([
+            'import' => ['required', 'mimes:xlsx'], //todo check mime formats
             'year' => ['required', 'numeric'] //todo validate year range
         ]);
+        $file = $attributes['import'];
         $tempImport = new TempImport();
         Excel::import($tempImport, $file);
         $year = $attributes['year'];
         $locations = $tempImport->getLocations();
         $times = $tempImport->getTimes();
-        //todo transaction
-        Excel::import(new Import($year, $locations, $times), $file);
+        DB::transaction(function () use ($year, $locations, $times, $file) {
+            Excel::import(new Import($year, $locations, $times), $file);
+        });
         return redirect()->route('admin-import');
     });
 
