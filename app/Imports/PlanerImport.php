@@ -25,7 +25,7 @@ class PlanerImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
     {
         foreach ($rows as $row) {
             $name = $row['Name'];
-            $planer = Planer::where('Name', $name)->first();
+            $planer = Planer::where('name', $name)->first();
             if (!$planer) {
                 $planer = new Planer();
                 $planer->name = $name;
