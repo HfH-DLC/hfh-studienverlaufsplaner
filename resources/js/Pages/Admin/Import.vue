@@ -15,7 +15,14 @@
       </div>
       <div class="mt-2">
         <label for="file" class="block uppercase text-sm">Datei</label>
-        <input type="file" name="file" id="file" @change="setFile" required />
+        <input
+          type="file"
+          accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          name="file"
+          id="file"
+          @change="setFile"
+          required
+        />
       </div>
       <Button type="submit" class="mt-4">Importieren</Button>
     </form>
@@ -49,7 +56,7 @@ export default {
     },
     submit() {
       this.form.post(`/admin/import`, {
-        onSuccess: () => form.reset(),
+        onSuccess: () => this.form.reset(),
       });
     },
   },
