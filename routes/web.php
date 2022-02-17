@@ -8,6 +8,7 @@ use App\Http\Resources\PlanerResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\RuleResource;
 use App\Imports\Import;
+use App\Imports\Rules\RuleImport;
 use App\Imports\TempImport;
 use App\Models\Category;
 use App\Models\Module;
@@ -168,6 +169,25 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         $planers = PlanerResource::collection(Planer::all());
         return Inertia::render('Admin/Planers', ['planersResource' => $planers]);
     })->name('admin-planers');
+
+    Route::get('/rules', function (Request $request) {
+        $rules = RuleResource::collection(Rule::all());
+        return Inertia::render('Admin/Rules', ['rulesResource' => $rules, 'types' => Rule::$types]);
+    })->name('admin-rules');
+
+    Route::get('/rules/import', function (Request $request) {
+        return Inertia::render('Admin/RulesImport');
+    })->name('admin-rules-import');
+
+    Route::post('/rules/import', function (Request $request) {
+        $attributes = $request->validate([
+            'import' => ['required', 'mimes:json'],
+        ]);
+        $file = $attributes['import'];
+        $import = new RuleImport();
+        $import->run($file);
+        return redirect()->route('admin-rules-import');
+    });
 });
 
 
