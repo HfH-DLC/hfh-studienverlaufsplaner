@@ -90,23 +90,26 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
         $validated = $request->validated();
 
         $placements = $validated['placements'];
-        $placements = collect($placements);
-
-        DB::transaction(function () use ($plan, $placements) {
-            $plan->placements()->delete();
-
-            $placements->each(function ($placement) use ($plan) {
-                $obj = new Placement();
-                $obj->year = $placement['year'];
-                $obj->semester = $placement['semester'];
-                $obj->week = $placement['week'];
-                $obj->day = $placement['day'];
-                $obj->time = $placement['time'];
-                $obj->location = $placement['location'];
-                $obj->module()->associate($placement['moduleId']);
-                $plan->placements()->save($obj);
+        if ($placements) {
+            $placements = collect($placements);
+            DB::transaction(function () use ($plan, $placements) {
+                $plan->placements()->delete();
+                $placements->each(function ($placement) use ($plan) {
+                    $obj = new Placement();
+                    $obj->year = $placement['year'];
+                    $obj->semester = $placement['semester'];
+                    $obj->week = $placement['week'];
+                    $obj->day = $placement['day'];
+                    $obj->time = $placement['time'];
+                    $obj->location = $placement['location'];
+                    $obj->module()->associate($placement['moduleId']);
+                    $plan->placements()->save($obj);
+                });
             });
-        });
+        }
+        $tourCompleted = $validated['tourCompleted'];
+        $plan->tour_completed = $tourCompleted;
+        $plan->save();
 
         return new PlanResource($plan);
     });

@@ -1,40 +1,52 @@
 <template>
-  <template v-if="initialized">
-    <div>
-      <div class="mb-4 p-4" role="alert" v-if="errors.length > 0">
-        <ul class="space-y-2">
-          <ErrorList :errors="errors" />
-        </ul>
-      </div>
-      <div class="flex flex-1 items-start">
-        <div id="module-list" class="w-3/12 p-4 sticky top-0">
-          <ModuleList />
-        </div>
-        <div id="time-table" class="w-7/12 p-4">
-          <TimeTable ref="timeTable" />
-        </div>
-        <div class="w-2/12 p-4 sticky top-0" aria-live="polite">
-          <div id="total-credits" class="mb-4 pb-4 border-b border-gray-300">
-            <h2 class="text-sm text-gray-500 font-bold uppercase">
-              Total Kreditpunkte
-            </h2>
-            <div class="flex items-center gap-2">
-              {{ credits }} / {{ requiredCredits }}
-              <CheckCircleIcon
-                v-if="credits === requiredCredits"
-                class="text-green-700 w-5 h-5"
-              />
+  <div class="min-h-screen flex flex-col">
+    <header>
+      <PlanHeader />
+    </header>
+    <main class="flex-1 flex flex-col">
+      <template v-if="initialized">
+        <div>
+          <div class="mb-4 p-4" role="alert" v-if="errors.length > 0">
+            <ul class="space-y-2">
+              <ErrorList :errors="errors" />
+            </ul>
+          </div>
+          <div class="flex flex-1 items-start">
+            <div id="module-list" class="w-3/12 p-4 sticky top-0">
+              <ModuleList />
+            </div>
+            <div id="time-table" class="w-7/12 p-4">
+              <TimeTable ref="timeTable" />
+            </div>
+            <div class="w-2/12 p-4 sticky top-0" aria-live="polite">
+              <div
+                id="total-credits"
+                class="mb-4 pb-4 border-b border-gray-300"
+              >
+                <h2 class="text-sm text-gray-500 font-bold uppercase">
+                  Total Kreditpunkte
+                </h2>
+                <div class="flex items-center gap-2">
+                  {{ credits }} / {{ requiredCredits }}
+                  <CheckCircleIcon
+                    v-if="credits === requiredCredits"
+                    class="text-green-700 w-5 h-5"
+                  />
+                </div>
+              </div>
+              <div id="module-information">
+                <ModuleInformation />
+              </div>
             </div>
           </div>
-          <div id="module-information">
-            <ModuleInformation />
-          </div>
         </div>
+        <Tour @completed="completeTour" />
+      </template>
+      <div v-else class="text-2xl text-center p-4 flex-1">
+        Plan wird geladen...
       </div>
-    </div>
-    <!-- <Tour /> -->
-  </template>
-  <div v-else class="text-2xl text-center p-4 flex-1">Plan wird geladen...</div>
+    </main>
+  </div>
 </template>
 
 <script>
@@ -46,6 +58,7 @@ import ModuleList from "../Components/ModuleList.vue";
 import TimeTable from "../Components/TimeTable.vue";
 import { CheckCircleIcon } from "@heroicons/vue/outline";
 import Tour from "../Components/Tour.vue";
+import PlanHeader from "../Components/PlanHeader.vue";
 
 export default {
   components: {
@@ -55,6 +68,7 @@ export default {
     ModuleInformation,
     ModuleList,
     Tour,
+    PlanHeader,
   },
   props: {
     categories: {
@@ -99,7 +113,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["init"]),
+    ...mapActions(["init", "completeTour"]),
   },
 };
 </script>

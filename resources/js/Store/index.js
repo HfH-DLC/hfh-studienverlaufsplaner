@@ -19,6 +19,8 @@ const SET_PLACEMENT_ERRORS = "SET_PLACEMENT_ERRORS"
 const INIT_FINISHED = "INIT_FINISHED"
 const ADD_PLACEMENT = "ADD_PLACEMENT"
 const REMOVE_PLACEMENT = "REMOVE_PLACEMENT"
+const SET_SHOW_TOUR = "SET_SHOW_TOUR"
+const SET_TOUR_COMPLETED = "SET_TOUR_COMPLETED"
 
 const initialState = {
     initialized: false,
@@ -29,6 +31,7 @@ const initialState = {
     moduleInfos: {},
     placementErrors: {},
     plan: null,
+    showTour: false
 }
 
 const store = createStore({
@@ -78,6 +81,12 @@ const store = createStore({
         },
         [REMOVE_PLACEMENT](state, placement) {
             state.plan.placements = state.plan.placements.filter(p => p.id !== placement.id);
+        },
+        [SET_SHOW_TOUR](state, value) {
+            state.showTour = value;
+        },
+        [SET_TOUR_COMPLETED](state) {
+            state.plan.tourCompleted = true;
         }
     },
     actions: {
@@ -85,6 +94,7 @@ const store = createStore({
             dataAdapter = new DataAdapter(planerSlug)
             commit(RESET_STATE)
             commit(SET_PLAN, plan)
+            commit(SET_SHOW_TOUR, !plan.tourCompleted);
             commit(SET_MODULES, modules)
             commit(SET_CATEGORIES, categories)
             commit(SET_RULES, rules)
@@ -98,6 +108,10 @@ const store = createStore({
                 //todo error state
                 console.error(error);
             }
+        },
+        completeTour({ commit, dispatch }) {
+            commit(SET_TOUR_COMPLETED);
+            dispatch("save");
         },
         selectModule({ commit, state, getters }, moduleId) {
             commit(SET_SELECTION_STATUS, {
@@ -158,6 +172,9 @@ const store = createStore({
                 rule.validatePlacements(getters.placements, placementErrors)
             })
             commit(SET_PLACEMENT_ERRORS, placementErrors)
+        },
+        setShowTour({ commit }, value) {
+            commit(SET_SHOW_TOUR, value);
         }
     },
     getters: {

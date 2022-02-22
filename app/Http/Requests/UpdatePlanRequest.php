@@ -25,14 +25,15 @@ class UpdatePlanRequest extends FormRequest
     {
         //todo validation of date parts
         return [
-            'placements' => 'present|array',
+            'placements' => 'array',
             'placements.*.year' => 'required',
             'placements.*.semester' => 'required',
             'placements.*.week' => 'required',
             'placements.*.day' => 'required',
             'placements.*.time' => 'required',
             'placements.*.location' => 'required',
-            'placements.*.moduleId' => 'required|exists:modules,id'
+            'placements.*.moduleId' => 'required|exists:modules,id',
+            'tourCompleted' => 'boolean',
         ];
     }
 }
