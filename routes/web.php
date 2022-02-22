@@ -69,10 +69,10 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
             array(
                 'planerName' => $planer->name,
                 'planerSlug' => $planer->slug,
-                'plan' => $planResource,
-                'categories' => $categoriesResource,
-                'modules' => $modulesResource,
-                'rules' => $rulesResource,
+                'planResource' => $planResource,
+                'categoriesResource' => $categoriesResource,
+                'modulesResource' => $modulesResource,
+                'rulesResource' => $rulesResource,
                 'requiredCredits' => $planer->required_credits,
             )
         );

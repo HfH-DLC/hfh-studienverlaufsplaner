@@ -40,7 +40,7 @@
             </div>
           </div>
         </div>
-        <Tour @completed="completeTour" />
+        <Tour :startOnMount="!plan.tourCompleted" @completed="completeTour" />
       </template>
       <div v-else class="text-2xl text-center p-4 flex-1">
         Plan wird geladen...
@@ -52,11 +52,11 @@
 <script>
 import { mapGetters, mapActions, mapState } from "vuex";
 // Components
+import { CheckCircleIcon } from "@heroicons/vue/outline";
 import ErrorList from "../Components/ErrorList.vue";
 import ModuleInformation from "../Components/ModuleInformation.vue";
 import ModuleList from "../Components/ModuleList.vue";
 import TimeTable from "../Components/TimeTable.vue";
-import { CheckCircleIcon } from "@heroicons/vue/outline";
 import Tour from "../Components/Tour.vue";
 import PlanHeader from "../Components/PlanHeader.vue";
 
@@ -71,19 +71,19 @@ export default {
     PlanHeader,
   },
   props: {
-    categories: {
+    categoriesResource: {
       type: Object,
       required: true,
     },
-    modules: {
+    modulesResource: {
       type: Object,
       required: true,
     },
-    rules: {
+    rulesResource: {
       type: Object,
       required: true,
     },
-    plan: {
+    planResource: {
       type: Object,
       required: true,
     },
@@ -98,15 +98,15 @@ export default {
   },
   async created() {
     await this.init({
-      categories: this.categories.data,
-      modules: this.modules.data,
-      rules: this.rules.data,
-      plan: this.plan.data,
+      categories: this.categoriesResource.data,
+      modules: this.modulesResource.data,
+      rules: this.rulesResource.data,
+      plan: this.planResource.data,
       planerSlug: this.planerSlug,
     });
   },
   computed: {
-    ...mapState(["initialized"]),
+    ...mapState(["initialized", "flash", "plan"]),
     ...mapGetters(["credits", "placementErrors"]),
     errors() {
       return this.placementErrors.map((error) => error.text);

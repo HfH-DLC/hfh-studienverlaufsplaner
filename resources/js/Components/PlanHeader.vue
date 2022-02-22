@@ -13,7 +13,7 @@
         Plan-Nummer: {{ $page.props.plan.data.slug }}
       </div>
       <div>
-        <button id="show-tour" class="p-2" @click="() => setShowTour(true)">
+        <button id="start-tour" class="p-2" @click="startTour">
           <QuestionMarkCircleIcon class="w-5 h-5" aria-hidden="true" /><span
             class="sr-only"
             >Einführung anschauen</span
@@ -26,13 +26,15 @@
 
 <script>
 import { QuestionMarkCircleIcon } from "@heroicons/vue/outline";
-import { mapActions } from "vuex";
 export default {
   components: {
     QuestionMarkCircleIcon,
   },
   methods: {
-    ...mapActions(["setShowTour"]),
+    startTour() {
+      console.log(this.emitter);
+      this.emitter.emit("start-tour", {});
+    },
   },
 };
 </script>

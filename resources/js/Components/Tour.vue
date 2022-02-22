@@ -66,6 +66,12 @@ export default {
     XIcon,
   },
   emits: ["completed"],
+  props: {
+    startOnMount: {
+      type: Boolean,
+      required: true,
+    },
+  },
   data() {
     return {
       isOpen: false,
@@ -113,19 +119,25 @@ export default {
           title: "Einführung",
           content:
             "Um diese Einführung später erneut anzuschauen, klicken Sie auf das Fragezeichen.",
-          ref: "show-tour",
+          ref: "start-tour",
           placement: "left",
         },
       ],
       popper: null,
     };
   },
+  created() {
+    this.emitter.on("start-tour", this.start);
+  },
   mounted() {
     this.$nextTick(() => {
-      if (this.showTour) {
+      if (this.startOnMount) {
         this.start();
       }
     });
+  },
+  beforeDestroy() {
+    this.emitter.off("start-tour", this.start);
   },
   computed: {
     currentStep() {
@@ -141,7 +153,6 @@ export default {
         ? "Einführung abschliessen"
         : "Weiter";
     },
-    ...mapState(["showTour"]),
   },
   methods: {
     start() {
@@ -218,14 +229,6 @@ export default {
       this.isOpen = value;
     },
     ...mapActions(["setShowTour"]),
-  },
-  watch: {
-    showTour(newValue) {
-      if (newValue) {
-        this.setShowTour(false);
-        this.start();
-      }
-    },
   },
 };
 </script>
