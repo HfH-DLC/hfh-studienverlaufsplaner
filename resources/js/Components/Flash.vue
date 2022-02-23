@@ -2,6 +2,7 @@
   <div
     v-if="message"
     class="
+      z-20
       rounded-md
       py-1
       px-2

@@ -4,7 +4,7 @@
       <PlanHeader />
     </header>
     <main class="flex-1 flex flex-col">
-      <Flash class="fixed top-4 left-1/2 -translate-x-1/2 z-20" />
+      <Flash class="fixed top-4 left-1/2 -translate-x-1/2" />
       <template v-if="initialized">
         <div>
           <div class="mb-4 p-4" role="alert" v-if="errors.length > 0">

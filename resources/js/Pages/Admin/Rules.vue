@@ -2,6 +2,7 @@
   <div class="flex-1 flex justify-between">
     <div class="w-full p-4">
       <h2 class="text-xl">Regeln</h2>
+      <RulesImport />
       <EntityList :entities="rules">
         <template v-slot:label="slotProps">
           {{ slotProps.entity.id }} - {{ slotProps.entity.type }} -
@@ -15,10 +16,12 @@
 <script>
 import AdminLayout from "../../Layouts/AdminLayout.vue";
 import EntityList from "../../Components/Admin/EntityList.vue";
+import RulesImport from "../../Components/Admin/RulesImport.vue";
 export default {
   layout: AdminLayout,
   components: {
     EntityList,
+    RulesImport,
   },
   props: {
     rulesResource: {

@@ -178,10 +178,6 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         return Inertia::render('Admin/Rules', ['rulesResource' => $rules, 'types' => Rule::$types]);
     })->name('admin-rules');
 
-    Route::get('/rules/import', function (Request $request) {
-        return Inertia::render('Admin/RulesImport');
-    })->name('admin-rules-import');
-
     Route::post('/rules/import', function (Request $request) {
         $attributes = $request->validate([
             'import' => ['required', 'mimes:json'],
@@ -189,7 +185,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         $file = $attributes['import'];
         $import = new RuleImport();
         $import->run($file);
-        return redirect()->route('admin-rules-import');
+        return redirect()->route('admin-rules');
     });
 });
 
