@@ -45,7 +45,7 @@
       <div v-else class="text-2xl text-center p-4 flex-1">
         Plan wird geladen...
       </div>
-      <Flash class="absolute top-4 left-1/2 -translate-x-1/2 z-20" />
+      <Flash class="fixed top-4 left-1/2 -translate-x-1/2 z-20" />
     </main>
   </div>
 </template>
@@ -61,6 +61,7 @@ import TimeTable from "../Components/TimeTable.vue";
 import Tour from "../Components/Tour.vue";
 import PlanHeader from "../Components/PlanHeader.vue";
 import Flash from "../Components/Flash.vue";
+import flashTypes from "../flashTypes";
 
 export default {
   components: {
@@ -107,10 +108,10 @@ export default {
       plan: this.planResource.data,
       planerSlug: this.planerSlug,
     });
-    this.$emitter.on("save", this.save);
+    this.$emitter.on("retry-save", this.retrySave);
   },
   beforeDestroy() {
-    this.$emitter.off("save", this.save);
+    this.$emitter.off("retry-save", this.retrySave);
   },
   computed: {
     ...mapState(["initialized", "flash", "plan"]),
@@ -121,6 +122,14 @@ export default {
   },
   methods: {
     ...mapActions(["init", "completeTour", "save"]),
+    async retrySave() {
+      if (await this.save()) {
+        this.$emitter.emit("flash", {
+          type: flashTypes.SUCCESS,
+          message: "Ihr Plan wurde erfolgreich gespeichert.",
+        });
+      }
+    },
   },
 };
 </script>

@@ -1,18 +1,30 @@
 <template>
   <div
     v-if="message"
-    class="rounded-md p-1 w-fit flex justify-between gap-4 items-center"
+    class="
+      rounded-md
+      py-1
+      px-2
+      gap-2
+      w-fit
+      flex
+      justify-between
+      items-center
+      shadow-lg
+    "
     :class="typeClasses"
-    role="alert"
+    :role="typeRole"
   >
     <span>{{ message }}</span>
-    <button v-if="actionMessage && actionEvent" @click="onCallback">
+    <button
+      v-if="actionMessage && actionEvent"
+      @click="onCallback"
+      class="underline"
+    >
       {{ actionMessage }}
     </button>
-    <button @click="onClose">
-      <XIcon class="w-5 h-5" aria-hidden="true" /><span class="sr-only"
-        >Nachricht schliessen</span
-      >
+    <button @click="onClose" aria-label="Nachricht schliessen">
+      <XIcon class="w-5 h-5" aria-hidden="true" />
     </button>
   </div>
 </template>
@@ -53,8 +65,8 @@ export default {
     },
     onCallback() {
       if (this.actionEvent) {
-        this.onClose();
         this.$emitter.emit(this.actionEvent);
+        this.onClose();
       }
     },
   },
@@ -69,6 +81,15 @@ export default {
         }
         default:
           return "";
+      }
+    },
+    typeRole() {
+      switch (this.type) {
+        case flashTypes.ERROR: {
+          return "alert";
+        }
+        default:
+          return "status";
       }
     },
   },

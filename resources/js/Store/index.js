@@ -100,14 +100,16 @@ const store = createStore({
         async save({ state, dispatch }) {
             try {
                 await dataAdapter.savePlan(state.plan);
+                return true;
             } catch (error) {
                 emitter.emit('flash', {
                     type: flashTypes.ERROR,
                     message: "Beim automatischen Speichern Ihres Plans ist ein Fehler aufgetreten.",
                     actionMessage: "Erneut versuchen",
-                    actionEvent: "save"
+                    actionEvent: "retry-save"
                 })
                 console.error(error);
+                return false;
             }
         },
         completeTour({ commit, dispatch }) {
