@@ -32,8 +32,7 @@ export default {
   },
   methods: {
     startTour() {
-      console.log(this.emitter);
-      this.emitter.emit("start-tour", {});
+      this.$emitter.emit("start-tour", {});
     },
   },
 };

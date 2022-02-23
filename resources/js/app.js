@@ -1,10 +1,8 @@
 import { createApp, h } from 'vue';
 import { createInertiaApp, Link, Head } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress'
-import mitt from 'mitt'
 import store from "./Store/index";
-
-const emitter = mitt()
+import emitter from "./emitter";
 
 createInertiaApp({
     resolve: async name => {
@@ -15,7 +13,7 @@ createInertiaApp({
     setup({ el, app, props, plugin }) {
 
         const vueApp = createApp({ render: () => h(app, props) });
-        vueApp.config.globalProperties.emitter = emitter
+        vueApp.config.globalProperties.$emitter = emitter
         vueApp
             .use(plugin)
             .use(store)

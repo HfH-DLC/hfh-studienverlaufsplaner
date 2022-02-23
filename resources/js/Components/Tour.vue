@@ -127,7 +127,7 @@ export default {
     };
   },
   created() {
-    this.emitter.on("start-tour", this.start);
+    this.$emitter.on("start-tour", this.start);
   },
   mounted() {
     this.$nextTick(() => {
@@ -137,7 +137,7 @@ export default {
     });
   },
   beforeDestroy() {
-    this.emitter.off("start-tour", this.start);
+    this.$emitter.off("start-tour", this.start);
   },
   computed: {
     currentStep() {
