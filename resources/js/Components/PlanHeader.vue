@@ -9,8 +9,8 @@
       </h1></Link
     >
     <div class="flex items-center justify-between gap-4">
-      <div v-if="$page.props.plan" id="plan-number">
-        Plan-Nummer: {{ $page.props.plan.data.slug }}
+      <div v-if="$page.props.planResource" id="plan-number">
+        Plan-Nummer: {{ $page.props.planResource.data.slug }}
       </div>
       <div>
         <button id="start-tour" class="p-2" @click="startTour">
