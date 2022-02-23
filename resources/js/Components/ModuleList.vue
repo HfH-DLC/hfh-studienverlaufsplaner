@@ -19,7 +19,7 @@
         />
         <div>{{ category.name }}</div>
         <div class="whitespace-nowrap">
-          ({{ category.placedNumber }} / {{ category.requiredNumber }})
+          ({{ category.placedNumber }}/{{ category.requiredNumber }})
         </div>
       </h2>
       <ChevronUpIcon
