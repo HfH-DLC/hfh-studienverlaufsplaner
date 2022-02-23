@@ -5,6 +5,8 @@ import DateRule from '../Models/Rules/DateRule';
 import { getRule } from '../Models/Rules/RuleFactory';
 import { v4 } from "uuid";
 import { getCalendarYear, orderDay, orderSemester, orderTime, orderWeek } from '../helpers';
+import emitter from "../emitter";
+import flashTypes from "../flashTypes";
 
 let dataAdapter;
 
@@ -95,11 +97,16 @@ const store = createStore({
             dispatch("validate")
             commit(INIT_FINISHED)
         },
-        async save({ state }) {
+        async save({ state, dispatch }) {
             try {
                 await dataAdapter.savePlan(state.plan);
             } catch (error) {
-                //todo error state
+                emitter.emit('flash', {
+                    type: flashTypes.ERROR,
+                    message: "Beim automatischen Speichern Ihres Plans ist ein Fehler aufgetreten.",
+                    actionMessage: "Erneut versuchen",
+                    actionEvent: "save"
+                })
                 console.error(error);
             }
         },

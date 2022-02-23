@@ -45,6 +45,7 @@
       <div v-else class="text-2xl text-center p-4 flex-1">
         Plan wird geladen...
       </div>
+      <Flash class="absolute top-4 left-1/2 -translate-x-1/2 z-20" />
     </main>
   </div>
 </template>
@@ -59,11 +60,13 @@ import ModuleList from "../Components/ModuleList.vue";
 import TimeTable from "../Components/TimeTable.vue";
 import Tour from "../Components/Tour.vue";
 import PlanHeader from "../Components/PlanHeader.vue";
+import Flash from "../Components/Flash.vue";
 
 export default {
   components: {
     CheckCircleIcon,
     ErrorList,
+    Flash,
     TimeTable,
     ModuleInformation,
     ModuleList,
@@ -104,6 +107,10 @@ export default {
       plan: this.planResource.data,
       planerSlug: this.planerSlug,
     });
+    this.$emitter.on("save", this.save);
+  },
+  beforeDestroy() {
+    this.$emitter.off("save", this.save);
   },
   computed: {
     ...mapState(["initialized", "flash", "plan"]),
@@ -113,7 +120,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["init", "completeTour"]),
+    ...mapActions(["init", "completeTour", "save"]),
   },
 };
 </script>
