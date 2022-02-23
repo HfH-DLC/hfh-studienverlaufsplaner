@@ -17,7 +17,6 @@ class ModuleResource extends JsonResource
         return   [
             'id' => $this->id,
             'name' => $this->name,
-            'number' => $this->number,
             'credits' => $this->credits,
             'category' => new CategoryResource($this->category),
             'prerequisites' => PrerequisiteResource::collection($this->prerequisites),

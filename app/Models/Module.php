@@ -9,6 +9,9 @@ class Module extends Model
 {
     use HasFactory;
 
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $casts = ['category_id' => 'integer', 'credits' => 'integer'];
 
     public function planers()

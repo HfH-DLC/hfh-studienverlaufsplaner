@@ -5,7 +5,7 @@
       <EntityList :entities="modules">
         <template v-slot:label="slotProps">
           <Link :href="`/admin/modules/${slotProps.entity.id}`"
-            >{{ slotProps.entity.number }} {{ slotProps.entity.name }}</Link
+            >{{ slotProps.entity.id }} {{ slotProps.entity.name }}</Link
           >
         </template>
       </EntityList>

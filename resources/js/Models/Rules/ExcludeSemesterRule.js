@@ -15,7 +15,7 @@ export default class ExcludeSemesterRule extends Rule {
                 const text = this.excludePositions.reduce((acc, cur, i, array) => {
                     return acc + (cur + 1) + '.' + (i < array.length - 2 ? ', ' : i < array.length - 1 ? ' oder ' : '')
                 }, "");
-                errors[placement.id].push(`<a href="#module-${placement.module.id}">${placement.module.number} ${placement.module.name}</a> kann nicht im ${text} Semester belegt werden.`);
+                errors[placement.id].push(`<a href="#module-${placement.module.id}">${placement.module.id} ${placement.module.name}</a> kann nicht im ${text} Semester belegt werden.`);
             }
         })
     }

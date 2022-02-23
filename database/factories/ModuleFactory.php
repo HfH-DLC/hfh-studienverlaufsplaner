@@ -14,8 +14,6 @@ class ModuleFactory extends Factory
     public function definition()
     {
         return [
-            'number' => $this->faker->regexify('[A-Za-z0-9]{'.mt_rand(2, 10).
-                '}'),
             'name' => $this->faker->name(),
             'credits' => $this->faker->numberBetween(1, 500),
         ];
@@ -25,7 +23,7 @@ class ModuleFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($category) {
             return [
-            'category_id' => $category,
+                'category_id' => $category,
             ];
         });
     }

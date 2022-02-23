@@ -19,5 +19,5 @@ class Placement extends Model
         return $this->belongsTo(Module::class);
     }
 
-    protected $casts = ['plan_id' => 'integer', 'module_id' => 'integer', 'year' => 'integer'];
+    protected $casts = ['plan_id' => 'integer', 'year' => 'integer'];
 }

@@ -69,17 +69,17 @@ export default class PrerequisitesRule extends Rule {
     getModuleErrorMessage(module, missingPrerequisites) {
             if (missingPrerequisites.length === 1) {
                 const prerequisite = missingPrerequisites[0];
-                return `<a href="#module-${prerequisite.id}">${prerequisite.number} ${prerequisite.name}</a> muss vor diesem Modul belegt werden.`
+                return `<a href="#module-${prerequisite.id}">${prerequisite.id} ${prerequisite.name}</a> muss vor diesem Modul belegt werden.`
             }
-            return `Die Module ${missingPrerequisites.map(prerequisite => `<a href="#module-${prerequisite.id}">${prerequisite.number} ${prerequisite.name}</a>`).join(", ")} müssen vor diesem Modul belegt werden.`
+            return `Die Module ${missingPrerequisites.map(prerequisite => `<a href="#module-${prerequisite.id}">${prerequisite.id} ${prerequisite.name}</a>`).join(", ")} müssen vor diesem Modul belegt werden.`
 }
 
     getPlacementErrorMessage(module, missingPrerequisites) {
             if (missingPrerequisites.length === 1) {
                 const prerequisite = missingPrerequisites[0];
-                return `<a href="#module-${prerequisite.id}">${prerequisite.number} ${prerequisite.name}</a> muss vor <a href="#module-${module.id}">${module.number} ${module.name}</a> belegt werden.`
+                return `<a href="#module-${prerequisite.id}">${prerequisite.id} ${prerequisite.name}</a> muss vor <a href="#module-${module.id}">${module.id} ${module.name}</a> belegt werden.`
             }
-            return `Die Module ${missingPrerequisites.map(prerequisite => `<a href="#module-${prerequisite.id}">${prerequisite.number} ${prerequisite.name}</a>`).join(", ")} müssen vor <a href="#module-${module.id}">${module.number} ${module.name}</a> belegt werden.`
+            return `Die Module ${missingPrerequisites.map(prerequisite => `<a href="#module-${prerequisite.id}">${prerequisite.id} ${prerequisite.name}</a>`).join(", ")} müssen vor <a href="#module-${module.id}">${module.id} ${module.name}</a> belegt werden.`
     }
 
 }

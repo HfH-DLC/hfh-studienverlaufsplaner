@@ -17,7 +17,7 @@ class CreatePlacementsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('plan_id')->constrained();
-            $table->foreignId('module_id')->constrained(); //todo maybe use module_number instead so we dont care about reimporting modules
+            $table->foreignId('module_id')->constrained();
             $table->year('year');
             $table->string('semester', 2);
             $table->string('week', 50);

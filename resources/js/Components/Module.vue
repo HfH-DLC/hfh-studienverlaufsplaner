@@ -27,7 +27,7 @@
       v-if="module.placement && !module.misplaced"
       class="inline-block w-5 h-5 flex-shrink-0 text-green-700"
     />
-    {{ module.number }} {{ module.name }}
+    {{ module.id }} {{ module.name }}
   </button>
 </template>
 

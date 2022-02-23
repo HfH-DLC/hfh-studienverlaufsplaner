@@ -1,7 +1,7 @@
 <template>
   <div class="flex-1 flex justify-between">
     <div class="w-full p-4">
-      <h2 class="text-xl">{{ module.number }} {{ module.name }}</h2>
+      <h2 class="text-xl">{{ module.id }} {{ module.name }}</h2>
       <h3 class="mt-4 mb-1 text-lg">Durchführungen</h3>
       <EntityList :entities="events">
         <template v-slot:label="slotProps">

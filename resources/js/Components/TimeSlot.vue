@@ -26,7 +26,7 @@
           v-if="invalidPlacement"
           class="text-red-600 inline-block mr-2 w-5 h-5"
         />
-        <span>{{ placement.module.number }} {{ placement.module.name }}</span>
+        <span>{{ placement.module.id }} {{ placement.module.name }}</span>
       </button>
       <button
         v-if="placement && placement.module.selected"

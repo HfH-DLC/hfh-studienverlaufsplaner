@@ -35,12 +35,12 @@ class EventImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
         Event::where('year', '>=', $this->year)->delete();
 
         foreach ($rows as $row) {
-            $moduleNumber = $row['Modulnummer'];
-            if (!array_key_exists($moduleNumber, $this->moduleCache)) {
-                $module =  $module = Module::where('number', $moduleNumber)->firstOrFail();
-                $this->moduleCache[$moduleNumber] = $module;
+            $moduleId = $row['Modulnummer'];
+            if (!array_key_exists($moduleId, $this->moduleCache)) {
+                $module =  $module = Module::findOrFail($moduleId);
+                $this->moduleCache[$moduleId] = $module;
             } else {
-                $module = $this->moduleCache[$moduleNumber];
+                $module = $this->moduleCache[$moduleId];
             }
             $this->parseRow($row, $module);
         }

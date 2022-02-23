@@ -48,22 +48,22 @@ class ModuleImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
 
     private function upsertModule($row)
     {
-        $number = $row['Nummer'];
+        $id = $row['Nummer'];
         $name = $row['Name'];
         $credits = $row['Kreditpunkte'];
-        $existingModule = Module::where('number', $number)->first();
+        $existingModule = Module::find($id);
         if ($existingModule) {
             $module = $existingModule;
         } else {
             $module = new Module();
-            $module->number = $number;
+            $module->id = $id;
         }
         $module->name = $name;
         $module->credits = $credits;
         $category = $this->getCategory($row['Kategorie']);
         $module->category()->associate($category);
         $module->save();
-        $modules[$number] = $module;
+        $modules[$id] = $module;
         return $module;
     }
 
@@ -83,25 +83,25 @@ class ModuleImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
     private function setPrerequisites($row)
     {
         $prerequisites = [];
-        $prerequisiteNumbers = $row['Voraussetzungen'];
-        if ($prerequisiteNumbers) {
-            $number = $row['Nummer'];
-            $module = $this->getModule($number);
-            $prerequisiteNumbers = explode(',', $prerequisiteNumbers);
-            foreach ($prerequisiteNumbers as $prerequisiteNumber) {
-                $prerequisites[] = $this->getModule($prerequisiteNumber)->id;
+        $prerequisiteIds = $row['Voraussetzungen'];
+        if ($prerequisiteIds) {
+            $id = $row['Nummer'];
+            $module = $this->getModule($id);
+            $prerequisiteIds = explode(',', $prerequisiteIds);
+            foreach ($prerequisiteIds as $prerequisiteId) {
+                $prerequisites[] = $this->getModule($prerequisiteId)->id;
             }
             $module->prerequisites()->sync($prerequisites);
         }
     }
 
-    private function getModule($number)
+    private function getModule($id)
     {
-        if (array_key_exists($number, $this->modulesCache)) {
-            $module = $this->modulesCache[$number];
+        if (array_key_exists($id, $this->modulesCache)) {
+            $module = $this->modulesCache[$id];
         } else {
-            $module = Module::where('number', $number)->firstOrFail();
-            $this->modulesCache[$number] = $module;
+            $module = Module::findOrFail($id);
+            $this->modulesCache[$id] = $module;
         }
         return $module;
     }

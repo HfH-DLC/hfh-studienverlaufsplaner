@@ -16,7 +16,6 @@ class PrerequisiteResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'number' => $this->number,
             'name' => $this->name
         ];
     }

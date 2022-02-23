@@ -6,7 +6,7 @@
     </ul>
     <dl class="mt-4">
       <dt class="text-sm text-gray-500 font-bold uppercase">Modulnummer</dt>
-      <dd>{{ selectedModule.number }}</dd>
+      <dd>{{ selectedModule.id }}</dd>
       <template v-if="selectedModule.prerequisites.length > 0">
         <dt class="mt-2 text-sm text-gray-500 font-bold uppercase">
           Voraussetzungen
@@ -17,7 +17,7 @@
               v-for="prerequisite in selectedModule.prerequisites"
               :key="prerequisite.id"
             >
-              {{ prerequisite.number }} {{ prerequisite.name }}
+              {{ prerequisite.id }} {{ prerequisite.name }}
             </li>
           </ul>
         </dd>
