@@ -30,7 +30,6 @@ export default class ExcludeSemesterRule extends Rule {
         if (module.id !== this.moduleId) {
             return
         }
-        console.log("validateSelection")
         module.events.forEach((event) => {
             status[event.id].dateAllowed = this.isAllowedSemester(event);
         })
