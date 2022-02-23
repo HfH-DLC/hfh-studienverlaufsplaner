@@ -17,13 +17,14 @@
   >
     <span>{{ message }}</span>
     <button
+      ref="action"
       v-if="actionMessage && actionEvent"
       @click="onCallback"
       class="underline"
     >
       {{ actionMessage }}
     </button>
-    <button @click="onClose" aria-label="Nachricht schliessen">
+    <button ref="close" @click="onClose" aria-label="Nachricht schliessen">
       <XIcon class="w-5 h-5" aria-hidden="true" />
     </button>
   </div>
@@ -56,6 +57,13 @@ export default {
       this.message = event.message;
       this.actionMessage = event.actionMessage;
       this.actionEvent = event.actionEvent;
+      this.$nextTick(() => {
+        if (this.$refs.action) {
+          this.$refs.action.focus();
+        } else if (this.$refs.close) {
+          this.$refs.close.focus();
+        }
+      });
     },
     onClose() {
       this.type = null;
