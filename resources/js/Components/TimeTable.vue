@@ -26,7 +26,7 @@
               v-for="week in semester.weeks"
               :key="week"
             >
-              {{ week }}
+              Zeitfenster {{ week }}
             </th>
           </tr>
         </thead>
