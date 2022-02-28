@@ -27,7 +27,7 @@ class CreateEventsTable extends Migration
         });
 
         Schema::table('events', function (Blueprint $table) {
-            $table->foreign('module_id')->constrained()->onDelete('cascade');
+            $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade');
         });
     }
 
