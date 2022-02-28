@@ -19,7 +19,7 @@ class CreateModulePlanerTable extends Migration
         });
 
         Schema::table('module_prerequisite', function (Blueprint $table) {
-            $table->foreign('module_id')->constrained()->onDelete('cascade');
+            $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade');
         });
     }
 

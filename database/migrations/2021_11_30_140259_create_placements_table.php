@@ -28,7 +28,7 @@ class CreatePlacementsTable extends Migration
         });
 
         Schema::table('placements', function (Blueprint $table) {
-            $table->foreign('module_id')->constrained();
+            $table->foreign('module_id')->references('id')->on('modules');
         });
     }
 
