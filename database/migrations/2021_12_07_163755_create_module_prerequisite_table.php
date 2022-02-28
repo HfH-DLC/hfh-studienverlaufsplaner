@@ -15,10 +15,11 @@ class CreateModulePrerequisiteTable extends Migration
     {
         Schema::create('module_prerequisite', function (Blueprint $table) {
             $table->string('module_id');
-            $table->foreignId('prerequisite_id')->constrained('modules')->onDelete('cascade');
+            $table->string('prerequisite_id');
         });
 
         Schema::table('module_prerequisite', function (Blueprint $table) {
+            $table->string('prerequisite_id')->references('id')->on('modules')->onDelete('cascade');
             $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade');
         });
     }
