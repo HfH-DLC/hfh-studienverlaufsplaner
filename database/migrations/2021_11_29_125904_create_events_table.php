@@ -22,8 +22,12 @@ class CreateEventsTable extends Migration
             $table->string('day', 20);
             $table->string('time', 20);
             $table->string('location', 50);
-            $table->foreignId('module_id')->constrained()->onDelete('cascade');
+            $table->string('module_id');
             $table->unique(['module_id', 'year', 'semester', 'week', 'day', 'time', 'location']);
+        });
+
+        Schema::table('events', function (Blueprint $table) {
+            $table->foreign('module_id')->constrained()->onDelete('cascade');
         });
     }
 
