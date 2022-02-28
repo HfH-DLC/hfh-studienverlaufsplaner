@@ -15,11 +15,11 @@ class CreateModulePlanerTable extends Migration
     {
         Schema::create('module_planer', function (Blueprint $table) {
             $table->string('module_id');
+            $table->foreignId('planer_id')->constrained()->onDelete('cascade');
         });
 
         Schema::table('module_prerequisite', function (Blueprint $table) {
             $table->foreign('module_id')->constrained()->onDelete('cascade');
-            $table->foreignId('planer_id')->constrained()->onDelete('cascade');
         });
     }
 

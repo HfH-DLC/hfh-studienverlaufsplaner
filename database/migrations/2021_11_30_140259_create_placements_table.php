@@ -24,10 +24,10 @@ class CreatePlacementsTable extends Migration
             $table->string('time', 20);
             $table->string('location', 50);
             $table->unique(['plan_id', 'year', 'semester', 'week', 'day', 'time']);
+            $table->foreignId('plan_id')->constrained();
         });
 
         Schema::table('placements', function (Blueprint $table) {
-            $table->foreignId('plan_id')->constrained();
             $table->foreign('module_id')->constrained();
         });
     }
