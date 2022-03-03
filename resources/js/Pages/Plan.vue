@@ -35,7 +35,7 @@
                   />
                 </div>
               </div>
-              <div id="module-information">
+              <div id="module-information" class="min-h-16">
                 <ModuleInformation />
               </div>
             </div>
