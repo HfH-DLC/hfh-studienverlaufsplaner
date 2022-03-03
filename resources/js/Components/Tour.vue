@@ -1,7 +1,7 @@
 <template>
   <Dialog
     :open="isOpen"
-    @close="setIsOpen"
+    @close="onDialogClosed"
     class="fixed inset-0 z-10 overflow-y-auto"
   >
     <DialogOverlay
@@ -54,7 +54,7 @@ import {
 import { XIcon } from "@heroicons/vue/outline";
 import { createPopper } from "@popperjs/core";
 import Button from "./Button.vue";
-import { mapActions, mapState } from "vuex";
+import { mapActions } from "vuex";
 export default {
   components: {
     Dialog,
@@ -183,7 +183,7 @@ export default {
       });
     },
     end() {
-      this.setIsOpen(false);
+      this.isOpen = false;
       if (this.currentElement) {
         this.currentElement.classList.remove("tour-focus");
       }
@@ -224,8 +224,8 @@ export default {
     complete() {
       this.end();
     },
-    setIsOpen(value) {
-      this.isOpen = value;
+    onDialogClosed() {
+      this.end();
     },
     ...mapActions(["setShowTour"]),
   },
