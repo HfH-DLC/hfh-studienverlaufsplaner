@@ -15,9 +15,8 @@
       class="
         max-w-md
         absolute
-        bg-white
-        border-gray-300 border
-        rounded
+        bg-thunderbird-red
+        text-white
         shadow-lg
         p-4
         top-1/2

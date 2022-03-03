@@ -1,12 +1,11 @@
 <template>
   <button
     class="
-      rounded
       p-2
-      bg-gray-700
+      bg-black
       text-white
-      hover:bg-gray-900
-      focus:bg-gray-900
+      hover:bg-thunderbird-red-light
+      focus:bg-thunderbird-red-light
     "
   >
     <slot />

@@ -14,19 +14,7 @@
             v-model="planSlug"
             required
           />
-          <button
-            class="
-              w-full
-              mt-3
-              rounded
-              p-2
-              bg-gray-700
-              text-white
-              hover:bg-gray-900
-            "
-          >
-            Anschauen
-          </button>
+          <Button class="w-full mt-3">Anschauen</Button>
         </form>
       </div>
     </div>
@@ -46,19 +34,7 @@
           <div v-if="createForm.errors.startYear">
             {{ createForm.errors.startYear }}
           </div>
-          <button
-            class="
-              w-full
-              mt-3
-              rounded
-              p-2
-              bg-gray-700
-              text-white
-              hover:bg-gray-900
-            "
-          >
-            Plan erstellen
-          </button>
+          <Button class="w-full mt-3">Plan erstellen</Button>
         </form>
       </div>
     </div>
@@ -66,7 +42,11 @@
 </template>
 
 <script>
+import Button from "../Components/Button.vue";
 export default {
+  components: {
+    Button,
+  },
   props: {
     slug: {
       type: String,
