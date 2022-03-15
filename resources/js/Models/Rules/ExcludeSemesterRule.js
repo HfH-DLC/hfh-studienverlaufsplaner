@@ -21,6 +21,9 @@ export default class ExcludeSemesterRule extends Rule {
     }
 
     validateModule(module, placements, errors) {
+        if (module.id !== this.moduleId) {
+            return
+        }
         if (!module.placement && module.events.every(event => this.isAllowedSemester(event) || placements.find(placement => isSameDate(placement, event)))) {
             errors.push("Alle Termine in den erlaubten Semestern für dieses Modul sind bereits besetzt.");
         }
