@@ -25,11 +25,9 @@ class CategoryPlanerMetaImport implements ToCollection, WithHeadingRow, SkipsEmp
             $planer = Planer::where('name', $planerName)->firstOrFail();
             $category = $planer->categories()->where('name', $categoryName)->firstOrFail();
             if ($requiredNumber) {
-                if (!$planer->categories()->updateExistingPivot($category->id, [
+                $planer->categories()->updateExistingPivot($category->id, [
                     'required_number' => $requiredNumber
-                ])) {
-                    throw new Exception("CategoryPlanerMetaImport: Error updating required_number");
-                }
+                ]);
             }
         }
     }
