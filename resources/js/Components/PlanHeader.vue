@@ -2,12 +2,17 @@
   <nav
     class="flex justify-between items-end h-full p-4 border-b border-gray-300"
   >
-    <Link :href="`/planers/${$page.props.planerSlug}`"
-      ><h1 class="text-3xl">
-        Studienverlaufsplaner
-        <span v-if="$page.props.planerName">{{ $page.props.planerName }}</span>
-      </h1></Link
-    >
+    <div>
+      <Link :href="`/planers/${$page.props.planerSlug}`"
+        ><h1 class="text-3xl">
+          Studienverlaufsplaner
+          <span v-if="$page.props.planerName">{{
+            $page.props.planerName
+          }}</span>
+        </h1></Link
+      >
+      <p class="text-sm">(Änderungen vorbehalten)</p>
+    </div>
     <div class="flex items-center justify-between gap-4">
       <div v-if="$page.props.planResource" id="plan-number">
         Plan-Nummer: {{ $page.props.planResource.data.slug }}
