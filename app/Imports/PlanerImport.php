@@ -10,14 +10,6 @@ use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 
 class PlanerImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
 {
-
-    private $year;
-
-    public function __construct($year)
-    {
-        $this->year = $year;
-    }
-
     /**
      * @param Collection $rows
      */
@@ -29,6 +21,7 @@ class PlanerImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
             if (!$planer) {
                 $planer = new Planer();
                 $planer->name = $name;
+                $planer->slug = $row['Slug'];
                 $planer->required_credits = $row['Benötigte Kreditpunkte'];
                 $planer->save();
             }
