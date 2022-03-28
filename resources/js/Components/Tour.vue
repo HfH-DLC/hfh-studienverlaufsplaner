@@ -13,7 +13,7 @@
     <div
       id="dialog"
       class="
-        max-w-md
+        max-w-lg
         absolute
         bg-thunderbird-red
         text-white
@@ -37,8 +37,13 @@
         {{ currentStep.content }}
       </p>
       <div class="flex gap-4 mt-8 justify-end">
-        <Button @click="previousStep" v-if="currentIndex > 0">Zurück</Button>
-        <Button @click="nextStep">{{ nextText }}</Button>
+        <Button
+          class="tour-button"
+          @click="previousStep"
+          v-if="currentIndex > 0"
+          >Zurück</Button
+        >
+        <Button class="tour-button" @click="nextStep">{{ nextText }}</Button>
       </div>
     </div>
   </Dialog>
@@ -77,47 +82,49 @@ export default {
       currentIndex: 0,
       steps: [
         {
-          title: "Willkommen im Studienverlaufsplaner",
-          content: "Some content...",
+          title: "Willkommen zum Studienverlaufsplaner MA HFE",
+          content:
+            "Hier können Sie Ihren Wunsch-Studienverlauf über alle Semester Ihres Studiums provisorisch planen. So geht's...",
         },
         {
-          title: "Plan-Nummer",
+          title: "Nicht alles in einem Schwung!",
           content:
-            "Um zu einem späteren Zeitpunkt wieder auf diesen Plan zugreifen zu können, notieren Sie sich bitte Ihre Plan-Nummer oder setzen Sie ein Lesezeichen in ihrem Browser.",
+            "Um zu einem späteren Zeitpunkt wieder auf Ihren Plan zuzugreifen, notieren Sie sich bitte Ihre Plan-Nummer (siehe oben). Noch einfacher: Setzen Sie ein Lesezeichen in ihrem Browser für diese Seite. So müssen Sie nie von Vorne anfangen und können in Ruhe planen.",
           ref: "plan-number",
           placement: "right-start",
         },
         {
-          title: "Modul-Liste",
-          content: "In der Liste links können Sie Ihre Module auswählen.",
+          title: "Die Modul-Liste",
+          content:
+            "In der Liste können Sie die gewünschten Module auswählen. Am besten fangen Sie an, die Pflichtmodule zu platzieren! Klick auf ein Modul und...",
           ref: "module-list",
           placement: "right",
         },
         {
-          title: "Stundenplan",
+          title: "Semester-Stundenpläne",
           content:
-            "Sobald sie ein Modul ausgewählt haben, können Sie es in der Mitte auf dem Stundenplan platzieren.",
+            "Sobald sie ein Modul ausgewählt haben, können Sie es platzieren. Klick auf ein aktiviertes Feld!",
           ref: "time-table",
           placement: "left-start",
         },
         {
-          title: "Kreditpunkte",
+          title: "Check Kreditpunkte",
           content:
-            "Rechts sehen Sie das Total der Kreditpunkte der Module, die sie bereits platziert haben.",
+            "Sie sehen das Total der Kreditpunkte der bereits platzierten Module.",
           ref: "total-credits",
           placement: "left",
         },
         {
           title: "Modul-Details",
           content:
-            "Darunter finden Sie genauere Informationen zum ausgewählten Modul.",
+            "Wenn Sie ein Modul angewählt haben, sehen Sie genauere Informationen, zum Beispiel Kreditpunkte und Voraussetzungen des Moduls.",
           ref: "module-information",
           placement: "left",
         },
         {
-          title: "Einführung",
+          title: "Tour «Einführung»",
           content:
-            "Um diese Einführung später erneut anzuschauen, klicken Sie auf das Fragezeichen.",
+            "Um diese Einführung später erneut anzuschauen, klicken Sie auf das Fragezeichen. Viel Erfolg beim Planen!",
           ref: "start-tour",
           placement: "left",
         },
@@ -251,5 +258,9 @@ export default {
 
 #dialog[data-popper-placement^="right"] > #arrow {
   left: -4px;
+}
+
+.tour-button {
+  @apply hover:bg-white focus:bg-white hover:text-thunderbird-red focus:text-thunderbird-red;
 }
 </style>
