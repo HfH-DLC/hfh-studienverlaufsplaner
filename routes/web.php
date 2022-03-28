@@ -56,7 +56,7 @@ Route::post('/admin/login', function (Request $request) {
 
 Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
     Route::get('/', function (Planer $planer) {
-        return Inertia::render('Planer', ['slug' => $planer->slug]);
+        return Inertia::render('Planer', ['slug' => $planer->slug, 'name' => $planer->name]);
     })->name('planer');
 
     Route::get('/plans/{plan:slug}', function (Planer $planer, Plan $plan) {
