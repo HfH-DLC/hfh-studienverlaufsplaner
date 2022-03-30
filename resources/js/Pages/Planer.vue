@@ -2,14 +2,14 @@
   <nav class="flex justify-between items-end p-4 border-b border-gray-300">
     <Link :href="`/planers/${slug}`"
       ><h1 class="text-3xl">
-        Studienplanungsinstrument
+        Studienverlaufsplaner
         <span v-if="name">{{ name }}</span>
       </h1></Link
     >
   </nav>
   <div class="p-4 max-w-6xl mx-auto">
     <h2 class="text-2xl mt-4 mb-4">
-      Willkommen zum Studienplanungsinstrument (Stupli) {{ name }}
+      Willkommen zum Studienverlaufsplaner {{ name }}
     </h2>
 
     <p>
