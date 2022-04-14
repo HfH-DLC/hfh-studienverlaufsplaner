@@ -8,22 +8,26 @@
     >
   </nav>
   <div class="p-4 max-w-6xl mx-auto">
-    <h2 class="text-2xl mt-4 mb-4">
-      Willkommen zum Studienverlaufsplaner {{ name }}
-    </h2>
+    <h2 class="text-2xl mt-4 mb-4">Willkommen!</h2>
 
     <p>
       Hier können Sie Ihren provisorischen Wunsch-Studienverlauf über alle
       Semester planen. Der zusammengestellte Plan dient als Orientierung! Die
-      Realität sieht künftig allfällig anders aus. Die HfH behält sich vor,
-      Module bei zu geringer Nachfrage abzusagen.
+      HfH behält sich vor, Module bei zu geringer Nachfrage abzusagen.
+    </p>
+
+    <p class="mt-4">
+      Bevor Sie loslegen, empfehlen wir Ihnen die
+      <HfHLink :href="degreeLink">Studienbroschüre</HfHLink> und das
+      <HfHLink :href="moduleDirectoryLink"> Modulverzeichnis</HfHLink>.
     </p>
 
     <h3 class="text-xl mt-3">Wichtig</h3>
     <p>
-      Dieses Instrument hat nichts mit der offiziellen Modul-Einschreibung für
+      Dieses Instrument hat nichts mit der offiziellen Moduleinschreibung für
       das HfH Studium im daylight-Web zu tun.
     </p>
+    <p class="mt-4 text-sm">{{ date }}, Änderungen vorbehalten.</p>
     <div class="my-8 py-8 w-full flex justify-evenly">
       <div>
         <h2 class="text-xl">Ich habe bereits einen Plan.</h2>
@@ -79,16 +83,6 @@
         </div>
       </div>
     </div>
-    <div>
-      <p>
-        <HfHLink :href="degreeLink">Alle Infos zum {{ name }}</HfHLink>
-      </p>
-
-      <p class="mt-2">
-        <HfHLink :href="moduleDirectoryLink">Zum Modulverzeichnis</HfHLink>
-      </p>
-      <p class="mt-4">{{ date }}, Änderungen vorbehalten.</p>
-    </div>
   </div>
 </template>
 
@@ -113,7 +107,7 @@ export default {
       type: String,
       required: true,
       default:
-        "https://www.hfh.ch/ausbildung/ma-heilpaedagogische-frueherziehung/auf-einen-blick", //todo get from server
+        "https://www.hfh.ch/sites/default/files/documents/StudienbroschuereMA_HFE_22.pdf", //todo get from server
     },
     moduleDirectoryLink: {
       type: String,
