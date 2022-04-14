@@ -97,14 +97,14 @@ export default {
         {
           title: "Die Modul-Liste",
           content:
-            "In der Liste können Sie die gewünschten Module auswählen. Am besten fangen Sie an, die Pflichtmodule zu platzieren! Klick auf ein Modul und...",
+            "In der Liste können Sie die gewünschten Module per Klick auswählen. Am besten fangen Sie damit an, die Pflichtmodule zu platzieren.",
           ref: "module-list",
           placement: "right",
         },
         {
           title: "Semester-Stundenpläne",
           content:
-            "Sobald sie ein Modul ausgewählt haben, können Sie es platzieren. Klick auf ein aktiviertes Feld!",
+            "Sobald Sie ein Modul ausgewählt haben, können Sie es platzieren. Klicken Sie dafür auf ein aktiviertes Feld!",
           ref: "time-table",
           placement: "left-start",
         },
