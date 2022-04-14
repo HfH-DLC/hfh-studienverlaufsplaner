@@ -18,11 +18,12 @@
         Plan-Nummer: {{ $page.props.planResource.data.slug }}
       </div>
       <div>
-        <button id="start-tour" class="p-2" @click="startTour">
-          <QuestionMarkCircleIcon class="w-5 h-5" aria-hidden="true" /><span
-            class="sr-only"
-            >Einführung anschauen</span
-          >
+        <button
+          id="start-tour"
+          class="p-2 flex items-center gap-1 hover:text-thunderbird-red"
+          @click="startTour"
+        >
+          <QuestionMarkCircleIcon class="w-7 h-7" aria-hidden="true" /> Hilfe
         </button>
       </div>
     </div>
