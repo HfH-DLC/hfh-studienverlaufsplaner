@@ -269,6 +269,6 @@ export default {
 }
 
 .tour-button {
-  @apply hover:bg-white focus:bg-white hover:text-thunderbird-red focus:text-thunderbird-red;
+  @apply hover:bg-white hover:text-thunderbird-red focus:bg-black focus:text-white;
 }
 </style>
