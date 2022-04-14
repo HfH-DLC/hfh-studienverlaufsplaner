@@ -32,13 +32,15 @@
 
 <script>
 import ErrorList from "../Components/ErrorList.vue";
-import { mapGetters } from "vuex";
 export default {
   components: {
     ErrorList,
   },
-  computed: {
-    ...mapGetters(["selectedModule"]),
+  props: {
+    selectedModule: {
+      type: Object,
+      default: null,
+    },
   },
 };
 </script>

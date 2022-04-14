@@ -21,6 +21,7 @@ const SET_PLACEMENT_ERRORS = "SET_PLACEMENT_ERRORS"
 const INIT_FINISHED = "INIT_FINISHED"
 const ADD_PLACEMENT = "ADD_PLACEMENT"
 const REMOVE_PLACEMENT = "REMOVE_PLACEMENT"
+export const SET_TOUR_ACTIVE = "SET_TOUR_ACTIVE"
 const SET_TOUR_COMPLETED = "SET_TOUR_COMPLETED"
 
 const initialState = {
@@ -32,6 +33,15 @@ const initialState = {
     moduleInfos: {},
     placementErrors: {},
     plan: null,
+    //tour
+    tourActive: false,
+    tourSelectedModule: {
+        id: "P1_01",
+        name: "Grundfragen der Heilpädagogik",
+        prerequisites: [],
+        infos: [],
+        credits: 5
+    },
 }
 
 const store = createStore({
@@ -81,6 +91,9 @@ const store = createStore({
         },
         [REMOVE_PLACEMENT](state, placement) {
             state.plan.placements = state.plan.placements.filter(p => p.id !== placement.id);
+        },
+        [SET_TOUR_ACTIVE](state, value) {
+            state.tourActive = value;
         },
         [SET_TOUR_COMPLETED](state) {
             state.plan.tourCompleted = true;

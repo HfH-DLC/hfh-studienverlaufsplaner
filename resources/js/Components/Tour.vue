@@ -60,6 +60,7 @@ import { XIcon } from "@heroicons/vue/outline";
 import { createPopper } from "@popperjs/core";
 import Button from "./Button.vue";
 import { mapActions } from "vuex";
+import { SET_TOUR_ACTIVE } from "../Store/index";
 export default {
   components: {
     Dialog,
@@ -147,12 +148,10 @@ export default {
   },
   computed: {
     currentStep() {
-      return this.steps[this.currentIndex];
+      return this.getStep(this.currentIndex);
     },
     currentElement() {
-      return this.currentStep.ref
-        ? document.getElementById(this.currentStep.ref)
-        : null;
+      return this.getElement(this.currentIndex);
     },
     nextText() {
       return this.currentIndex + 1 === this.steps.length
@@ -162,11 +161,19 @@ export default {
   },
   methods: {
     start() {
+      this.$store.commit(SET_TOUR_ACTIVE, true);
       this.isOpen = true;
       if (this.currentElement) {
         this.currentElement.classList.add("tour-focus");
         this.createPopper();
       }
+    },
+    getStep(index) {
+      return this.steps[index];
+    },
+    getElement(index) {
+      const step = this.getStep(index);
+      return step && step.ref ? document.getElementById(step.ref) : null;
     },
     createPopper() {
       const dialog = this.$refs.dialog;
@@ -199,6 +206,7 @@ export default {
         this.popper.destroy();
         this.popper = null;
       }
+      this.$store.commit(SET_TOUR_ACTIVE, false);
       this.$emit("completed");
     },
     cancel() {

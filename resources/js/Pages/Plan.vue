@@ -19,24 +19,27 @@
             <div id="time-table" class="w-7/12 p-4">
               <TimeTable ref="timeTable" />
             </div>
-            <div class="w-2/12 p-4 sticky top-0" aria-live="polite">
-              <div
-                id="total-credits"
-                class="mb-4 pb-4 border-b border-gray-300"
-              >
-                <h2 class="text-sm text-gray-500 font-bold uppercase">
-                  Total Kreditpunkte
-                </h2>
-                <div class="flex items-center gap-2">
-                  {{ credits }} / {{ requiredCredits }}
-                  <CheckCircleIcon
-                    v-if="credits === requiredCredits"
-                    class="text-green-700 w-5 h-5"
-                  />
+            <div class="w-2/12 py-4 sticky top-0" aria-live="polite">
+              <div id="total-credits" class="px-4">
+                <div class="border-b border-gray-300 pb-4">
+                  <h2 class="text-sm text-gray-500 font-bold uppercase">
+                    Total Kreditpunkte
+                  </h2>
+                  <div class="flex items-center gap-2">
+                    {{ credits }} / {{ requiredCredits }}
+                    <CheckCircleIcon
+                      v-if="credits === requiredCredits"
+                      class="text-green-700 w-5 h-5"
+                    />
+                  </div>
                 </div>
               </div>
-              <div id="module-information" class="min-h-16">
-                <ModuleInformation />
+              <div id="module-information" class="p-4 min-h-16">
+                <ModuleInformation
+                  :selectedModule="
+                    tourActive ? tourSelectedModule : selectedModule
+                  "
+                />
               </div>
             </div>
           </div>
@@ -114,8 +117,14 @@ export default {
     this.$emitter.off("retry-save", this.retrySave);
   },
   computed: {
-    ...mapState(["initialized", "flash", "plan"]),
-    ...mapGetters(["credits", "placementErrors"]),
+    ...mapState([
+      "initialized",
+      "flash",
+      "plan",
+      "tourActive",
+      "tourSelectedModule",
+    ]),
+    ...mapGetters(["credits", "placementErrors", "selectedModule"]),
     errors() {
       return this.placementErrors.map((error) => error.text);
     },
