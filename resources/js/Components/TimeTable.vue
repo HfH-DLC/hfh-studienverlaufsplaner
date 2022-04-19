@@ -26,7 +26,18 @@
               v-for="week in semester.weeks"
               :key="week"
             >
-              Zeitfenster {{ week }}
+              <div class="flex items-center">
+                <span>{{ week }}</span>
+                <button
+                  class="p-2 flex items-center gap-1 hover:text-thunderbird-red"
+                  @click="setWeekInfo(week)"
+                >
+                  <InformationCircleIcon class="w-5 h-5" aria-hidden="true" />
+                  <span class="sr-only"
+                    >Informationen zu diesem Zeitfenster</span
+                  >
+                </button>
+              </div>
             </th>
           </tr>
         </thead>
@@ -73,18 +84,74 @@
       </table>
     </div>
   </div>
+  <Dialog
+    :open="isWeekInfoVisible"
+    @close="setWeekInfoVisible(false)"
+    class="fixed inset-0 z-10 overflow-y-auto"
+  >
+    <DialogOverlay class="fixed inset-0 pointer-events-none bg-black/60" />
+    <div
+      class="
+        max-w-2xl
+        absolute
+        bg-white
+        shadow-lg
+        p-4
+        top-1/2
+        left-1/2
+        -translate-x-1/2 -translate-y-1/2
+      "
+    >
+      <DialogTitle class="text-lg font-bold mr-20">{{
+        weekInfo.title
+      }}</DialogTitle>
+      <button
+        @click="setWeekInfoVisible(false)"
+        class="absolute top-2 right-2 p-2"
+      >
+        <XIcon class="block w-6 h-6" aria-hidden="true" />
+        <span class="sr-only">Schliessen</span>
+      </button>
+
+      <div class="mt-2" v-html="weekInfo.content"></div>
+    </div>
+  </Dialog>
 </template>
 
 <script>
 import TimeSlot from "./TimeSlot.vue";
 import { mapGetters } from "vuex";
+import { InformationCircleIcon, XIcon } from "@heroicons/vue/outline";
+import { Dialog, DialogOverlay, DialogTitle } from "@headlessui/vue";
 export default {
   components: {
+    Dialog,
+    DialogOverlay,
+    DialogTitle,
     TimeSlot,
+    InformationCircleIcon,
+    XIcon,
   },
   data() {
     return {
       slotRefs: [],
+      isWeekInfoVisible: false,
+      weekInfos: [
+        {
+          title: "Pflichtmodule & Wahlpflichtmodule",
+          content: "Semesterwochen 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",
+        },
+        {
+          title: "Berufspraxis, Portfolio & Masterarbeit",
+          content: `<p>
+              Berufspraxis/Portfolio Semesterwochen: 1, 6, 10, 14
+            </p>
+            <p>
+              Masterarbeit: Kalenderwochen 34, 36, 38 (im Herbst), 5, 7, 8 (im Frühling)
+            </p>`,
+        },
+      ],
+      weekInfo: null,
     };
   },
   computed: {
@@ -121,6 +188,13 @@ export default {
       if (el) {
         this.slotRefs.push(el);
       }
+    },
+    setWeekInfo(week) {
+      this.weekInfo = this.weekInfos.find((info) => info.title === week);
+      this.setWeekInfoVisible(true);
+    },
+    setWeekInfoVisible(value) {
+      this.isWeekInfoVisible = value;
     },
   },
   watch: {
