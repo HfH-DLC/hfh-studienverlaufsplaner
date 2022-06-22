@@ -13,13 +13,23 @@
             </ul>
           </div>
           <div class="flex flex-1 items-start">
-            <div id="module-list" class="w-3/12 p-4 sticky top-0">
+            <div
+              id="module-list"
+              class="w-3/12 p-4 sticky top-0 overflow-scroll"
+            >
               <ModuleList />
             </div>
-            <div id="time-table" class="w-7/12 p-4">
+            <div
+              id="time-table"
+              class="w-7/12 p-4 sticky top-0 overflow-scroll"
+            >
               <TimeTable ref="timeTable" />
             </div>
-            <div class="w-2/12 py-4 sticky top-0" aria-live="polite">
+            <div
+              id="info-column"
+              class="w-2/12 py-4 sticky top-0 overflow-scroll"
+              aria-live="polite"
+            >
               <div id="total-credits" class="px-4">
                 <div class="border-b border-gray-300 pb-4">
                   <h2 class="text-sm text-gray-500 font-bold uppercase">
@@ -144,4 +154,10 @@ export default {
 </script>
 
 <style scoped>
+#module-list,
+#time-table,
+#info-column {
+  height: calc(100vh - 89px);
+  overflow: auto;
+}
 </style>
