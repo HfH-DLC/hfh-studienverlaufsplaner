@@ -31,32 +31,6 @@
     <p class="mt-4 text-sm">{{ date }}, Änderungen vorbehalten.</p>
     <div class="my-8 py-8 w-full flex justify-evenly">
       <div>
-        <h2 class="text-xl">Ich habe bereits einen Plan.</h2>
-        <div>
-          <form @submit.prevent="viewPlan" class="mt-4 w-64">
-            <label for="slug" class="text-sm uppercase">Plan-Nummer</label>
-            <input
-              type="text"
-              name="slug"
-              id="slug"
-              class="
-                leading-4
-                w-full
-                block
-                border border-gray-600
-                rounded
-                shadow-inner
-                p-2
-              "
-              placeholder="X63p4Z"
-              v-model="planSlug"
-              required
-            />
-            <Button class="w-full mt-3">Anschauen</Button>
-          </form>
-        </div>
-      </div>
-      <div>
         <h2 class="text-xl">Ich möchte einen neuen Plan erstellen.</h2>
         <div>
           <form @submit.prevent="createPlan" class="mt-4 w-64">
@@ -80,6 +54,32 @@
               {{ createForm.errors.startYear }}
             </div>
             <Button class="w-full mt-3">Plan erstellen</Button>
+          </form>
+        </div>
+      </div>
+      <div>
+        <h2 class="text-xl">Ich habe bereits einen Plan.</h2>
+        <div>
+          <form @submit.prevent="viewPlan" class="mt-4 w-64">
+            <label for="slug" class="text-sm uppercase">Plan-Nummer</label>
+            <input
+              type="text"
+              name="slug"
+              id="slug"
+              class="
+                leading-4
+                w-full
+                block
+                border border-gray-600
+                rounded
+                shadow-inner
+                p-2
+              "
+              placeholder="X63p4Z"
+              v-model="planSlug"
+              required
+            />
+            <Button class="w-full mt-3">Anschauen</Button>
           </form>
         </div>
       </div>
