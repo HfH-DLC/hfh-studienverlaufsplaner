@@ -7,6 +7,7 @@ import { v4 } from "uuid";
 import { getCalendarYear, orderDay, orderSemester, orderTime, orderWeek } from '../helpers';
 import emitter from "../emitter";
 import flashTypes from "../flashTypes";
+import { SAVE_STATUS_SAVED, SAVE_STATUS_SAVING } from "../constants";
 
 let dataAdapter;
 
@@ -23,6 +24,7 @@ const ADD_PLACEMENT = "ADD_PLACEMENT"
 const REMOVE_PLACEMENT = "REMOVE_PLACEMENT"
 export const SET_TOUR_ACTIVE = "SET_TOUR_ACTIVE"
 const SET_TOUR_COMPLETED = "SET_TOUR_COMPLETED"
+const SET_SAVE_STATUS = "SET_SAVE_STATUS"
 
 const initialState = {
     initialized: false,
@@ -33,6 +35,7 @@ const initialState = {
     moduleInfos: {},
     placementErrors: {},
     plan: null,
+    saveStatus: SAVE_STATUS_SAVED,
     //tour
     tourActive: false,
     tourSelectedModule: {
@@ -98,6 +101,9 @@ const store = createStore({
         [SET_TOUR_COMPLETED](state) {
             state.plan.tourCompleted = true;
         },
+        [SET_SAVE_STATUS](state, value) {
+            state.saveStatus = value
+        }
     },
     actions: {
         async init({ commit, dispatch }, { planerSlug, plan, modules, categories, rules }) {
@@ -110,11 +116,14 @@ const store = createStore({
             dispatch("validate")
             commit(INIT_FINISHED)
         },
-        async save({ state, dispatch }) {
+        async save({ state, commit }) {
             try {
+                commit(SET_SAVE_STATUS, SAVE_STATUS_SAVING)
                 await dataAdapter.savePlan(state.plan);
+                commit(SET_SAVE_STATUS, SAVE_STATUS_SAVED)
                 return true;
             } catch (error) {
+                commit(SET_SAVE_STATUS, null)
                 emitter.emit('flash', {
                     type: flashTypes.ERROR,
                     message: "Beim automatischen Speichern Ihres Plans ist ein Fehler aufgetreten.",

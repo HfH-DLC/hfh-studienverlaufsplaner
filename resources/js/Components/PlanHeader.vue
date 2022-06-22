@@ -14,6 +14,7 @@
       <p class="text-sm">(Änderungen vorbehalten)</p>
     </div>
     <div class="flex items-center justify-between gap-4">
+      <SaveStatus />
       <div v-if="$page.props.planResource" id="plan-number">
         Plan-Nummer: {{ $page.props.planResource.data.slug }}
       </div>
@@ -36,10 +37,12 @@
 <script>
 import { QuestionMarkCircleIcon } from "@heroicons/vue/outline";
 import PrintButton from "./PrintButton.vue";
+import SaveStatus from "./SaveStatus.vue";
 export default {
   components: {
     QuestionMarkCircleIcon,
     PrintButton,
+    SaveStatus,
   },
   methods: {
     startTour() {
