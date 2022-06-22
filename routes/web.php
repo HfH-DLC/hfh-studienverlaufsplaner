@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
@@ -88,25 +89,22 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
 
     Route::put('/plans/{plan:slug}', function (UpdatePlanRequest $request, Planer $planer, Plan $plan) {
         $validated = $request->validated();
-
         $placements = $validated['placements'];
-        if ($placements) {
-            $placements = collect($placements);
-            DB::transaction(function () use ($plan, $placements) {
-                $plan->placements()->delete();
-                $placements->each(function ($placement) use ($plan) {
-                    $obj = new Placement();
-                    $obj->year = $placement['year'];
-                    $obj->semester = $placement['semester'];
-                    $obj->week = $placement['week'];
-                    $obj->day = $placement['day'];
-                    $obj->time = $placement['time'];
-                    $obj->location = $placement['location'];
-                    $obj->module()->associate($placement['moduleId']);
-                    $plan->placements()->save($obj);
-                });
+        $placements = collect($placements);
+        DB::transaction(function () use ($plan, $placements) {
+            $plan->placements()->delete();
+            $placements->each(function ($placement) use ($plan) {
+                $obj = new Placement();
+                $obj->year = $placement['year'];
+                $obj->semester = $placement['semester'];
+                $obj->week = $placement['week'];
+                $obj->day = $placement['day'];
+                $obj->time = $placement['time'];
+                $obj->location = $placement['location'];
+                $obj->module()->associate($placement['moduleId']);
+                $plan->placements()->save($obj);
             });
-        }
+        });
         $tourCompleted = $validated['tourCompleted'];
         $plan->tour_completed = $tourCompleted;
         $plan->save();
