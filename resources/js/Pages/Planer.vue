@@ -11,9 +11,9 @@
     <h2 class="text-2xl mt-4 mb-4">Willkommen!</h2>
 
     <p>
-      Hier können Sie Ihren provisorischen Wunsch-Studienverlauf über alle
-      Semester planen. Der zusammengestellte Plan dient als Orientierung! Die
-      HfH behält sich vor, Module bei zu geringer Nachfrage abzusagen.
+      Hier können Sie Ihren gewünschten Studienverlauf über alle Semester
+      planen. Der zusammengestellte Plan dient als Orientierung! Die HfH behält
+      sich vor, Module bei zu geringer Nachfrage abzusagen.
     </p>
 
     <p class="mt-4">
@@ -24,8 +24,9 @@
 
     <h3 class="text-xl mt-3">Wichtig</h3>
     <p>
-      Dieses Instrument hat nichts mit der offiziellen Moduleinschreibung für
-      das HfH Studium im daylight-Web zu tun.
+      Unabhängig vom StVPl müssen Sie ihre Module offiziell in daylight-Web
+      buchen. Sie erhalten eine separate Info per Mail von der
+      Hochschuladministration.
     </p>
     <p class="mt-4 text-sm">{{ date }}, Änderungen vorbehalten.</p>
     <div class="my-8 py-8 w-full flex justify-evenly">

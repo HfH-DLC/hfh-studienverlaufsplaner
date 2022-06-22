@@ -85,7 +85,7 @@ export default {
         {
           title: "Willkommen zum Studienverlaufsplaner MA HFE",
           content:
-            "Hier können Sie Ihren Wunsch-Studienverlauf über alle Semester Ihres Studiums provisorisch planen. So geht's...",
+            "Hier können Sie Ihren gewünschten Studienverlauf über alle Semester Ihres Studiums provisorisch planen. So geht's...",
         },
         {
           title: "Nicht alles in einem Schwung!",
