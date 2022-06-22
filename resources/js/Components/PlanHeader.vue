@@ -26,15 +26,20 @@
           <QuestionMarkCircleIcon class="w-7 h-7" aria-hidden="true" /> Hilfe
         </button>
       </div>
+      <div>
+        <PrintButton />
+      </div>
     </div>
   </nav>
 </template>
 
 <script>
 import { QuestionMarkCircleIcon } from "@heroicons/vue/outline";
+import PrintButton from "./PrintButton.vue";
 export default {
   components: {
     QuestionMarkCircleIcon,
+    PrintButton,
   },
   methods: {
     startTour() {
