@@ -10,6 +10,7 @@ use App\Http\Resources\RuleResource;
 use App\Imports\Import;
 use App\Imports\Rules\RuleImport;
 use App\Imports\TempImport;
+use App\Mail\PlanCreated;
 use App\Models\Category;
 use App\Models\Module;
 use App\Models\Placement;
@@ -21,7 +22,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -84,6 +87,8 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
         $plan = new Plan();
         $plan->start_year = $validated['startYear'];
         $planer->plans()->save($plan);
+        Mail::to($validated['email'])
+            ->queue(new PlanCreated($plan));
         return Redirect::route('plan', array('planer' => $planer, 'plan' => $plan->slug));
     });
 

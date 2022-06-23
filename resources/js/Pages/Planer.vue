@@ -34,6 +34,23 @@
         <h2 class="text-xl">Ich möchte einen neuen Plan erstellen.</h2>
         <div>
           <form @submit.prevent="createPlan" class="mt-4 w-64">
+            <label for="email" class="text-sm uppercase">E-Mail</label>
+            <input
+              v-model="createForm.email"
+              type="email"
+              name="email"
+              id="email"
+              required
+              class="
+                leading-4
+                w-full
+                block
+                border border-gray-600
+                rounded
+                shadow-inner
+                p-2
+              "
+            />
             <label for="year" class="text-sm uppercase">Jahr</label>
             <select
               v-model="createForm.startYear"
@@ -120,6 +137,7 @@ export default {
   data() {
     return {
       createForm: this.$inertia.form({
+        email: "",
         startYear: "",
       }),
       planSlug: "",
