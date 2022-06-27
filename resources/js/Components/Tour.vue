@@ -90,7 +90,7 @@ export default {
         {
           title: "Nicht alles in einem Schwung!",
           content:
-            "Um zu einem späteren Zeitpunkt wieder auf Ihren Plan zuzugreifen, notieren Sie sich bitte Ihre Plan-Nummer (siehe oben). Noch einfacher: Setzen Sie ein Lesezeichen in ihrem Browser für diese Seite. So müssen Sie nie von Vorne anfangen und können in Ruhe planen.",
+            "Um zu einem späteren Zeitpunkt wieder auf Ihren Plan zuzugreifen, haben wir Ihnen eine E-Mail geschickt mit dem Link zu Ihrem HfH Studienverlaufsplan. Noch schneller auffindbar: Setzen Sie ein Lesezeichen in ihrem Browser für diese Seite. So müssen Sie nie von Vorne anfangen und können in Ruhe planen.",
           ref: "plan-number",
           placement: "right-start",
         },

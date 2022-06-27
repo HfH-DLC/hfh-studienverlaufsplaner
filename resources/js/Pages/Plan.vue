@@ -13,21 +13,15 @@
             </ul>
           </div>
           <div class="flex flex-1 items-start">
-            <div
-              id="module-list"
-              class="w-3/12 p-4 sticky top-0 overflow-scroll"
-            >
+            <div id="module-list" class="w-3/12 p-4 sticky top-0">
               <ModuleList />
             </div>
-            <div
-              id="time-table"
-              class="w-7/12 p-4 sticky top-0 overflow-scroll"
-            >
+            <div id="time-table" class="w-7/12 p-4 sticky top-0">
               <TimeTable ref="timeTable" />
             </div>
             <div
               id="info-column"
-              class="w-2/12 py-4 sticky top-0 overflow-scroll"
+              class="w-2/12 py-4 sticky top-0"
               aria-live="polite"
             >
               <div id="total-credits" class="px-4">
