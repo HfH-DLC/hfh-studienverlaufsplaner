@@ -5,10 +5,8 @@
     class="fixed inset-0 z-10 overflow-y-auto"
   >
     <DialogOverlay
-      class="fixed inset-0 pointer-events-none"
-      :class="{
-        overlay: !this.currentElement,
-      }"
+      class="fixed inset-0 pointer-events-none overlay"
+      :style="overlayStyle"
     />
     <div
       id="dialog"
@@ -158,13 +156,21 @@ export default {
         ? "Einführung abschliessen"
         : "Weiter";
     },
+    overlayStyle() {
+      if (!this.currentElement) {
+        return "";
+      }
+      const rect = this.currentElement.getBoundingClientRect();
+      return {
+        "clip-path": `polygon(0% 0%, 0% 100%, ${rect.left}px 100%,${rect.left}px ${rect.top}px, ${rect.right}px ${rect.top}px, ${rect.right}px ${rect.bottom}px, ${rect.left}px ${rect.bottom}px,${rect.left}px 100%, 100% 100%, 100% 0%)`,
+      };
+    },
   },
   methods: {
     start() {
       this.$store.commit(SET_TOUR_ACTIVE, true);
       this.isOpen = true;
       if (this.currentElement) {
-        this.currentElement.classList.add("tour-focus");
         this.createPopper();
       }
     },
@@ -198,9 +204,6 @@ export default {
     },
     end() {
       this.isOpen = false;
-      if (this.currentElement) {
-        this.currentElement.classList.remove("tour-focus");
-      }
       this.currentIndex = 0;
       if (this.popper) {
         this.popper.destroy();
@@ -226,13 +229,8 @@ export default {
       if (this.popper) {
         this.popper.destroy();
       }
-      const oldElement = this.currentElement;
       this.currentIndex = newIndex;
-      if (oldElement) {
-        oldElement.classList.remove("tour-focus");
-      }
       if (this.currentElement) {
-        this.currentElement.classList.add("tour-focus");
         this.createPopper();
       }
     },
