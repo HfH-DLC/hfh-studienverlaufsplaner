@@ -17,6 +17,7 @@ class CreatePlansTable extends Migration
             $table->id();
             $table->timestamps();
 
+            $table->string('email');
             $table->year('start_year');
             $table->string('slug')->nullable()->unique();
             $table->boolean('tour_completed')->default(false);

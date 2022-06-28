@@ -85,6 +85,7 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
     Route::post('/plans', function (StorePlanRequest $request, Planer $planer) {
         $validated = $request->validated();
         $plan = new Plan();
+        $plan->email = $validated['email'];
         $plan->start_year = $validated['startYear'];
         $planer->plans()->save($plan);
         Mail::to($validated['email'])
