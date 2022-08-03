@@ -11,16 +11,16 @@
         required
       />
     </div>
-    <Button type="submit" class="mt-4">Importieren</Button>
+    <HfHButton type="submit" class="mt-4">Importieren</HfHButton>
   </form>
 </template>
 
 <script>
 import flashTypes from "../../flashTypes";
-import Button from "../Button.vue";
+import HfHButton from "../HfHButton.vue";
 export default {
   components: {
-    Button,
+    HfHButton,
   },
   data() {
     return {

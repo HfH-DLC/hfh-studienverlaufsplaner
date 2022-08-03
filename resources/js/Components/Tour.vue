@@ -35,13 +35,15 @@
         {{ currentStep.content }}
       </p>
       <div class="flex gap-4 mt-8 justify-end">
-        <Button
+        <HfHButton
           class="tour-button"
           @click="previousStep"
           v-if="currentIndex > 0"
-          >Zurück</Button
+          >Zurück</HfHButton
         >
-        <Button class="tour-button" @click="nextStep">{{ nextText }}</Button>
+        <HfHButton class="tour-button" @click="nextStep">{{
+          nextText
+        }}</HfHButton>
       </div>
     </div>
   </Dialog>
@@ -56,7 +58,7 @@ import {
 } from "@headlessui/vue";
 import { XIcon } from "@heroicons/vue/outline";
 import { createPopper } from "@popperjs/core";
-import Button from "./Button.vue";
+import HfHButton from "./HfHButton.vue";
 import { mapActions } from "vuex";
 import { SET_TOUR_ACTIVE } from "../Store/index";
 export default {
@@ -65,7 +67,7 @@ export default {
     DialogDescription,
     DialogOverlay,
     DialogTitle,
-    Button,
+    HfHButton,
     XIcon,
   },
   emits: ["completed"],

@@ -24,18 +24,18 @@
           required
         />
       </div>
-      <Button type="submit" class="mt-4">Importieren</Button>
+      <HfHButton type="submit" class="mt-4">Importieren</HfHButton>
     </form>
   </div>
 </template>
 
 <script>
-import Button from "../../Components/Button.vue";
+import HfHButton from "../../Components/HfHButton.vue";
 import AdminLayoutVue from "../../Layouts/AdminLayout.vue";
 export default {
   layout: AdminLayoutVue,
   components: {
-    Button,
+    HfHButton,
   },
   data() {
     return {

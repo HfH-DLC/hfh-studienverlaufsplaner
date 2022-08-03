@@ -70,7 +70,7 @@
             <div v-if="createForm.errors.startYear">
               {{ createForm.errors.startYear }}
             </div>
-            <Button class="w-full mt-3">Plan erstellen</Button>
+            <HfHButton class="w-full mt-3">Plan erstellen</HfHButton>
           </form>
         </div>
       </div>
@@ -96,7 +96,7 @@
               v-model="planSlug"
               required
             />
-            <Button class="w-full mt-3">Anschauen</Button>
+            <HfHButton class="w-full mt-3">Anschauen</HfHButton>
           </form>
         </div>
       </div>
@@ -105,11 +105,11 @@
 </template>
 
 <script>
-import Button from "../Components/Button.vue";
+import HfHButton from "../Components/HfHButton.vue";
 import HfHLink from "../Components/HfHLink.vue";
 export default {
   components: {
-    Button,
+    HfHButton,
     HfHLink,
   },
   props: {
