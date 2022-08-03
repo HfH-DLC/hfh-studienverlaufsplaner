@@ -35,9 +35,7 @@
 
 <script>
 import { v4 } from "uuid";
-import Button from "./Button.vue";
 export default {
-  components: { Button },
   props: {
     open: {
       type: Boolean,
