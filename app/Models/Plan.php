@@ -23,6 +23,16 @@ class Plan extends Model
         return $this->hasMany(Placement::class);
     }
 
+    public function firstFocus()
+    {
+        return $this->hasOne(Focus::class, 'focus_1_id');
+    }
+
+    public function secondFocus()
+    {
+        return $this->hasOne(Focus::class, 'focus_2_id');
+    }
+
     public function setSlug($value)
     {
         if (empty($value)) {

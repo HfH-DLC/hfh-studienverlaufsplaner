@@ -22,6 +22,13 @@ class CreatePlansTable extends Migration
             $table->string('slug')->nullable()->unique();
             $table->boolean('tour_completed')->default(false);
             $table->foreignId('planer_id')->constrained();
+            $table->string('focus_1_id')->nullable();
+            $table->string('focus_2_id')->nullable();
+        });
+
+        Schema::table('plans', function (Blueprint $table) {
+            $table->foreign('focus_1_id')->references('id')->on('foci');
+            $table->foreign('focus_2_id')->references('id')->on('foci');
         });
     }
 

@@ -44,4 +44,9 @@ class Planer extends Model
             ->whereHas('events', $filter)
             ->get();
     }
+
+    public function foci()
+    {
+        return $this->hasMany(Focus::class);
+    }
 }
