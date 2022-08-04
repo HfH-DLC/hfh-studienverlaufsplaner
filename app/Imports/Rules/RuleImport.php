@@ -16,7 +16,6 @@ class RuleImport
             $data = json_decode($json);
             foreach ($data as $ruleData) {
                 $rule = new Rule();
-                //dd($ruleData);
                 $rule->type = $ruleData->type;
                 $rule->params = $ruleData->params;
                 $rule->save();
