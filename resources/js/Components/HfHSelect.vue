@@ -5,7 +5,7 @@
     @change="$emit('update:modelValue', $event.target.value)"
     v-model="modelValue"
   >
-    <option value="" disabled="disabled">{{ emptyOptionLabel }}</option>
+    <option value="" :disabled="required">{{ emptyOptionLabel }}</option>
     <option v-for="option in options" :key="option.value" :value="option.value">
       {{ option.label }}
     </option>
