@@ -30,18 +30,25 @@ export default {
     HfHSelect,
     HfHButton,
   },
+  props: {
+    fociResource: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
-      focusOptions: [
-        { label: "Studienschwerpunkt Lernen", value: "SSP_L" },
-        { label: "Studienschwerpunkt Verhalten", value: "SSP_V" },
-        { label: "Studienschwerpunkt Geistige Entwicklung", value: "SSP_gE" },
-      ],
       firstFocus: "",
       secondFocus: "",
     };
   },
   computed: {
+    focusOptions() {
+      return this.fociResource.data.map((focus) => ({
+        value: focus.id,
+        label: focus.name,
+      }));
+    },
     firstOptions() {
       return this.focusOptions.filter((option) => {
         if (this.secondFocus) {

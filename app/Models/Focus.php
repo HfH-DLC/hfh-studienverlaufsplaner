@@ -9,6 +9,9 @@ class Focus extends Model
 {
     use HasFactory;
 
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     public function planer()
     {
         return $this->belongsTo(Planer::class);
