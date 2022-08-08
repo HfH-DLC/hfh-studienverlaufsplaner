@@ -19,6 +19,7 @@ class CreatePlanersTable extends Migration
             $table->string('name')->unique();
             $table->string('slug')->unique();
             $table->integer('required_credits');
+            $table->boolean('module_selection_enabled');
         });
     }
 

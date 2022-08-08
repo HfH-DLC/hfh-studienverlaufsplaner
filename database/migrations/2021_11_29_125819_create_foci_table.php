@@ -17,7 +17,7 @@ class CreateFociTable extends Migration
             $table->string('id')->unique();
             $table->string('name')->unique();
             $table->timestamps();
-            $table->foreignId('planer_id')->constrained();
+            $table->foreignId('planer_id')->constrained()->onDelete('cascade');
         });
     }
 

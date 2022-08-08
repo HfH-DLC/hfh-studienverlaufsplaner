@@ -17,6 +17,11 @@ class CreateCategoriesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
+            $table->foreignId('planer_id')->constrained()->onDelete('cascade');
+            $table->integer('min_modules')->nullable();
+            $table->integer('max_modules')->nullable();
+            $table->integer('min_credits')->nullable();
+            $table->integer('max_credits')->nullable();
         });
     }
 
