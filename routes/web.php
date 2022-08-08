@@ -8,6 +8,7 @@ use App\Http\Resources\PlanerResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\RuleResource;
 use App\Imports\Import;
+use App\Imports\JSONImport;
 use App\Imports\Rules\RuleImport;
 use App\Imports\TempImport;
 use App\Mail\PlanCreated;
@@ -26,7 +27,6 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
-use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -137,17 +137,14 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     Route::post('/import', function (Request $request) {
         $attributes = $request->validate([
-            'import' => ['required', 'mimes:xlsx'], //todo check mime formats
+            'import' => ['required', 'mimes:json'],
             'year' => ['required', 'numeric'] //todo validate year range
         ]);
         $file = $attributes['import'];
-        $tempImport = new TempImport();
-        Excel::import($tempImport, $file);
         $year = $attributes['year'];
-        $locations = $tempImport->getLocations();
-        $times = $tempImport->getTimes();
-        DB::transaction(function () use ($year, $locations, $times, $file) {
-            Excel::import(new Import($year, $locations, $times), $file);
+        DB::transaction(function () use ($file, $year) {
+            $import = new JSONImport($year, $file);
+            $import->run();
         });
         return redirect()->route('admin-import');
     });
