@@ -155,7 +155,7 @@ export default {
       });
     },
     viewPlan() {
-      this.$inertia.get(`/planers/${this.slug}/plans/${this.planSlug}`);
+      this.$inertia.get(`/${this.slug}/plans/${this.planSlug}`);
     },
   },
 };
