@@ -19,6 +19,7 @@ class PlanerResource extends JsonResource
             'slug' => $this->slug,
             'categories' => CategoryResource::collection($this->categories),
             'requiredCredits' => $this->required_credits,
+            'moduleSelectionEnabled' => $this->module_selection_enabled
         ];
     }
 }

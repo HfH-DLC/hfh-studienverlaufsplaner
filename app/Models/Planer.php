@@ -23,7 +23,7 @@ class Planer extends Model
         return $this->hasMany(Category::class);
     }
 
-    public function getModulesForPlan(Plan $plan)
+    private function getYearFilterForPlan($plan)
     {
         $years = array();
         $numberOfYears = 4;
@@ -31,20 +31,20 @@ class Planer extends Model
             $years[] = $plan->start_year + $i;
         }
 
-        $filter = function ($query) use ($years) {
+        return function ($query) use ($years) {
             $query->whereIn('year', $years);
         };
+    }
 
-        $modules = new \Illuminate\Database\Eloquent\Collection;
-
-        foreach ($this->categories()->get() as $category) {
-            $categoryModules = $category->modules()->with(['events' => $filter])
-                ->whereHas('events', $filter)
-                ->get();
-            $modules = $modules->merge($categoryModules);
-        }
-
-        return $modules;
+    public function getCategoriesForPlan(Plan $plan, bool $onlySelectedModules)
+    {
+        $filter = $this->getYearFilterForPlan($plan);
+        return $this->categories()->with(['modules' => function ($query) use ($filter, $plan, $onlySelectedModules) {
+            $query->whereHas('events', $filter);
+            if ($onlySelectedModules) {
+                $query->whereIn('id', $plan->modules()->pluck('id')->all());
+            }
+        }])->get();
     }
 
     public function foci()

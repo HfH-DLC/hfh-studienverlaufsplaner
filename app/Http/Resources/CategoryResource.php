@@ -17,9 +17,11 @@ class CategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'requiredNumber' => $this->whenPivotLoaded('category_planer', function () {
-                return $this->pivot->required_number;
-            })
+            'requiredNumber' => $this->required_number,
+            'moduleSelectionEnabled' => $this->module_selection_enabled,
+            'minCredits' => $this->min_credits,
+            'maxCredits' => $this->max_credits,
+            'modules' => ModuleResource::collection($this->modules)
         ];
     }
 }

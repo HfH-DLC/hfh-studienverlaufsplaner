@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Placement;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PlanResource extends JsonResource
@@ -19,7 +18,8 @@ class PlanResource extends JsonResource
             'slug' => $this->slug,
             'placements' => PlacementResource::collection($this->placements),
             'startYear' => $this->start_year,
-            'tourCompleted' => $this->tour_completed
+            'tourCompleted' => $this->tour_completed,
+            'modules' =>  ModuleResource::collection($this->modules)
         ];
     }
 }

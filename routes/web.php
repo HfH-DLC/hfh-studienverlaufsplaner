@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Requests\StorePlanRequest;
+use App\Http\Requests\UpdateModuleSelectionRequest;
 use App\Http\Requests\UpdatePlanRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ModuleResource;
@@ -12,7 +13,6 @@ use App\Imports\JSONImport;
 use App\Imports\Rules\RuleImport;
 use App\Imports\TempImport;
 use App\Mail\PlanCreated;
-use App\Models\Category;
 use App\Models\Module;
 use App\Models\Placement;
 use App\Models\Plan;
@@ -20,12 +20,11 @@ use App\Models\Planer;
 use App\Models\Rule;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 
 /*
@@ -58,15 +57,54 @@ Route::post('/admin/login', function (Request $request) {
     ]);
 });
 
-Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
+Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
     Route::get('/', function (Planer $planer) {
         return Inertia::render('Planer', ['slug' => $planer->slug, 'name' => $planer->name]);
     })->name('planer');
 
-    Route::get('/plans/{plan:slug}', function (Planer $planer, Plan $plan) {
+    Route::get('/{plan:slug}/schwerpunkte', function (Planer $planer, Plan $plan) {
         $planResource = new PlanResource($plan);
-        $categoriesResource = CategoryResource::collection($planer->categories()->get());
-        $modulesResource = ModuleResource::collection($planer->getModulesForPlan($plan));
+        return Inertia::render(
+            'StudyFocus',
+            array(
+                'planerName' => $planer->name,
+                'planerSlug' => $planer->slug,
+                'planResource' => $planResource,
+            )
+        );
+    })->name('plan-focus');
+
+    Route::get('/{plan:slug}', function (Planer $planer, Plan $plan) {
+        if ($planer->module_selection_enabled) {
+            return Redirect::route('plan-focus', array('planer' => $planer, 'plan' => $plan->slug));
+        }
+        Redirect::route('plan-schedule', array('planer' => $planer, 'plan' => $plan->slug));
+    })->name('plan');
+
+    Route::get('/{plan:slug}/module', function (Planer $planer, Plan $plan) {
+        $planResource = new PlanResource($plan);
+        $categoriesResource = CategoryResource::collection($planer->getCategoriesForPlan($plan, false));
+        return Inertia::render(
+            'ModuleSelection',
+            array(
+                'planerName' => $planer->name,
+                'planerSlug' => $planer->slug,
+                'planResource' => $planResource,
+                'categoriesResource' => $categoriesResource
+            )
+        );
+    })->name('plan-modules');
+
+    Route::put('/{plan:slug}/module', function (UpdateModuleSelectionRequest $request, Planer $planer, Plan $plan) {
+        $validated = $request->validated();
+        $plan->modules()->sync($validated['modules']);
+        $plan->save();
+        return Redirect::route('plan', array('planer' => $planer, 'plan' => $plan->slug));
+    });
+
+    Route::get('/{plan:slug}/zeitplan', function (Planer $planer, Plan $plan) {
+        $planResource = new PlanResource($plan);
+        $categoriesResource = CategoryResource::collection($planer->getCategoriesForPlan($plan, false));
         $rulesResource = RuleResource::collection(Rule::all());
         return Inertia::render(
             'Plan',
@@ -75,45 +113,51 @@ Route::prefix('/planers/{planer:slug}')->scopeBindings()->group(function () {
                 'planerSlug' => $planer->slug,
                 'planResource' => $planResource,
                 'categoriesResource' => $categoriesResource,
-                'modulesResource' => $modulesResource,
                 'rulesResource' => $rulesResource,
                 'requiredCredits' => $planer->required_credits,
             )
         );
-    })->name('plan');
+    })->name('plan-schedule');
 
     Route::post('/plans', function (StorePlanRequest $request, Planer $planer) {
         $validated = $request->validated();
         $plan = new Plan();
         $plan->email = $validated['email'];
         $plan->start_year = $validated['startYear'];
-        $planer->plans()->save($plan);
+        DB::transaction(function () use ($plan, $planer) {
+            $planer->plans()->save($plan);
+            $plan->save();
+        });
+
         Mail::to($validated['email'])
             ->queue(new PlanCreated($plan));
         return Redirect::route('plan', array('planer' => $planer, 'plan' => $plan->slug));
     });
 
     Route::put('/plans/{plan:slug}', function (UpdatePlanRequest $request, Planer $planer, Plan $plan) {
-        $validated = $request->validated();
-        $placements = $validated['placements'];
-        $placements = collect($placements);
-        DB::transaction(function () use ($plan, $placements) {
-            $plan->placements()->delete();
-            $placements->each(function ($placement) use ($plan) {
-                $obj = new Placement();
-                $obj->year = $placement['year'];
-                $obj->semester = $placement['semester'];
-                $obj->week = $placement['week'];
-                $obj->day = $placement['day'];
-                $obj->time = $placement['time'];
-                $obj->location = $placement['location'];
-                $obj->module()->associate($placement['moduleId']);
-                $plan->placements()->save($obj);
-            });
+        DB::transaction(function () use ($plan, $request) {
+            $validated = $request->validated();
+            if (Arr::exists($validated, 'placements')) {
+                $placements = $validated['placements'];
+                $placements = collect($placements);
+                $plan->placements()->delete();
+                $placements->each(function ($placement) use ($plan) {
+                    $obj = new Placement();
+                    $obj->year = $placement['year'];
+                    $obj->semester = $placement['semester'];
+                    $obj->week = $placement['week'];
+                    $obj->day = $placement['day'];
+                    $obj->time = $placement['time'];
+                    $obj->location = $placement['location'];
+                    $obj->module()->associate($placement['moduleId']);
+                    $plan->placements()->save($obj);
+                });
+            }
+            if (Arr::exists($validated, 'tourCompleted')) {
+                $plan->tour_completed = $validated['tourCompleted'];;
+            }
+            $plan->save();
         });
-        $tourCompleted = $validated['tourCompleted'];
-        $plan->tour_completed = $tourCompleted;
-        $plan->save();
 
         return new PlanResource($plan);
     });
@@ -148,11 +192,6 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         });
         return redirect()->route('admin-import');
     });
-
-    Route::get('/categories', function (Request $request) {
-        $categories = CategoryResource::collection(Category::all());
-        return Inertia::render('Admin/Categories', ['categoriesResource' => $categories]);
-    })->name('admin-categories');
 
     Route::get('/modules', function (Request $request) {
         $modules = ModuleResource::collection(Module::all());
