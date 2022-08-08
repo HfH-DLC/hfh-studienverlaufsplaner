@@ -6,7 +6,6 @@ use App\Models\Category;
 use App\Models\Event;
 use App\Models\Module;
 use App\Models\Planer;
-use App\Models\Rule;
 use Illuminate\Support\Facades\DB;
 
 class JSONImport
@@ -132,7 +131,17 @@ class JSONImport
                 $category = new Category();
                 $category->name = $categoryName;
             }
-            //todo min/max credits, min/max modules
+            if (isset($categoryData->requiredNumber)) {
+                $category->required_number = $categoryData->requiredNumber;
+            }
+            if (isset($categoryData->moduleSelection)) {
+                if (isset($categoryData->moduleSelection->minCredits)) {
+                    $category->min_credits = $categoryData->moduleSelection->minCredits;
+                }
+                if (isset($categoryData->moduleSelection->maxCredits)) {
+                    $category->max_credits = $categoryData->moduleSelection->maxCredits;
+                }
+            }
             $planer->categories()->save($category);
             $category->modules()->attach($categoryData->modules);
             $category->save();
