@@ -220,6 +220,11 @@
             "abbreviation": "MA SHP",
             "moduleSelectionEnabled": true,
             "requiredCredits": 90,
+            "foci": [
+                { "id": "SSP_L", "name": "Studienschwerpunkt Lernen" },
+                { "id": "SSP_V", "name": "Studienschwerpunkt Verhalten" },
+                { "id": "SSP_gE", "name": "Studienschwerpunkt Geistige Entwicklung" }
+            ],
             "categories": [{
                     "name": "Pflicht",
                     "modules": [

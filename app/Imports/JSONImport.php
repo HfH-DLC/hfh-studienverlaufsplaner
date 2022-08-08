@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\Category;
 use App\Models\Event;
+use App\Models\Focus;
 use App\Models\Module;
 use App\Models\Planer;
 use Illuminate\Support\Facades\DB;
@@ -119,6 +120,7 @@ class JSONImport
             $planer->save();
 
             $this->importCategories($planerData, $planer);
+            $this->importFoci($planerData, $planer);
         }
     }
 
@@ -146,6 +148,22 @@ class JSONImport
             $planer->categories()->save($category);
             $category->modules()->syncWithoutDetaching($categoryData->modules);
             $category->save();
+        }
+    }
+
+    private function importFoci($planerData, $planer)
+    {
+        if (!isset($planerData->foci)) {
+            return;
+        }
+        foreach ($planerData->foci as $focusData) {
+            $focus = $planer->categories->where('id', $focusData->id)->first();
+            if (!$focus) {
+                $focus = new Focus();
+                $focus->id = $focusData->id;
+            }
+            $focus->name = $focusData->name;
+            $planer->foci()->save($focus);
         }
     }
 
@@ -178,7 +196,6 @@ class JSONImport
 
     private function createEvent($module, $year, $semester, $timeWindow, $day, $time, $location)
     {
-
         $event = new Event();
         $event->year = $year;
         $event->semester = $semester;
