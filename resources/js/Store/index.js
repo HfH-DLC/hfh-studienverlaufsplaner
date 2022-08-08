@@ -13,7 +13,6 @@ let dataAdapter;
 
 const RESET_STATE = "RESET_STATE"
 const SET_PLAN = "SET_PLAN"
-const SET_MODULES = "SET_MODULES"
 const SET_CATEGORIES = "SET_CATEGORIES"
 const SET_RULES = "SET_RULES"
 const SET_SELECTION_STATUS = "SET_SELECTION_STATUS"
@@ -28,7 +27,6 @@ const SET_SAVE_STATUS = "SET_SAVE_STATUS"
 
 const initialState = {
     initialized: false,
-    modules: [],
     categories: [],
     rules: [],
     selectionStatus: {},
@@ -58,9 +56,6 @@ const store = createStore({
         },
         [SET_PLAN](state, plan) {
             state.plan = plan
-        },
-        [SET_MODULES](state, modules) {
-            state.modules = modules
         },
         [SET_CATEGORIES](state, categories) {
             state.categories = categories
@@ -110,7 +105,6 @@ const store = createStore({
             dataAdapter = new DataAdapter(planerSlug)
             commit(RESET_STATE)
             commit(SET_PLAN, plan)
-            commit(SET_MODULES, modules)
             commit(SET_CATEGORIES, categories)
             commit(SET_RULES, rules)
             dispatch("validate")
@@ -141,7 +135,7 @@ const store = createStore({
         selectModule({ commit, state, getters }, moduleId) {
             commit(SET_SELECTION_STATUS, {
                 moduleId,
-                status: validateSelection(moduleId, state.modules, getters.placements, state.rules)
+                status: validateSelection(moduleId, getters.modules, getters.placements, state.rules)
             })
         },
         deselectModule({ commit }) {
@@ -206,19 +200,11 @@ const store = createStore({
         credits(state, { placements }) {
             return placements.map(placements => placements.module).reduce((total, module) => module ? total + module.credits : total, 0)
         },
-        modules(state) {
-            return state.modules.map(module => {
-                const moduleInfos = state.moduleInfos[module.id]
-                const placement = state.plan.placements.find(placement => placement.moduleId == module.id);
-                const misplaced = !!(placement && state.placementErrors[placement.id] && state.placementErrors[placement.id].length > 0);
-                return {
-                    ...module,
-                    infos: moduleInfos,
-                    selected: state.selectionStatus && state.selectionStatus.moduleId == module.id,
-                    placement: placement,
-                    misplaced,
-                }
-            })
+        modules(state, { categories }) {
+            return categories.reduce((acc, cur) => {
+                acc.push(...cur.modules);
+                return acc;
+            }, []);
         },
         moduleById: (state, { modules }) => (id) => {
             return modules.find(module => module.id == id)
@@ -250,9 +236,26 @@ const store = createStore({
             });
             return result;
         },
-        categories(state, { modules }) {
+        categories(state) {
             return state.categories.map(category => {
-                const categoryModules = modules.filter(module => module.category.id === category.id);
+                let categoryModules = category.moduleSelectionEnabled ?
+                    category.modules.filter(categoryModule => state.plan.modules.some(module => module.id === categoryModule.id)) :
+                    category.modules;
+
+                categoryModules = categoryModules.map(module => {
+                    const moduleInfos = state.moduleInfos[module.id]
+                    const placement = state.plan.placements.find(placement => placement.moduleId == module.id);
+                    const misplaced = !!(placement && state.placementErrors[placement.id] && state.placementErrors[placement.id].length > 0);
+                    return {
+                        ...module,
+                        infos: moduleInfos,
+                        selected: state.selectionStatus && state.selectionStatus.moduleId == module.id,
+                        placement: placement,
+                        misplaced,
+                    }
+                })
+
+
                 const requiredNumber = category.requiredNumber != null ? category.requiredNumber : categoryModules.length;
                 return {
                     ...category,
