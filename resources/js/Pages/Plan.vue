@@ -86,10 +86,6 @@ export default {
       type: Object,
       required: true,
     },
-    modulesResource: {
-      type: Object,
-      required: true,
-    },
     rulesResource: {
       type: Object,
       required: true,
@@ -110,7 +106,6 @@ export default {
   async created() {
     await this.init({
       categories: this.categoriesResource.data,
-      modules: this.modulesResource.data,
       rules: this.rulesResource.data,
       plan: this.planResource.data,
       planerSlug: this.planerSlug,
