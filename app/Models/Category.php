@@ -9,8 +9,13 @@ class Category extends Model
 {
     use HasFactory;
 
-    public function planers()
+    public function planer()
     {
-        return $this->belongsToMany(Planer::class);
+        return $this->belongsTo(Planer::class);
+    }
+
+    public function modules()
+    {
+        return $this->belongsToMany(Module::class);
     }
 }

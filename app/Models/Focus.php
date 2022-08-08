@@ -13,4 +13,9 @@ class Focus extends Model
     {
         return $this->belongsTo(Planer::class);
     }
+
+    public function modules()
+    {
+        return $this->belongsToMany(Module::class);
+    }
 }

@@ -20,12 +20,7 @@ class Planer extends Model
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class)->withPivot('required_number');
-    }
-
-    public function modules()
-    {
-        return $this->belongsToMany(Module::class);
+        return $this->hasMany(Category::class);
     }
 
     public function getModulesForPlan(Plan $plan)
@@ -40,9 +35,16 @@ class Planer extends Model
             $query->whereIn('year', $years);
         };
 
-        return $this->modules()->with(['events' => $filter])
-            ->whereHas('events', $filter)
-            ->get();
+        $modules = new \Illuminate\Database\Eloquent\Collection;
+
+        foreach ($this->categories()->get() as $category) {
+            $categoryModules = $category->modules()->with(['events' => $filter])
+                ->whereHas('events', $filter)
+                ->get();
+            $modules = $modules->merge($categoryModules);
+        }
+
+        return $modules;
     }
 
     public function foci()

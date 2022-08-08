@@ -14,14 +14,9 @@ class Module extends Model
 
     protected $casts = ['category_id' => 'integer', 'credits' => 'integer'];
 
-    public function planers()
+    public function categories()
     {
-        return $this->belongsToMany(Planer::class);
-    }
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class);
     }
 
     public function events()
@@ -37,5 +32,15 @@ class Module extends Model
     public function dependencies()
     {
         return $this->belongsToMany('App\Models\Module', 'module_prerequisite', 'prerequisite_id', 'module_id');
+    }
+
+    public function plans()
+    {
+        return $this->belongsToMany(Plan::class);
+    }
+
+    public function foci()
+    {
+        return $this->belongsToMany(Focus::class);
     }
 }

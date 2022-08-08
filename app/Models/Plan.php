@@ -33,6 +33,11 @@ class Plan extends Model
         return $this->hasOne(Focus::class, 'focus_2_id');
     }
 
+    public function modules()
+    {
+        return $this->belongsToMany(Module::class);
+    }
+
     public function setSlug($value)
     {
         if (empty($value)) {
