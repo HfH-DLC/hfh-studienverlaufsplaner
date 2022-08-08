@@ -17,7 +17,7 @@
         <label for="file" class="block uppercase text-sm">Datei</label>
         <input
           type="file"
-          accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          accept="application/json"
           name="file"
           id="file"
           @change="setFile"
