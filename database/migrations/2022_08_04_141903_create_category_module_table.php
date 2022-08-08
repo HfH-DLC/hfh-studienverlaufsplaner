@@ -16,6 +16,7 @@ class CreateCategoryModuleTable extends Migration
         Schema::create('category_module', function (Blueprint $table) {
             $table->string('module_id');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->unique(['category_id', 'module_id']);
         });
 
         Schema::table('category_module', function (Blueprint $table) {

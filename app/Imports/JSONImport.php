@@ -135,6 +135,7 @@ class JSONImport
                 $category->required_number = $categoryData->requiredNumber;
             }
             if (isset($categoryData->moduleSelection)) {
+                $category->module_selection_enabled = true;
                 if (isset($categoryData->moduleSelection->minCredits)) {
                     $category->min_credits = $categoryData->moduleSelection->minCredits;
                 }
@@ -143,7 +144,7 @@ class JSONImport
                 }
             }
             $planer->categories()->save($category);
-            $category->modules()->attach($categoryData->modules);
+            $category->modules()->syncWithoutDetaching($categoryData->modules);
             $category->save();
         }
     }
@@ -153,7 +154,6 @@ class JSONImport
         Event::where('year', '>=', $this->year)->delete();
         foreach ($data->events as $eventData) {
             $module = $this->getModule($eventData->module);
-            $ids = [];
 
             $semesters = $eventData->semesters;
             $timeWindow = $this->timeWindows[$eventData->timeWindow];
@@ -168,14 +168,11 @@ class JSONImport
                         $time = $this->times[$timeLetter]['time'];
                         for ($i = 0; $i < self::NUMBER_OF_YEARS; $i++) {
                             $year = $this->year + $i;
-                            $event = $this->createEvent($module, $year, $semester, $timeWindow, $day, $time, $location);
+                            $this->createEvent($module, $year, $semester, $timeWindow, $day, $time, $location);
                         }
-                        $ids[] = $event->id;
                     }
                 }
             }
-
-            return $ids;
         }
     }
 
@@ -191,6 +188,5 @@ class JSONImport
         $event->location = $location;
         $event->module()->associate($module->id);
         $event->save();
-        return $event;
     }
 }
