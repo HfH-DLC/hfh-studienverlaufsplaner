@@ -168,7 +168,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
         $validated = $request->validated();
         $plan->modules()->sync($validated['modules']);
         $plan->save();
-        return Redirect::route('plan', array('planer' => $planer, 'plan' => $plan->slug));
+        return Redirect::route('plan-schedule', array('planer' => $planer, 'plan' => $plan->slug));
     });
 
     Route::get('/{plan:slug}/zeitplan', function (Planer $planer, Plan $plan) {
