@@ -150,12 +150,12 @@ export default {
   },
   methods: {
     createPlan() {
-      this.createForm.post(`/planers/${this.slug}/plans`, {
+      this.createForm.post(`/${this.slug}/plans`, {
         onSuccess: () => this.createForm.reset(),
       });
     },
     viewPlan() {
-      this.$inertia.get(`/${this.slug}/plans/${this.planSlug}`);
+      this.$inertia.get(`/${this.slug}/${this.planSlug}`);
     },
   },
 };

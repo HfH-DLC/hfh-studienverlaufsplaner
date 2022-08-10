@@ -97,7 +97,6 @@ export default {
   methods: {
     save() {
       this.form.put(
-        `/planers/${this.planerSlug}/plans/${this.planResource.data.slug}/module`,
         {
           onSuccess: () => this.form.reset(),
         }
