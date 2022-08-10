@@ -7,7 +7,7 @@ export default class DataAdapter {
     }
 
     async savePlan(plan) {
-        const response = await axios.put(`/planers/${this.planerSlug}/plans/${plan.slug}`, plan)
+        const response = await axios.put(`/${this.planerSlug}/${plan.slug}`, plan)
         return response.data.data
     }
 }
