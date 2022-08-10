@@ -3,7 +3,13 @@
             "id": "P1_01",
             "name": "Grundfragen der Heilpädagogik",
             "credits": 5
-        }, {
+        },
+        {
+            "id": "P1_02",
+            "name": "Diagnostik, Förderung und Partizipation bei besonderem Bildungsbedarf",
+            "credits": 5
+        },
+        {
             "id": "P1_03",
             "name": "Heilpädagogik im Vorschulbereich",
             "credits": 5
@@ -220,10 +226,81 @@
             "abbreviation": "MA SHP",
             "moduleSelectionEnabled": true,
             "requiredCredits": 90,
-            "foci": [
-                { "id": "SSP_L", "name": "Studienschwerpunkt Lernen" },
-                { "id": "SSP_V", "name": "Studienschwerpunkt Verhalten" },
-                { "id": "SSP_gE", "name": "Studienschwerpunkt Geistige Entwicklung" }
+            "foci": [{
+                    "id": "SSP_L",
+                    "name": "Studienschwerpunkt Lernen",
+                    "modules": [
+                        "WP2_01.1", "WP2_01.2"
+                    ]
+                },
+                {
+                    "id": "SSP_V",
+                    "name": "Studienschwerpunkt Verhalten",
+                    "modules": [
+                        "WP2_02.1", "WP2_02.2"
+                    ]
+                },
+                {
+                    "id": "SSP_gE",
+                    "name": "Studienschwerpunkt Geistige Entwicklung",
+                    "modules": [
+                        "WP2_03.1", "WP2_03.2"
+                    ]
+                },
+                {
+                    "id": "SSP_H",
+                    "name": "Studienschwerpunkt Hören",
+                    "modules": [
+                        "WP2_04.1"
+                    ],
+                    "moduleSelection": {
+                        "requiredNumber": 1,
+                        "options": [
+                            "WP2_04.2",
+                            "WP2_07"
+                        ]
+                    }
+                },
+                {
+                    "id": "SSP_S",
+                    "name": "Studienschwerpunkt Sehen",
+                    "modules": [
+                        "WP2_05.1"
+                    ],
+                    "moduleSelection": {
+                        "requiredNumber": 1,
+                        "options": [
+                            "WP2_05.2",
+                            "WP2_07"
+                        ]
+                    }
+                },
+                {
+                    "id": "SSP_KmE",
+                    "name": "Studienschwerpunkt Körperlich-motorische Entwicklung",
+                    "modules": [],
+                    "moduleSelection": {
+                        "requiredNumber": 2,
+                        "options": [
+                            "WP2_06.1",
+                            "WP2_06.2",
+                            "WP2_07"
+                        ]
+                    }
+                },
+                {
+                    "id": "SSP_BuK",
+                    "name": "Studienschwerpunkt Beratung und Kooperation im heilpädagogischen Kontext",
+                    "modules": ["WP4_04.1", "WP4_04.2"]
+                },
+                {
+                    "id": "SSP_SOE",
+                    "name": "Studienschwerpunkt Schul- und Organisationsentwicklung im heilpädagogischen Kontext",
+                    "modules": [
+                        "WP4_05.1",
+                        "WP4_05.2"
+                    ]
+                }
             ],
             "categories": [{
                     "name": "Pflicht",
@@ -367,6 +444,20 @@
             ]
         },
         {
+            "module": "P1_02",
+            "semesters": [
+                "HS",
+                "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "a",
+                "e"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        }, {
             "module": "P1_03",
             "semesters": [
                 "FS"
@@ -374,6 +465,32 @@
             "timeWindow": 1,
             "times": [
                 "a"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "P3_01",
+            "semesters": [
+                "HS", "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "d", "h"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "P4_01",
+            "semesters": [
+                "HS", "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "c", "g"
             ],
             "locations": [
                 "ZH"
@@ -445,6 +562,149 @@
             ]
         },
         {
+            "module": "WP2_01.1",
+            "semesters": [
+                "HS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "a", "e"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP2_01.1",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "b", "f"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP2_01.2",
+            "semesters": [
+                "HS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "b"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP2_01.2",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "a", "e"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP2_02.1",
+            "semesters": [
+                "HS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "c", "g"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP2_02.1",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "d", "h"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP2_02.2",
+            "semesters": [
+                "HS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "d"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP2_02.2",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "c", "g"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP2_03.1",
+            "semesters": [
+                "HS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "b"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP2_03.1",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "f"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP2_03.2",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "b"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
             "module": "WP2_04.1",
             "semesters": [
                 "HS"
@@ -472,6 +732,19 @@
         },
         {
             "module": "WP2_05.1",
+            "semesters": [
+                "HS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "f"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP2_05.2",
             "semesters": [
                 "HS"
             ],
@@ -517,6 +790,279 @@
             "timeWindow": 1,
             "times": [
                 "a"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP2_08",
+            "semesters": [
+                "HS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "c"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP2_09",
+            "semesters": [
+                "HS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "c"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP2_10",
+            "semesters": [
+                "HS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "c", "h"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP2_10",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "d", "h"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP2_11",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "f"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP3_02",
+            "semesters": [
+                "HS", "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "c", "g"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP3_03",
+            "semesters": [
+                "HS", "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "a", "e"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP3_04",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "d", "h"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP3_05",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "d"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP3_06",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "a"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP4_03",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "c"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP4_04.1",
+            "semesters": [
+                "HS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "f"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP4_04.2",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "f"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP4_05.1",
+            "semesters": [
+                "HS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "e"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "WP4_05.2",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 1,
+            "times": [
+                "e"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "BP5_01.1.SHP",
+            "semesters": [
+                "HS"
+            ],
+            "timeWindow": 2,
+            "times": [
+                "a", "c", "e", "g"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "BP5_01.1.SHP",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 2,
+            "times": [
+                "b", "f"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "BP5_01.2.SHP",
+            "semesters": [
+                "HS"
+            ],
+            "timeWindow": 2,
+            "times": [
+                "b", "d", "f", "h"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "BP5_01.2.SHP",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 2,
+            "times": [
+                "a", "c", "e", "g"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "BP5_01.3.SHP",
+            "semesters": [
+                "HS"
+            ],
+            "timeWindow": 2,
+            "times": [
+                "a", "e"
+            ],
+            "locations": [
+                "ZH"
+            ]
+        },
+        {
+            "module": "BP5_01.3.SHP",
+            "semesters": [
+                "FS"
+            ],
+            "timeWindow": 2,
+            "times": [
+                "b", "d", "f", "h"
             ],
             "locations": [
                 "ZH"
@@ -631,7 +1177,7 @@
         },
         {
             "id": "SG",
-            "name": "St. Gallen"
+            "name": "Rorschach"
         },
         {
             "id": "GR",
