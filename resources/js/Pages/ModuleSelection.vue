@@ -1,6 +1,6 @@
 <template>
-  <main>
-    <h1>Wahlpflicht- und Wahlmodule</h1>
+  <main class="p-4 max-w-6xl mx-auto">
+    <h1 class="text-3xl mt-4 mb-2">Wahlpflicht- und Wahlmodule</h1>
     <p>
       Das Wahlpflicht- und Wahlangebot ist in drei Bereiche gegliedert. Aus den
       Bereichen Wahlpflicht 1 und Wahlpflicht 2 belegen Sie mindestens 10 CP und
@@ -10,38 +10,41 @@
       möglich.
     </p>
 
-    <form @submit.prevent="save">
+    <form @submit.prevent="save" class="mt-4">
       <div v-for="category in categories" :key="category.id">
-        <h2>
+        <h2 class="text-2xl mt-4 mb-2">
           {{ category.name }}
+          <span class="text-base"
+            >({{ category.currentCredits }} / {{ category.minCredits }} -
+            {{ category.maxCredits }} Kreditpunkte)</span
+          >
         </h2>
-        <div v-if="category.moduleSelectionEnabled">
-          <div v-for="module in category.modules" :key="module.id">
-            <input
-              type="checkbox"
-              :id="module.id"
-              :value="module.id"
-              v-model="form.modules"
-            />
-            <label :for="module.id">{{ module.id }} {{ module.name }}</label>
-          </div>
-        </div>
-        <div v-else>
-          <div v-for="module in category.modules" :key="module.id">
-            <input
-              type="checkbox"
-              :id="module.id"
-              :value="module.id"
-              disabled
-              checked
-            />
-            <label :for="module.id">{{ module.id }} {{ module.name }}</label>
-          </div>
+        <div v-for="module in category.modules" :key="module.id" class="mb-1">
+          <input
+            v-if="!module.isFocusModule"
+            type="checkbox"
+            :id="module.id"
+            :value="module.id"
+            v-model="form.modules"
+            :disabled="
+              category.currentCredits >= category.maxCredits &&
+              !module.isSelectedModule
+            "
+          />
+          <input
+            v-else
+            type="checkbox"
+            :id="module.id"
+            :value="module.id"
+            disabled
+            checked
+          />
+          <label class="ml-2" :for="module.id"
+            >{{ module.id }} {{ module.name }}</label
+          >
         </div>
       </div>
-      <div>{{ form.modules }}</div>
-
-      <HfHButton>Weiter</HfHButton>
+      <HfHButton class="mt-4" :disabled="form.processing">Weiter</HfHButton>
     </form>
   </main>
 </template>
@@ -74,29 +77,66 @@ export default {
     };
   },
   created() {
-    this.form.modules = this.categories
-      .filter((category) => category.moduleSelectionEnabled)
-      .reduce((acc, cur) => {
-        cur.modules.forEach((module) => {
-          if (
-            this.planResource.data.modules.some(
-              (planModule) => module.id === planModule.id
-            )
-          ) {
-            acc.push(module.id);
-          }
-        });
-        return acc;
-      }, []);
+    this.form.modules = this.categories.reduce((acc, cur) => {
+      cur.modules.forEach((module) => {
+        if (
+          this.plan.modules.some((planModule) => module.id === planModule.id)
+        ) {
+          acc.push(module.id);
+        }
+      });
+      return acc;
+    }, []);
   },
   computed: {
+    plan() {
+      return this.planResource.data;
+    },
     categories() {
-      return this.categoriesResource.data;
+      return this.categoriesResource.data
+        .filter((category) => category.moduleSelectionEnabled)
+        .map((category) => {
+          const modules = category.modules.map((module) => ({
+            ...module,
+            isFocusModule: this.isFocusModule(module),
+            isSelectedModule: this.isSelectedModule(module),
+          }));
+          const currentModules = modules.filter((module) => {
+            return module.isFocusModule || module.isSelectedModule;
+          });
+          const currentCredits = currentModules.reduce(
+            (acc, cur) => acc + cur.credits,
+            0
+          );
+          return {
+            ...category,
+            modules,
+            currentCredits,
+          };
+        });
+    },
+    focusModules() {
+      const focusModules = [...this.plan.firstFocus.modules];
+      if (this.plan.secondFocus) {
+        focusModules.push(...this.plan.secondFocus.modules);
+      }
+      return focusModules;
     },
   },
   methods: {
+    isFocusModule(module) {
+      return this.focusModules.some(
+        (focusModule) => module.id === focusModule.id
+      );
+    },
+    isSelectedModule(module) {
+      return this.form.modules.some(
+        (selectedModule) => module.id === selectedModule
+      );
+    },
     save() {
       this.form.put(
+        `/${this.planerSlug}/${this.planResource.data.slug}/module`,
         {
           onSuccess: () => this.form.reset(),
         }
