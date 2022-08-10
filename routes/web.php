@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Requests\StorePlanRequest;
+use App\Http\Requests\UpdateFocusSelectionRequest;
 use App\Http\Requests\UpdateModuleSelectionRequest;
 use App\Http\Requests\UpdatePlanRequest;
 use App\Http\Resources\CategoryResource;
@@ -129,11 +130,19 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
         return Inertia::render('Planer', ['slug' => $planer->slug, 'name' => $planer->name]);
     })->name('planer');
 
+
+    Route::get('/{plan:slug}', function (Planer $planer, Plan $plan) {
+        if ($planer->module_selection_enabled) {
+            return Redirect::route('plan-focus', array('planer' => $planer, 'plan' => $plan->slug));
+        }
+        Redirect::route('plan-schedule', array('planer' => $planer, 'plan' => $plan->slug));
+    })->name('plan');
+
     Route::get('/{plan:slug}/schwerpunkte', function (Planer $planer, Plan $plan) {
         $planResource = new PlanResource($plan);
         $fociResource = FocusResource::collection($planer->foci()->get());
         return Inertia::render(
-            'StudyFocus',
+            'FocusSelection',
             array(
                 'planerName' => $planer->name,
                 'planerSlug' => $planer->slug,
@@ -143,12 +152,13 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
         );
     })->name('plan-focus');
 
-    Route::get('/{plan:slug}', function (Planer $planer, Plan $plan) {
-        if ($planer->module_selection_enabled) {
-            return Redirect::route('plan-focus', array('planer' => $planer, 'plan' => $plan->slug));
-        }
-        Redirect::route('plan-schedule', array('planer' => $planer, 'plan' => $plan->slug));
-    })->name('plan');
+    Route::put('/{plan:slug}/schwerpunkte', function (UpdateFocusSelectionRequest $request, Planer $planer, Plan $plan) {
+        $validated = $request->validated();
+        $plan->first_focus = $validated['firstFocus'];
+        $plan->second_focus = $validated['secondFocus'];
+        $plan->save();
+        return Redirect::route('plan-modules', array('planer' => $planer, 'plan' => $plan->slug));
+    });
 
     Route::get('/{plan:slug}/module', function (Planer $planer, Plan $plan) {
         $planResource = new PlanResource($plan);
