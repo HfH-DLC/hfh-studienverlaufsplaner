@@ -152,7 +152,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
 
     Route::get('/{plan:slug}/module', function (Planer $planer, Plan $plan) {
         $planResource = new PlanResource($plan);
-        $categoriesResource = CategoryResource::collection($planer->getCategoriesForPlan($plan, false));
+        $categoriesResource = CategoryResource::collection($planer->getCategoriesForPlan($plan));
         return Inertia::render(
             'ModuleSelection',
             array(
@@ -173,7 +173,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
 
     Route::get('/{plan:slug}/zeitplan', function (Planer $planer, Plan $plan) {
         $planResource = new PlanResource($plan);
-        $categoriesResource = CategoryResource::collection($planer->getCategoriesForPlan($plan, false));
+        $categoriesResource = CategoryResource::collection($planer->getCategoriesForPlan($plan));
         $rulesResource = RuleResource::collection(Rule::all());
         return Inertia::render(
             'Plan',
