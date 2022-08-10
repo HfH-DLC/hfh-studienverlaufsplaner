@@ -36,14 +36,11 @@ class Planer extends Model
         };
     }
 
-    public function getCategoriesForPlan(Plan $plan, bool $onlySelectedModules)
+    public function getCategoriesForPlan(Plan $plan)
     {
         $filter = $this->getYearFilterForPlan($plan);
-        return $this->categories()->with(['modules' => function ($query) use ($filter, $plan, $onlySelectedModules) {
+        return $this->categories()->with(['modules' => function ($query) use ($filter, $plan) {
             $query->whereHas('events', $filter);
-            if ($onlySelectedModules) {
-                $query->whereIn('id', $plan->modules()->pluck('id')->all());
-            }
         }])->get();
     }
 
