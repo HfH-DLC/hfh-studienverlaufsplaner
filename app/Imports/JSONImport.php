@@ -98,6 +98,7 @@ class JSONImport
         if (array_key_exists($id, $this->modulesCache)) {
             $module = $this->modulesCache[$id];
         } else {
+            var_dump($id);
             $module = Module::findOrFail($id);
             $this->modulesCache[$id] = $module;
         }
@@ -157,13 +158,17 @@ class JSONImport
             return;
         }
         foreach ($planerData->foci as $focusData) {
-            $focus = $planer->categories->where('id', $focusData->id)->first();
+            $focus = $planer->foci->where('id', $focusData->id)->first();
             if (!$focus) {
                 $focus = new Focus();
                 $focus->id = $focusData->id;
+                $focus->name = $focusData->name;
+                $planer->foci()->save($focus);
+            } else {
+                $focus->name = $focusData->name;
             }
-            $focus->name = $focusData->name;
-            $planer->foci()->save($focus);
+            $focus->modules()->sync($focusData->modules);
+            $focus->save();
         }
     }
 
