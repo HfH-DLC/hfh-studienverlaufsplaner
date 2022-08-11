@@ -228,75 +228,69 @@
             "requiredCredits": 90,
             "foci": [{
                     "id": "SSP_L",
-                    "name": "Studienschwerpunkt Lernen",
-                    "modules": [
+                    "name": "Lernen",
+                    "requiredModules": [
                         "WP2_01.1", "WP2_01.2"
                     ]
                 },
                 {
                     "id": "SSP_V",
-                    "name": "Studienschwerpunkt Verhalten",
-                    "modules": [
+                    "name": "Verhalten",
+                    "requiredModules": [
                         "WP2_02.1", "WP2_02.2"
                     ]
                 },
                 {
                     "id": "SSP_gE",
-                    "name": "Studienschwerpunkt Geistige Entwicklung",
-                    "modules": [
+                    "name": "Geistige Entwicklung",
+                    "requiredModules": [
                         "WP2_03.1", "WP2_03.2"
                     ]
                 },
                 {
                     "id": "SSP_H",
-                    "name": "Studienschwerpunkt Hören",
-                    "modules": [
+                    "name": "Hören",
+                    "requiredModules": [
                         "WP2_04.1"
                     ],
-                    "moduleSelection": {
-                        "requiredNumber": 1,
-                        "options": [
-                            "WP2_04.2",
-                            "WP2_07"
-                        ]
-                    }
+                    "optionalModules": [
+                        "WP2_04.2",
+                        "WP2_07"
+                    ],
+                    "requiredNumberOfOptionalModules": 1
                 },
                 {
                     "id": "SSP_S",
-                    "name": "Studienschwerpunkt Sehen",
-                    "modules": [
+                    "name": "Sehen",
+                    "requiredModules": [
                         "WP2_05.1"
                     ],
-                    "moduleSelection": {
-                        "requiredNumber": 1,
-                        "options": [
-                            "WP2_05.2",
-                            "WP2_07"
-                        ]
-                    }
+                    "optionalModules": [
+                        "WP2_05.2",
+                        "WP2_07"
+                    ],
+                    "requiredNumberOfOptionalModules": 1
                 },
                 {
                     "id": "SSP_KmE",
-                    "name": "Studienschwerpunkt Körperlich-motorische Entwicklung",
-                    "modules": [],
-                    "moduleSelection": {
-                        "requiredNumber": 2,
-                        "options": [
-                            "WP2_06.1",
-                            "WP2_06.2",
-                            "WP2_07"
-                        ]
-                    }
+                    "name": "Körperlich-motorische Entwicklung",
+                    "requiredModules": [],
+                    "optionalModules": [
+                        "WP2_06.1",
+                        "WP2_06.2",
+                        "WP2_07"
+                    ],
+                    "requiredNumberOfOptionalModules": 2
                 },
                 {
                     "id": "SSP_BuK",
-                    "name": "Studienschwerpunkt Beratung und Kooperation im heilpädagogischen Kontext",
-                    "modules": ["WP4_04.1", "WP4_04.2"]
+                    "name": "Beratung und Kooperation im heilpädagogischen Kontext",
+                    "requiredModules": ["WP4_04.1", "WP4_04.2"]
                 },
                 {
                     "id": "SSP_SOE",
-                    "name": "Studienschwerpunkt Schul- und Organisationsentwicklung im heilpädagogischen Kontext",
-                    "modules": [
+                    "name": "Schul- und Organisationsentwicklung im heilpädagogischen Kontext",
+                    "requiredModules": [
                         "WP4_05.1",
                         "WP4_05.2"
                     ]
