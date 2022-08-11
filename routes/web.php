@@ -78,12 +78,10 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::post('/import', function (Request $request) {
         $attributes = $request->validate([
             'import' => ['required', 'mimes:json'],
-            'year' => ['required', 'numeric'] //todo validate year range
         ]);
         $file = $attributes['import'];
-        $year = $attributes['year'];
-        DB::transaction(function () use ($file, $year) {
-            $import = new JSONImport($year, $file);
+        DB::transaction(function () use ($file) {
+            $import = new JSONImport($file);
             $import->run();
         });
         return Redirect::route('admin-import');

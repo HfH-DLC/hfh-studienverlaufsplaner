@@ -19,9 +19,8 @@ class JSONImport
     private $times = [];
     private $timeWindows = [];
 
-    public function __construct($year, $file)
+    public function __construct($file)
     {
-        $this->year = $year;
         $this->file = $file;
     }
 
@@ -31,6 +30,7 @@ class JSONImport
         DB::transaction(function () {
             $json = file_get_contents($this->file);
             $data = json_decode($json);
+            $this->year = $data->year;
             $this->getTimes($data);
             $this->importModules($data);
             $this->importPlaners($data);

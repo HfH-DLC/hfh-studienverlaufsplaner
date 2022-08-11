@@ -2,17 +2,6 @@
   <div class="p-4">
     <h2 class="text-xl">Import</h2>
     <form @submit.prevent="submit" class="mt-4">
-      <div>
-        <label for="year" class="block uppercase text-sm">Jahr</label>
-        <input
-          type="number"
-          v-model="form.year"
-          name="year"
-          id="year"
-          required
-          class="block border border-gray-600 rounded shadow-inner p-1"
-        />
-      </div>
       <div class="mt-2">
         <label for="file" class="block uppercase text-sm">Datei</label>
         <input
@@ -40,7 +29,6 @@ export default {
   data() {
     return {
       form: this.$inertia.form({
-        year: null,
         import: null,
       }),
     };
