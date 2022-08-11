@@ -39,7 +39,7 @@ class Planer extends Model
     public function getCategoriesForPlan(Plan $plan)
     {
         $filter = $this->getYearFilterForPlan($plan);
-        return $this->categories()->with(['modules' => function ($query) use ($filter, $plan) {
+        return $this->categories()->with(['modules' => function ($query) use ($filter) {
             $query->whereHas('events', $filter);
         }])->get();
     }
