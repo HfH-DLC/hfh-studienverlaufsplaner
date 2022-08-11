@@ -18,6 +18,7 @@ class CreateFociTable extends Migration
             $table->string('name')->unique();
             $table->timestamps();
             $table->foreignId('planer_id')->constrained()->onDelete('cascade');
+            $table->integer('required_number_of_optional_modules')->default(0);
         });
     }
 

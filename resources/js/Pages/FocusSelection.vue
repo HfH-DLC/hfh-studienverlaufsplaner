@@ -5,35 +5,97 @@
       <div>
         <label for="firstFocus">Erster Studienschwerpunkt</label>
         <HfHSelect
-          name="firstFocus"
           id="firstFocus"
-          v-model="form.firstFocus"
+          v-model="form.firstFocusSelection.focus"
           :required="true"
           :options="firstOptions"
+          @update:modelValue="clearSelectedModules(form.firstFocusSelection)"
         />
       </div>
-      <div class="mt-4" v-if="form.firstFocus">
-        {{
-          this.fociResource.data
-            .find((focus) => focus.id === form.firstFocus)
-            .modules.map((module) => module.name)
-        }}
+      <div v-if="firstFocus">
+        <div v-if="firstFocus.requiredNumberOfOptionalModules > 0">
+          <label for="firstFocusModules">
+            Wählen Sie
+            {{ firstFocus.requiredNumberOfOptionalModules }}
+            {{
+              firstFocus.requiredNumberOfOptionalModules == 1
+                ? "Pflichtmodul"
+                : "Pflichtmodule"
+            }}:
+          </label>
+          <div
+            v-for="module in firstFocus.optionalModules"
+            :key="module.id"
+            class="mb-1"
+          >
+            <input
+              type="checkbox"
+              :id="`${firstFocus.id}-${module.id}`"
+              :value="module.id"
+              v-model="form.firstFocusSelection.selectedOptionalModules"
+              :disabled="
+                (form.firstFocusSelection.selectedOptionalModules.length >=
+                  firstFocus.requiredNumberOfOptionalModules &&
+                  !form.firstFocusSelection.selectedOptionalModules.includes(
+                    module.id
+                  )) ||
+                form.secondFocusSelection.selectedOptionalModules.includes(
+                  module.id
+                )
+              "
+            />
+            <label class="ml-2" :for="`${firstFocus.id}-${module.id}`"
+              >{{ module.id }} {{ module.name }}</label
+            >
+          </div>
+        </div>
       </div>
       <div class="mt-4">
         <label for="secondFocus">Zweiter Studienschwerpunkt</label>
         <HfHSelect
-          name="secondFocus"
           id="secondFocus"
-          v-model="form.secondFocus"
+          v-model="form.secondFocusSelection.focus"
           :options="secondOptions"
+          @update:modelValue="clearSelectedModules(form.secondFocusSelection)"
         />
       </div>
-      <div class="mt-4" v-if="form.secondFocus">
-        {{
-          this.fociResource.data
-            .find((focus) => focus.id === form.secondFocus)
-            .modules.map((module) => module.name)
-        }}
+      <div v-if="secondFocus">
+        <div v-if="secondFocus.requiredNumberOfOptionalModules > 0">
+          <label for="secondFocusModules">
+            Wählen Sie
+            {{ secondFocus.requiredNumberOfOptionalModules }}
+            {{
+              secondFocus.requiredNumberOfOptionalModules == 1
+                ? "Pflichtmodul"
+                : "Pflichtmodule"
+            }}:
+          </label>
+          <div
+            v-for="module in secondFocus.optionalModules"
+            :key="module.id"
+            class="mb-1"
+          >
+            <input
+              type="checkbox"
+              :id="`${secondFocus.id}-${module.id}`"
+              :value="module.id"
+              v-model="form.secondFocusSelection.selectedOptionalModules"
+              :disabled="
+                (form.secondFocusSelection.selectedOptionalModules.length >=
+                  secondFocus.requiredNumberOfOptionalModules &&
+                  !form.secondFocusSelection.selectedOptionalModules.includes(
+                    module.id
+                  )) ||
+                form.firstFocusSelection.selectedOptionalModules.includes(
+                  module.id
+                )
+              "
+            />
+            <label class="ml-2" :for="`${secondFocus.id}-${module.id}`"
+              >{{ module.id }} {{ module.name }}</label
+            >
+          </div>
+        </div>
       </div>
       <HfHButton class="w-full mt-3">Weiter</HfHButton>
     </form>
@@ -63,14 +125,30 @@ export default {
     },
   },
   data() {
+    const firstFocusSelection = this.planResource.data.focusSelections.find(
+      (focusSelection) => focusSelection.position === 0
+    );
+    const secondFocusSelection = this.planResource.data.focusSelections.find(
+      (focusSelection) => focusSelection.position === 1
+    );
     return {
       form: this.$inertia.form({
-        firstFocus: this.planResource.data.firstFocus
-          ? this.planResource.data.firstFocus.id
-          : "",
-        secondFocus: this.planResource.data.secondFocus
-          ? this.planResource.data.secondFocus.id
-          : "",
+        firstFocusSelection: {
+          focus: firstFocusSelection ? firstFocusSelection.focus.id : "",
+          selectedOptionalModules: firstFocusSelection
+            ? firstFocusSelection.selectedOptionalModules.map(
+                (module) => module.id
+              )
+            : [],
+        },
+        secondFocusSelection: {
+          focus: secondFocusSelection ? secondFocusSelection.focus.id : "",
+          selectedOptionalModules: secondFocusSelection
+            ? secondFocusSelection.selectedOptionalModules.map(
+                (module) => module.id
+              )
+            : [],
+        },
       }),
     };
   },
@@ -82,24 +160,24 @@ export default {
       }));
     },
     firstOptions() {
-      return this.focusOptions.filter((option) => {
-        if (this.form.secondFocus) {
-          if (this.form.secondFocus == option.value) {
-            return false;
-          }
-        }
-        return true;
-      });
+      return this.focusOptions.filter(
+        (option) => option.value !== this.form.secondFocusSelection.focus
+      );
     },
     secondOptions() {
-      return this.focusOptions.filter((option) => {
-        if (this.form.firstFocus) {
-          if (this.form.firstFocus == option.value) {
-            return false;
-          }
-        }
-        return true;
-      });
+      return this.focusOptions.filter(
+        (option) => option.value !== this.form.firstFocusSelection.focus
+      );
+    },
+    firstFocus() {
+      return this.fociResource.data.find(
+        (focus) => focus.id === this.form.firstFocusSelection.focus
+      );
+    },
+    secondFocus() {
+      return this.fociResource.data.find(
+        (focus) => focus.id === this.form.secondFocusSelection.focus
+      );
     },
   },
   methods: {
@@ -110,6 +188,9 @@ export default {
           onSuccess: () => this.form.reset(),
         }
       );
+    },
+    clearSelectedModules(formSelection) {
+      formSelection.selectedOptionalModules = [];
     },
   },
 };

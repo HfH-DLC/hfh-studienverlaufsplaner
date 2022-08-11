@@ -116,11 +116,13 @@ export default {
         });
     },
     focusModules() {
-      const focusModules = [...this.plan.firstFocus.modules];
-      if (this.plan.secondFocus) {
-        focusModules.push(...this.plan.secondFocus.modules);
-      }
-      return focusModules;
+      return this.plan.focusSelections.reduce((acc, cur) => {
+        if (cur.focus) {
+          acc.push(...cur.focus.requiredModules);
+          acc.push(...cur.selectedOptionalModules);
+        }
+        return acc;
+      }, []);
     },
   },
   methods: {

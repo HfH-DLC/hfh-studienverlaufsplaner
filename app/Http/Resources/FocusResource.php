@@ -17,7 +17,9 @@ class FocusResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'modules' => ModuleResource::collection($this->modules)
+            'requiredModules' => ModuleResource::collection($this->requiredModules),
+            'optionalModules' => ModuleResource::collection($this->optionalModules),
+            'requiredNumberOfOptionalModules' => $this->required_number_of_optional_modules
         ];
     }
 }

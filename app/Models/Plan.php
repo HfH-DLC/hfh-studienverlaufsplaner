@@ -23,17 +23,12 @@ class Plan extends Model
         return $this->hasMany(Placement::class);
     }
 
-    public function firstFocus()
+    public function focusSelections()
     {
-        return $this->hasOne(Focus::class, 'focus_1_id');
+        return $this->hasMany(FocusSelection::class);
     }
 
-    public function secondFocus()
-    {
-        return $this->hasOne(Focus::class, 'focus_2_id');
-    }
-
-    public function modules()
+    public function selectedModules()
     {
         return $this->belongsToMany(Module::class);
     }

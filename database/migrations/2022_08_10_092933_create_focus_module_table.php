@@ -18,6 +18,7 @@ class CreateFocusModuleTable extends Migration
             $table->string('module_id');
             $table->string('focus_id');
             $table->unique(['focus_id', 'module_id']);
+            $table->boolean('required');
         });
 
         Schema::table('focus_module', function (Blueprint $table) {

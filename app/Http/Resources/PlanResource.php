@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Focus;
+use App\Models\FocusSelection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PlanResource extends JsonResource
@@ -20,9 +20,8 @@ class PlanResource extends JsonResource
             'placements' => PlacementResource::collection($this->placements),
             'startYear' => $this->start_year,
             'tourCompleted' => $this->tour_completed,
-            'modules' =>  ModuleResource::collection($this->modules),
-            'firstFocus' => new FocusResource(Focus::find($this->first_focus)),
-            'secondFocus' => new FocusResource(Focus::find($this->second_focus))
+            'modules' =>  ModuleResource::collection($this->selectedModules),
+            'focusSelections' => FocusSelectionResource::collection($this->focusSelections)
         ];
     }
 }

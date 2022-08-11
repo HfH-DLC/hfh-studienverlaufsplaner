@@ -241,8 +241,7 @@ const store = createStore({
                 let categoryModules = category.moduleSelectionEnabled ?
                     category.modules.filter(categoryModule =>
                         state.plan.modules.some(module => module.id === categoryModule.id) ||
-                        state.plan.firstFocus.modules.some(module => module.id === categoryModule.id) ||
-                        state.plan.firstFocus.modules.some(module => module.id === categoryModule.id)
+                        state.plan.focusSelections.some(focusSelection => focusSelection.selectedOptionalModules.some(module => module.id === categoryModule.id))
                     ) : category.modules;
 
                 categoryModules = categoryModules.map(module => {

@@ -98,7 +98,6 @@ class JSONImport
         if (array_key_exists($id, $this->modulesCache)) {
             $module = $this->modulesCache[$id];
         } else {
-            var_dump($id);
             $module = Module::findOrFail($id);
             $this->modulesCache[$id] = $module;
         }
@@ -167,7 +166,19 @@ class JSONImport
             } else {
                 $focus->name = $focusData->name;
             }
-            $focus->modules()->sync($focusData->modules);
+            $modules = array();
+            foreach ($focusData->requiredModules as $module) {
+                $modules[$module] = ['required' => true];
+            }
+            if (isset($focusData->optionalModules)) {
+                foreach ($focusData->optionalModules as $module) {
+                    $modules[$module] = ['required' => false];
+                }
+            }
+            if (isset($focusData->requiredNumberOfOptionalModules)) {
+                $focus->required_number_of_optional_modules = $focusData->requiredNumberOfOptionalModules;
+            }
+            $focus->modules()->sync($modules);
             $focus->save();
         }
     }

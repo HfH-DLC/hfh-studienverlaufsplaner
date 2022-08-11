@@ -10,11 +10,11 @@ use App\Http\Resources\ModuleResource;
 use App\Http\Resources\PlanerResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\RuleResource;
-use App\Imports\Import;
 use App\Imports\JSONImport;
 use App\Imports\Rules\RuleImport;
-use App\Imports\TempImport;
 use App\Mail\PlanCreated;
+use App\Models\Focus;
+use App\Models\FocusSelection;
 use App\Models\Module;
 use App\Models\Placement;
 use App\Models\Plan;
@@ -52,7 +52,7 @@ Route::post('/admin/login', function (Request $request) {
 
     if (Auth::attempt($credentials)) {
         $request->session()->regenerate();
-        return redirect()->intended('/admin/planers');
+        return Redirect::intended('/admin/planers');
     }
     return back()->withErrors([
         'email' => 'The provided credentials do not match our records.',
@@ -61,14 +61,14 @@ Route::post('/admin/login', function (Request $request) {
 
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/', function () {
-        return redirect()->route('admin-planers');
+        return Redirect::route('admin-planers');
     })->name('admin');
 
     Route::post('/logout', function (Request $request) {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('login');
+        return Redirect::route('login');
     });
 
     Route::get('/import', function (Request $request) {
@@ -86,7 +86,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             $import = new JSONImport($year, $file);
             $import->run();
         });
-        return redirect()->route('admin-import');
+        return Redirect::route('admin-import');
     });
 
     Route::get('/modules', function (Request $request) {
@@ -121,7 +121,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         $file = $attributes['import'];
         $import = new RuleImport();
         $import->run($file);
-        return redirect()->route('admin-rules');
+        return Redirect::route('admin-rules');
     });
 });
 
@@ -154,9 +154,26 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
 
     Route::put('/{plan:slug}/schwerpunkte', function (UpdateFocusSelectionRequest $request, Planer $planer, Plan $plan) {
         $validated = $request->validated();
-        $plan->first_focus = $validated['firstFocus'];
-        $plan->second_focus = $validated['secondFocus'];
-        $plan->save();
+
+        $first_focus_selection_data = $validated['firstFocusSelection'];
+        $second_focus_selection_data  = $validated['secondFocusSelection'];
+        DB::transaction(function () use ($plan, $first_focus_selection_data, $second_focus_selection_data) {
+            $plan->focusSelections()->delete();
+
+            $first_focus_selection = new FocusSelection();
+            $first_focus_selection->position = 0;
+            $first_focus_selection->focus()->associate(Focus::findOrFail($first_focus_selection_data['focus']));
+            $plan->focusSelections()->save($first_focus_selection);
+            $first_focus_selection->selectedOptionalModules()->sync($first_focus_selection_data['selectedOptionalModules']);
+
+            if ($second_focus_selection_data['focus']) {
+                $second_focus_selection = new FocusSelection();
+                $second_focus_selection->position = 1;
+                $second_focus_selection->focus()->associate(Focus::findOrFail($second_focus_selection_data['focus']));
+                $plan->focusSelections()->save($second_focus_selection);
+                $second_focus_selection->selectedOptionalModules()->sync($second_focus_selection_data['selectedOptionalModules']);
+            }
+        });
         return Redirect::route('plan-modules', array('planer' => $planer, 'plan' => $plan->slug));
     });
 
@@ -176,7 +193,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
 
     Route::put('/{plan:slug}/module', function (UpdateModuleSelectionRequest $request, Planer $planer, Plan $plan) {
         $validated = $request->validated();
-        $plan->modules()->sync($validated['modules']);
+        $plan->selectedModules()->sync($validated['modules']);
         $plan->save();
         return Redirect::route('plan-schedule', array('planer' => $planer, 'plan' => $plan->slug));
     });
@@ -213,7 +230,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
         return Redirect::route('plan', array('planer' => $planer, 'plan' => $plan->slug));
     });
 
-    Route::put('/plans/{plan:slug}', function (UpdatePlanRequest $request, Planer $planer, Plan $plan) {
+    Route::put('/{plan:slug}', function (UpdatePlanRequest $request, Planer $planer, Plan $plan) {
         DB::transaction(function () use ($plan, $request) {
             $validated = $request->validated();
             if (Arr::exists($validated, 'placements')) {

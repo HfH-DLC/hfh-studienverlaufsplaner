@@ -19,6 +19,16 @@ class Focus extends Model
 
     public function modules()
     {
-        return $this->belongsToMany(Module::class);
+        return $this->belongsToMany(Module::class)->withPivot('required');
+    }
+
+    public function requiredModules()
+    {
+        return $this->belongsToMany(Module::class)->withPivot('required')->wherePivot('required', true);
+    }
+
+    public function optionalModules()
+    {
+        return $this->belongsToMany(Module::class)->withPivot('required')->wherePivot('required', false);
     }
 }
