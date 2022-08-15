@@ -76,6 +76,7 @@ class JSONImport
         }
         $module->name = $moduleData->name;
         $module->credits = $moduleData->credits;
+        $module->creditable_against_focus = $moduleData->creditableAgainstFocus;
         $module->save();
         $this->modulesCache[$id] = $module;
     }
