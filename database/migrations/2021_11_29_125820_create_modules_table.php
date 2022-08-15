@@ -18,6 +18,7 @@ class CreateModulesTable extends Migration
             $table->timestamps();
             $table->string('name');
             $table->integer('credits');
+            $table->boolean('creditable_against_focus');
         });
     }
 
