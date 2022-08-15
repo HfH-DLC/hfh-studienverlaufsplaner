@@ -32,14 +32,14 @@
               type="checkbox"
               :id="`${firstFocus.id}-${module.id}`"
               :value="module.id"
-              v-model="form.firstFocusSelection.selectedOptionalModules"
+              v-model="form.firstFocusSelection.selectedRequiredModules"
               :disabled="
-                (form.firstFocusSelection.selectedOptionalModules.length >=
+                (form.firstFocusSelection.selectedRequiredModules.length >=
                   firstFocus.requiredNumberOfOptionalModules &&
-                  !form.firstFocusSelection.selectedOptionalModules.includes(
+                  !form.firstFocusSelection.selectedRequiredModules.includes(
                     module.id
                   )) ||
-                form.secondFocusSelection.selectedOptionalModules.includes(
+                form.secondFocusSelection.selectedRequiredModules.includes(
                   module.id
                 )
               "
@@ -79,14 +79,14 @@
               type="checkbox"
               :id="`${secondFocus.id}-${module.id}`"
               :value="module.id"
-              v-model="form.secondFocusSelection.selectedOptionalModules"
+              v-model="form.secondFocusSelection.selectedRequiredModules"
               :disabled="
-                (form.secondFocusSelection.selectedOptionalModules.length >=
+                (form.secondFocusSelection.selectedRequiredModules.length >=
                   secondFocus.requiredNumberOfOptionalModules &&
-                  !form.secondFocusSelection.selectedOptionalModules.includes(
+                  !form.secondFocusSelection.selectedRequiredModules.includes(
                     module.id
                   )) ||
-                form.firstFocusSelection.selectedOptionalModules.includes(
+                form.firstFocusSelection.selectedRequiredModules.includes(
                   module.id
                 )
               "
@@ -135,16 +135,16 @@ export default {
       form: this.$inertia.form({
         firstFocusSelection: {
           focus: firstFocusSelection ? firstFocusSelection.focus.id : "",
-          selectedOptionalModules: firstFocusSelection
-            ? firstFocusSelection.selectedOptionalModules.map(
+          selectedRequiredModules: firstFocusSelection
+            ? firstFocusSelection.selectedRequiredModules.map(
                 (module) => module.id
               )
             : [],
         },
         secondFocusSelection: {
           focus: secondFocusSelection ? secondFocusSelection.focus.id : "",
-          selectedOptionalModules: secondFocusSelection
-            ? secondFocusSelection.selectedOptionalModules.map(
+          selectedRequiredModules: secondFocusSelection
+            ? secondFocusSelection.selectedRequiredModules.map(
                 (module) => module.id
               )
             : [],
@@ -190,7 +190,7 @@ export default {
       );
     },
     clearSelectedModules(formSelection) {
-      formSelection.selectedOptionalModules = [];
+      formSelection.selectedRequiredModules = [];
     },
   },
 };

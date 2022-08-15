@@ -50,7 +50,7 @@ const store = createStore({
                 let categoryModules = category.moduleSelectionEnabled ?
                     category.modules.filter(categoryModule =>
                         state.plan.modules.some(module => module.id === categoryModule.id) ||
-                        state.plan.focusSelections.some(focusSelection => focusSelection.selectedOptionalModules.some(module => module.id === categoryModule.id) || focusSelection.focus.requiredModules.some(module => module.id === categoryModule.id))
+                        state.plan.focusSelections.some(focusSelection => focusSelection.selectedRequiredModules.some(module => module.id === categoryModule.id) || focusSelection.focus.requiredModules.some(module => module.id === categoryModule.id))
                     ) : category.modules;
 
                 const requiredNumber = category.requiredNumber != null ? category.requiredNumber : categoryModules.length;

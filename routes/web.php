@@ -162,14 +162,14 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
             $first_focus_selection->position = 0;
             $first_focus_selection->focus()->associate(Focus::findOrFail($first_focus_selection_data['focus']));
             $plan->focusSelections()->save($first_focus_selection);
-            $first_focus_selection->selectedOptionalModules()->sync($first_focus_selection_data['selectedOptionalModules']);
+            $first_focus_selection->selectedRequiredModules()->sync($first_focus_selection_data['selectedRequiredModules']);
 
             if ($second_focus_selection_data['focus']) {
                 $second_focus_selection = new FocusSelection();
                 $second_focus_selection->position = 1;
                 $second_focus_selection->focus()->associate(Focus::findOrFail($second_focus_selection_data['focus']));
                 $plan->focusSelections()->save($second_focus_selection);
-                $second_focus_selection->selectedOptionalModules()->sync($second_focus_selection_data['selectedOptionalModules']);
+                $second_focus_selection->selectedRequiredModules()->sync($second_focus_selection_data['selectedRequiredModules']);
             }
         });
         return Redirect::route('plan-modules', array('planer' => $planer, 'plan' => $plan->slug));

@@ -119,7 +119,7 @@ export default {
       return this.plan.focusSelections.reduce((acc, cur) => {
         if (cur.focus) {
           acc.push(...cur.focus.requiredModules);
-          acc.push(...cur.selectedOptionalModules);
+          acc.push(...cur.selectedRequiredModules.map((module) => module.id));
         }
         return acc;
       }, []);

@@ -16,7 +16,7 @@ class FocusSelectionResource extends JsonResource
     {
         return [
             "focus" => new FocusResource($this->focus),
-            "selectedOptionalModules" => ModuleResource::collection($this->selectedOptionalModules),
+            "selectedRequiredModules" => ModuleResource::collection($this->selectedRequiredModules),
             "position" => $this->position
         ];
     }
