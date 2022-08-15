@@ -3,7 +3,7 @@
 use App\Http\Requests\StorePlanRequest;
 use App\Http\Requests\UpdateFocusSelectionRequest;
 use App\Http\Requests\UpdateModuleSelectionRequest;
-use App\Http\Requests\UpdatePlanRequest;
+use App\Http\Requests\UpdateScheduleRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\FocusResource;
 use App\Http\Resources\ModuleResource;
@@ -201,7 +201,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
         $categoriesResource = CategoryResource::collection($planer->getCategoriesForPlan($plan));
         $rulesResource = RuleResource::collection(Rule::all());
         return Inertia::render(
-            'Plan',
+            'Schedule',
             array(
                 'planerName' => $planer->name,
                 'planerSlug' => $planer->slug,
@@ -228,7 +228,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
         return Redirect::route('plan', array('planer' => $planer, 'plan' => $plan->slug));
     });
 
-    Route::put('/{plan:slug}', function (UpdatePlanRequest $request, Planer $planer, Plan $plan) {
+    Route::put('/{plan:slug}/schedule', function (UpdateScheduleRequest $request, Planer $planer, Plan $plan) {
         DB::transaction(function () use ($plan, $request) {
             $validated = $request->validated();
             if (Arr::exists($validated, 'placements')) {

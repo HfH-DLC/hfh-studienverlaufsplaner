@@ -48,7 +48,7 @@
             </div>
           </div>
         </div>
-        <Tour :startOnMount="!plan.tourCompleted" @completed="completeTour" />
+        <Tour :startOnMount="!tourCompleted" @completed="completeTour" />
       </template>
       <div v-else class="text-2xl text-center p-4 flex-1">
         Plan wird geladen...
@@ -103,8 +103,8 @@ export default {
       required: true,
     },
   },
-  async created() {
-    await this.init({
+  created() {
+    this.init({
       categories: this.categoriesResource.data,
       rules: this.rulesResource.data,
       plan: this.planResource.data,
@@ -116,20 +116,20 @@ export default {
     this.$emitter.off("retry-save", this.retrySave);
   },
   computed: {
-    ...mapState([
+    ...mapState("schedule", [
       "initialized",
       "flash",
-      "plan",
+      "tourCompleted",
       "tourActive",
       "tourSelectedModule",
     ]),
-    ...mapGetters(["credits", "placementErrors", "selectedModule"]),
+    ...mapGetters("schedule", ["credits", "placementErrors", "selectedModule"]),
     errors() {
       return this.placementErrors.map((error) => error.text);
     },
   },
   methods: {
-    ...mapActions(["init", "completeTour", "save"]),
+    ...mapActions("schedule", ["init", "completeTour", "save"]),
     async retrySave() {
       if (await this.save()) {
         this.$emitter.emit("flash", {

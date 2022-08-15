@@ -55,7 +55,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["deselectModule", "selectModule"]),
+    ...mapActions("schedule", ["deselectModule", "selectModule"]),
     onClick() {
       if (this.module.selected) {
         this.deselectModule();

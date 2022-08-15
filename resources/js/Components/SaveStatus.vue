@@ -28,7 +28,7 @@ export default {
     CheckCircleIcon,
   },
   computed: {
-    ...mapState(["saveStatus"]),
+    ...mapState("schedule", ["saveStatus"]),
     saved() {
       return this.saveStatus == SAVE_STATUS_SAVED;
     },

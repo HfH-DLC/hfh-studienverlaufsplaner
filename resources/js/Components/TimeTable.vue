@@ -155,7 +155,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters([
+    ...mapGetters("schedule", [
       "years",
       "selectableEventByDate",
       "placementByDate",

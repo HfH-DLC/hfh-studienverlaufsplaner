@@ -60,7 +60,7 @@ import { XIcon } from "@heroicons/vue/outline";
 import { createPopper } from "@popperjs/core";
 import HfHButton from "./HfHButton.vue";
 import { mapActions } from "vuex";
-import { SET_TOUR_ACTIVE } from "../Store/index";
+import { SET_TOUR_ACTIVE } from "../Store/schedule";
 export default {
   components: {
     Dialog,
@@ -170,7 +170,7 @@ export default {
   },
   methods: {
     start() {
-      this.$store.commit(SET_TOUR_ACTIVE, true);
+      this.$store.commit("schedule/" + SET_TOUR_ACTIVE, true);
       this.isOpen = true;
       if (this.currentElement) {
         this.createPopper();
@@ -211,7 +211,7 @@ export default {
         this.popper.destroy();
         this.popper = null;
       }
-      this.$store.commit(SET_TOUR_ACTIVE, false);
+      this.$store.commit("schedule/" + SET_TOUR_ACTIVE, false);
       this.$emit("completed");
     },
     cancel() {

@@ -2,12 +2,13 @@ import axios from "axios";
 
 export default class DataAdapter {
 
-    constructor(planerSlug) {
+    constructor(planerSlug, planSlug) {
         this.planerSlug = planerSlug;
+        this.planSlug = planSlug
     }
 
-    async savePlan(plan) {
-        const response = await axios.put(`/${this.planerSlug}/${plan.slug}`, plan)
+    async saveSchedule(placements, tourCompleted) {
+        const response = await axios.put(`/${this.planerSlug}/${this.planSlug}/schedule`, { placements, tourCompleted })
         return response.data.data
     }
 }

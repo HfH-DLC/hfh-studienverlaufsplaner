@@ -61,7 +61,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["categories"]),
+    ...mapGetters("schedule", ["categories"]),
   },
 };
 </script>
