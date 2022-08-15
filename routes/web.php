@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Requests\StorePlanRequest;
+use App\Http\Requests\UpdateFocusCreditRequest;
 use App\Http\Requests\UpdateFocusSelectionRequest;
 use App\Http\Requests\UpdateModuleSelectionRequest;
 use App\Http\Requests\UpdateScheduleRequest;
@@ -193,6 +194,34 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
         $validated = $request->validated();
         $plan->selectedModules()->sync($validated['modules']);
         $plan->save();
+        return Redirect::route('plan-credit', array('planer' => $planer, 'plan' => $plan->slug));
+    });
+
+    Route::get('/{plan:slug}/anrechnung', function (Planer $planer, Plan $plan) {
+        $planResource = new PlanResource($plan);
+        $categoriesResource = CategoryResource::collection($planer->getCategoriesForPlan($plan));
+        return Inertia::render(
+            'FocusCredit',
+            array(
+                'planerName' => $planer->name,
+                'planerSlug' => $planer->slug,
+                'planResource' => $planResource,
+                'categoriesResource' => $categoriesResource
+            )
+        );
+    })->name('plan-credit');
+
+    Route::put('/{plan:slug}/anrechnung', function (UpdateFocusCreditRequest $request, Planer $planer, Plan $plan) {
+        $validated = $request->validated();
+        $focusCredits = $validated['focusCredits'];
+        DB::transaction(function () use ($focusCredits) {
+            foreach ($focusCredits as $focusSelectionId => $moduleIds) {
+                var_dump($focusSelectionId);
+                $focusSelection = FocusSelection::findOrFail($focusSelectionId);
+                $focusSelection->creditedModules()->sync($moduleIds);
+                $focusSelection->save();
+            }
+        });
         return Redirect::route('plan-schedule', array('planer' => $planer, 'plan' => $plan->slug));
     });
 

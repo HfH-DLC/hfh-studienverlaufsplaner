@@ -20,6 +20,7 @@ class ModuleResource extends JsonResource
             'credits' => $this->credits,
             'prerequisites' => PrerequisiteResource::collection($this->prerequisites),
             'events' => EventResource::collection($this->events),
+            'creditableAgainstFocus' => $this->creditable_against_focus
         ];
     }
 }

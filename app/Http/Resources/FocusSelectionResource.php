@@ -15,8 +15,10 @@ class FocusSelectionResource extends JsonResource
     public function toArray($request)
     {
         return [
+            "id" => $this->id,
             "focus" => new FocusResource($this->focus),
             "selectedRequiredModules" => ModuleResource::collection($this->selectedRequiredModules),
+            "creditModules" => ModuleResource::collection($this->creditedModules),
             "position" => $this->position
         ];
     }
