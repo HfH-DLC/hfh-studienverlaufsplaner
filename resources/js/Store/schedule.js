@@ -98,7 +98,7 @@ export default {
         }
     },
     actions: {
-        async init({ commit, dispatch }, { planerSlug, plan, categories, rules }) {
+        init({ commit, dispatch }, { planerSlug, plan, categories, rules }) {
             dataAdapter = new DataAdapter(planerSlug, plan.slug);
             dispatch("init", { plan, categories }, { root: true });
             commit(RESET_STATE);
@@ -231,7 +231,7 @@ export default {
         selectedModule(state, { moduleById }, ) {
             return moduleById(state.selectionStatus.moduleId)
         },
-        placements(state, getters, rootState, { moduleById }) {
+        placements(state, { moduleById }) {
             return state.placements.map(placement => {
                 return {
                     ...placement,
