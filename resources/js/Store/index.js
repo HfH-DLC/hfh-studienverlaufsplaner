@@ -42,9 +42,6 @@ const store = createStore({
                 return acc;
             }, []);
         },
-        moduleById: (state, { modules }) => (id) => {
-            return modules.find(module => module.id == id)
-        },
         categories(state) {
             return state.categories.map(category => {
                 let categoryModules = category.moduleSelectionEnabled ?
