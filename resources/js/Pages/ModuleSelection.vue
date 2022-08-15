@@ -115,10 +115,18 @@ export default {
           };
         });
     },
-    focusModules() {
+    requiredModuleIds() {
+      return this.categoriesResource.data
+        .filter((category) => !category.moduleSelectionEnabled)
+        .reduce((acc, cur) => {
+          acc.push(...cur.modules.map((module) => module.id));
+          return acc;
+        }, []);
+    },
+    focusModuleIds() {
       return this.plan.focusSelections.reduce((acc, cur) => {
         if (cur.focus) {
-          acc.push(...cur.focus.requiredModules);
+          acc.push(...cur.focus.requiredModules.map((module) => module.id));
           acc.push(...cur.selectedRequiredModules.map((module) => module.id));
         }
         return acc;
@@ -127,22 +135,23 @@ export default {
   },
   methods: {
     isFocusModule(module) {
-      return this.focusModules.some(
-        (focusModule) => module.id === focusModule.id
-      );
+      return this.focusModuleIds.includes(module.id);
     },
     isSelectedModule(module) {
-      return this.form.modules.some(
-        (selectedModule) => module.id === selectedModule
-      );
+      return this.form.modules.includes(module.id);
     },
     save() {
-      this.form.put(
-        `/${this.planerSlug}/${this.planResource.data.slug}/module`,
-        {
+      this.form
+        .transform((data) => ({
+          modules: [
+            ...data.modules,
+            ...this.focusModuleIds,
+            ...this.requiredModuleIds,
+          ],
+        }))
+        .put(`/${this.planerSlug}/${this.planResource.data.slug}/module`, {
           onSuccess: () => this.form.reset(),
-        }
-      );
+        });
     },
   },
 };
