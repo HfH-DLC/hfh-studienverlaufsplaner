@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 
-import moduleSchedule from "./schedule";
+import schedule from "./schedule";
 
 const RESET_STATE = "RESET_STATE"
 const SET_PLAN = "SET_PLAN"
@@ -14,7 +14,7 @@ const initialState = {
 
 const store = createStore({
     modules: {
-        schedule: moduleSchedule
+        schedule,
     },
     state: initialState,
     mutations: {
