@@ -160,7 +160,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
             foreach ($focusSelectionsData as $focusSelectionData) {
                 $focusSelection = FocusSelection::where('position', $focusSelectionData['position'])->first();
                 if ($focusSelection) {
-                    if ($focusSelection->focus != $focusSelectionData['focus']) {
+                    if ($focusSelection->focus->id != $focusSelectionData['focus']) {
                         $focusSelection->delete();
                         $focusSelection = null;
                     }
