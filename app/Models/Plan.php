@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Hashids\Hashids;
+use Illuminate\Database\Eloquent\Collection;
 
 class Plan extends Model
 {
@@ -40,6 +41,31 @@ class Plan extends Model
         } else {
             $this->attributes['slug'] = $value;
         }
+    }
+
+    public function getCreditableModules()
+    {
+        $flexCreditableModules = collect();
+        $flexCreditableModules = $flexCreditableModules->merge($this->selectedModules);
+        $categories = $this->planer->getCategoriesForPlan($this)->where('module_selection_enabled', false)->all();
+        foreach ($categories as $category) {
+            $flexCreditableModules = $flexCreditableModules->merge($category->modules);
+        }
+        foreach ($flexCreditableModules as $module) {
+            $focusSelection = $this->focusSelections()->whereRelation('creditedModules', 'id', $module->id)->first();
+            $module->credited_against = $focusSelection;
+            $module->fixed_credit = false;
+        }
+        $fixedCreditableModules = collect();
+        foreach ($this->focusSelections as $focusSelection) {
+            $modules = $focusSelection->focus->requiredModules->merge($focusSelection->selectedRequiredModules);
+            foreach ($modules as $module) {
+                $module->credited_against = $focusSelection;
+                $module->fixed_credit = true;
+            }
+            $fixedCreditableModules = $fixedCreditableModules->merge($modules);
+        }
+        return $flexCreditableModules->merge($fixedCreditableModules);
     }
 
     /**
