@@ -2,14 +2,18 @@
   <main class="p-4 max-w-6xl mx-auto">
     <h1 class="text-3xl mt-4 mb-2">Anrechnung an die Studienschwerpunkte</h1>
     <form @submit.prevent="save">
-      <div class="mt-4 grid grid-cols-2 gap-y-4 items-center">
+      <div class="mt-4 grid grid-cols-2 gap-y-4">
         <template v-for="module in modules" :key="module.id">
           <div>
             <label :for="`credit-${module.id}`"
               >{{ module.id }} {{ module.name }}</label
             >
           </div>
+          <div v-if="module.fixedCredit">
+            {{ module.creditedAgainst.label }}
+          </div>
           <HfHSelect
+            v-else
             :id="`credit-${module.id}`"
             :options="focusOptions"
             v-model="form.focusCredits[module.id]"
@@ -27,7 +31,7 @@ import HfHSelect from "../Components/HfHSelect.vue";
 export default {
   components: { HfHButton, HfHSelect },
   props: {
-    categoriesResource: {
+    creditableModulesResource: {
       type: Object,
       required: true,
     },
@@ -44,28 +48,17 @@ export default {
   data() {
     return {
       form: this.$inertia.form({
-        focusCredits: {},
+        focusCredits: this.creditableModulesResource.data.reduce((acc, cur) => {
+          acc[cur.id] = cur.creditedAgainst ? cur.creditedAgainst.id : "";
+          return acc;
+        }, {}),
       }),
     };
   },
 
-  created() {
-    this.form.focusCredits = this.modules.reduce((acc, cur) => {
-      acc[cur.id] = cur.creditedFocusSelectionId
-        ? cur.creditedFocusSelectionId
-        : "";
-      return acc;
-    }, {});
-  },
-
   computed: {
     modules() {
-      return this.planResource.data.modules
-        .filter((module) => module.creditableAgainstFocus)
-        .map((module) => ({
-          ...module,
-          creditedFocusSelectionId: this.getCreditedFocusSelectionId(module),
-        }));
+      return this.creditableModulesResource.data;
     },
     focusOptions() {
       return this.planResource.data.focusSelections.map((focusSelection) => ({
@@ -95,15 +88,6 @@ export default {
         .put(`/${this.planerSlug}/${this.planResource.data.slug}/anrechnung`, {
           onSuccess: () => this.form.reset(),
         });
-    },
-    getCreditedFocusSelectionId(module) {
-      const focusSelection = this.planResource.data.focusSelections.find(
-        (focusSelection) =>
-          focusSelection.creditModules.some(
-            (creditedModule) => creditedModule.id === module.id
-          )
-      );
-      return focusSelection ? focusSelection.id : "";
     },
   },
 };

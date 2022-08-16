@@ -6,6 +6,7 @@ use App\Http\Requests\UpdateFocusSelectionRequest;
 use App\Http\Requests\UpdateModuleSelectionRequest;
 use App\Http\Requests\UpdateScheduleRequest;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\CreditableModuleResource;
 use App\Http\Resources\FocusResource;
 use App\Http\Resources\ModuleResource;
 use App\Http\Resources\PlanerResource;
@@ -200,14 +201,13 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
 
     Route::get('/{plan:slug}/anrechnung', function (Planer $planer, Plan $plan) {
         $planResource = new PlanResource($plan);
-        $categoriesResource = CategoryResource::collection($planer->getCategoriesForPlan($plan));
         return Inertia::render(
             'FocusCredit',
             array(
                 'planerName' => $planer->name,
                 'planerSlug' => $planer->slug,
                 'planResource' => $planResource,
-                'categoriesResource' => $categoriesResource
+                'creditableModulesResource' => CreditableModuleResource::collection($plan->getCreditableModules())
             )
         );
     })->name('plan-credit');
@@ -217,7 +217,6 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
         $focusCredits = $validated['focusCredits'];
         DB::transaction(function () use ($focusCredits) {
             foreach ($focusCredits as $focusSelectionId => $moduleIds) {
-                var_dump($focusSelectionId);
                 $focusSelection = FocusSelection::findOrFail($focusSelectionId);
                 $focusSelection->creditedModules()->sync($moduleIds);
                 $focusSelection->save();
