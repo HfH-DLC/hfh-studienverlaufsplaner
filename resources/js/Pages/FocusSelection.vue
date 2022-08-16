@@ -50,8 +50,9 @@
           </div>
         </div>
       </div>
+      <div class="text-thunderbird-red">{{ errors.firstFocus }}</div>
       <div class="mt-4">
-        <label for="secondFocus">Zweiter Studienschwerpunkt</label>
+        <label for="secondFocus">Zweiter Studienschwerpunkt (Optional)</label>
         <HfHSelect
           id="secondFocus"
           v-model="form.secondFocusSelection.focus"
@@ -97,6 +98,7 @@
           </div>
         </div>
       </div>
+      <div class="text-thunderbird-red">{{ errors.secondFocus }}</div>
       <HfHButton class="w-full mt-3">Weiter</HfHButton>
     </form>
   </main>
@@ -132,6 +134,10 @@ export default {
       (focusSelection) => focusSelection.position === 1
     );
     return {
+      errors: {
+        firstFocus: "",
+        secondFocus: "",
+      },
       form: this.$inertia.form({
         firstFocusSelection: {
           position: 0,
@@ -184,6 +190,10 @@ export default {
   },
   methods: {
     save() {
+      if (!this.validate()) {
+        return;
+      }
+
       this.form
         .transform((data) => {
           const focusSelections = [data.firstFocusSelection];
@@ -201,6 +211,48 @@ export default {
     },
     clearSelectedModules(formSelection) {
       formSelection.selectedRequiredModules = [];
+    },
+    pluralize(count, singular, plural) {
+      return count == 1 ? singular : plural;
+    },
+    getRequiredNumberErrorMessage(requiredNumber) {
+      return `Bitte wählen Sie exakt ${requiredNumber} ${this.pluralize(
+        requiredNumber,
+        "Pflichtmodul",
+        "Pflichtmodule"
+      )}.`;
+    },
+    validate() {
+      let result = true;
+      if (!this.form.firstFocusSelection.focus) {
+        this.errors.firstFocus =
+          "Bitte wählen Sie Ihren ersten Studienschwerpunkt.";
+        result = false;
+      } else {
+        if (
+          this.form.firstFocusSelection.selectedRequiredModules.length !=
+          this.firstFocus.requiredNumberOfOptionalModules
+        ) {
+          this.errors.firstFocus = this.getRequiredNumberErrorMessage(
+            this.firstFocus.requiredNumberOfOptionalModules
+          );
+          result = false;
+        }
+      }
+
+      if (
+        this.secondFocus &&
+        this.secondFocus.requiredNumberOfOptionalModules > 0 &&
+        this.form.secondFocusSelection.selectedRequiredModules.length !=
+          this.secondFocus.requiredNumberOfOptionalModules
+      ) {
+        this.errors.secondFocus = this.getRequiredNumberErrorMessage(
+          this.secondFocus.requiredNumberOfOptionalModules
+        );
+        result = false;
+      }
+      console.log(this.errors.firstFocus);
+      return result;
     },
   },
 };
