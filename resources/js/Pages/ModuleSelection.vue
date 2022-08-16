@@ -143,17 +143,12 @@ export default {
       return this.form.modules.includes(module.id);
     },
     save() {
-      this.form
-        .transform((data) => ({
-          modules: [
-            ...data.modules,
-            ...this.focusModuleIds,
-            ...this.requiredModuleIds,
-          ],
-        }))
-        .put(`/${this.planerSlug}/${this.planResource.data.slug}/module`, {
+      this.form.put(
+        `/${this.planerSlug}/${this.planResource.data.slug}/module`,
+        {
           onSuccess: () => this.form.reset(),
-        });
+        }
+      );
     },
   },
 };
