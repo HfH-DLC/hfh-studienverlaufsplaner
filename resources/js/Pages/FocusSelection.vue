@@ -134,6 +134,7 @@ export default {
     return {
       form: this.$inertia.form({
         firstFocusSelection: {
+          position: 0,
           focus: firstFocusSelection ? firstFocusSelection.focus.id : "",
           selectedRequiredModules: firstFocusSelection
             ? firstFocusSelection.selectedRequiredModules.map(
@@ -142,6 +143,7 @@ export default {
             : [],
         },
         secondFocusSelection: {
+          position: 1,
           focus: secondFocusSelection ? secondFocusSelection.focus.id : "",
           selectedRequiredModules: secondFocusSelection
             ? secondFocusSelection.selectedRequiredModules.map(
@@ -182,12 +184,20 @@ export default {
   },
   methods: {
     save() {
-      this.form.put(
-        `/${this.planerSlug}/${this.planResource.data.slug}/schwerpunkte`,
-        {
-          onSuccess: () => this.form.reset(),
-        }
-      );
+      this.form
+        .transform((data) => {
+          const focusSelections = [data.firstFocusSelection];
+          if (data.secondFocusSelection.focus) {
+            focusSelections.push(data.secondFocusSelection);
+          }
+          return { focusSelections };
+        })
+        .put(
+          `/${this.planerSlug}/${this.planResource.data.slug}/schwerpunkte`,
+          {
+            onSuccess: () => this.form.reset(),
+          }
+        );
     },
     clearSelectedModules(formSelection) {
       formSelection.selectedRequiredModules = [];

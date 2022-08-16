@@ -24,14 +24,11 @@ class UpdateFocusSelectionRequest extends FormRequest
     public function rules()
     {
         return [
-            'firstFocusSelection' => 'required',
-            'firstFocusSelection.focus' => 'required|string|exists:foci,id',
-            'firstFocusSelection.selectedRequiredModules' => 'array',
-            'firstFocusSelection.selectedRequiredModules.*' => 'string|exists:modules,id',
-            'secondFocusSelection' => 'required',
-            'secondFocusSelection.focus' => 'nullable|string|exists:foci,id',
-            'secondFocusSelection.selectedRequiredModules' => 'array',
-            'secondFocusSelection.selectedRequiredModules.*' => 'string|exists:modules,id',
+            'focusSelections' => 'required|array|min:1',
+            'focusSelections.*.focus' => 'required|string|exists:foci,id',
+            'focusSelections.*.selectedRequiredModules' => 'array',
+            'focusSelections.*.selectedRequiredModules.*' => 'string|exists:modules,id',
+            'focusSelections.*.position' => 'required|integer|min:0'
         ];
     }
 }

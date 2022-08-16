@@ -154,23 +154,24 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
     Route::put('/{plan:slug}/schwerpunkte', function (UpdateFocusSelectionRequest $request, Planer $planer, Plan $plan) {
         $validated = $request->validated();
 
-        $first_focus_selection_data = $validated['firstFocusSelection'];
-        $second_focus_selection_data  = $validated['secondFocusSelection'];
-        DB::transaction(function () use ($plan, $first_focus_selection_data, $second_focus_selection_data) {
-            $plan->focusSelections()->delete();
-
-            $first_focus_selection = new FocusSelection();
-            $first_focus_selection->position = 0;
-            $first_focus_selection->focus()->associate(Focus::findOrFail($first_focus_selection_data['focus']));
-            $plan->focusSelections()->save($first_focus_selection);
-            $first_focus_selection->selectedRequiredModules()->sync($first_focus_selection_data['selectedRequiredModules']);
-
-            if ($second_focus_selection_data['focus']) {
-                $second_focus_selection = new FocusSelection();
-                $second_focus_selection->position = 1;
-                $second_focus_selection->focus()->associate(Focus::findOrFail($second_focus_selection_data['focus']));
-                $plan->focusSelections()->save($second_focus_selection);
-                $second_focus_selection->selectedRequiredModules()->sync($second_focus_selection_data['selectedRequiredModules']);
+        $focusSelectionsData = $validated['focusSelections'];
+        DB::transaction(function () use ($plan, $focusSelectionsData) {
+            foreach ($focusSelectionsData as $focusSelectionData) {
+                $focusSelection = FocusSelection::where('position', $focusSelectionData['position'])->first();
+                if ($focusSelection) {
+                    if ($focusSelection->focus != $focusSelectionData['focus']) {
+                        $focusSelection->delete();
+                        $focusSelection = null;
+                    }
+                }
+                if (!$focusSelection) {
+                    $focusSelection = new FocusSelection();
+                    $focusSelection->position = $focusSelectionData['position'];
+                    $focusSelection->focus()->associate(Focus::findOrFail($focusSelectionData['focus']));
+                    $plan->focusSelections()->save($focusSelection);
+                }
+                $focusSelection->selectedRequiredModules()->sync($focusSelectionData['selectedRequiredModules']);
+                $focusSelection->save();
             }
         });
         return Redirect::route('plan-modules', array('planer' => $planer, 'plan' => $plan->slug));
