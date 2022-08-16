@@ -46,7 +46,7 @@ const store = createStore({
             return state.categories.map(category => {
                 let categoryModules = category.moduleSelectionEnabled ?
                     category.modules.filter(categoryModule =>
-                        state.plan.modules.some(module => module.id === categoryModule.id) ||
+                        state.plan.selectedModules.some(module => module.id === categoryModule.id) ||
                         state.plan.focusSelections.some(focusSelection => focusSelection.selectedRequiredModules.some(module => module.id === categoryModule.id) || focusSelection.focus.requiredModules.some(module => module.id === categoryModule.id))
                     ) : category.modules;
 

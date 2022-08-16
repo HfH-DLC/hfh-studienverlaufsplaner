@@ -80,7 +80,9 @@ export default {
     this.form.modules = this.categories.reduce((acc, cur) => {
       cur.modules.forEach((module) => {
         if (
-          this.plan.modules.some((planModule) => module.id === planModule.id)
+          this.plan.selectedModules.some(
+            (planModule) => module.id === planModule.id
+          )
         ) {
           acc.push(module.id);
         }
