@@ -134,10 +134,7 @@ export default {
       (focusSelection) => focusSelection.position === 1
     );
     return {
-      errors: {
-        firstFocus: "",
-        secondFocus: "",
-      },
+      errors: {},
       form: this.$inertia.form({
         firstFocusSelection: {
           position: 0,
@@ -222,7 +219,11 @@ export default {
         "Pflichtmodule"
       )}.`;
     },
+    resetErrors() {
+      this.errors = {};
+    },
     validate() {
+      this.resetErrors();
       let result = true;
       if (!this.form.firstFocusSelection.focus) {
         this.errors.firstFocus =
