@@ -3,15 +3,15 @@ export function useValidation() {
 
     const errors = ref({});
 
-    const isValid = computed(() => {
-        return errors.value.length > 0;
-    });
+    const isValid = ref(true);
 
     function resetErrors() {
+        isValid.value = true;
         errors.value = {};
     }
 
     function addError(path, message) {
+        isValid.value = false;
         const segments = path.split(".");
         let target = errors.value;
         let i;
