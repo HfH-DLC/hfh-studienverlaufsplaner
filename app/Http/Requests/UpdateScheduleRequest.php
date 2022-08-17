@@ -28,7 +28,7 @@ class UpdateScheduleRequest extends FormRequest
             'placements' => 'array',
             'placements.*.year' => 'required',
             'placements.*.semester' => 'required',
-            'placements.*.week' => 'required',
+            'placements.*.timeWindow' => 'required',
             'placements.*.day' => 'required',
             'placements.*.time' => 'required',
             'placements.*.location' => 'required',

@@ -8,7 +8,7 @@
           {{ slotProps.entity.semester }}
           {{
             getCalendarYear(slotProps.entity.semester, slotProps.entity.year)
-          }}, Zeitfenster {{ slotProps.entity.week }},
+          }}, Zeitfenster {{ slotProps.entity.timeWindow }},
           {{ slotProps.entity.day }} {{ slotProps.entity.time }}
         </template>
       </EntityList>
@@ -24,7 +24,7 @@ import {
   orderDay,
   orderSemester,
   orderTime,
-  orderWeek,
+  orderTimeWindow,
 } from "../../helpers";
 export default {
   layout: AdminLayout,
@@ -46,7 +46,7 @@ export default {
         return (
           a.year - b.year ||
           orderSemester(a.semester, b.semester) ||
-          orderWeek(a.week, b.week) ||
+          orderTimeWindow(a.timeWindow, b.timeWindow) ||
           orderDay(a.day, b.day) ||
           orderTime(a.time, b.time)
         );

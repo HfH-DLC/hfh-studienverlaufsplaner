@@ -50,7 +50,7 @@ class PlanerTest extends TestCase
             ->has('modules')
             ->has('rules')
             ->has('requiredCredits')
-            ->has('optionsWeek')
+            ->has('optionsTimeWindow')
             ->has('optionsDay')
             ->has('optionsTime'));
     }

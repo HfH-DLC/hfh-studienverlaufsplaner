@@ -25,7 +25,7 @@ class EventFactory extends Factory
 
             $result = [
                 'planer_id' => $planer->id,
-                'week' => $this->faker->randomElement($planer->options_week),
+                'time_window' => $this->faker->randomElement($planer->options_time_window),
                 'day' => $this->faker->randomElement($planer->options_day),
                 'time' => $this->faker->randomElement($planer->options_time),
             ];

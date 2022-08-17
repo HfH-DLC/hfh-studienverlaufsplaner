@@ -23,14 +23,14 @@
             <th
               scope="col"
               class="px-6 py-2 text-xs text-gray-500"
-              v-for="week in semester.weeks"
-              :key="week"
+              v-for="timeWindow in semester.timeWindows"
+              :key="timeWindow"
             >
               <div class="flex items-center">
-                <span>{{ week }}</span>
+                <span>{{ timeWindow }}</span>
                 <button
                   class="p-2 flex items-center gap-1 hover:text-thunderbird-red"
-                  @click="setWeekInfo(week)"
+                  @click="setTimeWindowInfo(timeWindow)"
                 >
                   <InformationCircleIcon class="w-5 h-5" aria-hidden="true" />
                   <span class="sr-only"
@@ -62,20 +62,26 @@
                 {{ day }} {{ time }}
               </th>
               <TimeSlot
-                v-for="week in semester.weeks"
-                :key="week"
+                v-for="timeWindow in semester.timeWindows"
+                :key="timeWindow"
                 :ref="setSlotRef"
                 :event="
                   selectableEventByDate(
                     year.value,
                     semester.value,
-                    week,
+                    timeWindow,
                     day,
                     time
                   )
                 "
                 :placement="
-                  placementByDate(year.value, semester.value, week, day, time)
+                  placementByDate(
+                    year.value,
+                    semester.value,
+                    timeWindow,
+                    day,
+                    time
+                  )
                 "
               />
             </tr>
@@ -85,8 +91,8 @@
     </div>
   </div>
   <Dialog
-    :open="isWeekInfoVisible"
-    @close="setWeekInfoVisible(false)"
+    :open="isTimeWindowInfoVisible"
+    @close="setTimeWindowInfoVisible(false)"
     class="fixed inset-0 z-10 overflow-y-auto"
   >
     <DialogOverlay class="fixed inset-0 pointer-events-none bg-black/60" />
@@ -103,17 +109,17 @@
       "
     >
       <DialogTitle class="text-lg font-bold mr-20">{{
-        weekInfo.title
+        timeWindowInfo.title
       }}</DialogTitle>
       <button
-        @click="setWeekInfoVisible(false)"
+        @click="setTimeWindowInfoVisible(false)"
         class="absolute top-2 right-2 p-2"
       >
         <XIcon class="block w-6 h-6" aria-hidden="true" />
         <span class="sr-only">Schliessen</span>
       </button>
 
-      <div class="mt-2" v-html="weekInfo.content"></div>
+      <div class="mt-2" v-html="timeWindowInfo.content"></div>
     </div>
   </Dialog>
 </template>
@@ -135,8 +141,8 @@ export default {
   data() {
     return {
       slotRefs: [],
-      isWeekInfoVisible: false,
-      weekInfos: [
+      isTimeWindowInfoVisible: false,
+      timeWindowInfos: [
         {
           title: "Pflichtmodule & Wahlpflichtmodule",
           content: "Semesterwochen 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",
@@ -151,7 +157,7 @@ export default {
             </p>`,
         },
       ],
-      weekInfo: null,
+      timeWindowInfo: null,
     };
   },
   computed: {
@@ -189,12 +195,14 @@ export default {
         this.slotRefs.push(el);
       }
     },
-    setWeekInfo(week) {
-      this.weekInfo = this.weekInfos.find((info) => info.title === week);
-      this.setWeekInfoVisible(true);
+    setTimeWindowInfo(timeWindow) {
+      this.timeWindowInfo = this.timeWindowInfos.find(
+        (info) => info.title === timeWindow
+      );
+      this.setTimeWindowInfoVisible(true);
     },
-    setWeekInfoVisible(value) {
-      this.isWeekInfoVisible = value;
+    setTimeWindowInfoVisible(value) {
+      this.isTimeWindowInfoVisible = value;
     },
   },
   watch: {

@@ -9,7 +9,7 @@ export default class DateRule extends BasePlacementRule {
     validatePlacements(placements, errors) {
         placements.forEach((placement) => {
             if (!placement.module.events.find(event => isSameDate(placement, event))) {
-                errors[placement.id].push(`<a href="#module-${placement.module.id}">${placement.module.id} ${placement.module.name}</a> ist am Datum ${placement.semester} ${placement.year}, ${placement.week}, ${placement.day} ${placement.time} nicht verfügbar.`);
+                errors[placement.id].push(`<a href="#module-${placement.module.id}">${placement.module.id} ${placement.module.name}</a> ist am Datum ${placement.semester} ${placement.year}, ${placement.timeWindow}, ${placement.day} ${placement.time} nicht verfügbar.`);
             }
         })
     }

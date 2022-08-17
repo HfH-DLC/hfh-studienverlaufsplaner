@@ -18,12 +18,12 @@ class CreateEventsTable extends Migration
             $table->timestamps();
             $table->year('year');
             $table->string('semester', 2);
-            $table->string('week', 50);
+            $table->string('time_window', 50);
             $table->string('day', 20);
             $table->string('time', 20);
             $table->string('location', 50);
             $table->string('module_id');
-            $table->unique(['module_id', 'year', 'semester', 'week', 'day', 'time', 'location']);
+            $table->unique(['module_id', 'year', 'semester', 'time_window', 'day', 'time', 'location'], 'events_date_location_module_unique');
         });
 
         Schema::table('events', function (Blueprint $table) {

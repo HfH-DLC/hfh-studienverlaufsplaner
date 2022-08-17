@@ -7,7 +7,7 @@ import { SAVE_STATUS_SAVED, SAVE_STATUS_SAVING } from "../constants";
 import PrerequisitesRule from '../Models/Rules/Placement/PrerequisitesRule';
 import DateRule from '../Models/Rules/Placement/DateRule';
 import { getRule } from '../Models/Rules/RuleFactory';
-import { getCalendarYear, orderDay, orderSemester, orderTime, orderWeek } from '../helpers';
+import { getCalendarYear, orderDay, orderSemester, orderTime, orderTimeWindow } from '../helpers';
 
 const RESET_STATE = "RESET_STATE"
 const SET_RULES = "SET_RULES"
@@ -148,7 +148,7 @@ export default {
                 moduleId: state.selectionStatus.moduleId,
                 year: event.year,
                 semester: event.semester,
-                week: event.week,
+                timeWindow: event.timeWindow,
                 day: event.day,
                 time: event.time,
                 location: event.location
@@ -243,12 +243,12 @@ export default {
         placementById: (state, { placements }) => (id) => {
             return placements.find(placements => placements.id == id)
         },
-        placementByDate: (state, { placements }) => (year, semester, week, day, time) => {
+        placementByDate: (state, { placements }) => (year, semester, timeWindow, day, time) => {
             return placements.find((placement) => {
                 return (
                     placement.year == year &&
                     placement.semester == semester &&
-                    placement.week == week &&
+                    placement.timeWindow == timeWindow &&
                     placement.day == day &&
                     placement.time == time
                 );
@@ -285,7 +285,7 @@ export default {
                     return {
                         value: semester,
                         calendarYear: getCalendarYear(semester, year),
-                        weeks: [...new Set(semesterDates.map((date) => date.week))].sort(orderWeek),
+                        timeWindows: [...new Set(semesterDates.map((date) => date.timeWindow))].sort(orderTimeWindow),
                         days: [...new Set(semesterDates.map((date) => date.day))].sort(orderDay),
                         times: [...new Set(semesterDates.map((date) => date.time))].sort(orderTime),
                     }
@@ -312,12 +312,12 @@ export default {
                 }
             });
         },
-        selectableEventByDate: (state, { selectableEvents }) => (year, semester, week, day, time) => {
+        selectableEventByDate: (state, { selectableEvents }) => (year, semester, timeWindow, day, time) => {
             const result = selectableEvents.find((event) => {
                 return (
                     event.year == year &&
                     event.semester == semester &&
-                    event.week == week &&
+                    event.timeWindow == timeWindow &&
                     event.day == day &&
                     event.time == time
                 );

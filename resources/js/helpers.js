@@ -1,7 +1,7 @@
 export const isSameDate = (a, b) => {
     return a.year === b.year &&
         a.semester === b.semester &&
-        a.week === b.week &&
+        a.timeWindow === b.timeWindow &&
         a.day === b.day &&
         a.time === b.time
 }
@@ -23,8 +23,8 @@ export const orderSemester = (a, b) => orderBy(semesters, a, b);
 export const semesterCount = () => semesters.length;
 export const semesterPosition = (semester) => semesters.indexOf(semester);
 
-const weeks = ['A', 'B'];
-export const orderWeek = (a, b) => orderBy(weeks, a, b);
+const timeWindows = ['A', 'B'];
+export const orderTimeWindow = (a, b) => orderBy(timeWindows, a, b);
 
 const days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
 export const orderDay = (a, b) => orderBy(days, a, b);

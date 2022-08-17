@@ -216,7 +216,7 @@ class JSONImport
         $event = new Event();
         $event->year = $year;
         $event->semester = $semester;
-        $event->week = $timeWindow['name']; //todo rename week
+        $event->time_window = $timeWindow['name'];
         $event->day = $day;
         $event->time = $time;
         $event->location = $location;

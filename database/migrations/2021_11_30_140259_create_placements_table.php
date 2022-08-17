@@ -19,11 +19,11 @@ class CreatePlacementsTable extends Migration
             $table->string('module_id');
             $table->year('year');
             $table->string('semester', 2);
-            $table->string('week', 50);
+            $table->string('time_window', 50);
             $table->string('day', 20);
             $table->string('time', 20);
             $table->string('location', 50);
-            $table->unique(['plan_id', 'year', 'semester', 'week', 'day', 'time']);
+            $table->unique(['plan_id', 'year', 'semester', 'time_window', 'day', 'time']);
             $table->foreignId('plan_id')->constrained()->onDelete('cascade');
         });
 
