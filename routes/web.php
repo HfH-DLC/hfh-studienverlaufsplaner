@@ -157,14 +157,16 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
 
         $focusSelectionsData = $validated['focusSelections'];
         DB::transaction(function () use ($plan, $focusSelectionsData) {
-            foreach ($focusSelectionsData as $focusSelectionData) {
-                $focusSelection = FocusSelection::where('position', $focusSelectionData['position'])->first();
-                if ($focusSelection) {
-                    if ($focusSelection->focus->id != $focusSelectionData['focus']) {
-                        $focusSelection->delete();
-                        $focusSelection = null;
-                    }
+            $plan->focusSelections()->whereNot(function ($q1) use ($focusSelectionsData) {
+                foreach ($focusSelectionsData as $focusSelectionData) {
+                    $q1->orWhere(function ($q2) use ($focusSelectionData) {
+                        $q2->where('position', $focusSelectionData['position'])->where('focus_id', $focusSelectionData['focus']);
+                    });
                 }
+            })->delete();
+
+            foreach ($focusSelectionsData as $focusSelectionData) {
+                $focusSelection = FocusSelection::where('position', $focusSelectionData['position'])->where('focus_id', $focusSelectionData['focus'])->first();
                 if (!$focusSelection) {
                     $focusSelection = new FocusSelection();
                     $focusSelection->position = $focusSelectionData['position'];
