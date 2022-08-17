@@ -19,9 +19,7 @@
             {{ category.maxCredits }} Kreditpunkte)</span
           >
         </h2>
-        <div class="text-thunderbird-red" v-if="errors.categories[category.id]">
-          {{ errors.categories[category.id] }}
-        </div>
+        <ErrorList :errors="getErrors(`categories.${category.id}`)" />
         <div v-for="module in category.modules" :key="module.id" class="mb-1">
           <input
             v-if="!module.isFocusModule"
@@ -47,18 +45,19 @@
           >
         </div>
       </div>
-      <div v-if="errors.total" class="text-thunderbird-red">
-        {{ errors.total }}
-      </div>
+      <ErrorList :errors="getErrors('total')" />
       <HfHButton class="mt-4" :disabled="form.processing">Weiter</HfHButton>
     </form>
   </main>
 </template>
 
 <script>
+import { useValidation } from "../Composables/useValidation";
+import ErrorList from "../Components/ErrorList.vue";
 import HfHButton from "../Components/HfHButton.vue";
 export default {
   components: {
+    ErrorList,
     HfHButton,
   },
   props: {
@@ -75,16 +74,16 @@ export default {
       required: true,
     },
   },
+
+  setup() {
+    return useValidation();
+  },
   data() {
     return {
-      errors: {
-        categories: [],
-      },
       form: this.$inertia.form({
         modules: [],
       }),
       requiredCredits: 30, //todo get data from backend
-      isValid: true,
     };
   },
   created() {
@@ -158,41 +157,24 @@ export default {
     isSelectedModule(module) {
       return this.form.modules.includes(module.id);
     },
-    resetErrors() {
-      this.errors = {
-        categories: {},
-        total: "",
-      };
-      this.isValid = true;
-    },
-    setError(path, message) {
-      const segments = path.split(".");
-      let target = this.errors;
-      let i;
-      for (i = 0; i < segments.length - 1; i++) {
-        target = target[segments[i]];
-      }
-      target[segments[i]] = message;
-      this.isValid = false;
-    },
     validate() {
       this.resetErrors();
       if (this.totalCredits != this.requiredCredits) {
-        this.setError(
+        this.addError(
           "total",
           `Sie müssen insgesamt ${this.requiredCredits} aus dem Wahlpflicht- und Wahlangebot Kreditpunkte belegen.`
         );
       }
       this.categories.forEach((category) => {
         if (category.currentCredits > category.maxCredits) {
-          this.setError(
-            `category.${category.id}`,
+          this.addError(
+            `categories.${category.id}`,
             `Sie können im Bereich ${category.name} maximal ${category.maxCredits} Kreditpunkte belegen.`
           );
         }
         if (category.currentCredits < category.minCredits) {
-          this.setError(
-            `category.${category.id}`,
+          this.addError(
+            `categories.${category.id}`,
             `Sie müssen im Bereich ${category.name} mindestens ${category.minCredits} Kreditpunkte belegen.`
           );
         }
