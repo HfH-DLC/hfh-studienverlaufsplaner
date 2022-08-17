@@ -43,6 +43,15 @@ class Plan extends Model
         }
     }
 
+    public function getFocusModules()
+    {
+        $focusModules = collect();
+        foreach ($this->focusSelections as $focusSelection) {
+            $focusModules = $focusModules->merge($focusSelection->getAllModules());
+        }
+        return $focusModules;
+    }
+
     public function getCreditableModules()
     {
         $flexCreditableModules = collect();
