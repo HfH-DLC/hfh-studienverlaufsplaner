@@ -1,6 +1,6 @@
-import Rule from "./Rule"
-import { isSameDate } from "../../helpers"
-export default class DateRule extends Rule {
+import { isSameDate } from "../../../helpers"
+import BasePlacementRule from "./BasePlacementRule";
+export default class DateRule extends BasePlacementRule {
 
     constructor() {
         super("date")
@@ -21,12 +21,4 @@ export default class DateRule extends Rule {
     }
 
     validateSelection(module, placements, status) {}
-
-    isSameDate(a, b) {
-        return a.year === b.year &&
-            a.semester === b.semester &&
-            a.week === b.week &&
-            a.day === b.day &&
-            a.time === b.time
-    }
 }

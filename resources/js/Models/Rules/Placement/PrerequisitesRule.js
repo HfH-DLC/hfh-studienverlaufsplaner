@@ -1,6 +1,6 @@
-import Rule from "./Rule"
-import { isPreviousSemester, isSameDate } from "../../helpers"
-export default class PrerequisitesRule extends Rule {
+import { isPreviousSemester, isSameDate } from "../../../helpers"
+import BasePlacementRule from "./BasePlacementRule";
+export default class PrerequisitesRule extends BasePlacementRule {
 
     constructor() {
         super("prerequisites")

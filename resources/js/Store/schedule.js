@@ -4,8 +4,8 @@ import DataAdapter from '../DataAdapter'
 import emitter from "../emitter";
 import flashTypes from "../flashTypes";
 import { SAVE_STATUS_SAVED, SAVE_STATUS_SAVING } from "../constants";
-import PrerequisitesRule from '../Models/Rules/PrerequisitesRule';
-import DateRule from '../Models/Rules/DateRule';
+import PrerequisitesRule from '../Models/Rules/Placement/PrerequisitesRule';
+import DateRule from '../Models/Rules/Placement/DateRule';
 import { getRule } from '../Models/Rules/RuleFactory';
 import { getCalendarYear, orderDay, orderSemester, orderTime, orderWeek } from '../helpers';
 

@@ -1,4 +1,4 @@
-import ExcludeSemesterRule from "./ExcludeSemesterRule"
+import ExcludeSemesterRule from "./Placement/ExcludeSemesterRule"
 
 export const getRule = (state, { type, params }) => {
     switch (type) {

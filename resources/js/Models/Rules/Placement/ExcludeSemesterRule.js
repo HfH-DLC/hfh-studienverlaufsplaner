@@ -1,6 +1,6 @@
-import { isSameDate, semesterCount, semesterPosition } from "../../helpers"
-import Rule from "./Rule"
-export default class ExcludeSemesterRule extends Rule {
+import { isSameDate, semesterCount, semesterPosition } from "../../../helpers"
+import BasePlacementRule from "./BasePlacementRule";
+export default class ExcludeSemesterRule extends BasePlacementRule {
 
     constructor(params, startYear) {
         super("ExcludeSemester")
