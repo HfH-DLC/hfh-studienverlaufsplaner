@@ -107,6 +107,7 @@
 <script>
 import HfHSelect from "../Components/HfHSelect.vue";
 import HfHButton from "../Components/HfHButton.vue";
+import { pluralize } from "../helpers";
 export default {
   components: {
     HfHSelect,
@@ -209,11 +210,9 @@ export default {
     clearSelectedModules(formSelection) {
       formSelection.selectedRequiredModules = [];
     },
-    pluralize(count, singular, plural) {
-      return count == 1 ? singular : plural;
-    },
+
     getRequiredNumberErrorMessage(requiredNumber) {
-      return `Bitte wählen Sie exakt ${requiredNumber} ${this.pluralize(
+      return `Bitte wählen Sie exakt ${requiredNumber} ${pluralize(
         requiredNumber,
         "Pflichtmodul",
         "Pflichtmodule"

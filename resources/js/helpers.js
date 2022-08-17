@@ -37,3 +37,7 @@ const orderBy = (order, a, b) => order.indexOf(a) - order.indexOf(b)
 export const getCalendarYear = (semester, schoolYear) => {
     return semester === HS ? schoolYear : schoolYear + 1
 }
+
+export const pluralize = (count, singular, plural) => {
+    return count == 1 ? singular : plural;
+}
