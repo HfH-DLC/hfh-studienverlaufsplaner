@@ -55,6 +55,9 @@
 import { useValidation } from "../Composables/useValidation";
 import ErrorList from "../Components/ErrorList.vue";
 import HfHButton from "../Components/HfHButton.vue";
+
+import TotalECTSRule from "../Models/Rules/ModuleSelection/TotalECTSRule";
+import CategoriesECTSRule from "../Models/Rules/ModuleSelection/CategoriesECTSRule";
 export default {
   components: {
     ErrorList,
@@ -83,7 +86,11 @@ export default {
       form: this.$inertia.form({
         modules: [],
       }),
-      requiredCredits: 30, //todo get data from backend
+      rules: [
+        //todo get from backend
+        new TotalECTSRule({ requiredECTS: 30 }),
+        new CategoriesECTSRule(),
+      ],
     };
   },
   created() {
@@ -159,30 +166,13 @@ export default {
     },
     validate() {
       this.resetErrors();
-      if (this.totalCredits != this.requiredCredits) {
-        this.addError(
-          "total",
-          `Sie müssen insgesamt ${this.requiredCredits} aus dem Wahlpflicht- und Wahlangebot Kreditpunkte belegen.`
-        );
-      }
-      this.categories.forEach((category) => {
-        if (category.currentCredits > category.maxCredits) {
-          this.addError(
-            `categories.${category.id}`,
-            `Sie können im Bereich ${category.name} maximal ${category.maxCredits} Kreditpunkte belegen.`
-          );
-        }
-        if (category.currentCredits < category.minCredits) {
-          this.addError(
-            `categories.${category.id}`,
-            `Sie müssen im Bereich ${category.name} mindestens ${category.minCredits} Kreditpunkte belegen.`
-          );
-        }
-      });
-      return this.isValid;
+      this.rules.forEach((rule) =>
+        rule.validate(this.categories, this.addError)
+      );
     },
     save() {
-      if (!this.validate()) {
+      this.validate();
+      if (!this.isValid) {
         return;
       }
       this.form.put(
