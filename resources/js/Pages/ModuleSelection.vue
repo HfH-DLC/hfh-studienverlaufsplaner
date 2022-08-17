@@ -19,6 +19,9 @@
             {{ category.maxCredits }} Kreditpunkte)</span
           >
         </h2>
+        <div class="text-thunderbird-red" v-if="errors.categories[category.id]">
+          {{ errors.categories[category.id] }}
+        </div>
         <div v-for="module in category.modules" :key="module.id" class="mb-1">
           <input
             v-if="!module.isFocusModule"
@@ -43,6 +46,9 @@
             >{{ module.id }} {{ module.name }}</label
           >
         </div>
+      </div>
+      <div v-if="errors.total" class="text-thunderbird-red">
+        {{ errors.total }}
       </div>
       <HfHButton class="mt-4" :disabled="form.processing">Weiter</HfHButton>
     </form>
@@ -71,9 +77,14 @@ export default {
   },
   data() {
     return {
+      errors: {
+        categories: [],
+      },
       form: this.$inertia.form({
         modules: [],
       }),
+      requiredCredits: 30, //todo get data from backend
+      isValid: true,
     };
   },
   created() {
@@ -134,6 +145,11 @@ export default {
         return acc;
       }, []);
     },
+    totalCredits() {
+      return this.categories.reduce((acc, cur) => {
+        return acc + cur.currentCredits;
+      }, 0);
+    },
   },
   methods: {
     isFocusModule(module) {
@@ -142,7 +158,51 @@ export default {
     isSelectedModule(module) {
       return this.form.modules.includes(module.id);
     },
+    resetErrors() {
+      this.errors = {
+        categories: {},
+        total: "",
+      };
+      this.isValid = true;
+    },
+    setError(path, message) {
+      const segments = path.split(".");
+      let target = this.errors;
+      let i;
+      for (i = 0; i < segments.length - 1; i++) {
+        target = target[segments[i]];
+      }
+      target[segments[i]] = message;
+      this.isValid = false;
+    },
+    validate() {
+      this.resetErrors();
+      if (this.totalCredits != this.requiredCredits) {
+        this.setError(
+          "total",
+          `Sie müssen insgesamt ${this.requiredCredits} aus dem Wahlpflicht- und Wahlangebot Kreditpunkte belegen.`
+        );
+      }
+      this.categories.forEach((category) => {
+        if (category.currentCredits > category.maxCredits) {
+          this.setError(
+            `category.${category.id}`,
+            `Sie können im Bereich ${category.name} maximal ${category.maxCredits} Kreditpunkte belegen.`
+          );
+        }
+        if (category.currentCredits < category.minCredits) {
+          this.setError(
+            `category.${category.id}`,
+            `Sie müssen im Bereich ${category.name} mindestens ${category.minCredits} Kreditpunkte belegen.`
+          );
+        }
+      });
+      return this.isValid;
+    },
     save() {
+      if (!this.validate()) {
+        return;
+      }
       this.form.put(
         `/${this.planerSlug}/${this.planResource.data.slug}/module`,
         {
@@ -155,4 +215,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+input:checked + label {
+  @apply text-green-700;
+}
 </style>
