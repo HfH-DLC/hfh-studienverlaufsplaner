@@ -50,7 +50,7 @@
           </div>
         </div>
       </div>
-      <div class="text-thunderbird-red">{{ errors.firstFocus }}</div>
+      <ErrorList :errors="getErrors('firstFocus')" />
       <div class="mt-4">
         <label for="secondFocus">Zweiter Studienschwerpunkt (Optional)</label>
         <HfHSelect
@@ -98,18 +98,21 @@
           </div>
         </div>
       </div>
-      <div class="text-thunderbird-red">{{ errors.secondFocus }}</div>
+      <ErrorList :errors="getErrors('secondFocus')" />
       <HfHButton class="w-full mt-3">Weiter</HfHButton>
     </form>
   </main>
 </template>
 
 <script>
+import ErrorList from "../Components/ErrorList.vue";
 import HfHSelect from "../Components/HfHSelect.vue";
 import HfHButton from "../Components/HfHButton.vue";
 import { pluralize } from "../helpers";
+import { useValidation } from "../Composables/useValidation";
 export default {
   components: {
+    ErrorList,
     HfHSelect,
     HfHButton,
   },
@@ -127,6 +130,9 @@ export default {
       required: true,
     },
   },
+  setup() {
+    return useValidation();
+  },
   data() {
     const firstFocusSelection = this.planResource.data.focusSelections.find(
       (focusSelection) => focusSelection.position === 0
@@ -135,7 +141,6 @@ export default {
       (focusSelection) => focusSelection.position === 1
     );
     return {
-      errors: {},
       form: this.$inertia.form({
         firstFocusSelection: {
           position: 0,
@@ -188,7 +193,8 @@ export default {
   },
   methods: {
     save() {
-      if (!this.validate()) {
+      this.validate();
+      if (!this.isValid) {
         return;
       }
 
@@ -218,25 +224,24 @@ export default {
         "Pflichtmodule"
       )}.`;
     },
-    resetErrors() {
-      this.errors = {};
-    },
     validate() {
       this.resetErrors();
-      let result = true;
       if (!this.form.firstFocusSelection.focus) {
-        this.errors.firstFocus =
-          "Bitte wählen Sie Ihren ersten Studienschwerpunkt.";
-        result = false;
+        this.addError(
+          "firstFocus",
+          "Bitte wählen Sie Ihren ersten Studienschwerpunkt."
+        );
       } else {
         if (
           this.form.firstFocusSelection.selectedRequiredModules.length !=
           this.firstFocus.requiredNumberOfOptionalModules
         ) {
-          this.errors.firstFocus = this.getRequiredNumberErrorMessage(
-            this.firstFocus.requiredNumberOfOptionalModules
+          this.addError(
+            "firstFocus",
+            this.getRequiredNumberErrorMessage(
+              this.firstFocus.requiredNumberOfOptionalModules
+            )
           );
-          result = false;
         }
       }
 
@@ -246,13 +251,13 @@ export default {
         this.form.secondFocusSelection.selectedRequiredModules.length !=
           this.secondFocus.requiredNumberOfOptionalModules
       ) {
-        this.errors.secondFocus = this.getRequiredNumberErrorMessage(
-          this.secondFocus.requiredNumberOfOptionalModules
+        this.addError(
+          "secondFocus",
+          this.getRequiredNumberErrorMessage(
+            this.secondFocus.requiredNumberOfOptionalModules
+          )
         );
-        result = false;
       }
-      console.log(this.errors.firstFocus);
-      return result;
     },
   },
 };
