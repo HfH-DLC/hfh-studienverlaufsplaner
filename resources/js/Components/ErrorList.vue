@@ -1,7 +1,9 @@
 <template>
-  <li v-for="(error, index) in errors" :key="index" ref="list" tabindex="-1">
-    <Error><span v-html="error" /></Error>
-  </li>
+  <ul>
+    <li v-for="(error, index) in errors" :key="index" ref="list" tabindex="-1">
+      <Error><span v-html="error" /></Error>
+    </li>
+  </ul>
 </template>
 
 <script>

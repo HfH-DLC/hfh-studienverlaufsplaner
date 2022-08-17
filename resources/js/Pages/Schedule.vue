@@ -8,9 +8,7 @@
       <template v-if="initialized">
         <div>
           <div class="mb-4 p-4" role="alert" v-if="errors.length > 0">
-            <ul class="space-y-2">
-              <ErrorList :errors="errors" />
-            </ul>
+            <ErrorList class="space-y-2" :errors="errors" />
           </div>
           <div class="flex flex-1 items-start">
             <div id="module-list" class="w-3/12 p-4 sticky top-0">

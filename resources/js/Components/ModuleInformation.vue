@@ -1,9 +1,11 @@
 <template>
   <div v-if="selectedModule">
     <h2 class="text-xl">{{ selectedModule.name }}</h2>
-    <ul class="mt-4 space-y-2" v-if="selectedModule.infos.length > 0">
-      <ErrorList :errors="selectedModule.infos" />
-    </ul>
+    <ErrorList
+      class="mt-4 space-y-2"
+      v-if="selectedModule.infos.length > 0"
+      :errors="selectedModule.infos"
+    />
     <dl class="mt-4">
       <dt class="text-sm text-gray-500 font-bold uppercase">Modulnummer</dt>
       <dd>{{ selectedModule.id }}</dd>
