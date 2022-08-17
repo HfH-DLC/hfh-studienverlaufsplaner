@@ -261,19 +261,19 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
         DB::transaction(function () use ($plan, $request) {
             $validated = $request->validated();
             if (Arr::exists($validated, 'placements')) {
-                $placements = $validated['placements'];
-                $placements = collect($placements);
+                $placements_data = $validated['placements'];
+                $placements_data = collect($placements_data);
                 $plan->placements()->delete();
-                $placements->each(function ($placement) use ($plan) {
-                    $obj = new Placement();
-                    $obj->year = $placement['year'];
-                    $obj->semester = $placement['semester'];
-                    $obj->week = $placement['week'];
-                    $obj->day = $placement['day'];
-                    $obj->time = $placement['time'];
-                    $obj->location = $placement['location'];
-                    $obj->module()->associate($placement['moduleId']);
-                    $plan->placements()->save($obj);
+                $placements_data->each(function ($placement_data) use ($plan) {
+                    $placement = new Placement();
+                    $placement->year = $placement_data['year'];
+                    $placement->semester = $placement_data['semester'];
+                    $placement->time_window = $placement_data['timeWindow'];
+                    $placement->day = $placement_data['day'];
+                    $placement->time = $placement_data['time'];
+                    $placement->location = $placement_data['location'];
+                    $placement->module()->associate($placement_data['moduleId']);
+                    $plan->placements()->save($placement);
                 });
             }
             if (Arr::exists($validated, 'tourCompleted')) {
