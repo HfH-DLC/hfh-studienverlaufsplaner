@@ -18,8 +18,8 @@ class ModuleResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'credits' => $this->credits,
-            'prerequisites' => PrerequisiteResource::collection($this->prerequisites),
-            'events' => EventResource::collection($this->events),
+            'prerequisites' => PrerequisiteResource::collection($this->whenLoaded('prerequisites')),
+            'events' => EventResource::collection($this->whenLoaded('events')),
             'creditableAgainstFocus' => $this->creditable_against_focus
         ];
     }

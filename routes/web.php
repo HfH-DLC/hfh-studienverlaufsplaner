@@ -139,7 +139,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
     })->name('plan');
 
     Route::get('/{plan:slug}/schwerpunkte', function (Planer $planer, Plan $plan) {
-        $planResource = new PlanResource($plan);
+        $planResource = new PlanResource($plan->load('focusSelections'));
         $fociResource = FocusResource::collection($planer->foci()->get());
         return Inertia::render(
             'FocusSelection',
@@ -179,7 +179,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
     });
 
     Route::get('/{plan:slug}/module', function (Planer $planer, Plan $plan) {
-        $planResource = new PlanResource($plan);
+        $planResource = new PlanResource($plan->load('focusSelections', 'selectedModules'));
         $categoriesResource = CategoryResource::collection($planer->getCategoriesForPlan($plan));
         return Inertia::render(
             'ModuleSelection',
@@ -226,8 +226,8 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
     });
 
     Route::get('/{plan:slug}/zeitplan', function (Planer $planer, Plan $plan) {
-        $planResource = new PlanResource($plan);
-        $categoriesResource = CategoryResource::collection($planer->getCategoriesForPlan($plan));
+        $planResource = new PlanResource($plan->load('placements'));
+        $categoriesResource = CategoryResource::collection($planer->getCategoriesForPlan($plan)->load('modules', 'modules.events', 'modules.prerequisites'));
         $rulesResource = RuleResource::collection(Rule::all());
         return Inertia::render(
             'Schedule',

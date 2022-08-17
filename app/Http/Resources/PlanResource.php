@@ -17,11 +17,11 @@ class PlanResource extends JsonResource
     {
         return   [
             'slug' => $this->slug,
-            'placements' => PlacementResource::collection($this->placements),
+            'placements' => PlacementResource::collection($this->whenLoaded('placements')),
             'startYear' => $this->start_year,
             'tourCompleted' => $this->tour_completed,
-            'selectedModules' =>  ModuleResource::collection($this->selectedModules),
-            'focusSelections' => FocusSelectionResource::collection($this->focusSelections)
+            'selectedModules' =>  ModuleResource::collection($this->whenLoaded('selectedModules')),
+            'focusSelections' => FocusSelectionResource::collection($this->whenLoaded('focusSelections'))
         ];
     }
 }

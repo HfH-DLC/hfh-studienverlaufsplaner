@@ -21,7 +21,7 @@ class CategoryResource extends JsonResource
             'moduleSelectionEnabled' => $this->module_selection_enabled,
             'minCredits' => $this->min_credits,
             'maxCredits' => $this->max_credits,
-            'modules' => ModuleResource::collection($this->modules)
+            'modules' => ModuleResource::collection($this->whenLoaded('modules'))
         ];
     }
 }
