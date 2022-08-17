@@ -2,10 +2,10 @@ import Rule from '../Rule';
 export default class BasePlacementRule extends Rule {
 
     constructor(type) {
+        super('placement', type);
         if (this.constructor == BasePlacementRule) {
             throw new Error("Abstract classes can't be instantiated.");
         }
-        super('placement', type);
     }
 
     validatePlacements() {
