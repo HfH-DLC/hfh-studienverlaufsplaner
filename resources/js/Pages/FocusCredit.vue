@@ -21,7 +21,7 @@
           />
         </template>
       </div>
-      <ErrorList class="mt-4 space-y-2" :errors="errors" />
+      <ErrorList class="mt-4 space-y-2" :errors="getErrors('global')" />
       <HfHButton class="mt-4" :disabled="form.processing">Weiter</HfHButton>
     </form>
   </main>
@@ -32,6 +32,7 @@ import ErrorList from "../Components/ErrorList.vue";
 import HfHButton from "../Components/HfHButton.vue";
 import HfHSelect from "../Components/HfHSelect.vue";
 
+import { useValidation } from "../Composables/useValidation";
 import ECTSPerFocusRule from "../Models/Rules/FocusCredit/ECTSPerFocusRule";
 import RequiredModulePerFocusRule from "../Models/Rules/FocusCredit/RequiredModulePerFocusRule";
 export default {
@@ -50,10 +51,11 @@ export default {
       required: true,
     },
   },
-
+  setup() {
+    return useValidation();
+  },
   data() {
     return {
-      errors: [],
       form: this.$inertia.form({
         focusCredits: this.creditableModulesResource.data.reduce((acc, cur) => {
           acc[cur.id] = cur.creditedAgainst ? cur.creditedAgainst.id : "";
@@ -70,9 +72,6 @@ export default {
   },
 
   computed: {
-    isValid() {
-      return this.errors.length > 0;
-    },
     modules() {
       return this.creditableModulesResource.data;
     },
@@ -87,13 +86,13 @@ export default {
   methods: {
     validate() {
       const focusCredits = this.groupByFocus(this.form.focusCredits);
-      this.errors = [];
+      this.resetErrors();
       this.rules.forEach((rule) =>
         rule.validate(
           focusCredits,
           this.planResource.data.focusSelections,
           this.modules,
-          this.errors
+          this.addError
         )
       );
     },
@@ -113,11 +112,14 @@ export default {
     },
     save() {
       this.validate();
+      console.log(this.isValid);
       if (!this.isValid) {
         return;
       }
       this.form
-        .transform((data) => this.groupByFocus(data.focusCredits))
+        .transform((data) => ({
+          focusCredits: this.groupByFocus(data.focusCredits),
+        }))
         .put(`/${this.planerSlug}/${this.planResource.data.slug}/anrechnung`, {
           onSuccess: () => this.form.reset(),
         });

@@ -8,7 +8,7 @@ export default class BaseFocusCreditRule extends Rule {
         }
     }
 
-    validate(focusCredits, focusSelections, modules, errors) {
+    validate(focusCredits, focusSelections, modules, addError) {
         throw new Error("Method not implemented");
     }
 
