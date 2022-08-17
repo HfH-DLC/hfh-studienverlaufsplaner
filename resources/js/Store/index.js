@@ -44,17 +44,11 @@ const store = createStore({
         },
         categories(state) {
             return state.categories.map(category => {
-                let categoryModules = category.moduleSelectionEnabled ?
-                    category.modules.filter(categoryModule =>
-                        state.plan.selectedModules.some(module => module.id === categoryModule.id) ||
-                        state.plan.focusSelections.some(focusSelection => focusSelection.selectedRequiredModules.some(module => module.id === categoryModule.id) || focusSelection.focus.requiredModules.some(module => module.id === categoryModule.id))
-                    ) : category.modules;
 
-                const requiredNumber = category.requiredNumber != null ? category.requiredNumber : categoryModules.length;
+                const requiredNumber = category.requiredNumber != null ? category.requiredNumber : category.modules.length;
                 return {
                     ...category,
                     requiredNumber,
-                    modules: categoryModules
                 }
             })
         },

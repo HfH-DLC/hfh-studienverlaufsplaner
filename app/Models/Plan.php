@@ -56,7 +56,7 @@ class Plan extends Model
     {
         $flexCreditableModules = collect();
         $flexCreditableModules = $flexCreditableModules->merge($this->selectedModules);
-        $categories = $this->planer->getCategoriesForPlan($this)->where('module_selection_enabled', false)->all();
+        $categories = $this->planer->getCategoriesWithAllModules($this)->where('module_selection_enabled', false)->all();
         foreach ($categories as $category) {
             $flexCreditableModules = $flexCreditableModules->merge($category->modules);
         }

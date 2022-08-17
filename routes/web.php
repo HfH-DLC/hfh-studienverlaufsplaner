@@ -180,7 +180,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
 
     Route::get('/{plan:slug}/module', function (Planer $planer, Plan $plan) {
         $planResource = new PlanResource($plan->load('focusSelections', 'selectedModules'));
-        $categoriesResource = CategoryResource::collection($planer->getCategoriesForPlan($plan));
+        $categoriesResource = CategoryResource::collection($planer->getCategoriesWithAllModules($plan));
         return Inertia::render(
             'ModuleSelection',
             array(
@@ -227,7 +227,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
 
     Route::get('/{plan:slug}/zeitplan', function (Planer $planer, Plan $plan) {
         $planResource = new PlanResource($plan->load('placements'));
-        $categoriesResource = CategoryResource::collection($planer->getCategoriesForPlan($plan)->load('modules', 'modules.events', 'modules.prerequisites'));
+        $categoriesResource = CategoryResource::collection($planer->getCategoriesWithActiveModules($plan));
         $rulesResource = RuleResource::collection(Rule::all());
         return Inertia::render(
             'Schedule',
