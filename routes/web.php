@@ -182,7 +182,9 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
 
     Route::get('/{plan:slug}/module', function (Planer $planer, Plan $plan) {
         $planResource = new PlanResource($plan->load('focusSelections', 'selectedModules'));
-        $categoriesResource = CategoryResource::collection($planer->getCategoriesWithAllModules($plan));
+        $categoriesResource = CategoryResource::collection($planer->getCategoriesWithAllModules($plan)->filter(function ($value) {
+            return $value->module_selection_enabled == true;
+        }));
         return Inertia::render(
             'ModuleSelection',
             array(
