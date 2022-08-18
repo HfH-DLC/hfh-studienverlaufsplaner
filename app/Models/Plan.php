@@ -47,34 +47,34 @@ class Plan extends Model
     {
         $focusModules = collect();
         foreach ($this->focusSelections as $focusSelection) {
-            $focusModules = $focusModules->merge($focusSelection->getAllModules());
+            $focusModules = $focusModules->merge($focusSelection->getRequiredModules());
         }
         return $focusModules;
     }
 
     public function getCreditableModules()
     {
-        $flexCreditableModules = collect();
-        $flexCreditableModules = $flexCreditableModules->merge($this->selectedModules);
-        $categories = $this->planer->getCategoriesWithAllModules($this)->where('module_selection_enabled', false)->all();
-        foreach ($categories as $category) {
-            $flexCreditableModules = $flexCreditableModules->merge($category->modules);
+
+        $focusModules = collect();
+        foreach ($this->focusSelections as $focusSelection) {
+            $modules = $focusSelection->getRequiredModules();
+            foreach ($modules as $module) {
+                $module->credited_against = $focusSelection;
+                $module->fixed_credit = true;
+            }
+            $focusModules = $focusModules->merge($modules);
         }
+        $flexCreditableModules = $this->planer->getCategoriesWithActiveModules($this)->reduce(function ($carry, $item) use ($focusModules) {
+            return $carry->merge($item->modules->filter(function ($value) use ($focusModules) {
+                return $value->creditable_against_focus && !$focusModules->pluck('id')->contains($value->id);
+            }));
+        }, collect());
         foreach ($flexCreditableModules as $module) {
             $focusSelection = $this->focusSelections()->whereRelation('creditedModules', 'id', $module->id)->first();
             $module->credited_against = $focusSelection;
             $module->fixed_credit = false;
         }
-        $fixedCreditableModules = collect();
-        foreach ($this->focusSelections as $focusSelection) {
-            $modules = $focusSelection->focus->requiredModules->merge($focusSelection->selectedRequiredModules);
-            foreach ($modules as $module) {
-                $module->credited_against = $focusSelection;
-                $module->fixed_credit = true;
-            }
-            $fixedCreditableModules = $fixedCreditableModules->merge($modules);
-        }
-        return $flexCreditableModules->merge($fixedCreditableModules);
+        return $flexCreditableModules->merge($focusModules);
     }
 
     /**

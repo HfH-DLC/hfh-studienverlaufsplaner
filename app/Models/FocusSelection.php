@@ -24,7 +24,7 @@ class FocusSelection extends Model
         return $this->belongsToMany(Module::class, 'focus_selection_required_module');
     }
 
-    public function getAllModules()
+    public function getRequiredModules()
     {
         return $this->selectedRequiredModules->merge($this->focus->requiredModules);
     }
