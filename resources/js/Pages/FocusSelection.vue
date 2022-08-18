@@ -141,7 +141,7 @@ export default {
       (focusSelection) => focusSelection.position === 1
     );
     return {
-      form: this.$inertia.form({
+      form: this.$inertia.form("FocusSelection", {
         firstFocusSelection: {
           position: 0,
           focus: firstFocusSelection ? firstFocusSelection.focus.id : "",

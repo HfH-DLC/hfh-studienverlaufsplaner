@@ -83,8 +83,19 @@ export default {
   },
   data() {
     return {
-      form: this.$inertia.form({
-        modules: [],
+      form: this.$inertia.form("ModuleSelection", {
+        modules: this.categoriesResource.data.reduce((acc, cur) => {
+          cur.modules.forEach((module) => {
+            if (
+              this.planResource.data.selectedModules.some(
+                (planModule) => module.id === planModule.id
+              )
+            ) {
+              acc.push(module.id);
+            }
+          });
+          return acc;
+        }, []),
       }),
       rules: [
         //todo get from backend
@@ -93,54 +104,30 @@ export default {
       ],
     };
   },
-  created() {
-    this.form.modules = this.categories.reduce((acc, cur) => {
-      cur.modules.forEach((module) => {
-        if (
-          this.plan.selectedModules.some(
-            (planModule) => module.id === planModule.id
-          )
-        ) {
-          acc.push(module.id);
-        }
-      });
-      return acc;
-    }, []);
-  },
   computed: {
     plan() {
       return this.planResource.data;
     },
     categories() {
-      return this.categoriesResource.data
-        .filter((category) => category.moduleSelectionEnabled)
-        .map((category) => {
-          const modules = category.modules.map((module) => ({
-            ...module,
-            isFocusModule: this.isFocusModule(module),
-            isSelectedModule: this.isSelectedModule(module),
-          }));
-          const currentModules = modules.filter((module) => {
-            return module.isFocusModule || module.isSelectedModule;
-          });
-          const currentCredits = currentModules.reduce(
-            (acc, cur) => acc + cur.credits,
-            0
-          );
-          return {
-            ...category,
-            modules,
-            currentCredits,
-          };
+      return this.categoriesResource.data.map((category) => {
+        const modules = category.modules.map((module) => ({
+          ...module,
+          isFocusModule: this.isFocusModule(module),
+          isSelectedModule: this.isSelectedModule(module),
+        }));
+        const currentModules = modules.filter((module) => {
+          return module.isFocusModule || module.isSelectedModule;
         });
-    },
-    requiredModuleIds() {
-      return this.categoriesResource.data
-        .filter((category) => !category.moduleSelectionEnabled)
-        .reduce((acc, cur) => {
-          acc.push(...cur.modules.map((module) => module.id));
-          return acc;
-        }, []);
+        const currentCredits = currentModules.reduce(
+          (acc, cur) => acc + cur.credits,
+          0
+        );
+        return {
+          ...category,
+          modules,
+          currentCredits,
+        };
+      });
     },
     focusModuleIds() {
       return this.plan.focusSelections.reduce((acc, cur) => {

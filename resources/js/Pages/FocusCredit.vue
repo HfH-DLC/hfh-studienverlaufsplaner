@@ -56,7 +56,7 @@ export default {
   },
   data() {
     return {
-      form: this.$inertia.form({
+      form: this.$inertia.form("FocusCredit", {
         focusCredits: this.creditableModulesResource.data.reduce((acc, cur) => {
           acc[cur.id] = cur.creditedAgainst ? cur.creditedAgainst.id : "";
           return acc;
