@@ -127,13 +127,14 @@ class JSONImport
 
     private function importCategories($planerData, $planer)
     {
-        foreach ($planerData->categories as $categoryData) {
+        foreach ($planerData->categories as $index => $categoryData) {
             $categoryName = $categoryData->name;
             $category = $planer->categories->where('name', $categoryName)->first();
             if (!$category) {
                 $category = new Category();
                 $category->name = $categoryName;
             }
+            $category->position = $index;
             if (isset($categoryData->requiredNumber)) {
                 $category->required_number = $categoryData->requiredNumber;
             }

@@ -41,7 +41,7 @@ class Planer extends Model
         $filter = $this->getYearFilterForPlan($plan);
         return $this->categories()->with(['modules' => function ($query) use ($filter) {
             $query->whereHas('events', $filter);
-        }])->get();
+        }])->get()->sortBy('position');
     }
 
     public function getCategoriesWithActiveModules(Plan $plan)
@@ -58,7 +58,9 @@ class Planer extends Model
             $query->whereHas('events', $filter);
         }, 'modules.events', 'modules.prerequisites'])->get();
 
-        return $categoriesWithVariableModules->merge($categoriesWithFixModules);
+        return $categoriesWithVariableModules->merge($categoriesWithFixModules)->filter(function ($value) {
+            return $value->modules->count() > 0;
+        })->sortBy('position');
     }
 
     public function foci()
