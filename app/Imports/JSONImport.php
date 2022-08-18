@@ -187,16 +187,16 @@ class JSONImport
 
     private function importEvents($data)
     {
-        Event::where('year', '>=', $this->year)->delete();
+        $eventIds = array();
         foreach ($data->events as $eventData) {
-            $module = $this->getModule($eventData->module);
 
             $semesters = $eventData->semesters;
-            $timeWindow = $this->timeWindows[$eventData->timeWindow];
+            $timeWindow = $this->timeWindows[$eventData->timeWindow]['name'];
 
             $locations = $eventData->locations;
             $timeLetters = $eventData->times;
 
+            $moduleID = $eventData->module;
             foreach ($locations as $location) {
                 foreach ($semesters as $semester) {
                     foreach ($timeLetters as $timeLetter) {
@@ -204,24 +204,20 @@ class JSONImport
                         $time = $this->times[$timeLetter]['time'];
                         for ($i = 0; $i < self::NUMBER_OF_YEARS; $i++) {
                             $year = $this->year + $i;
-                            $this->createEvent($module, $year, $semester, $timeWindow, $day, $time, $location);
+                            $event =  $this->createEvent($moduleID, $year, $semester, $timeWindow, $day, $time, $location);
+                            $eventIds[] = $event->id;
                         }
                     }
                 }
             }
         }
+        Event::where('year', '>=', $this->year)->whereNotIn('id', $eventIds)->delete();
     }
 
-    private function createEvent($module, $year, $semester, $timeWindow, $day, $time, $location)
+    private function createEvent($moduleID, $year, $semester, $timeWindow, $day, $time, $location)
     {
-        $event = new Event();
-        $event->year = $year;
-        $event->semester = $semester;
-        $event->time_window = $timeWindow['name'];
-        $event->day = $day;
-        $event->time = $time;
-        $event->location = $location;
-        $event->module()->associate($module->id);
-        $event->save();
+        return Event::firstOrCreate([
+            'module_id' => $moduleID, 'year' => $year, 'semester' => $semester, 'time_window' => $timeWindow, 'day' => $day, 'time' => $time, 'location' => $location
+        ]);
     }
 }
