@@ -122,6 +122,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
     })->name('plan');
 
     Route::get('/{plan:slug}/anrechnung', function (Planer $planer, Plan $plan) {
+        $plan->load('focusSelections.focus');
         $planResource = new PlanResource($plan);
         return Inertia::render(
             'Credit',
@@ -139,9 +140,9 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
         $validated = $request->validated();
         $focusCredits = $validated['focusCredits'];
         DB::transaction(function () use ($focusCredits) {
-            foreach ($focusCredits as $focusSelectionId => $moduleIds) {
-                $focusSelection = FocusSelection::findOrFail($focusSelectionId);
-                $focusSelection->creditedModules()->sync($moduleIds);
+            foreach ($focusCredits as $focusCredit) {
+                $focusSelection = FocusSelection::findOrFail($focusCredit['focusSelectionId']);
+                $focusSelection->creditedModules()->sync($focusCredit['moduleIds']);
                 $focusSelection->save();
             }
         });
