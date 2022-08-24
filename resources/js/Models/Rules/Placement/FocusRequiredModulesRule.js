@@ -1,14 +1,11 @@
 import BaseScheduleRule from "./BaseScheduleRule";
 
 export default class FocusRequiredModulesRule extends BaseScheduleRule {
-
     constructor() {
-        super('FocusRequiredModules');
+        super("FocusRequiredModules");
     }
 
-    validatePlacement(state, getters, errors) {
-
-    }
+    validatePlacement(state, getters, errors) {}
 
     validateModule() {}
 

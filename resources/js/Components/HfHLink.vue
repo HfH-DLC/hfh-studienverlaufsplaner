@@ -1,28 +1,23 @@
 <template>
-  <a
-    :href="href"
-    target="_blank"
-    rel="“noopener"
-    noreferrer
-    class="
-      text-thunderbird-red
-      hover:text-thunderbird-red-light hover:underline
-      focus:text-thunderbird-red-light focus:underline
-    "
-    ><slot
-  /></a>
+    <a
+        :href="href"
+        target="_blank"
+        rel="“noopener"
+        noreferrer
+        class="text-thunderbird-red hover:text-thunderbird-red-light hover:underline focus:text-thunderbird-red-light focus:underline"
+        ><slot
+    /></a>
 </template>
 
 <script>
 export default {
-  props: {
-    href: {
-      type: String,
-      required: true,
+    props: {
+        href: {
+            type: String,
+            required: true,
+        },
     },
-  },
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

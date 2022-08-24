@@ -1,6 +1,5 @@
 import { computed, ref } from "vue";
 export function useValidation() {
-
     const errors = ref({});
 
     const isValid = ref(true);
@@ -17,7 +16,7 @@ export function useValidation() {
         let i;
         for (i = 0; i < segments.length - 1; i++) {
             if (!target[segments[i]]) {
-                target[segments[i]] = {}
+                target[segments[i]] = {};
             }
             target = target[segments[i]];
         }
@@ -25,7 +24,7 @@ export function useValidation() {
             target[segments[i]] = {};
         }
         if (!target[segments[i]].errors) {
-            target[segments[i]].errors = []
+            target[segments[i]].errors = [];
         }
         target[segments[i]].errors.push(message);
     }
@@ -43,5 +42,5 @@ export function useValidation() {
         return target.errors ? target.errors : [];
     }
 
-    return { isValid, getErrors, resetErrors, addError }
+    return { isValid, getErrors, resetErrors, addError };
 }

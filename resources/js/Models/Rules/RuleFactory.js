@@ -1,12 +1,11 @@
-import ExcludeSemesterRule from "./Placement/ExcludeSemesterRule"
+import ExcludeSemesterRule from "./Placement/ExcludeSemesterRule";
 
 export const getRule = (state, { type, params }) => {
     switch (type) {
-        case 'ExcludeSemester':
-            {
-                return new ExcludeSemesterRule(params, state.startYear);
-            }
+        case "ExcludeSemester": {
+            return new ExcludeSemesterRule(params, state.startYear);
+        }
         default:
             throw "Unknown rules type: " + type;
     }
-}
+};

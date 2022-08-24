@@ -1,6 +1,7 @@
 {
     "year": 2022,
-    "modules": [{
+    "modules": [
+        {
             "id": "P1_01",
             "name": "Grundfragen der Heilpädagogik",
             "ects": 5,
@@ -185,143 +186,140 @@
             "name": "Medien und Informatik in der Schulischen Heilpädagogik",
             "ects": 5,
             "creditable": true
-        }, {
+        },
+        {
             "id": "WP3_05",
             "name": "Natur, Mensch, Gesellschaft in der Schulischen Heilpädagogik",
             "ects": 5,
             "creditable": true
-        }, {
+        },
+        {
             "id": "WP3_06",
             "name": "Künste in der Schulischen Heilpädagogik",
             "ects": 5,
             "creditable": true
-        }, {
+        },
+        {
             "id": "WP3_03",
             "name": "Sprache bei besonderem Bildungsbedarf",
             "ects": 5,
             "creditable": true
-        }, {
+        },
+        {
             "id": "WP4_03",
             "name": "Berufliche Integration. Heilpädagogische Begleitung des Übergangs Schule-Beruf",
             "ects": 5,
             "creditable": true
-        }, {
+        },
+        {
             "id": "WP4_04.1",
             "name": "Beratung und Coaching in heilpädagogischen Berufsfeldern",
             "ects": 5,
             "creditable": true
-        }, {
+        },
+        {
             "id": "WP4_04.2",
             "name": "Multiprofessionelle Kooperation",
             "ects": 5,
             "creditable": true
-        }, {
+        },
+        {
             "id": "WP4_05.1",
             "name": "Schul- und Organisationsentwicklung in heilpädagogischen Berufsfeldern 1",
             "ects": 5,
             "creditable": true
-        }, {
+        },
+        {
             "id": "WP4_05.2",
             "name": "Schul- und Organisationsentwicklung in heilpädagogischen Berufsfeldern 2",
             "ects": 5,
             "creditable": true
-        }, {
+        },
+        {
             "id": "BP5_01.1.SHP",
             "name": "Berufspraxis 1 & Portfolio",
             "ects": 5,
             "creditable": true
-        }, {
+        },
+        {
             "id": "BP5_01.2.SHP",
             "name": "Berufspraxis 2 & Portfolio",
             "ects": 5,
             "creditable": true
-        }, {
+        },
+        {
             "id": "BP5_01.3.SHP",
             "name": "Berufspraxis 3 & Portfolio",
             "ects": 5,
             "creditable": true
-        }, {
+        },
+        {
             "id": "BP5_01.1.HFE",
             "name": "Berufspraxis 1 & Portfolio",
             "ects": 5,
             "creditable": true
-        }, {
+        },
+        {
             "id": "BP5_01.2.HFE",
             "name": "Berufspraxis 2 & Portfolio",
             "ects": 5,
             "creditable": true
-        }, {
+        },
+        {
             "id": "BP5_01.3.HFE",
             "name": "Berufspraxis 3 & Portfolio",
             "ects": 5,
             "creditable": true
-        }, {
+        },
+        {
             "id": "M5_03",
             "name": "Masterarbeit",
             "ects": 20,
             "creditable": true
         }
     ],
-    "planers": [{
+    "planers": [
+        {
             "name": "Master Schulische Heilpädagogik",
             "slug": "shp",
             "abbreviation": "MA SHP",
             "focusSelectionEnabled": true,
             "requiredECTS": 90,
-            "foci": [{
+            "foci": [
+                {
                     "id": "SSP_L",
                     "name": "Lernen",
-                    "requiredModules": [
-                        "WP2_01.1", "WP2_01.2"
-                    ]
+                    "requiredModules": ["WP2_01.1", "WP2_01.2"]
                 },
                 {
                     "id": "SSP_V",
                     "name": "Verhalten",
-                    "requiredModules": [
-                        "WP2_02.1", "WP2_02.2"
-                    ]
+                    "requiredModules": ["WP2_02.1", "WP2_02.2"]
                 },
                 {
                     "id": "SSP_gE",
                     "name": "Geistige Entwicklung",
-                    "requiredModules": [
-                        "WP2_03.1", "WP2_03.2"
-                    ]
+                    "requiredModules": ["WP2_03.1", "WP2_03.2"]
                 },
                 {
                     "id": "SSP_H",
                     "name": "Hören",
-                    "requiredModules": [
-                        "WP2_04.1"
-                    ],
-                    "optionalModules": [
-                        "WP2_04.2",
-                        "WP2_07"
-                    ],
+                    "requiredModules": ["WP2_04.1"],
+                    "optionalModules": ["WP2_04.2", "WP2_07"],
                     "requiredNumberOfOptionalModules": 1
                 },
                 {
                     "id": "SSP_S",
                     "name": "Sehen",
-                    "requiredModules": [
-                        "WP2_05.1"
-                    ],
-                    "optionalModules": [
-                        "WP2_05.2",
-                        "WP2_07"
-                    ],
+                    "requiredModules": ["WP2_05.1"],
+                    "optionalModules": ["WP2_05.2", "WP2_07"],
                     "requiredNumberOfOptionalModules": 1
                 },
                 {
                     "id": "SSP_KmE",
                     "name": "Körperlich-motorische Entwicklung",
                     "requiredModules": [],
-                    "optionalModules": [
-                        "WP2_06.1",
-                        "WP2_06.2",
-                        "WP2_07"
-                    ],
+                    "optionalModules": ["WP2_06.1", "WP2_06.2", "WP2_07"],
                     "requiredNumberOfOptionalModules": 2
                 },
                 {
@@ -332,20 +330,13 @@
                 {
                     "id": "SSP_SOE",
                     "name": "Schul- und Organisationsentwicklung im heilpädagogischen Kontext",
-                    "requiredModules": [
-                        "WP4_05.1",
-                        "WP4_05.2"
-                    ]
+                    "requiredModules": ["WP4_05.1", "WP4_05.2"]
                 }
             ],
-            "categories": [{
+            "categories": [
+                {
                     "name": "Pflicht",
-                    "modules": [
-                        "P1_01",
-                        "P1_03",
-                        "P3_01",
-                        "P4_01"
-                    ]
+                    "modules": ["P1_01", "P1_03", "P3_01", "P4_01"]
                 },
                 {
                     "name": "Wahlpflicht 1",
@@ -401,17 +392,11 @@
                 },
                 {
                     "name": "Berufspraxis und Portfolio",
-                    "modules": [
-                        "BP5_01.1.SHP",
-                        "BP5_01.2.SHP",
-                        "BP5_01.3.SHP"
-                    ]
+                    "modules": ["BP5_01.1.SHP", "BP5_01.2.SHP", "BP5_01.3.SHP"]
                 },
                 {
                     "name": "Masterarbeit",
-                    "modules": [
-                        "M5_03"
-                    ]
+                    "modules": ["M5_03"]
                 }
             ]
         },
@@ -421,7 +406,8 @@
             "slug": "hfe",
             "requiredECTS": 90,
             "focusSelectionEnabled": false,
-            "categories": [{
+            "categories": [
+                {
                     "name": "Pflicht",
                     "modules": [
                         "P1_01",
@@ -445,719 +431,393 @@
                         "WP2_11"
                     ],
                     "requiredNumber": 3
-
                 },
                 {
                     "name": "Berufspraxis und Portfolio",
-                    "modules": [
-                        "BP5_01.1.HFE",
-                        "BP5_01.2.HFE",
-                        "BP5_01.3.HFE"
-                    ]
+                    "modules": ["BP5_01.1.HFE", "BP5_01.2.HFE", "BP5_01.3.HFE"]
                 },
                 {
                     "name": "Masterarbeit",
-                    "modules": [
-                        "M5_03"
-                    ]
+                    "modules": ["M5_03"]
                 }
             ]
         }
     ],
-    "events": [{
+    "events": [
+        {
             "module": "P1_01",
-            "semesters": [
-                "HS",
-                "FS"
-            ],
+            "semesters": ["HS", "FS"],
             "timeWindow": 1,
-            "times": [
-                "b",
-                "f"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["b", "f"],
+            "locations": ["ZH"]
         },
         {
             "module": "P1_02",
-            "semesters": [
-                "HS",
-                "FS"
-            ],
+            "semesters": ["HS", "FS"],
             "timeWindow": 1,
-            "times": [
-                "a",
-                "e"
-            ],
-            "locations": [
-                "ZH"
-            ]
-        }, {
+            "times": ["a", "e"],
+            "locations": ["ZH"]
+        },
+        {
             "module": "P1_03",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "a"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["a"],
+            "locations": ["ZH"]
         },
         {
             "module": "P3_01",
-            "semesters": [
-                "HS", "FS"
-            ],
+            "semesters": ["HS", "FS"],
             "timeWindow": 1,
-            "times": [
-                "d", "h"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["d", "h"],
+            "locations": ["ZH"]
         },
         {
             "module": "P4_01",
-            "semesters": [
-                "HS", "FS"
-            ],
+            "semesters": ["HS", "FS"],
             "timeWindow": 1,
-            "times": [
-                "c", "g"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["c", "g"],
+            "locations": ["ZH"]
         },
         {
             "module": "P4_02",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "a"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["a"],
+            "locations": ["ZH"]
         },
         {
             "module": "P4_06",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "b"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["b"],
+            "locations": ["ZH"]
         },
         {
             "module": "P4_07",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "f"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["f"],
+            "locations": ["ZH"]
         },
         {
             "module": "P4_08",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "e"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["e"],
+            "locations": ["ZH"]
         },
         {
             "module": "P4_09",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "e"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["e"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_01.1",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "a", "e"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["a", "e"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_01.1",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "b", "f"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["b", "f"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_01.2",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "b"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["b"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_01.2",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "a", "e"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["a", "e"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_02.1",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "c", "g"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["c", "g"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_02.1",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "d", "h"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["d", "h"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_02.2",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "d"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["d"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_02.2",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "c", "g"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["c", "g"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_03.1",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "b"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["b"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_03.1",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "f"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["f"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_03.2",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "b"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["b"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_04.1",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "f"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["f"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_04.2",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "f"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["f"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_05.1",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "f"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["f"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_05.2",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "f"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["f"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_06.1",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "b"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["b"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_06.2",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "b"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["b"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_07",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "a"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["a"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_08",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "c"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["c"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_09",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "c"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["c"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_10",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "c", "h"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["c", "h"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_10",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "d", "h"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["d", "h"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP2_11",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "f"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["f"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP3_02",
-            "semesters": [
-                "HS", "FS"
-            ],
+            "semesters": ["HS", "FS"],
             "timeWindow": 1,
-            "times": [
-                "c", "g"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["c", "g"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP3_03",
-            "semesters": [
-                "HS", "FS"
-            ],
+            "semesters": ["HS", "FS"],
             "timeWindow": 1,
-            "times": [
-                "a", "e"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["a", "e"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP3_04",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "d", "h"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["d", "h"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP3_05",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "d"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["d"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP3_06",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "a"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["a"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP4_03",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "c"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["c"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP4_04.1",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "f"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["f"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP4_04.2",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "f"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["f"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP4_05.1",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 1,
-            "times": [
-                "e"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["e"],
+            "locations": ["ZH"]
         },
         {
             "module": "WP4_05.2",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 1,
-            "times": [
-                "e"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["e"],
+            "locations": ["ZH"]
         },
         {
             "module": "BP5_01.1.SHP",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 2,
-            "times": [
-                "a", "c", "e", "g"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["a", "c", "e", "g"],
+            "locations": ["ZH"]
         },
         {
             "module": "BP5_01.1.SHP",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 2,
-            "times": [
-                "b", "f"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["b", "f"],
+            "locations": ["ZH"]
         },
         {
             "module": "BP5_01.2.SHP",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 2,
-            "times": [
-                "b", "d", "f", "h"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["b", "d", "f", "h"],
+            "locations": ["ZH"]
         },
         {
             "module": "BP5_01.2.SHP",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 2,
-            "times": [
-                "a", "c", "e", "g"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["a", "c", "e", "g"],
+            "locations": ["ZH"]
         },
         {
             "module": "BP5_01.3.SHP",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 2,
-            "times": [
-                "a", "e"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["a", "e"],
+            "locations": ["ZH"]
         },
         {
             "module": "BP5_01.3.SHP",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 2,
-            "times": [
-                "b", "d", "f", "h"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["b", "d", "f", "h"],
+            "locations": ["ZH"]
         },
         {
             "module": "BP5_01.1.HFE",
-            "semesters": [
-                "HS"
-            ],
+            "semesters": ["HS"],
             "timeWindow": 2,
-            "times": [
-                "a"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["a"],
+            "locations": ["ZH"]
         },
         {
             "module": "BP5_01.2.HFE",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 2,
-            "times": [
-                "a"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["a"],
+            "locations": ["ZH"]
         },
         {
             "module": "BP5_01.3.HFE",
-            "semesters": [
-                "FS"
-            ],
+            "semesters": ["FS"],
             "timeWindow": 2,
-            "times": [
-                "f"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["f"],
+            "locations": ["ZH"]
         },
         {
             "module": "M5_03",
-            "semesters": [
-                "HS", "FS"
-            ],
+            "semesters": ["HS", "FS"],
             "timeWindow": 2,
-            "times": [
-                "a", "e"
-            ],
-            "locations": [
-                "ZH"
-            ]
+            "times": ["a", "e"],
+            "locations": ["ZH"]
         }
     ],
-    "times": [{
+    "times": [
+        {
             "id": "a",
             "day": "Montag",
             "time": "Morgen"
@@ -1198,7 +858,8 @@
             "time": "Nachmittag"
         }
     ],
-    "timeWindows": [{
+    "timeWindows": [
+        {
             "id": 1,
             "name": "Pflichtmodule & Wahlpflichtmodule"
         },
@@ -1207,7 +868,8 @@
             "name": "Berufspraxis, Portfolio & Masterarbeit"
         }
     ],
-    "locations": [{
+    "locations": [
+        {
             "id": "ZH",
             "name": "Zürich"
         },

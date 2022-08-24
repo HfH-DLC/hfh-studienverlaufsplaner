@@ -1,7 +1,7 @@
-import Rule from '../Rule';
+import Rule from "../Rule";
 export default class BaseScheduleRule extends Rule {
     constructor(type) {
-        super('placement', type);
+        super("placement", type);
         if (this.constructor == BaseScheduleRule) {
             throw new Error("Abstract classes can't be instantiated.");
         }
