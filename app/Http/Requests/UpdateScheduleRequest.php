@@ -33,7 +33,7 @@ class UpdateScheduleRequest extends FormRequest
             'placements.*.time' => 'required',
             'placements.*.location' => 'required',
             'placements.*.moduleId' => 'required|exists:modules,id',
-            'focusSelections' => 'required|array|min:1',
+            'focusSelections' => 'array',
             'focusSelections.*.focusId' => 'required|string|exists:foci,id',
             'focusSelections.*.position' => 'required|integer|min:0',
             'tourCompleted' => 'boolean',
