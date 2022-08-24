@@ -18,9 +18,8 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'requiredNumber' => $this->required_number,
-            'moduleSelectionEnabled' => $this->module_selection_enabled,
-            'minCredits' => $this->min_credits,
-            'maxCredits' => $this->max_credits,
+            'minECTS' => $this->min_ects,
+            'maxECTS' => $this->max_ects,
             'modules' => ModuleResource::collection($this->whenLoaded('modules'))
         ];
     }

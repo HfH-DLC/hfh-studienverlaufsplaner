@@ -3,7 +3,7 @@
     class="flex justify-between items-end h-full p-4 border-b border-gray-300"
   >
     <div>
-      <Link :href="`/planers/${$page.props.planerSlug}`"
+      <Link :href="`/${$page.props.planerSlug}`"
         ><h1 class="text-3xl">
           Studienverlaufsplaner
           <span v-if="$page.props.planerName">{{

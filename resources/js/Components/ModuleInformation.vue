@@ -27,7 +27,7 @@
       <dt class="mt-2 text-sm text-gray-500 font-bold uppercase">
         Kreditpunkte
       </dt>
-      <dd>{{ selectedModule.credits }}</dd>
+      <dd>{{ selectedModule.ects }}</dd>
     </dl>
   </div>
 </template>

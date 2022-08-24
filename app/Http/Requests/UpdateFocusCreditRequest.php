@@ -24,7 +24,7 @@ class UpdateFocusCreditRequest extends FormRequest
     public function rules()
     {
         return [
-            'focusCredits' => 'required',
+            'focusCredits' => 'present',
             'focusCredits.*' => 'array'
         ];
     }

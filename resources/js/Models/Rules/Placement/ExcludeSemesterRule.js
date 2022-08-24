@@ -1,6 +1,6 @@
 import { isSameDate, semesterCount, semesterPosition } from "../../../helpers"
-import BasePlacementRule from "./BasePlacementRule";
-export default class ExcludeSemesterRule extends BasePlacementRule {
+import BaseScheduleRule from "./BaseScheduleRule";
+export default class ExcludeSemesterRule extends BaseScheduleRule {
 
     constructor(params, startYear) {
         super("ExcludeSemester")
@@ -9,7 +9,7 @@ export default class ExcludeSemesterRule extends BasePlacementRule {
         this.startYear = startYear
     }
 
-    validatePlacements(placements, errors) {
+    validatePlacements(state, { placements }, errors) {
         placements.filter(placement => placement.moduleId == this.moduleId).forEach((placement) => {
             if (!this.isAllowedSemester(placement)) {
                 const text = this.excludePositions.reduce((acc, cur, i, array) => {
@@ -20,7 +20,7 @@ export default class ExcludeSemesterRule extends BasePlacementRule {
         })
     }
 
-    validateModule(module, placements, errors) {
+    validateModule(module, state, { placements }, errors) {
         if (module.id !== this.moduleId) {
             return
         }
@@ -29,7 +29,7 @@ export default class ExcludeSemesterRule extends BasePlacementRule {
         }
     }
 
-    validateSelection(module, placements, status) {
+    validateSelection(module, state, getters, status) {
         if (module.id !== this.moduleId) {
             return
         }

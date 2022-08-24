@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FocusSelection extends Model
+class FocusCredit extends Model
 {
     use HasFactory;
 
@@ -19,13 +19,8 @@ class FocusSelection extends Model
         return $this->belongsTo(Focus::class);
     }
 
-    public function getRequiredModules()
-    {
-        return $this->selectedRequiredModules->merge($this->focus->requiredModules);
-    }
-
     public function creditedModules()
     {
-        return $this->belongsToMany(Module::class, 'focus_selection_credited_module');
+        return $this->belongsToMany(Module::class, 'focus_credit_credited_module');
     }
 }

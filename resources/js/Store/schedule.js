@@ -1,13 +1,13 @@
-import { v4 } from "uuid";
+import { v4 } from "uuid"
 
 import DataAdapter from '../DataAdapter'
-import emitter from "../emitter";
-import flashTypes from "../flashTypes";
-import { SAVE_STATUS_SAVED, SAVE_STATUS_SAVING } from "../constants";
-import PrerequisitesRule from '../Models/Rules/Placement/PrerequisitesRule';
-import DateRule from '../Models/Rules/Placement/DateRule';
-import { getRule } from '../Models/Rules/RuleFactory';
-import { getCalendarYear, orderDay, orderSemester, orderTime, orderTimeWindow } from '../helpers';
+import emitter from "../emitter"
+import flashTypes from "../flashTypes"
+import { SAVE_STATUS_SAVED, SAVE_STATUS_SAVING } from "../constants"
+import PrerequisitesRule from '../Models/Rules/Placement/PrerequisitesRule'
+import DateRule from '../Models/Rules/Placement/DateRule'
+import { getRule } from '../Models/Rules/RuleFactory'
+import { getCalendarYear, orderDay, orderSemester, orderTime, orderTimeWindow } from '../helpers'
 
 const RESET_STATE = "RESET_STATE"
 const SET_RULES = "SET_RULES"
@@ -18,16 +18,24 @@ const ADD_PLACEMENT = "ADD_PLACEMENT"
 const SET_PLACEMENTS = "SET_PLACEMENTS"
 const REMOVE_PLACEMENT = "REMOVE_PLACEMENT"
 const SET_PLACEMENT_ERRORS = "SET_PLACEMENT_ERRORS"
-
+const SET_FOCI = "SET_FOCI"
+const SET_FOCUS_SELECTIONS = "SET_FOCUS_SELECTIONS"
+const SELECT_FOCUS = "SELECT_FOCUS"
+const SET_START_YEAR = "SET_START_YEAR"
+const SET_CATEGORIES = "SET_CATEGORIES"
 export const SET_TOUR_ACTIVE = "SET_TOUR_ACTIVE"
 const SET_TOUR_COMPLETED = "SET_TOUR_COMPLETED"
 const SET_SAVE_STATUS = "SET_SAVE_STATUS"
 
-let dataAdapter;
+let dataAdapter
 
 const initialState = {
+    startYear: null,
+    categories: [],
     placements: [],
+    focusSelections: [],
     rules: [],
+    foci: [],
     selectionStatus: {},
     moduleInfos: {},
     placementErrors: {},
@@ -40,7 +48,7 @@ const initialState = {
         name: "Grundfragen der Heilpädagogik",
         prerequisites: [],
         infos: [],
-        credits: 5
+        ects: 5
     },
 }
 
@@ -57,16 +65,16 @@ export default {
         [SET_RULES](state, rules) {
             const ruleObjects = rules.reduce((array, rule) => {
                 try {
-                    array.push(getRule(state, rule));
+                    array.push(getRule(state, rule))
                 } catch (error) {
                     console.error(error)
                 }
-                return array;
+                return array
             }, [])
             ruleObjects.push(
                 new DateRule(),
                 new PrerequisitesRule()
-            );
+            )
             state.rules = ruleObjects
         },
         [SET_SELECTION_STATUS](state, selectionStatus) {
@@ -79,41 +87,60 @@ export default {
             state.placementErrors = placementErrors
         },
         [SET_PLACEMENTS](state, placements) {
-            state.placements = placements;
+            state.placements = placements
         },
         [ADD_PLACEMENT](state, placement) {
-            state.placements.push(placement);
+            state.placements.push(placement)
         },
         [REMOVE_PLACEMENT](state, placement) {
-            state.placements = state.placements.filter(p => p.id !== placement.id);
+            state.placements = state.placements.filter(p => p.id !== placement.id)
         },
         [SET_TOUR_ACTIVE](state, value) {
-            state.tourActive = value;
+            state.tourActive = value
         },
         [SET_TOUR_COMPLETED](state) {
-            state.tourCompleted = true;
+            state.tourCompleted = true
         },
         [SET_SAVE_STATUS](state, value) {
             state.saveStatus = value
+        },
+        [SET_FOCI](state, foci) {
+            state.foci = foci
+        },
+        [SET_FOCUS_SELECTIONS](state, focusSelections) {
+            state.focusSelections = focusSelections
+        },
+        [SELECT_FOCUS](state, { position, focusId }) {
+            state.focusSelections = state.focusSelections.filter(f => f.position != position);
+            state.focusSelections.push({ position, focusId });
+        },
+        [SET_CATEGORIES](state, categories) {
+            state.categories = categories
+        },
+        [SET_START_YEAR](state, startYear) {
+            state.startYear = startYear
         }
     },
     actions: {
-        init({ commit, dispatch }, { planerSlug, plan, categories, rules }) {
-            dataAdapter = new DataAdapter(planerSlug, plan.slug);
-            dispatch("init", { plan, categories }, { root: true });
-            commit(RESET_STATE);
+        init({ commit, dispatch }, { planerSlug, plan, categories, rules, foci }) {
+            dataAdapter = new DataAdapter(planerSlug, plan.slug)
+            commit(RESET_STATE)
+            commit(SET_CATEGORIES, categories)
+            commit(SET_FOCI, foci)
+            commit(SET_FOCUS_SELECTIONS, plan.focusSelections)
             commit(SET_PLACEMENTS, plan.placements)
-            commit(SET_TOUR_COMPLETED, plan.tourCompleted);
             commit(SET_RULES, rules)
+            commit(SET_START_YEAR, plan.startYear)
+            commit(SET_TOUR_COMPLETED, plan.tourCompleted)
             dispatch("validate")
-            commit(INIT_FINISHED);
+            commit(INIT_FINISHED)
         },
         async save({ state, commit }) {
             try {
                 commit(SET_SAVE_STATUS, SAVE_STATUS_SAVING)
-                await dataAdapter.saveSchedule(state.placements, state.tourCompleted);
+                await dataAdapter.saveSchedule(state.placements, state.focusSelections, state.tourCompleted)
                 commit(SET_SAVE_STATUS, SAVE_STATUS_SAVED)
-                return true;
+                return true
             } catch (error) {
                 commit(SET_SAVE_STATUS, null)
                 emitter.emit('flash', {
@@ -122,14 +149,14 @@ export default {
                     actionMessage: "Erneut versuchen",
                     actionEvent: "retry-save"
                 })
-                console.error(error);
-                return false;
+                console.error(error)
+                return false
             }
         },
         selectModule({ commit, state, getters }, moduleId) {
             commit(SET_SELECTION_STATUS, {
                 moduleId,
-                status: validateSelection(moduleId, getters.modules, getters.placements, state.rules)
+                status: validateSelection(getters.moduleById(moduleId), state, getters)
             })
         },
         deselectModule({ commit }) {
@@ -139,9 +166,9 @@ export default {
             })
         },
         placeModule({ commit, dispatch, state }, event) {
-            const existingPlacement = state.placements.find(placement => placement.moduleId == state.selectionStatus.moduleId);
+            const existingPlacement = state.placements.find(placement => placement.moduleId == state.selectionStatus.moduleId)
             if (existingPlacement) {
-                commit(REMOVE_PLACEMENT, existingPlacement);
+                commit(REMOVE_PLACEMENT, existingPlacement)
             }
             commit(ADD_PLACEMENT, {
                 id: v4(),
@@ -155,24 +182,30 @@ export default {
             })
             dispatch("deselectModule")
             dispatch("validate")
-            dispatch("save");
+            dispatch("save")
         },
-        removeModule({ commit, dispatch, state }, placement) {
+        removeModule({ commit, dispatch }, placement) {
             commit(REMOVE_PLACEMENT, placement)
             dispatch("deselectModule")
             dispatch("validate")
             dispatch("save")
 
         },
+        selectFocus({ commit, dispatch }, { position, focusId }) {
+            console.log(position)
+            console.log(focusId);
+            commit(SELECT_FOCUS, { position, focusId })
+            dispatch("save")
+        },
         validate({ dispatch }) {
             dispatch("validateModules")
             dispatch("validatePlacements")
         },
-        validateModules({ commit, state, getters, rootGetters }) {
+        validateModules({ commit, state, getters }) {
             const moduleInfos = {}
-            const modules = rootGetters.modules;
+            const modules = getters.modules
             modules.forEach(module => {
-                moduleInfos[module.id] = validateModule(module.id, modules, getters.placements, state.rules)
+                moduleInfos[module.id] = validateModule(module, state, getters)
             })
             commit(SET_MODULE_INFOS, moduleInfos)
         },
@@ -182,25 +215,25 @@ export default {
                 return acc
             }, {})
             state.rules.forEach(rule => {
-                rule.validatePlacements(getters.placements, placementErrors)
+                rule.validatePlacements(state, getters, placementErrors)
             })
             commit(SET_PLACEMENT_ERRORS, placementErrors)
         },
         completeTour({ commit, dispatch }) {
-            commit(SET_TOUR_COMPLETED);
-            dispatch("save");
+            commit(SET_TOUR_COMPLETED)
+            dispatch("save")
         },
         setShowTour({ commit }, value) {
-            commit(SET_SHOW_TOUR, value);
+            commit(SET_SHOW_TOUR, value)
         }
     },
     getters: {
-        categories(state, getters, rootState, { categories }) {
-            return categories.map(category => {
+        categories(state) {
+            return state.categories.map(category => {
                 const categoryModules = category.modules.map(module => {
                     const moduleInfos = state.moduleInfos[module.id]
-                    const placement = state.placements.find(placement => placement.moduleId == module.id);
-                    const misplaced = !!(placement && state.placementErrors[placement.id] && state.placementErrors[placement.id].length > 0);
+                    const placement = state.placements.find(placement => placement.moduleId == module.id)
+                    const misplaced = !!(placement && state.placementErrors[placement.id] && state.placementErrors[placement.id].length > 0)
                     return {
                         ...module,
                         infos: moduleInfos,
@@ -209,21 +242,31 @@ export default {
                         misplaced,
                     }
                 })
+                const requiredNumber = category.requiredNumber != null ? category.requiredNumber : category.modules.length;
+                const currentECTS = categoryModules.reduce((acc, cur) => {
+                    if (cur.placement) {
+                        acc += cur.ects;
+                    }
+                    return acc;
+                }, 0)
+
                 return {
                     ...category,
                     placedNumber: categoryModules.filter(module => module.placement).length,
-                    modules: categoryModules
+                    modules: categoryModules,
+                    requiredNumber,
+                    currentECTS
                 }
             })
         },
-        credits(state, { placements }) {
-            return placements.map(placements => placements.module).reduce((total, module) => module ? total + module.credits : total, 0)
+        ects(state, { placements }) {
+            return placements.map(placements => placements.module).reduce((total, module) => module ? total + module.ects : total, 0)
         },
         modules(state, { categories }) {
             return categories.reduce((acc, cur) => {
-                acc.push(...cur.modules);
-                return acc;
-            }, []);
+                acc.push(...cur.modules)
+                return acc
+            }, [])
         },
         moduleById: (state, { modules }) => (id) => {
             return modules.find(module => module.id == id)
@@ -251,37 +294,37 @@ export default {
                     placement.timeWindow == timeWindow &&
                     placement.day == day &&
                     placement.time == time
-                );
-            });
+                )
+            })
         },
         placementErrors(state, { placementById }) {
-            const result = [];
+            const result = []
             Object.entries(state.placementErrors).forEach(([placementId, errors]) => {
-                const placement = placementById(placementId);
+                const placement = placementById(placementId)
                 errors.forEach(error => {
                     result.push({
                         placement,
                         text: error
                     })
                 })
-            });
-            return result;
+            })
+            return result
         },
         years(state, { placements, modules }) {
             const events = modules.reduce((acc, cur) => {
                 acc.push(...cur.events)
                 return acc
-            }, []);
-            const dates = [...events, ...placements];
+            }, [])
+            const dates = [...events, ...placements]
             const years = [
                 ...new Set(
                     dates.map((date) => date.year)
                 ),
             ].sort()
             return years.sort((a, b) => a - b).map((year) => {
-                const yearDates = dates.filter(date => date.year === year);
+                const yearDates = dates.filter(date => date.year === year)
                 const semesters = [...new Set(yearDates.map((date) => date.semester))].sort(orderSemester).map(semester => {
-                    const semesterDates = yearDates.filter(date => date.semester === semester);
+                    const semesterDates = yearDates.filter(date => date.semester === semester)
                     return {
                         value: semester,
                         calendarYear: getCalendarYear(semester, year),
@@ -289,7 +332,7 @@ export default {
                         days: [...new Set(semesterDates.map((date) => date.day))].sort(orderDay),
                         times: [...new Set(semesterDates.map((date) => date.time))].sort(orderTime),
                     }
-                });
+                })
 
                 return {
                     value: year,
@@ -299,18 +342,18 @@ export default {
         },
         selectableEvents(state, { selectedModule }) {
             if (!selectedModule) {
-                return [];
+                return []
             }
             return selectedModule.events.filter(event => {
-                const status = state.selectionStatus.status[event.id];
+                const status = state.selectionStatus.status[event.id]
                 return status.dateAllowed
             }).map(event => {
-                const status = state.selectionStatus.status[event.id];
+                const status = state.selectionStatus.status[event.id]
                 return {
                     ...event,
                     valid: status.valid
                 }
-            });
+            })
         },
         selectableEventByDate: (state, { selectableEvents }) => (year, semester, timeWindow, day, time) => {
             const result = selectableEvents.find((event) => {
@@ -320,9 +363,9 @@ export default {
                     event.timeWindow == timeWindow &&
                     event.day == day &&
                     event.time == time
-                );
-            });
-            return result;
+                )
+            })
+            return result
         },
     }
 }
@@ -337,20 +380,18 @@ function getStatus(events) {
     }, {})
 }
 
-function validateModule(moduleId, modules, placements, rules) {
-    const module = modules.find(module => module.id == moduleId);
-    const errors = [];
-    rules.forEach(rule => {
-        rule.validateModule(module, placements, errors)
+function validateModule(module, state, getters) {
+    const errors = []
+    state.rules.forEach(rule => {
+        rule.validateModule(module, state, getters, errors)
     })
     return errors
 }
 
-function validateSelection(moduleId, modules, placements, rules) {
-    const module = modules.find(module => module.id == moduleId);
-    const status = getStatus(module.events);
-    rules.forEach(rule => {
-        rule.validateSelection(module, placements, status)
+function validateSelection(module, state, getters) {
+    const status = getStatus(module.events)
+    state.rules.forEach(rule => {
+        rule.validateSelection(module, state, getters, status)
     })
     return status
 }

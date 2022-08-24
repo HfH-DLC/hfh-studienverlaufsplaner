@@ -17,10 +17,10 @@ class ModuleResource extends JsonResource
         return   [
             'id' => $this->id,
             'name' => $this->name,
-            'credits' => $this->credits,
+            'ects' => $this->ects,
             'prerequisites' => PrerequisiteResource::collection($this->whenLoaded('prerequisites')),
             'events' => EventResource::collection($this->whenLoaded('events')),
-            'creditableAgainstFocus' => $this->creditable_against_focus
+            'creditable' => $this->creditable
         ];
     }
 }

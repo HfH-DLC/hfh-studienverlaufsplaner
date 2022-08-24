@@ -34,7 +34,7 @@ class PlanCreated extends Mailable
     {
         $planerSlug = $this->plan->planer->slug;
         $slug = $this->plan->slug;
-        $url = URL::to("/planers/$planerSlug/plans/$slug");
+        $url = URL::to("/$planerSlug/$slug");
         return $this
             ->subject('Ihr HfH Studienverlaufsplan')
             ->view('emails.plan_created')

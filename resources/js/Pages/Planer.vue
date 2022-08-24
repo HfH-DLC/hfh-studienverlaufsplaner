@@ -1,6 +1,6 @@
 <template>
   <nav class="flex justify-between items-end p-4 border-b border-gray-300">
-    <Link :href="`/planers/${slug}`"
+    <Link :href="`/${slug}`"
       ><h1 class="text-3xl">
         Studienverlaufsplaner
         <span v-if="name">{{ name }}</span>

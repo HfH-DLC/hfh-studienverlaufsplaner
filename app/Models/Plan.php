@@ -6,7 +6,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Hashids\Hashids;
-use Illuminate\Database\Eloquent\Collection;
 
 class Plan extends Model
 {
@@ -29,9 +28,9 @@ class Plan extends Model
         return $this->hasMany(FocusSelection::class);
     }
 
-    public function selectedModules()
+    public function foci()
     {
-        return $this->belongsToMany(Module::class);
+        return $this->focusSelections()->get('focus');
     }
 
     public function setSlug($value)
@@ -43,38 +42,9 @@ class Plan extends Model
         }
     }
 
-    public function getFocusModules()
-    {
-        $focusModules = collect();
-        foreach ($this->focusSelections as $focusSelection) {
-            $focusModules = $focusModules->merge($focusSelection->getRequiredModules());
-        }
-        return $focusModules;
-    }
-
     public function getCreditableModules()
     {
-
-        $focusModules = collect();
-        foreach ($this->focusSelections as $focusSelection) {
-            $modules = $focusSelection->getRequiredModules();
-            foreach ($modules as $module) {
-                $module->credited_against = $focusSelection;
-                $module->fixed_credit = true;
-            }
-            $focusModules = $focusModules->merge($modules);
-        }
-        $flexCreditableModules = $this->planer->getCategoriesWithActiveModules($this)->reduce(function ($carry, $item) use ($focusModules) {
-            return $carry->merge($item->modules->filter(function ($value) use ($focusModules) {
-                return $value->creditable_against_focus && !$focusModules->pluck('id')->contains($value->id);
-            }));
-        }, collect());
-        foreach ($flexCreditableModules as $module) {
-            $focusSelection = $this->focusSelections()->whereRelation('creditedModules', 'id', $module->id)->first();
-            $module->credited_against = $focusSelection;
-            $module->fixed_credit = false;
-        }
-        return $flexCreditableModules->merge($focusModules);
+        return Module::whereIn('id', $this->placements->pluck('module_id'))->get();
     }
 
     /**

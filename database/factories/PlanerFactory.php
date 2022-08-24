@@ -21,7 +21,7 @@ class PlanerFactory extends Factory
 
         return [
             'name' => $this->faker->name(),
-            'required_credits' => $this->faker->numberBetween(0, 500),
+            'required_ects' => $this->faker->numberBetween(0, 500),
             'options_day' => array_slice($days, random_int(0, count($days)), random_int(1, count($days)))
         ];
     }

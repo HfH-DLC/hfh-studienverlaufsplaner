@@ -1,12 +1,13 @@
 import { isPreviousSemester, isSameDate } from "../../../helpers"
-import BasePlacementRule from "./BasePlacementRule";
-export default class PrerequisitesRule extends BasePlacementRule {
+import BaseScheduleRule from "./BaseScheduleRule";
+export default class PrerequisitesRule extends BaseScheduleRule {
 
     constructor() {
-        super("prerequisites")
+        super("Prerequisites")
     }
 
-    validatePlacements(placements, errors) {
+    validatePlacements(state, { placements }, errors) {
+        console.log(errors);
         placements.forEach(placement => {
             const missingPrerequisites = [];
             const prerequisites = placement.module.prerequisites;
@@ -26,12 +27,13 @@ export default class PrerequisitesRule extends BasePlacementRule {
 
             if (missingPrerequisites.length > 0) {
                 errors[placement.id].push(this.getPlacementErrorMessage(placement.module, missingPrerequisites))
+                console.log("Misssing Prerequisite");
             }
         })
     }
 
 
-    validateModule(module, placements, errors) {
+    validateModule(module, state, { placements }, errors) {
         const prerequisites = module.prerequisites;
         const prerequisitesMet = module.events.some(event => this.eventMeetsPrerequisites(event, placements, prerequisites))
         if (!prerequisitesMet) {
@@ -39,7 +41,7 @@ export default class PrerequisitesRule extends BasePlacementRule {
         }
     }
 
-    validateSelection(module, placements, status) {
+    validateSelection(module, state, { placements }, status) {
         const prerequisites = module.prerequisites;
 
         module.events.forEach(event => {

@@ -18,8 +18,8 @@ class CreatePlanersTable extends Migration
             $table->timestamps();
             $table->string('name')->unique();
             $table->string('slug')->unique();
-            $table->integer('required_credits');
-            $table->boolean('module_selection_enabled');
+            $table->integer('required_ects');
+            $table->boolean('focus_selection_enabled');
         });
     }
 

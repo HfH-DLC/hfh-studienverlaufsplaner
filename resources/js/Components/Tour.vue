@@ -112,7 +112,7 @@ export default {
           title: "Check Kreditpunkte",
           content:
             "Sie sehen das Total der Kreditpunkte der bereits platzierten Module.",
-          ref: "total-credits",
+          ref: "total-ects",
           placement: "left",
         },
         {

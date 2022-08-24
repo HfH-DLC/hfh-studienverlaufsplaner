@@ -7,8 +7,14 @@ export default class DataAdapter {
         this.planSlug = planSlug
     }
 
-    async saveSchedule(placements, tourCompleted) {
-        const response = await axios.put(`/${this.planerSlug}/${this.planSlug}/schedule`, { placements, tourCompleted })
+    async saveSchedule(placements, focusSelections, tourCompleted) {
+        const response = await axios.put(`/${this.planerSlug}/${this.planSlug}/zeitplan`, { placements, focusSelections, tourCompleted })
+        return response.data.data
+    }
+
+    async saveFocusCredits(focusCredits) {
+        console.log("saveFocusCredits", focusCredits);
+        const response = await axios.put(`/${this.planerSlug}/${this.planSlug}/anrechnung`, { focusCredits })
         return response.data.data
     }
 }

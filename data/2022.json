@@ -3,271 +3,271 @@
     "modules": [{
             "id": "P1_01",
             "name": "Grundfragen der Heilpädagogik",
-            "credits": 5,
-            "creditableAgainstFocus": false
+            "ects": 5,
+            "creditable": false
         },
         {
             "id": "P1_02",
             "name": "Diagnostik, Förderung und Partizipation bei besonderem Bildungsbedarf",
-            "credits": 5,
-            "creditableAgainstFocus": false
+            "ects": 5,
+            "creditable": false
         },
         {
             "id": "P1_03",
             "name": "Heilpädagogik im Vorschulbereich",
-            "credits": 5,
-            "creditableAgainstFocus": false
+            "ects": 5,
+            "creditable": false
         },
         {
             "id": "P3_01",
             "name": "Inklusive Didaktik unter heilpädagogischer Perspektive. Lernen und Partizipation in Sprache und Mathematik",
-            "credits": 5,
-            "creditableAgainstFocus": false
+            "ects": 5,
+            "creditable": false
         },
         {
             "id": "P4_01",
             "name": "Schulische Heilpädagogik im Schweizer Bildungssystem",
-            "credits": 5,
-            "creditableAgainstFocus": false
+            "ects": 5,
+            "creditable": false
         },
         {
             "id": "P4_02",
             "name": "Grundlagen der Heilpädagogischen Früherziehung",
-            "credits": 5,
-            "creditableAgainstFocus": false
+            "ects": 5,
+            "creditable": false
         },
         {
             "id": "P4_06",
             "name": "Diagnostik und Früherfassung in der Heilpädagogischen Früherziehung",
-            "credits": 5,
-            "creditableAgainstFocus": false
+            "ects": 5,
+            "creditable": false
         },
         {
             "id": "P4_07",
             "name": "Entwicklungsorientierte Intervention in der Heilpädagogischen Früherziehung",
-            "credits": 5,
-            "creditableAgainstFocus": false
+            "ects": 5,
+            "creditable": false
         },
         {
             "id": "P4_08",
             "name": "Beratung und Begleitung von Eltern und weiteren Bezugs- und Fachpersonen in der Heilpädagogischen Früherziehung",
-            "credits": 5,
-            "creditableAgainstFocus": false
+            "ects": 5,
+            "creditable": false
         },
         {
             "id": "P4_09",
             "name": "Interdisziplinarität und Kooperation im Kontext der Heilpädagogischen Früherziehung",
-            "credits": 5,
-            "creditableAgainstFocus": false
+            "ects": 5,
+            "creditable": false
         },
         {
             "id": "WP2_01.1",
             "name": "Heilpädagogik im Bereich Lernen. Lernschwierigkeiten",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_01.2",
             "name": "Heilpädagogik im Bereich Lernen. Inklusionssensible Lehr- und Lernsituationen",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_02.1",
             "name": "Heilpädagogik im Bereich sozial-emotionale Entwicklung und Verhalten 1",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_02.2",
             "name": "Heilpädagogik im Bereich sozial-emotionale Entwicklung und Verhalten 2",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_03.1",
             "name": "Heilpädagogik im Bereich geistige Entwicklung 1",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_03.2",
             "name": "Heilpädagogik im Bereich geistige Entwicklung 2",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_04.1",
             "name": "Heilpädagogik im Bereich Hören 1",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_04.2",
             "name": "Heilpädagogik im Bereich Hören 2",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_05.1",
             "name": "Heilpädagogik im Bereich Sehen 1",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_05.2",
             "name": "Heilpädagogik im Bereich Sehen 2",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_06.1",
             "name": "Heilpädagogik im Bereich körperlich-motorische Entwicklung. Motorische Beeinträchtigungen",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_06.2",
             "name": "Heilpädagogik im Bereich körperlich-motorische Entwicklung. Chronische Erkrankungen",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_07",
             "name": "Schwere mehrfache Beeinträchtigungen",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_08",
             "name": "Begabungs- und Begabtenförderung",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_09",
             "name": "Prävention und Förderung bei Beeinträchtigungen der Sprache und Kommunikation",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_10",
             "name": "Autismus im Kontext der Schulischen Heilpädagogik",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_05.2",
             "name": "Heilpädagogik im Bereich Sehen 2",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP2_11",
             "name": "Autismus im Kontext der Heilpädagogischen Früherziehung",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP3_02",
             "name": "Mathematik bei besonderem Bildungsbedarf",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP3_03",
             "name": "Sprache bei besonderem Bildungsbedarf",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         },
         {
             "id": "WP3_04",
             "name": "Medien und Informatik in der Schulischen Heilpädagogik",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         }, {
             "id": "WP3_05",
             "name": "Natur, Mensch, Gesellschaft in der Schulischen Heilpädagogik",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         }, {
             "id": "WP3_06",
             "name": "Künste in der Schulischen Heilpädagogik",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         }, {
             "id": "WP3_03",
             "name": "Sprache bei besonderem Bildungsbedarf",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         }, {
             "id": "WP4_03",
             "name": "Berufliche Integration. Heilpädagogische Begleitung des Übergangs Schule-Beruf",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         }, {
             "id": "WP4_04.1",
             "name": "Beratung und Coaching in heilpädagogischen Berufsfeldern",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         }, {
             "id": "WP4_04.2",
             "name": "Multiprofessionelle Kooperation",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         }, {
             "id": "WP4_05.1",
             "name": "Schul- und Organisationsentwicklung in heilpädagogischen Berufsfeldern 1",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         }, {
             "id": "WP4_05.2",
             "name": "Schul- und Organisationsentwicklung in heilpädagogischen Berufsfeldern 2",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         }, {
             "id": "BP5_01.1.SHP",
             "name": "Berufspraxis 1 & Portfolio",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         }, {
             "id": "BP5_01.2.SHP",
             "name": "Berufspraxis 2 & Portfolio",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         }, {
             "id": "BP5_01.3.SHP",
             "name": "Berufspraxis 3 & Portfolio",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         }, {
             "id": "BP5_01.1.HFE",
             "name": "Berufspraxis 1 & Portfolio",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         }, {
             "id": "BP5_01.2.HFE",
             "name": "Berufspraxis 2 & Portfolio",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         }, {
             "id": "BP5_01.3.HFE",
             "name": "Berufspraxis 3 & Portfolio",
-            "credits": 5,
-            "creditableAgainstFocus": true
+            "ects": 5,
+            "creditable": true
         }, {
             "id": "M5_03",
             "name": "Masterarbeit",
-            "credits": 20,
-            "creditableAgainstFocus": true
+            "ects": 20,
+            "creditable": true
         }
     ],
     "planers": [{
             "name": "Master Schulische Heilpädagogik",
             "slug": "shp",
             "abbreviation": "MA SHP",
-            "moduleSelectionEnabled": true,
-            "requiredCredits": 90,
+            "focusSelectionEnabled": true,
+            "requiredECTS": 90,
             "foci": [{
                     "id": "SSP_L",
                     "name": "Lernen",
@@ -368,8 +368,8 @@
                         "WP2_10"
                     ],
                     "moduleSelection": {
-                        "minCredits": 10,
-                        "maxCredits": 20
+                        "minECTS": 10,
+                        "maxECTS": 20
                     }
                 },
                 {
@@ -387,16 +387,16 @@
                         "WP4_05.2"
                     ],
                     "moduleSelection": {
-                        "minCredits": 10,
-                        "maxCredits": 20
+                        "minECTS": 10,
+                        "maxECTS": 20
                     }
                 },
                 {
                     "name": "Wahl",
                     "modules": [],
                     "moduleSelection": {
-                        "minCredits": 0,
-                        "maxCredits": 10
+                        "minECTS": 0,
+                        "maxECTS": 10
                     }
                 },
                 {
@@ -419,8 +419,8 @@
             "name": "Master Heilpädagogische Früherziehung",
             "abbreviation": "MA HFE",
             "slug": "hfe",
-            "requiredCredits": 90,
-            "moduleSelectionEnabled": false,
+            "requiredECTS": 90,
+            "focusSelectionEnabled": false,
             "categories": [{
                     "name": "Pflicht",
                     "modules": [

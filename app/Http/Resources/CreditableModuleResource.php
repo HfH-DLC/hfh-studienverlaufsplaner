@@ -17,7 +17,7 @@ class CreditableModuleResource extends JsonResource
         return   [
             'id' => $this->id,
             'name' => $this->name,
-            'credits' => $this->credits,
+            'ects' => $this->ects,
             'creditedAgainst' => new CreditedAgainstResource($this->credited_against),
             'fixedCredit' => $this->fixed_credit
         ];

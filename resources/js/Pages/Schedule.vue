@@ -10,6 +10,7 @@
           <div class="mb-4 p-4" role="alert" v-if="errors.length > 0">
             <ErrorList class="space-y-2" :errors="errors" />
           </div>
+          <FocusSelection v-if="focusSelectionEnabled" />
           <div class="flex flex-1 items-start">
             <div id="module-list" class="w-3/12 p-4 sticky top-0">
               <ModuleList />
@@ -22,15 +23,15 @@
               class="w-2/12 py-4 sticky top-0"
               aria-live="polite"
             >
-              <div id="total-credits" class="px-4">
+              <div id="total-ects" class="px-4">
                 <div class="border-b border-gray-300 pb-4">
                   <h2 class="text-sm text-gray-500 font-bold uppercase">
                     Total Kreditpunkte
                   </h2>
                   <div class="flex items-center gap-2">
-                    {{ credits }} / {{ requiredCredits }}
+                    {{ ects }} / {{ requiredECTS }}
                     <CheckCircleIcon
-                      v-if="credits === requiredCredits"
+                      v-if="ects === requiredECTS"
                       class="text-green-700 w-5 h-5"
                     />
                   </div>
@@ -60,6 +61,7 @@ import { mapGetters, mapActions, mapState } from "vuex";
 // Components
 import { CheckCircleIcon } from "@heroicons/vue/outline";
 import ErrorList from "../Components/ErrorList.vue";
+import FocusSelection from "../Components/FocusSelection.vue";
 import ModuleInformation from "../Components/ModuleInformation.vue";
 import ModuleList from "../Components/ModuleList.vue";
 import TimeTable from "../Components/TimeTable.vue";
@@ -73,6 +75,7 @@ export default {
     CheckCircleIcon,
     ErrorList,
     Flash,
+    FocusSelection,
     TimeTable,
     ModuleInformation,
     ModuleList,
@@ -84,29 +87,38 @@ export default {
       type: Object,
       required: true,
     },
-    rulesResource: {
-      type: Object,
+    focusSelectionEnabled: {
+      type: Boolean,
       required: true,
     },
-    planResource: {
+    fociResource: {
       type: Object,
-      required: true,
-    },
-    requiredCredits: {
-      type: Number,
       required: true,
     },
     planerSlug: {
       type: String,
       required: true,
     },
+    planResource: {
+      type: Object,
+      required: true,
+    },
+    requiredECTS: {
+      type: Number,
+      required: true,
+    },
+    rulesResource: {
+      type: Object,
+      required: true,
+    },
   },
   created() {
     this.init({
       categories: this.categoriesResource.data,
-      rules: this.rulesResource.data,
       plan: this.planResource.data,
       planerSlug: this.planerSlug,
+      rules: this.rulesResource.data,
+      foci: this.fociResource.data,
     });
     this.$emitter.on("retry-save", this.retrySave);
   },
@@ -121,7 +133,7 @@ export default {
       "tourActive",
       "tourSelectedModule",
     ]),
-    ...mapGetters("schedule", ["credits", "placementErrors", "selectedModule"]),
+    ...mapGetters("schedule", ["ects", "placementErrors", "selectedModule"]),
     errors() {
       return this.placementErrors.map((error) => error.text);
     },

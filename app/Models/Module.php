@@ -12,7 +12,7 @@ class Module extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $casts = ['category_id' => 'integer', 'credits' => 'integer'];
+    protected $casts = ['category_id' => 'integer', 'ects' => 'integer'];
 
     public function categories()
     {

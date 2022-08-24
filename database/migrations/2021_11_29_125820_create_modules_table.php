@@ -17,8 +17,8 @@ class CreateModulesTable extends Migration
             $table->string('id')->unique();
             $table->timestamps();
             $table->string('name');
-            $table->integer('credits');
-            $table->boolean('creditable_against_focus');
+            $table->integer('ects');
+            $table->boolean('creditable');
         });
     }
 

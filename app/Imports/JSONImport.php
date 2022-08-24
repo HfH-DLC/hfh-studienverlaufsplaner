@@ -75,8 +75,8 @@ class JSONImport
             $module->id = $id;
         }
         $module->name = $moduleData->name;
-        $module->credits = $moduleData->credits;
-        $module->creditable_against_focus = $moduleData->creditableAgainstFocus;
+        $module->ects = $moduleData->ects;
+        $module->creditable = $moduleData->creditable;
         $module->save();
         $this->modulesCache[$id] = $module;
     }
@@ -116,8 +116,8 @@ class JSONImport
             }
 
             $planer->slug = $planerData->slug;
-            $planer->required_credits = $planerData->requiredCredits;
-            $planer->module_selection_enabled = $planerData->moduleSelectionEnabled;
+            $planer->required_ects = $planerData->requiredECTS;
+            $planer->focus_selection_enabled = $planerData->focusSelectionEnabled;
             $planer->save();
 
             $this->importCategories($planerData, $planer);
@@ -139,12 +139,11 @@ class JSONImport
                 $category->required_number = $categoryData->requiredNumber;
             }
             if (isset($categoryData->moduleSelection)) {
-                $category->module_selection_enabled = true;
-                if (isset($categoryData->moduleSelection->minCredits)) {
-                    $category->min_credits = $categoryData->moduleSelection->minCredits;
+                if (isset($categoryData->moduleSelection->minECTS)) {
+                    $category->min_ects = $categoryData->moduleSelection->minECTS;
                 }
-                if (isset($categoryData->moduleSelection->maxCredits)) {
-                    $category->max_credits = $categoryData->moduleSelection->maxCredits;
+                if (isset($categoryData->moduleSelection->maxECTS)) {
+                    $category->max_ects = $categoryData->moduleSelection->maxECTS;
                 }
             }
             $planer->categories()->save($category);

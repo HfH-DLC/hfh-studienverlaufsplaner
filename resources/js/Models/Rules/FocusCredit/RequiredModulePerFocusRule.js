@@ -16,7 +16,7 @@ export default class RequiredModulesPerFocusRule extends BaseFocusCreditRule {
                 return acc;
             }, 0)
             if (requiredModuleCount < 1) {
-                const moduleString = requiredModuleIds.slice(0, requiredModuleIds.length - 1).join(", ") + " oder " + requiredModuleIds[moduleIds.length - 1];
+                const moduleString = requiredModuleIds.slice(0, requiredModuleIds.length - 1).join(", ") + " oder " + requiredModuleIds[requiredModuleIds.length - 1];
                 addError('global', `Sie müssen mindestens eines der Module ${moduleString} an den SSP ${this.getFocusName(focusSelectionId, focusSelections)} anrechnen.`)
             }
         })

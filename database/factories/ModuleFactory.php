@@ -15,7 +15,7 @@ class ModuleFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'credits' => $this->faker->numberBetween(1, 500),
+            'ects' => $this->faker->numberBetween(1, 500),
         ];
     }
 

@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateScheduleRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CreditableModuleResource;
 use App\Http\Resources\FocusResource;
+use App\Http\Resources\FocusSelectionResource;
 use App\Http\Resources\ModuleResource;
 use App\Http\Resources\PlanerResource;
 use App\Http\Resources\PlanResource;
@@ -132,86 +133,19 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
 
 
     Route::get('/{plan:slug}', function (Planer $planer, Plan $plan) {
-        if ($planer->module_selection_enabled) {
-            return Redirect::route('plan-focus', array('planer' => $planer, 'plan' => $plan->slug));
-        }
-        Redirect::route('plan-schedule', array('planer' => $planer, 'plan' => $plan->slug));
+        return Redirect::route('plan-schedule', array('planer' => $planer, 'plan' => $plan->slug));
     })->name('plan');
-
-    Route::get('/{plan:slug}/schwerpunkte', function (Planer $planer, Plan $plan) {
-        $planResource = new PlanResource($plan->load('focusSelections'));
-        $fociResource = FocusResource::collection($planer->foci()->get());
-        return Inertia::render(
-            'FocusSelection',
-            array(
-                'planerName' => $planer->name,
-                'planerSlug' => $planer->slug,
-                'planResource' => $planResource,
-                'fociResource' => $fociResource
-            )
-        );
-    })->name('plan-focus');
-
-    Route::put('/{plan:slug}/schwerpunkte', function (UpdateFocusSelectionRequest $request, Planer $planer, Plan $plan) {
-        $validated = $request->validated();
-
-        $focusSelectionsData = $validated['focusSelections'];
-        DB::transaction(function () use ($plan, $focusSelectionsData) {
-            $plan->focusSelections()->whereNot(function ($q1) use ($focusSelectionsData) {
-                foreach ($focusSelectionsData as $focusSelectionData) {
-                    $q1->orWhere(function ($q2) use ($focusSelectionData) {
-                        $q2->where('position', $focusSelectionData['position'])->where('focus_id', $focusSelectionData['focus']);
-                    });
-                }
-            })->delete();
-
-            foreach ($focusSelectionsData as $focusSelectionData) {
-                $focusSelection = FocusSelection::where('position', $focusSelectionData['position'])->where('focus_id', $focusSelectionData['focus'])->first();
-                if (!$focusSelection) {
-                    $focusSelection = new FocusSelection();
-                    $focusSelection->position = $focusSelectionData['position'];
-                    $focusSelection->focus()->associate(Focus::findOrFail($focusSelectionData['focus']));
-                    $plan->focusSelections()->save($focusSelection);
-                }
-                $focusSelection->selectedRequiredModules()->sync($focusSelectionData['selectedRequiredModules']);
-                $focusSelection->save();
-            }
-        });
-        return Redirect::route('plan-modules', array('planer' => $planer, 'plan' => $plan->slug));
-    });
-
-    Route::get('/{plan:slug}/module', function (Planer $planer, Plan $plan) {
-        $planResource = new PlanResource($plan->load('focusSelections', 'selectedModules'));
-        $categoriesResource = CategoryResource::collection($planer->getCategoriesWithAllModules($plan)->filter(function ($value) {
-            return $value->module_selection_enabled == true;
-        }));
-        return Inertia::render(
-            'ModuleSelection',
-            array(
-                'planerName' => $planer->name,
-                'planerSlug' => $planer->slug,
-                'planResource' => $planResource,
-                'categoriesResource' => $categoriesResource
-            )
-        );
-    })->name('plan-modules');
-
-    Route::put('/{plan:slug}/module', function (UpdateModuleSelectionRequest $request, Planer $planer, Plan $plan) {
-        $validated = $request->validated();
-        $plan->selectedModules()->sync($validated['modules']);
-        $plan->save();
-        return Redirect::route('plan-credit', array('planer' => $planer, 'plan' => $plan->slug));
-    });
 
     Route::get('/{plan:slug}/anrechnung', function (Planer $planer, Plan $plan) {
         $planResource = new PlanResource($plan);
         return Inertia::render(
-            'FocusCredit',
+            'Credit',
             array(
                 'planerName' => $planer->name,
                 'planerSlug' => $planer->slug,
                 'planResource' => $planResource,
-                'creditableModulesResource' => CreditableModuleResource::collection($plan->getCreditableModules())
+                'creditableModulesResource' => CreditableModuleResource::collection($plan->getCreditableModules()),
+                'rulesResource' => RuleResource::collection(Rule::all())
             )
         );
     })->name('plan-credit');
@@ -226,13 +160,14 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
                 $focusSelection->save();
             }
         });
-        return Redirect::route('plan-schedule', array('planer' => $planer, 'plan' => $plan->slug));
+        return response()->noContent();
     });
 
     Route::get('/{plan:slug}/zeitplan', function (Planer $planer, Plan $plan) {
         $planResource = new PlanResource($plan->load('placements'));
-        $categoriesResource = CategoryResource::collection($planer->getCategoriesWithActiveModules($plan));
+        $categoriesResource = CategoryResource::collection($planer->getCategoriesWithAllModules($plan));
         $rulesResource = RuleResource::collection(Rule::all());
+        $fociResource = FocusResource::collection($planer->foci()->get());
         return Inertia::render(
             'Schedule',
             array(
@@ -240,8 +175,10 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
                 'planerSlug' => $planer->slug,
                 'planResource' => $planResource,
                 'categoriesResource' => $categoriesResource,
+                'focusSelectionEnabled' => $planer->focus_selection_enabled,
+                'fociResource' => $fociResource,
                 'rulesResource' => $rulesResource,
-                'requiredCredits' => $planer->required_credits,
+                'requiredECTS' => $planer->required_ects,
             )
         );
     })->name('plan-schedule');
@@ -261,7 +198,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
         return Redirect::route('plan', array('planer' => $planer, 'plan' => $plan->slug));
     });
 
-    Route::put('/{plan:slug}/schedule', function (UpdateScheduleRequest $request, Planer $planer, Plan $plan) {
+    Route::put('/{plan:slug}/zeitplan', function (UpdateScheduleRequest $request, Planer $planer, Plan $plan) {
         DB::transaction(function () use ($plan, $request) {
             $validated = $request->validated();
             if (Arr::exists($validated, 'placements')) {
@@ -280,13 +217,36 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
                     $plan->placements()->save($placement);
                 });
             }
+
+            if (Arr::exists($validated, 'focusSelections')) {
+                $focusSelectionsData = $validated['focusSelections'];
+                $plan->focusSelections()->whereNot(function ($q1) use ($focusSelectionsData) {
+                    foreach ($focusSelectionsData as $focusSelectionData) {
+                        $q1->orWhere(function ($q2) use ($focusSelectionData) {
+                            $q2->where('position', $focusSelectionData['position'])->where('focus_id', $focusSelectionData['focusId']);
+                        });
+                    }
+                })->delete();
+
+                foreach ($focusSelectionsData as $focusSelectionData) {
+                    $focusSelection = FocusSelection::where('position', $focusSelectionData['position'])->where('focus_id', $focusSelectionData['focusId'])->first();
+                    if (!$focusSelection) {
+                        $focusSelection = new FocusSelection();
+                        $focusSelection->position = $focusSelectionData['position'];
+                        $focusSelection->focus()->associate(Focus::findOrFail($focusSelectionData['focusId']));
+                        $plan->focusSelections()->save($focusSelection);
+                    }
+                    $focusSelection->save();
+                }
+            }
+
             if (Arr::exists($validated, 'tourCompleted')) {
                 $plan->tour_completed = $validated['tourCompleted'];;
             }
             $plan->save();
         });
 
-        return new PlanResource($plan);
+        return response()->noContent();
     });
 });
 
