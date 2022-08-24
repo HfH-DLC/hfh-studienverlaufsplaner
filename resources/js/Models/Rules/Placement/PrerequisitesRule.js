@@ -6,7 +6,6 @@ export default class PrerequisitesRule extends BaseScheduleRule {
     }
 
     validatePlacements(state, { placements }, errors) {
-        console.log(errors);
         placements.forEach((placement) => {
             const missingPrerequisites = [];
             const prerequisites = placement.module.prerequisites;
@@ -36,7 +35,6 @@ export default class PrerequisitesRule extends BaseScheduleRule {
                         missingPrerequisites
                     )
                 );
-                console.log("Misssing Prerequisite");
             }
         });
     }

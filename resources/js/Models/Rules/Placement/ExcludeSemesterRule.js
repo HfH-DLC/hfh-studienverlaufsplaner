@@ -1,18 +1,17 @@
 import { isSameDate, semesterCount, semesterPosition } from "../../../helpers";
 import BaseScheduleRule from "./BaseScheduleRule";
 export default class ExcludeSemesterRule extends BaseScheduleRule {
-    constructor(params, startYear) {
+    constructor(params) {
         super("ExcludeSemester");
         this.excludePositions = params.excludePositions;
         this.moduleId = params.moduleId;
-        this.startYear = startYear;
     }
 
     validatePlacements(state, { placements }, errors) {
         placements
             .filter((placement) => placement.moduleId == this.moduleId)
             .forEach((placement) => {
-                if (!this.isAllowedSemester(placement)) {
+                if (!this.isAllowedSemester(placement, state.startYear)) {
                     const text = this.excludePositions.reduce(
                         (acc, cur, i, array) => {
                             return (
@@ -43,7 +42,7 @@ export default class ExcludeSemesterRule extends BaseScheduleRule {
             !module.placement &&
             module.events.every(
                 (event) =>
-                    this.isAllowedSemester(event) ||
+                    this.isAllowedSemester(event, state.startYear) ||
                     placements.find((placement) => isSameDate(placement, event))
             )
         ) {
@@ -58,12 +57,15 @@ export default class ExcludeSemesterRule extends BaseScheduleRule {
             return;
         }
         module.events.forEach((event) => {
-            status[event.id].dateAllowed = this.isAllowedSemester(event);
+            status[event.id].dateAllowed = this.isAllowedSemester(
+                event,
+                state.startYear
+            );
         });
     }
 
-    isAllowedSemester(date) {
-        const yearDiff = date.year - this.startYear;
+    isAllowedSemester(date, startYear) {
+        const yearDiff = date.year - startYear;
         const position =
             yearDiff * semesterCount() + semesterPosition(date.semester);
         return !this.excludePositions.includes(position);

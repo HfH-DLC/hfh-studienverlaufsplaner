@@ -29,6 +29,4 @@ export default class DateRule extends BaseScheduleRule {
             errors.push("Alle Termine für dieses Modul sind bereits besetzt.");
         }
     }
-
-    validateSelection(module, state, getters, status) {}
 }

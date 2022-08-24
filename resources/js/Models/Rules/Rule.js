@@ -1,9 +1,8 @@
 export default class Rule {
-    constructor(category, type) {
+    constructor(name) {
         if (this.constructor == Rule) {
             throw new Error("Abstract classes can't be instantiated.");
         }
-        this.category = category;
-        this.type = type;
+        this.name;
     }
 }

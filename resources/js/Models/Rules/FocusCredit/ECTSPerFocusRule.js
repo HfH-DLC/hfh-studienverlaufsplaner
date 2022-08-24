@@ -2,36 +2,36 @@ import BaseFocusCreditRule from "./BaseFocusCreditRule";
 export default class ECTSPerFocusRule extends BaseFocusCreditRule {
     constructor(params) {
         super("ECTSPerFocus");
-        this.params = params;
+        this.minECTS = params.minECTS;
+        this.maxECTS = params.maxECTS;
     }
 
-    validate(focusCredits, focusSelections, modules, addError) {
-        Object.entries(focusCredits).forEach(
-            ([focusSelectionId, moduleIds]) => {
-                const totalECTS = moduleIds
-                    .map((id) => modules.find((module) => module.id === id))
-                    .reduce((acc, cur) => {
-                        return acc + cur.ects;
-                    }, 0);
-                if (this.params.minECTS && totalECTS < this.params.minECTS) {
-                    addError(
-                        "global",
+    validate(state, getters, errors) {
+        getters.creditedModulesByFocusSelection.forEach(
+            ({ focusSelectionId, moduleIds }) => {
+                const modules = state.modules.filter((module) =>
+                    moduleIds.includes(module.id)
+                );
+                const totalECTS = modules.reduce((acc, cur) => {
+                    return acc + cur.ects;
+                }, 0);
+                if (this.minECTS && totalECTS < this.minECTS) {
+                    errors.push(
                         `Sie müssen mindestens ${
-                            this.params.minECTS
+                            this.minECTS
                         } Kreditpunkte an den SSP ${this.getFocusName(
                             focusSelectionId,
-                            focusSelections
+                            state.focusSelections
                         )} anrechnen.`
                     );
                 }
-                if (this.params.maxECTS && totalECTS > this.params.maxECTS) {
-                    addError(
-                        "global",
+                if (this.maxECTS && totalECTS > this.maxECTS) {
+                    errors.push(
                         `Sie dürfen höchstens ${
-                            this.params.maxECTS
+                            this.maxECTS
                         } Kreditpunkte an den SSP ${this.getFocusName(
                             focusSelectionId,
-                            focusSelections
+                            state.focusSelections
                         )} anrechnen.`
                     );
                 }
