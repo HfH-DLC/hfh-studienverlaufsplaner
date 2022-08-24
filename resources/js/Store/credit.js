@@ -2,16 +2,19 @@ import DataAdapter from "../DataAdapter";
 import emitter from "../emitter";
 import flashTypes from "../flashTypes";
 import { SAVE_STATUS_SAVED, SAVE_STATUS_SAVING } from "../constants";
+import { getRule } from "../Models/Rules/RuleFactory";
 
 const initialState = {
     focusSelections: [],
     initialized: false,
     modules: [],
     rules: [],
+    errors: [],
 };
 
 const CREDIT_MODULE = "CREDIT_MODULE";
 const INIT_FINISHED = "INIT_FINISHED";
+const SET_ERRORS = "SET_ERRORS";
 const SET_FOCUS_SELECTIONS = "SET_FOCUS_SELECTIONS";
 const SET_MODULES = "SET_MODULES";
 const SET_RULES = "SET_RULES";
@@ -24,7 +27,7 @@ export default {
     namespaced: true,
     state: initialState,
     mutations: {
-        [CREDIT_MODULE](state, moduleId, focusSelectionId) {
+        [CREDIT_MODULE](state, { moduleId, focusSelectionId }) {
             state.modules = state.modules.map((module) => {
                 if (module.id == moduleId) {
                     module.creditedAgainst = focusSelectionId;
@@ -35,6 +38,9 @@ export default {
         [INIT_FINISHED](state) {
             state.initialized = true;
         },
+        [SET_ERRORS](state, errors) {
+            state.errors = errors;
+        },
         [SET_FOCUS_SELECTIONS](state, focusSelections) {
             state.focusSelections = focusSelections;
         },
@@ -42,7 +48,15 @@ export default {
             state.modules = modules;
         },
         [SET_RULES](state, rules) {
-            state.rules = rules;
+            const ruleObjects = rules.reduce((array, rule) => {
+                try {
+                    array.push(getRule(state, rule));
+                } catch (error) {
+                    console.error(error);
+                }
+                return array;
+            }, []);
+            state.rules = ruleObjects;
         },
         [SET_SAVE_STATUS](state, value) {
             state.saveStatus = value;
@@ -62,14 +76,23 @@ export default {
             commit(SET_FOCUS_SELECTIONS, focusSelections);
             commit(SET_MODULES, modules);
             commit(SET_RULES, rules);
+            dispatch("validate");
             commit(INIT_FINISHED);
         },
-        async creditedModuleAgainstFocusSelection(
+        async creditModuleAgainstFocusSelection(
             { commit, dispatch },
             { moduleId, focusSelectionId }
         ) {
-            commit(CREDIT_MODULE, moduleId, focusSelectionId);
+            commit(CREDIT_MODULE, { moduleId, focusSelectionId });
+            dispatch("validate");
             await dispatch("save");
+        },
+        validate({ state, commit, getters }) {
+            const errors = [];
+            state.rules.forEach((rule) => {
+                rule.validate(state, getters, errors);
+            });
+            commit(SET_ERRORS, errors);
         },
         async save({ state, commit, getters }) {
             try {
@@ -96,14 +119,14 @@ export default {
     getters: {
         creditedModulesByFocusSelection(state) {
             return state.focusSelections.reduce((acc, cur) => {
-                if (!acc[cur.id]) {
-                    acc[cur.id] = [];
-                }
-                acc[cur.id] = state.modules.filter(
-                    (module) => module.creditedAgainst == cur.id
-                );
+                acc.push({
+                    focusSelectionId: cur.id,
+                    moduleIds: state.modules
+                        .filter((module) => module.creditedAgainst == cur.id)
+                        .map((module) => module.id),
+                });
                 return acc;
-            }, {});
+            }, []);
         },
     },
 };

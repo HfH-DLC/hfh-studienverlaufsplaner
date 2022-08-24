@@ -15,7 +15,6 @@ export default class DataAdapter {
     }
 
     async saveFocusCredits(focusCredits) {
-        console.log("saveFocusCredits", focusCredits);
         const response = await axios.put(
             `/${this.planerSlug}/${this.planSlug}/anrechnung`,
             { focusCredits }

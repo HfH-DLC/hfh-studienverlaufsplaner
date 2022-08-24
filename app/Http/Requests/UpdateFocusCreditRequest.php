@@ -25,7 +25,10 @@ class UpdateFocusCreditRequest extends FormRequest
     {
         return [
             'focusCredits' => 'present',
-            'focusCredits.*' => 'array'
+            'focusCredits.*' => 'array',
+            'focusCredits.*.focusSelectionId' =>  'required|exists:focus_selections,id',
+            'focusCredits.*.moduleIds' =>  'present|array',
+            'focusCredits.*.moduleIds.*' => 'required|exists:modules,id'
         ];
     }
 }

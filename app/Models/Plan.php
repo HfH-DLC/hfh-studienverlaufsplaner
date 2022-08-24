@@ -28,11 +28,6 @@ class Plan extends Model
         return $this->hasMany(FocusSelection::class);
     }
 
-    public function foci()
-    {
-        return $this->focusSelections()->get('focus');
-    }
-
     public function setSlug($value)
     {
         if (empty($value)) {
@@ -44,7 +39,14 @@ class Plan extends Model
 
     public function getCreditableModules()
     {
-        return Module::whereIn('id', $this->placements->pluck('module_id'))->get();
+        $modules = Module::whereIn('id', $this->placements->pluck('module_id'))->get();
+        return $modules->map(function ($module) {
+            $credited_against = $this->focusSelections()->whereHas('creditedModules', function ($query) use ($module) {
+                $query->where('id', $module->id);
+            })->pluck('id')->first();
+            $module->credited_against = $credited_against;
+            return $module;
+        });
     }
 
     /**
