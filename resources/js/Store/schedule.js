@@ -4,8 +4,6 @@ import DataAdapter from "../DataAdapter";
 import emitter from "../emitter";
 import flashTypes from "../flashTypes";
 import { SAVE_STATUS_SAVED, SAVE_STATUS_SAVING } from "../constants";
-import PrerequisitesRule from "../Models/Rules/Placement/PrerequisitesRule";
-import DateRule from "../Models/Rules/Placement/DateRule";
 import { getRule } from "../Models/Rules/RuleFactory";
 import {
     getCalendarYear,
@@ -24,6 +22,7 @@ const ADD_PLACEMENT = "ADD_PLACEMENT";
 const SET_PLACEMENTS = "SET_PLACEMENTS";
 const REMOVE_PLACEMENT = "REMOVE_PLACEMENT";
 const SET_PLACEMENT_ERRORS = "SET_PLACEMENT_ERRORS";
+const SET_GLOBAL_ERRORS = "SET_GLOBAL_ERRORS";
 const SET_FOCI = "SET_FOCI";
 const SET_FOCUS_SELECTIONS = "SET_FOCUS_SELECTIONS";
 const SELECT_FOCUS = "SELECT_FOCUS";
@@ -45,6 +44,7 @@ const initialState = {
     selectionStatus: {},
     moduleInfos: {},
     placementErrors: {},
+    globalErrors: [],
     initialized: false,
     saveStatus: SAVE_STATUS_SAVED,
     //tour
@@ -87,6 +87,9 @@ export default {
         },
         [SET_PLACEMENT_ERRORS](state, placementErrors) {
             state.placementErrors = placementErrors;
+        },
+        [SET_GLOBAL_ERRORS](state, globalErrors) {
+            state.globalErrors = globalErrors;
         },
         [SET_PLACEMENTS](state, placements) {
             state.placements = placements;
@@ -212,14 +215,20 @@ export default {
             dispatch("save");
         },
         selectFocus({ commit, dispatch }, { position, focusId }) {
-            console.log(position);
-            console.log(focusId);
             commit(SELECT_FOCUS, { position, focusId });
             dispatch("save");
         },
         validate({ dispatch }) {
+            dispatch("validateGlobal");
             dispatch("validateModules");
             dispatch("validatePlacements");
+        },
+        validateGlobal({ commit, state, getters }) {
+            const globalErrors = [];
+            state.rules.forEach((rule) => {
+                rule.validateGlobal(state, getters, globalErrors);
+            });
+            commit(SET_GLOBAL_ERRORS, globalErrors);
         },
         validateModules({ commit, state, getters }) {
             const moduleInfos = {};
