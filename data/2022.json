@@ -47,13 +47,15 @@
             "id": "P4_07",
             "name": "Entwicklungsorientierte Intervention in der Heilpädagogischen Früherziehung",
             "ects": 5,
-            "creditable": false
+            "creditable": false,
+            "prerequisites": ["P4_02"]
         },
         {
             "id": "P4_08",
             "name": "Beratung und Begleitung von Eltern und weiteren Bezugs- und Fachpersonen in der Heilpädagogischen Früherziehung",
             "ects": 5,
-            "creditable": false
+            "creditable": false,
+            "prerequisites": ["P4_02"]
         },
         {
             "id": "P4_09",
@@ -83,7 +85,8 @@
             "id": "WP2_02.2",
             "name": "Heilpädagogik im Bereich sozial-emotionale Entwicklung und Verhalten 2",
             "ects": 5,
-            "creditable": true
+            "creditable": true,
+            "prerequisites": ["WP2_02.1"]
         },
         {
             "id": "WP2_03.1",
@@ -95,7 +98,8 @@
             "id": "WP2_03.2",
             "name": "Heilpädagogik im Bereich geistige Entwicklung 2",
             "ects": 5,
-            "creditable": true
+            "creditable": true,
+            "prerequisites": ["WP2_03.1"]
         },
         {
             "id": "WP2_04.1",
@@ -107,7 +111,8 @@
             "id": "WP2_04.2",
             "name": "Heilpädagogik im Bereich Hören 2",
             "ects": 5,
-            "creditable": true
+            "creditable": true,
+            "prerequisites": ["WP2_04.1"]
         },
         {
             "id": "WP2_05.1",
@@ -119,7 +124,8 @@
             "id": "WP2_05.2",
             "name": "Heilpädagogik im Bereich Sehen 2",
             "ects": 5,
-            "creditable": true
+            "creditable": true,
+            "prerequisites": ["WP2_05.1"]
         },
         {
             "id": "WP2_06.1",
@@ -233,7 +239,8 @@
             "id": "WP4_05.2",
             "name": "Schul- und Organisationsentwicklung in heilpädagogischen Berufsfeldern 2",
             "ects": 5,
-            "creditable": true
+            "creditable": true,
+            "prerequisites": ["WP4_05.1"]
         },
         {
             "id": "BP5_01.1.SHP",
@@ -245,13 +252,15 @@
             "id": "BP5_01.2.SHP",
             "name": "Berufspraxis 2 & Portfolio",
             "ects": 5,
-            "creditable": true
+            "creditable": true,
+            "prerequisites": ["BP5_01.1.SHP"]
         },
         {
             "id": "BP5_01.3.SHP",
             "name": "Berufspraxis 3 & Portfolio",
             "ects": 5,
-            "creditable": true
+            "creditable": true,
+            "prerequisites": ["BP5_01.1.SHP", "BP5_01.2.SHP"]
         },
         {
             "id": "BP5_01.1.HFE",
@@ -263,13 +272,15 @@
             "id": "BP5_01.2.HFE",
             "name": "Berufspraxis 2 & Portfolio",
             "ects": 5,
-            "creditable": true
+            "creditable": true,
+            "prerequisites": ["BP5_01.1.HFE"]
         },
         {
             "id": "BP5_01.3.HFE",
             "name": "Berufspraxis 3 & Portfolio",
             "ects": 5,
-            "creditable": true
+            "creditable": true,
+            "prerequisites": ["BP5_01.1.HFE", "BP5_01.2.HFE"]
         },
         {
             "id": "M5_03",
