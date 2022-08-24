@@ -49,4 +49,9 @@ class Planer extends Model
     {
         return $this->hasMany(Focus::class);
     }
+
+    public function rules()
+    {
+        return $this->hasMany(Rule::class);
+    }
 }

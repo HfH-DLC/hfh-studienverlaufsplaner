@@ -109,21 +109,6 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         $planers = PlanerResource::collection(Planer::all());
         return Inertia::render('Admin/Planers', ['planersResource' => $planers]);
     })->name('admin-planers');
-
-    Route::get('/rules', function (Request $request) {
-        $rules = RuleResource::collection(Rule::all());
-        return Inertia::render('Admin/Rules', ['rulesResource' => $rules, 'types' => Rule::$types]);
-    })->name('admin-rules');
-
-    Route::post('/rules/import', function (Request $request) {
-        $attributes = $request->validate([
-            'import' => ['required', 'mimes:json'],
-        ]);
-        $file = $attributes['import'];
-        $import = new RuleImport();
-        $import->run($file);
-        return Redirect::route('admin-rules');
-    });
 });
 
 Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
@@ -145,7 +130,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
                 'planerSlug' => $planer->slug,
                 'planResource' => $planResource,
                 'creditableModulesResource' => CreditableModuleResource::collection($plan->getCreditableModules()),
-                'rulesResource' => RuleResource::collection(Rule::all())
+                'rulesResource' => RuleResource::collection($planer->rules()->where('type', 'FocusCredit')->get())
             )
         );
     })->name('plan-credit');
@@ -166,7 +151,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
     Route::get('/{plan:slug}/zeitplan', function (Planer $planer, Plan $plan) {
         $planResource = new PlanResource($plan->load('placements'));
         $categoriesResource = CategoryResource::collection($planer->getCategoriesWithAllModules($plan));
-        $rulesResource = RuleResource::collection(Rule::all());
+        $rulesResource = RuleResource::collection($planer->rules()->where('type', 'Placement')->get());
         $fociResource = FocusResource::collection($planer->foci()->get());
         return Inertia::render(
             'Schedule',

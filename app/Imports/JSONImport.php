@@ -7,6 +7,7 @@ use App\Models\Event;
 use App\Models\Focus;
 use App\Models\Module;
 use App\Models\Planer;
+use App\Models\Rule;
 use Illuminate\Support\Facades\DB;
 
 class JSONImport
@@ -86,8 +87,7 @@ class JSONImport
         $prerequisites = [];
         if (isset($moduleData->prerequisites)) {
             $module = $this->getModule($moduleData->id);
-            $prerequisiteIds = explode(',', $moduleData->prerequisites);
-            foreach ($prerequisiteIds as $prerequisiteId) {
+            foreach ($moduleData->prerequisites as $prerequisiteId) {
                 $prerequisites[] = $this->getModule($prerequisiteId)->id;
             }
             $module->prerequisites()->sync($prerequisites);
@@ -122,6 +122,7 @@ class JSONImport
 
             $this->importCategories($planerData, $planer);
             $this->importFoci($planerData, $planer);
+            $this->importRules($planerData, $planer);
         }
     }
 
@@ -181,6 +182,23 @@ class JSONImport
             }
             $focus->modules()->sync($modules);
             $focus->save();
+        }
+    }
+
+    private function importRules($planerData, $planer)
+    {
+        if (!isset($planerData->rules)) {
+            return;
+        }
+        $planer->rules()->delete();
+        foreach ($planerData->rules as $ruleData) {
+            $rule = new Rule();
+            $rule->name = $ruleData->name;
+            $rule->type = $ruleData->type;
+            if (isset($ruleData->params)) {
+                $rule->params = $ruleData->params;
+            }
+            $planer->rules()->save($rule);
         }
     }
 
