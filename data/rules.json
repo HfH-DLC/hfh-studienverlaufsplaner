@@ -1,0 +1,20 @@
+{
+    "rules": [
+        {
+            "type": "Date"
+        },
+        {
+            "type": "Prerequisites"
+        },
+        {
+            "type": "FocusRequiredModules"
+        },
+        {
+            "type": "CategoriesECTSRule"
+        },
+        {
+            "type": "ExcludeSemester",
+            "params": { "excludePositions": [0, 1], "moduleId": "M5_03" }
+        }
+    ]
+}

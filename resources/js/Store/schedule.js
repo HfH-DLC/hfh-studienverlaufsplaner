@@ -77,7 +77,6 @@ export default {
                 }
                 return array;
             }, []);
-            ruleObjects.push(new DateRule(), new PrerequisitesRule());
             state.rules = ruleObjects;
         },
         [SET_SELECTION_STATUS](state, selectionStatus) {
