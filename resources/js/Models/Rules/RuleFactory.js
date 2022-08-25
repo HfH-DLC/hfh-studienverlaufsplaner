@@ -3,7 +3,7 @@ import ExcludeSemesterRule from "./Placement/ExcludeSemesterRule";
 import FocusRequiredModulesRule from "./Placement/FocusRequiredModulesRule";
 import PrerequisitesRule from "./Placement/PrerequisitesRule";
 import ECTSPerFocusRule from "./FocusCredit/ECTSPerFocusRule";
-import AtLeastOneOfModulesPerFocusFocus from "./FocusCredit/AtLeastOneOfModulesPerFocusRule";
+import AtLeastOneOfModulesPerFocus from "./FocusCredit/AtLeastOneOfModulesPerFocusRule";
 
 export const getRule = (state, { name, params }) => {
     switch (name) {
@@ -26,6 +26,6 @@ export const getRule = (state, { name, params }) => {
             return new AtLeastOneOfModulesPerFocus(params);
         }
         default:
-            throw "Unknown rules type: " + type;
+            throw "Unknown rule: " + name;
     }
 };
