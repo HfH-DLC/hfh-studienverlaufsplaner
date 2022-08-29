@@ -7,39 +7,29 @@
       <Flash class="fixed top-4 left-1/2 -translate-x-1/2" />
       <template v-if="initialized">
         <div>
-          <div class="mb-4 p-4" role="alert" v-if="errors.length > 0">
+          <div
+            class="p-4 border-b border-gray-300"
+            role="alert"
+            v-if="errors.length > 0"
+          >
             <ErrorList class="space-y-2" :errors="errors" />
           </div>
           <FocusSelection v-if="focusSelectionEnabled" class="p-4" />
           <div class="flex flex-1 items-start">
             <StickyColumn id="module-list" class="w-3/12">
-              <ModuleList />
+              <ModuleInformation
+                v-show="selectedModule"
+                :selectedModule="
+                  tourActive ? tourSelectedModule : selectedModule
+                "
+              />
+              <ModuleList v-show="!selectedModule" />
             </StickyColumn>
             <StickyColumn id="time-table" class="w-7/12">
               <TimeTable ref="timeTable" />
             </StickyColumn>
             <StickyColumn id="info-column" class="w-2/12" aria-live="polite">
-              <div id="total-ects" class="px-4">
-                <div class="border-b border-gray-300 pb-4">
-                  <h2 class="text-sm text-gray-500 font-bold uppercase">
-                    Total Kreditpunkte
-                  </h2>
-                  <div class="flex items-center gap-2">
-                    {{ ects }} / {{ requiredECTS }}
-                    <CheckCircleIcon
-                      v-if="ects === requiredECTS"
-                      class="text-green-700 w-5 h-5"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div id="module-information" class="p-4 min-h-16">
-                <ModuleInformation
-                  :selectedModule="
-                    tourActive ? tourSelectedModule : selectedModule
-                  "
-                />
-              </div>
+              <Checklist :entries="todoEntries" />
             </StickyColumn>
           </div>
         </div>
@@ -66,10 +56,12 @@ import PlanHeader from "../Components/PlanHeader.vue";
 import Flash from "../Components/Flash.vue";
 import flashTypes from "../flashTypes";
 import StickyColumn from "../Components/StickyColumn.vue";
+import Checklist from "../Components/Checklist.vue";
 
 export default {
   components: {
     CheckCircleIcon,
+    Checklist,
     ErrorList,
     Flash,
     FocusSelection,
@@ -117,6 +109,7 @@ export default {
       planerSlug: this.planerSlug,
       rules: this.rulesResource.data,
       foci: this.fociResource.data,
+      requiredECTS: this.requiredECTS,
     });
     this.$emitter.on("retry-save", this.retrySave);
   },
@@ -130,6 +123,7 @@ export default {
       "tourCompleted",
       "tourActive",
       "tourSelectedModule",
+      "todoEntries",
     ]),
     ...mapGetters("schedule", ["ects", "placementErrors", "selectedModule"]),
     errors() {
