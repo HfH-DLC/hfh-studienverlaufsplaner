@@ -10,20 +10,19 @@ export default class AtLeastOneOfModulesPerFocusRule extends BaseFocusCreditRule
             const requriedModules = state.modules.filter((module) =>
                 this.moduleIds.includes(module.id)
             );
-            const requiredModuleCount = requriedModules.reduce((acc, cur) => {
+            const count = requriedModules.reduce((acc, cur) => {
                 if (cur.creditedAgainst == focusSelection.id) {
                     acc++;
                 }
                 return acc;
             }, 0);
-            if (requiredModuleCount < 1) {
-                const moduleNames = requriedModules.map(
-                    (module) => `${module.id} ${module.name}`
-                );
+            if (count < 1) {
                 const moduleString =
-                    moduleNames.slice(0, moduleNames.length - 1).join(", ") +
+                    this.moduleIds
+                        .slice(0, this.moduleIds.length - 1)
+                        .join(", ") +
                     " oder " +
-                    moduleNames[moduleNames.length - 1];
+                    this.moduleIds[this.moduleIds.length - 1];
                 errors.push(
                     `Sie müssen mindestens eines der Module ${moduleString} an den SSP ${this.getFocusName(
                         focusSelection.id,
