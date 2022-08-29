@@ -19,9 +19,7 @@
           <Link
             :href="`/${$page.props.planerSlug}/${$page.props.planResource.data.slug}/zeitplan`"
             :class="{
-              active:
-                $page.url ===
-                `/${$page.props.planerSlug}/${$page.props.planResource.data.slug}/zeitplan`,
+              active: $page.component === 'Schedule',
             }"
             >Zeitplan</Link
           >
@@ -30,9 +28,7 @@
           <Link
             :href="`/${$page.props.planerSlug}/${$page.props.planResource.data.slug}/anrechnung`"
             :class="{
-              active:
-                $page.url ===
-                `/${$page.props.planerSlug}/${$page.props.planResource.data.slug}/anrechnung`,
+              active: $page.component === 'Credit',
             }"
             >Anrechnung</Link
           >
