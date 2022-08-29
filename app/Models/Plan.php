@@ -39,14 +39,44 @@ class Plan extends Model
 
     public function getCreditableModules()
     {
-        $modules = Module::whereIn('id', $this->placements->pluck('module_id'))->get();
-        return $modules->map(function ($module) {
-            $credited_against = $this->focusSelections()->whereHas('creditedModules', function ($query) use ($module) {
+        $placedModuleIds = $this->placements()->pluck('module_id')->all();
+        $query = function ($query) use ($placedModuleIds) {
+            $query->where('creditable', true);
+            $query->whereIn('id', $placedModuleIds);
+        };
+        $modules = $this->planer->getModules($query);
+        $modules = $modules->map(function ($module) {
+            $focusSelectionId = $this->focusSelections()->whereHas('creditedModules', function ($query) use ($module) {
                 $query->where('id', $module->id);
             })->pluck('id')->first();
-            $module->credited_against = $credited_against;
+            $module->credited_against = $focusSelectionId;
             return $module;
         });
+        return $modules;
+    }
+
+    public function getCategoriesWithAllModules()
+    {
+        $filter = $this->getYearFilter();
+        return $this->planer->categories()->with([
+            'modules' => function ($query) use ($filter) {
+                $query->whereHas('events', $filter);
+            },
+            'modules.events' => $filter,
+            'modules.prerequisites'
+        ])->get()->sortBy('position');
+    }
+
+    private function getYearFilter()
+    {
+        $years = array();
+        $numberOfYears = 4;
+        for ($i = 0; $i < $numberOfYears; $i++) {
+            $years[] = $this->start_year + $i;
+        }
+        return function ($query) use ($years) {
+            $query->whereIn('year', $years);
+        };
     }
 
     /**

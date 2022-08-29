@@ -24,27 +24,6 @@ class Planer extends Model
         return $this->hasMany(Category::class);
     }
 
-    private function getYearFilterForPlan($plan)
-    {
-        $years = array();
-        $numberOfYears = 4;
-        for ($i = 0; $i < $numberOfYears; $i++) {
-            $years[] = $plan->start_year + $i;
-        }
-
-        return function ($query) use ($years) {
-            $query->whereIn('year', $years);
-        };
-    }
-
-    public function getCategoriesWithAllModules(Plan $plan)
-    {
-        $filter = $this->getYearFilterForPlan($plan);
-        return $this->categories()->with(['modules' => function ($query) use ($filter) {
-            $query->whereHas('events', $filter);
-        }, 'modules.events', 'modules.prerequisites'])->get()->sortBy('position');
-    }
-
     public function foci()
     {
         return $this->hasMany(Focus::class);
@@ -53,5 +32,14 @@ class Planer extends Model
     public function rules()
     {
         return $this->hasMany(Rule::class);
+    }
+
+    public function getModules($query)
+    {
+        $modules = collect();
+        foreach ($this->categories()->with(['modules' => $query])->get() as $category) {
+            $modules = $modules->merge($category->modules);
+        }
+        return $modules;
     }
 }
