@@ -54,6 +54,28 @@ export default {
   computed: {
     ...mapGetters("schedule", ["categories"]),
   },
+  mounted() {
+    this.openActiveAccordion(window.location.hash);
+    window.onhashchange = (event) => {
+      this.openActiveAccordion(new URL(event.newURL).hash);
+    };
+  },
+  beforeUnmount() {
+    window.onhashchange = null;
+  },
+  methods: {
+    openActiveAccordion(hash) {
+      if (hash && hash.startsWith("#module-")) {
+        const moduleId = hash.slice("#module-".length);
+        const index = this.categories.findIndex((category) =>
+          category.modules.some((module) => module.id == moduleId)
+        );
+        if (index > -1) {
+          this.currentOpen = index;
+        }
+      }
+    },
+  },
 };
 </script>
 

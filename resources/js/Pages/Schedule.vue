@@ -116,6 +116,15 @@ export default {
   beforeDestroy() {
     this.$emitter.off("retry-save", this.retrySave);
   },
+  mounted() {
+    this.selectModuleFromHash(window.location.hash);
+    window.onhashchange = (event) => {
+      this.selectModuleFromHash(new URL(event.newURL).hash);
+    };
+  },
+  beforeUnmount() {
+    window.onhashchange = null;
+  },
   computed: {
     ...mapState("schedule", [
       "initialized",
@@ -131,13 +140,19 @@ export default {
     },
   },
   methods: {
-    ...mapActions("schedule", ["init", "completeTour", "save"]),
+    ...mapActions("schedule", ["init", "completeTour", "save", "selectModule"]),
     async retrySave() {
       if (await this.save()) {
         this.$emitter.emit("flash", {
           type: flashTypes.SUCCESS,
           message: "Ihr Plan wurde erfolgreich gespeichert.",
         });
+      }
+    },
+    selectModuleFromHash(hash) {
+      if (hash && hash.startsWith("#module-")) {
+        const moduleId = hash.slice("#module-".length);
+        this.selectModule(moduleId);
       }
     },
   },
