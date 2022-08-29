@@ -49,7 +49,9 @@ export default class FocusModulesTodo {
             const module = modules[0];
             return `Belegen Sie für den SSP "${focus.name}" das Modul <a href="#module-${module.id}">${module.id}</a>.`;
         }
-        const moduleNames = modules.map((module) => `${module.id}`);
+        const moduleNames = modules.map(
+            (module) => `<a href="#module-${module.id}">${module.id}</a>`
+        );
         const moduleString = joinStrings(moduleNames, "oder");
         return `Belegen Sie für den SSP "${focus.name}" ${numToWord(number, {
             uppercase: false,
