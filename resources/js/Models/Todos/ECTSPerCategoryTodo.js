@@ -22,7 +22,7 @@ export default class ECTSPerCategoryTodo {
                 label = `Belegen Sie im Bereich "${category.name}" mindestens ${category.minECTS} ECTS Kreditpunkte.`;
             }
             if (category.maxECTS) {
-                label = `Belegen Sie im Bereich "${category.name}" höchstens ${category.maxECTS} ECTS Kreditpunkte.`;
+                label = `Belegen Sie im Bereich "${category.name}" bis zu ${category.maxECTS} ECTS Kreditpunkte.`;
             }
         }
         return label;
