@@ -43,3 +43,14 @@ export const getCalendarYear = (semester, schoolYear) => {
 export const pluralize = (count, singular, plural) => {
     return count == 1 ? singular : plural;
 };
+
+export const joinStrings = (strings, connector) => {
+    if (strings.length == 0) {
+        return strings[0];
+    }
+    return (
+        strings.slice(0, strings.length - 1).join(", ") +
+        ` ${connector} ` +
+        strings[strings.length - 1]
+    );
+};
