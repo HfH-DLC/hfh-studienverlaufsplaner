@@ -136,17 +136,16 @@ class JSONImport
                 $category->name = $categoryName;
             }
             $category->position = $index;
-            if (isset($categoryData->requiredNumber)) {
-                $category->required_number = $categoryData->requiredNumber;
+            if (isset($categoryData->required)) {
+                $category->required = $categoryData->required;
             }
-            if (isset($categoryData->moduleSelection)) {
-                if (isset($categoryData->moduleSelection->minECTS)) {
-                    $category->min_ects = $categoryData->moduleSelection->minECTS;
-                }
-                if (isset($categoryData->moduleSelection->maxECTS)) {
-                    $category->max_ects = $categoryData->moduleSelection->maxECTS;
-                }
+            if (isset($categoryData->minECTS)) {
+                $category->min_ects = $categoryData->minECTS;
             }
+            if (isset($categoryData->maxECTS)) {
+                $category->max_ects = $categoryData->maxECTS;
+            }
+            $category->required = isset($category->required) && $category->required == true;
             $planer->categories()->save($category);
             $category->modules()->syncWithoutDetaching($categoryData->modules);
             $category->save();

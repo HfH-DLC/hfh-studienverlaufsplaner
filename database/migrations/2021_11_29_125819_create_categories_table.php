@@ -19,7 +19,7 @@ class CreateCategoriesTable extends Migration
             $table->string('name');
             $table->integer('position');
             $table->foreignId('planer_id')->constrained()->onDelete('cascade');
-            $table->integer('required_number')->nullable();
+            $table->boolean('required');
             $table->integer('min_ects')->nullable();
             $table->integer('max_ects')->nullable();
             $table->unique(['position', 'planer_id']);

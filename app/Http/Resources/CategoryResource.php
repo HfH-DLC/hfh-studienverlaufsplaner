@@ -17,7 +17,7 @@ class CategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'requiredNumber' => $this->required_number,
+            'required' => $this->required,
             'minECTS' => $this->min_ects,
             'maxECTS' => $this->max_ects,
             'modules' => ModuleResource::collection($this->whenLoaded('modules'))
