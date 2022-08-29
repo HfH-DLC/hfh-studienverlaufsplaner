@@ -10,6 +10,6 @@ select {
     font-weight: bold;
 }
 
-:where(.error-message, .checklist-entry) a:hover {
+a:hover {
     text-decoration: underline;
 }
