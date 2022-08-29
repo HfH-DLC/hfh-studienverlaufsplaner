@@ -58,7 +58,7 @@ export default class PrerequisitesRule extends BaseScheduleRule {
             if (
                 !this.eventMeetsPrerequisites(event, placements, prerequisites)
             ) {
-                status[event.id].valid = false;
+                status[event.id].dateAllowed = false;
             }
         });
     }
