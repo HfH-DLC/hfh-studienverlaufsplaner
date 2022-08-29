@@ -6,7 +6,6 @@ export default class ECTSPerCategoryTodo {
                 label: this.getLabel(category),
                 checked: this.validate(category),
             }));
-        console.log(entries);
         return entries;
     }
 
@@ -14,16 +13,16 @@ export default class ECTSPerCategoryTodo {
         let label;
         if (category.minECTS && category.maxECTS) {
             if (category.minECTS == category.maxECTS) {
-                label = `Belegen Sie im Bereich ${category.name} ${category.minECTS} ECTS Kreditpunkte.`;
+                label = `Belegen Sie im Bereich "${category.name}" ${category.minECTS} ECTS Kreditpunkte.`;
             } else {
-                label = `Belegen Sie im Bereich ${category.name} zwischen ${category.minECTS} und ${category.maxECTS} ECTS Kreditpunkte.`;
+                label = `Belegen Sie im Bereich "${category.name}" zwischen ${category.minECTS} und ${category.maxECTS} ECTS Kreditpunkte.`;
             }
         } else {
             if (category.minECTS) {
-                label = `Belegen Sie im Bereich ${category.name} mindestens ${category.minECTS} ECTS Kreditpunkte.`;
+                label = `Belegen Sie im Bereich "${category.name}" mindestens ${category.minECTS} ECTS Kreditpunkte.`;
             }
             if (category.maxECTS) {
-                label = `Belegen Sie im Bereich ${category.name} höchstens ${category.maxECTS} ECTS Kreditpunkte.`;
+                label = `Belegen Sie im Bereich "${category.name}" höchstens ${category.maxECTS} ECTS Kreditpunkte.`;
             }
         }
         return label;

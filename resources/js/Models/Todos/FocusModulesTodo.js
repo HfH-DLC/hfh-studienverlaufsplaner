@@ -33,11 +33,13 @@ export default class FocusModulesTodo {
         const modules = focus.requiredModules;
         if (modules.length == 1) {
             const module = modules[0];
-            return `Belegen Sie für den SSP ${focus.name} das Modul ${module.id}.`;
+            return `Belegen Sie für den SSP "${focus.name}" das Modul <a href="#module-${module.id}">${module.id}</a>.`;
         }
-        const moduleNames = modules.map((module) => `${module.id}`);
+        const moduleNames = modules.map(
+            (module) => `<a href="#module-${module.id}">${module.id}</a>`
+        );
         const moduleString = joinStrings(moduleNames, "und");
-        return `Belegen Sie für den SSP ${focus.name} die Module ${moduleString}.`;
+        return `Belegen Sie für den SSP "${focus.name}" die Module ${moduleString}.`;
     }
 
     getLabelOptional(focus) {
@@ -45,11 +47,11 @@ export default class FocusModulesTodo {
         const number = focus.requiredNumberOfOptionalModules;
         if (modules.length == 1) {
             const module = modules[0];
-            return `Belegen Sie für den SSP ${focus.name} das Modul ${module.id}.`;
+            return `Belegen Sie für den SSP "${focus.name}" das Modul <a href="#module-${module.id}">${module.id}</a>.`;
         }
         const moduleNames = modules.map((module) => `${module.id}`);
         const moduleString = joinStrings(moduleNames, "oder");
-        return `Belegen Sie für den SSP ${focus.name} ${numToWord(number, {
+        return `Belegen Sie für den SSP "${focus.name}" ${numToWord(number, {
             uppercase: false,
             indefinite_eines: true,
         })} der Module ${moduleString}.`;

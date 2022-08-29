@@ -16,7 +16,9 @@ export default class RequiredModulesTodo {
     }
 
     getLabel(categories) {
-        const categoryNames = categories.map((category) => category.name);
+        const categoryNames = categories.map(
+            (category) => `"${category.name}"`
+        );
         const categoryString = joinStrings(categoryNames, "und");
         return `Belegen Sie alle Module ${pluralize(
             categoryNames.length,
