@@ -1,7 +1,6 @@
-import DateRule from "./Placement/DateRule";
-import ExcludeSemesterRule from "./Placement/ExcludeSemesterRule";
-import FocusRequiredModulesRule from "./Placement/FocusRequiredModulesRule";
-import PrerequisitesRule from "./Placement/PrerequisitesRule";
+import DateRule from "./Schedule/DateRule";
+import ExcludeSemesterRule from "./Schedule/ExcludeSemesterRule";
+import PrerequisitesRule from "./Schedule/PrerequisitesRule";
 import ECTSPerFocusRule from "./FocusCredit/ECTSPerFocusRule";
 import AtLeastOneOfModulesPerFocus from "./FocusCredit/AtLeastOneOfModulesPerFocusRule";
 
@@ -15,9 +14,6 @@ export const getRule = (state, { name, params }) => {
         }
         case "ExcludeSemester": {
             return new ExcludeSemesterRule(params);
-        }
-        case "FocusRequiredModules": {
-            return new FocusRequiredModulesRule(params);
         }
         case "Prerequisites": {
             return new PrerequisitesRule(params);

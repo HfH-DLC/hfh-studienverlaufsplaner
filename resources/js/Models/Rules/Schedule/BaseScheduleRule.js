@@ -6,7 +6,6 @@ export default class BaseScheduleRule extends Rule {
             throw new Error("Abstract classes can't be instantiated.");
         }
     }
-    validateGlobal() {}
     validatePlacements() {}
     validateModule() {}
     validateSelection() {}
