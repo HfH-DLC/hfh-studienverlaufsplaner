@@ -23,7 +23,8 @@
               :module="module"
               :disabled="
                 !module.placement &&
-                category.placedNumber === category.requiredNumber
+                category.maxECTS &&
+                category.currentECTS >= category.maxECTS
               "
             />
           </li>

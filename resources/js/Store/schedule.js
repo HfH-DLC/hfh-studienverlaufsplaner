@@ -162,11 +162,11 @@ export default {
             commit(SET_PLACEMENTS, plan.placements);
 
             const todos = [
-                new TotalECTSTodo(),
                 new AtLeastOneFocusTodo(),
+                new TotalECTSTodo(),
+                new RequiredModulesTodo(),
                 new ECTSPerCategoryTodo(),
                 new FocusModulesTodo(),
-                new RequiredModulesTodo(),
             ];
             commit(SET_TODOS, todos);
             commit(SET_RULES, rules);
@@ -316,10 +316,6 @@ export default {
                         misplaced,
                     };
                 });
-                const requiredNumber =
-                    category.requiredNumber != null
-                        ? category.requiredNumber
-                        : category.modules.length;
                 const currentECTS = categoryModules.reduce((acc, cur) => {
                     if (cur.placement) {
                         acc += cur.ects;
@@ -333,7 +329,6 @@ export default {
                         (module) => module.placement
                     ).length,
                     modules: categoryModules,
-                    requiredNumber,
                     currentECTS,
                 };
             });
