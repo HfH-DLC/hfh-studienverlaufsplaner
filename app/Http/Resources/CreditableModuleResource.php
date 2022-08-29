@@ -19,6 +19,7 @@ class CreditableModuleResource extends JsonResource
             'name' => $this->name,
             'ects' => $this->ects,
             'creditedAgainst' => $this->credited_against,
+            'requiredCredit' => $this->required_credit
         ];
     }
 }

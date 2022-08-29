@@ -46,9 +46,16 @@ class Plan extends Model
         };
         $modules = $this->planer->getModules($query);
         $modules = $modules->map(function ($module) {
-            $focusSelectionId = $this->focusSelections()->whereHas('creditedModules', function ($query) use ($module) {
+            $focusSelectionId = $this->focusSelections()->whereHas('focus.requiredModules', function ($query) use ($module) {
                 $query->where('id', $module->id);
             })->pluck('id')->first();
+            if (!$focusSelectionId) {
+                $focusSelectionId = $this->focusSelections()->whereHas('creditedModules', function ($query) use ($module) {
+                    $query->where('id', $module->id);
+                })->pluck('id')->first();
+            } else {
+                $module->required_credit = true;
+            }
             $module->credited_against = $focusSelectionId;
             return $module;
         });
