@@ -1,5 +1,5 @@
 import { numToWord } from "num-words-de";
-import { joinStrings } from "../../helpers";
+import { joinStrings } from "../../../helpers";
 export default class FocusModulesTodo {
     getEntries({ focusSelections, placements }, getters) {
         return focusSelections.reduce((acc, cur) => {
