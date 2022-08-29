@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center gap-x-8 border-b border-gray-300">
-    <div class="flex-1">
+    <div class="max-w-64">
       <label for="firstFocus">Erster Studienschwerpunkt</label>
       <HfHSelect
         id="firstFocus"
@@ -10,7 +10,7 @@
         class="mt-1"
       />
     </div>
-    <div class="flex-1">
+    <div class="max-w-64">
       <label for="secondFocus">Zweiter Studienschwerpunkt (Optional)</label>
       <HfHSelect
         id="secondFocus"
@@ -36,8 +36,8 @@ export default {
         const focusSelection = this.focusSelections.find(
           (focusSelection) => focusSelection.position == 0
         );
-        if (focusSelection) {
-          return focusSelection.focusId;
+        if (focusSelection && focusSelection.focus) {
+          return focusSelection.focus.id;
         }
         return "";
       },
@@ -50,8 +50,8 @@ export default {
         const focusSelection = this.focusSelections.find(
           (focusSelection) => focusSelection.position == 1
         );
-        if (focusSelection) {
-          return focusSelection.focusId;
+        if (focusSelection && focusSelection.focus) {
+          return focusSelection.focus.id;
         }
         return "";
       },
