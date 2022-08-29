@@ -6,32 +6,52 @@
     <main class="flex-1 flex flex-col p-4">
       <h1 class="text-3xl mt-4 mb-2">Anrechnung an die Studienschwerpunkte</h1>
       <ErrorList class="mt-4 space-y-2" :errors="errors" />
-      <div class="mt-4 grid grid-cols-[1fr,auto] gap-y-4">
-        <template v-for="module in modules" :key="module.id">
-          <div>
-            <label :for="`credit-${module.id}`"
-              >{{ module.id }} {{ module.name }}</label
+      <div class="flex mt-4 gap-x-8">
+        <table class="w-9/12">
+          <template v-for="(module, index) in modules" :key="module.id">
+            <tr
+              :class="{
+                'bg-gray-300': index % 2 == 0,
+                'bg-gray-100': index % 2 != 0,
+              }"
             >
-          </div>
-          <HfHSelect
-            :id="`credit-${module.id}`"
-            :options="focusOptions"
-            :modelValue="module.creditedAgainst ? module.creditedAgainst : ''"
-            @update:modelValue="
-              creditModuleAgainstFocusSelection({
-                moduleId: module.id,
-                focusSelectionId: $event,
-              })
-            "
-            emptyOptionLabel="Nicht anrechnen"
-          />
-        </template>
+              <td class="p-4 whitespace-nowrap w-full">
+                <label :for="`credit-${module.id}`"
+                  >{{ module.id }} {{ module.name }}</label
+                >
+              </td>
+              <td class="p-4">
+                <div v-if="module.requiredCredit">
+                  {{ getFocusName(module.creditedAgainst) }}
+                </div>
+                <HfHSelect
+                  v-else
+                  class="w-fit"
+                  :id="`credit-${module.id}`"
+                  :options="focusOptions"
+                  :modelValue="
+                    module.creditedAgainst ? module.creditedAgainst : ''
+                  "
+                  @update:modelValue="
+                    creditModuleAgainstFocusSelection({
+                      moduleId: module.id,
+                      focusSelectionId: $event,
+                    })
+                  "
+                  emptyOptionLabel="Nicht anrechnen"
+                />
+              </td>
+            </tr>
+          </template>
+        </table>
+        <Checklist :entries="todoEntries" class="w-3/12" />
       </div>
     </main>
   </div>
 </template>
 
 <script>
+import Checklist from "../Components/Checklist.vue";
 import ErrorList from "../Components/ErrorList.vue";
 import HfHButton from "../Components/HfHButton.vue";
 import HfHSelect from "../Components/HfHSelect.vue";
@@ -39,7 +59,7 @@ import PlanHeader from "../Components/PlanHeader.vue";
 
 import { mapActions, mapState } from "vuex";
 export default {
-  components: { ErrorList, HfHButton, HfHSelect, PlanHeader },
+  components: { Checklist, ErrorList, HfHButton, HfHSelect, PlanHeader },
   props: {
     creditableModulesResource: {
       type: Object,
@@ -69,7 +89,12 @@ export default {
   },
 
   computed: {
-    ...mapState("credit", ["errors", "modules", "focusSelections"]),
+    ...mapState("credit", [
+      "errors",
+      "modules",
+      "focusSelections",
+      "todoEntries",
+    ]),
     focusOptions() {
       return this.focusSelections.map((focusSelection) => ({
         label: "SSP " + focusSelection.focus.name,
@@ -80,6 +105,12 @@ export default {
 
   methods: {
     ...mapActions("credit", ["init", "creditModuleAgainstFocusSelection"]),
+    getFocusName(focusSelectionId) {
+      console.log(focusSelectionId);
+      return this.focusSelections.find(
+        (focusSelection) => focusSelection.id == focusSelectionId
+      ).focus.name;
+    },
   },
 };
 </script>

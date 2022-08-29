@@ -3,6 +3,9 @@ import emitter from "../emitter";
 import flashTypes from "../flashTypes";
 import { SAVE_STATUS_SAVED, SAVE_STATUS_SAVING } from "../constants";
 import { getRule } from "../Models/Rules/RuleFactory";
+import ECTSPerFocusTodo from "../Models/Todos/Credit/ECTSPerFocusTodo";
+import AtLeastOneOfModulesPerFocusTodo from "../Models/Todos/Credit/AtLeastOneOfModulesPerFocusTodo";
+import FocusModulesTodo from "../Models/Todos/Credit/FocusModulesTodo";
 
 const initialState = {
     focusSelections: [],
@@ -19,6 +22,8 @@ const SET_FOCUS_SELECTIONS = "SET_FOCUS_SELECTIONS";
 const SET_MODULES = "SET_MODULES";
 const SET_RULES = "SET_RULES";
 const SET_SAVE_STATUS = "SET_SAVE_STATUS";
+const SET_TODOS = "SET_TODOS";
+const SET_TODO_ENTRIES = "SET_TODO_ENTRIES";
 const RESET_STATE = "RESET_STATE";
 
 let dataAdapter;
@@ -61,6 +66,12 @@ export default {
         [SET_SAVE_STATUS](state, value) {
             state.saveStatus = value;
         },
+        [SET_TODOS](state, todos) {
+            state.todos = todos;
+        },
+        [SET_TODO_ENTRIES](state, todoEntries) {
+            state.todoEntries = todoEntries;
+        },
         [RESET_STATE](state) {
             state = initialState;
         },
@@ -75,6 +86,14 @@ export default {
             commit(RESET_STATE);
             commit(SET_FOCUS_SELECTIONS, focusSelections);
             commit(SET_MODULES, modules);
+            const todos = [
+                new ECTSPerFocusTodo({ minECTS: 30, maxECTS: 65 }),
+                new FocusModulesTodo(),
+                new AtLeastOneOfModulesPerFocusTodo({
+                    moduleIds: ["BP5_01.1.SHP", "BP5_01.2.SHP", "BP5_01.3.SHP"],
+                }),
+            ];
+            commit(SET_TODOS, todos);
             commit(SET_RULES, rules);
             dispatch("validate");
             commit(INIT_FINISHED);
@@ -87,12 +106,23 @@ export default {
             dispatch("validate");
             await dispatch("save");
         },
-        validate({ state, commit, getters }) {
+        validate({ dispatch }) {
+            dispatch("validateRules");
+            dispatch("validateTodos");
+        },
+        validateRules({ state, getters, commit }) {
             const errors = [];
             state.rules.forEach((rule) => {
                 rule.validate(state, getters, errors);
             });
             commit(SET_ERRORS, errors);
+        },
+        validateTodos({ commit, state, getters }) {
+            const todoEntries = state.todos.reduce((acc, cur) => {
+                acc.push(...cur.getEntries(state, getters));
+                return acc;
+            }, []);
+            commit(SET_TODO_ENTRIES, todoEntries);
         },
         async save({ state, commit, getters }) {
             try {
