@@ -25,10 +25,10 @@
               />
               <ModuleList v-show="!selectedModule" />
             </StickyColumn>
-            <StickyColumn id="time-table" class="w-7/12">
+            <StickyColumn id="time-table" class="w-6/12">
               <TimeTable ref="timeTable" />
             </StickyColumn>
-            <StickyColumn id="info-column" class="w-2/12" aria-live="polite">
+            <StickyColumn id="info-column" class="w-3/12" aria-live="polite">
               <Checklist :entries="todoEntries" />
             </StickyColumn>
           </div>
