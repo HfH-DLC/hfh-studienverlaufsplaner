@@ -12,11 +12,11 @@ import {
     orderTime,
     orderTimeWindow,
 } from "../helpers";
-import TotalECTSTodo from "../Models/Todos/TotalECTSTodo";
-import AtLeastOneFocusTodo from "../Models/Todos/AtLeastOneFocusTodo";
-import ECTSPerCategoryTodo from "../Models/Todos/ECTSPerCategoryTodo";
-import FocusModulesTodo from "../Models/Todos/FocusModulesTodo";
-import RequiredModulesTodo from "../Models/Todos/RequiredModulesTodo";
+import TotalECTSTodo from "../Models/Todos/Schedule/TotalECTSTodo";
+import AtLeastOneFocusTodo from "../Models/Todos/Schedule/AtLeastOneFocusTodo";
+import ECTSPerCategoryTodo from "../Models/Todos/Schedule/ECTSPerCategoryTodo";
+import FocusModulesTodo from "../Models/Todos/Schedule/FocusModulesTodo";
+import RequiredModulesTodo from "../Models/Todos/Schedule/RequiredModulesTodo";
 
 const RESET_STATE = "RESET_STATE";
 const SET_RULES = "SET_RULES";
