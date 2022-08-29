@@ -1,3 +1,4 @@
+import { joinStrings } from "../../../helpers";
 import BaseFocusCreditRule from "./BaseFocusCreditRule";
 export default class AtLeastOneOfModulesPerFocusRule extends BaseFocusCreditRule {
     constructor(params) {
@@ -17,12 +18,7 @@ export default class AtLeastOneOfModulesPerFocusRule extends BaseFocusCreditRule
                 return acc;
             }, 0);
             if (count < 1) {
-                const moduleString =
-                    this.moduleIds
-                        .slice(0, this.moduleIds.length - 1)
-                        .join(", ") +
-                    " oder " +
-                    this.moduleIds[this.moduleIds.length - 1];
+                const moduleString = joinStrings(this.moduleIds, "oder");
                 errors.push(
                     `Sie müssen mindestens eines der Module ${moduleString} an den SSP ${this.getFocusName(
                         focusSelection.id,
