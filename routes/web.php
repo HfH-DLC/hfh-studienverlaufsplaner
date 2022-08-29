@@ -151,7 +151,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
 
     Route::get('/{plan:slug}/zeitplan', function (Planer $planer, Plan $plan) {
         $planResource = new PlanResource($plan->load('placements'));
-        $categoriesResource = CategoryResource::collection($planer->getCategoriesWithAllModules($plan));
+        $categoriesResource = CategoryResource::collection($plan->getCategoriesWithAllModules());
         $rulesResource = RuleResource::collection($planer->rules()->where('type', 'Placement')->get());
         $fociResource = FocusResource::collection($planer->foci()->get());
         return Inertia::render(
