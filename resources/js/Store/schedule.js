@@ -12,6 +12,11 @@ import {
     orderTime,
     orderTimeWindow,
 } from "../helpers";
+import TotalECTSTodo from "../Models/Todos/TotalECTSTodo";
+import AtLeastOneFocusTodo from "../Models/Todos/AtLeastOneFocusTodo";
+import ECTSPerCategoryTodo from "../Models/Todos/ECTSPerCategoryTodo";
+import FocusModulesTodo from "../Models/Todos/FocusModulesTodo";
+import RequiredModulesTodo from "../Models/Todos/RequiredModulesTodo";
 
 const RESET_STATE = "RESET_STATE";
 const SET_RULES = "SET_RULES";
@@ -22,7 +27,8 @@ const ADD_PLACEMENT = "ADD_PLACEMENT";
 const SET_PLACEMENTS = "SET_PLACEMENTS";
 const REMOVE_PLACEMENT = "REMOVE_PLACEMENT";
 const SET_PLACEMENT_ERRORS = "SET_PLACEMENT_ERRORS";
-const SET_GLOBAL_ERRORS = "SET_GLOBAL_ERRORS";
+const SET_TODOS = "SET_TODOS";
+const SET_TODO_ENTRIES = "SET_TODO_ENTRIES";
 const SET_FOCI = "SET_FOCI";
 const SET_FOCUS_SELECTIONS = "SET_FOCUS_SELECTIONS";
 const SELECT_FOCUS = "SELECT_FOCUS";
@@ -31,20 +37,23 @@ const SET_CATEGORIES = "SET_CATEGORIES";
 export const SET_TOUR_ACTIVE = "SET_TOUR_ACTIVE";
 const SET_TOUR_COMPLETED = "SET_TOUR_COMPLETED";
 const SET_SAVE_STATUS = "SET_SAVE_STATUS";
+const SET_REQUIRED_ECTS = "SET_REQUIRED_ECTS";
 
 let dataAdapter;
 
 const initialState = {
+    requiredECTS: null,
     startYear: null,
     categories: [],
     placements: [],
     focusSelections: [],
     rules: [],
+    todos: [],
     foci: [],
     selectionStatus: {},
     moduleInfos: {},
     placementErrors: {},
-    globalErrors: [],
+    todoEntries: [],
     initialized: false,
     saveStatus: SAVE_STATUS_SAVED,
     //tour
@@ -88,8 +97,11 @@ export default {
         [SET_PLACEMENT_ERRORS](state, placementErrors) {
             state.placementErrors = placementErrors;
         },
-        [SET_GLOBAL_ERRORS](state, globalErrors) {
-            state.globalErrors = globalErrors;
+        [SET_TODOS](state, todos) {
+            state.todos = todos;
+        },
+        [SET_TODO_ENTRIES](state, todoEntries) {
+            state.todoEntries = todoEntries;
         },
         [SET_PLACEMENTS](state, placements) {
             state.placements = placements;
@@ -121,8 +133,9 @@ export default {
             state.focusSelections = state.focusSelections.filter(
                 (f) => f.position != position
             );
-            if (focusId) {
-                state.focusSelections.push({ position, focusId });
+            const focus = state.foci.find((focus) => focus.id == focusId);
+            if (focus) {
+                state.focusSelections.push({ position, focus });
             }
         },
         [SET_CATEGORIES](state, categories) {
@@ -131,18 +144,31 @@ export default {
         [SET_START_YEAR](state, startYear) {
             state.startYear = startYear;
         },
+        [SET_REQUIRED_ECTS](state, requiredECTS) {
+            state.requiredECTS = requiredECTS;
+        },
     },
     actions: {
         init(
             { commit, dispatch },
-            { planerSlug, plan, categories, rules, foci }
+            { planerSlug, plan, categories, rules, foci, requiredECTS }
         ) {
             dataAdapter = new DataAdapter(planerSlug, plan.slug);
             commit(RESET_STATE);
+            commit(SET_REQUIRED_ECTS, requiredECTS);
             commit(SET_CATEGORIES, categories);
             commit(SET_FOCI, foci);
             commit(SET_FOCUS_SELECTIONS, plan.focusSelections);
             commit(SET_PLACEMENTS, plan.placements);
+
+            const todos = [
+                new TotalECTSTodo(),
+                new AtLeastOneFocusTodo(),
+                new ECTSPerCategoryTodo(),
+                new FocusModulesTodo(),
+                new RequiredModulesTodo(),
+            ];
+            commit(SET_TODOS, todos);
             commit(SET_RULES, rules);
             commit(SET_START_YEAR, plan.startYear);
             commit(SET_TOUR_COMPLETED, plan.tourCompleted);
@@ -152,9 +178,17 @@ export default {
         async save({ state, commit }) {
             try {
                 commit(SET_SAVE_STATUS, SAVE_STATUS_SAVING);
+                const focusSelections = state.focusSelections.map(
+                    (focusSelection) => {
+                        return {
+                            position: focusSelection.position,
+                            focusId: focusSelection.focus.id,
+                        };
+                    }
+                );
                 await dataAdapter.saveSchedule(
                     state.placements,
-                    state.focusSelections,
+                    focusSelections,
                     state.tourCompleted
                 );
                 commit(SET_SAVE_STATUS, SAVE_STATUS_SAVED);
@@ -222,16 +256,16 @@ export default {
             dispatch("save");
         },
         validate({ dispatch }) {
-            dispatch("validateGlobal");
+            dispatch("validateTodos");
             dispatch("validateModules");
             dispatch("validatePlacements");
         },
-        validateGlobal({ commit, state, getters }) {
-            const globalErrors = [];
-            state.rules.forEach((rule) => {
-                rule.validateGlobal(state, getters, globalErrors);
-            });
-            commit(SET_GLOBAL_ERRORS, globalErrors);
+        validateTodos({ commit, state, getters }) {
+            const todoEntries = state.todos.reduce((acc, cur) => {
+                acc.push(...cur.getEntries(state, getters));
+                return acc;
+            }, []);
+            commit(SET_TODO_ENTRIES, todoEntries);
         },
         validateModules({ commit, state, getters }) {
             const moduleInfos = {};
