@@ -14,6 +14,30 @@
       <p class="text-sm">(Änderungen vorbehalten)</p>
     </div>
     <div class="flex items-center justify-between gap-4">
+      <ul class="flex gap-x-4 items-center">
+        <li>
+          <Link
+            :href="`/${$page.props.planerSlug}/${$page.props.planResource.data.slug}/zeitplan`"
+            :class="{
+              active:
+                $page.url ===
+                `/${$page.props.planerSlug}/${$page.props.planResource.data.slug}/zeitplan`,
+            }"
+            >Zeitplan</Link
+          >
+        </li>
+        <li>
+          <Link
+            :href="`/${$page.props.planerSlug}/${$page.props.planResource.data.slug}/anrechnung`"
+            :class="{
+              active:
+                $page.url ===
+                `/${$page.props.planerSlug}/${$page.props.planResource.data.slug}/anrechnung`,
+            }"
+            >Anrechnung</Link
+          >
+        </li>
+      </ul>
       <SaveStatus />
       <div>
         <button
@@ -50,4 +74,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+a.active {
+  font-weight: bold;
+}
+</style>
