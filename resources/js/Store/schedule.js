@@ -121,7 +121,9 @@ export default {
             state.focusSelections = state.focusSelections.filter(
                 (f) => f.position != position
             );
-            state.focusSelections.push({ position, focusId });
+            if (focusId) {
+                state.focusSelections.push({ position, focusId });
+            }
         },
         [SET_CATEGORIES](state, categories) {
             state.categories = categories;
@@ -216,6 +218,7 @@ export default {
         },
         selectFocus({ commit, dispatch }, { position, focusId }) {
             commit(SELECT_FOCUS, { position, focusId });
+            dispatch("validate");
             dispatch("save");
         },
         validate({ dispatch }) {
