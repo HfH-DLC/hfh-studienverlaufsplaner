@@ -1,6 +1,7 @@
 <template>
   <div
     class="
+      error-message
       bg-red-50
       text-red-600
       border border-red-300
