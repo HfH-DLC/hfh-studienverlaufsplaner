@@ -16,8 +16,7 @@ class FocusSelectionResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "focus" => new FocusResource($this->whenLoaded('focus')),
-            "focusId" => $this->focus->id,
+            "focus" => new FocusResource($this->focus),
             "creditedModules" => ModuleResource::collection($this->whenLoaded('creditedModules')),
             "position" => $this->position
         ];
