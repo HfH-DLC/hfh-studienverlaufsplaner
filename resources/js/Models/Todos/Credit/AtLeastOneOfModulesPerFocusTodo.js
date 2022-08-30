@@ -9,6 +9,7 @@ export default class AtLeastOneOfModulesPerFocusTodo {
             acc.push({
                 label: this.getLabel(cur.focus),
                 checked: this.validate(cur, modules),
+                progressLabel: this.getProgressLabel(cur, modules),
             });
             return acc;
         }, []);
@@ -33,5 +34,18 @@ export default class AtLeastOneOfModulesPerFocusTodo {
             return false;
         }
         return true;
+    }
+
+    getProgressLabel(focusSelection, modules) {
+        const requriedModules = modules.filter((module) =>
+            this.moduleIds.includes(module.id)
+        );
+        const count = requriedModules.reduce((acc, cur) => {
+            if (cur.creditedAgainst == focusSelection.id) {
+                acc++;
+            }
+            return acc;
+        }, 0);
+        return `${count}`;
     }
 }

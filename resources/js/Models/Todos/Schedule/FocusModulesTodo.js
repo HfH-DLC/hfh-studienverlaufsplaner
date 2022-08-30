@@ -11,6 +11,10 @@ export default class FocusModulesTodo {
                         focus.requiredModules,
                         placements
                     ),
+                    progressLabel: this.getProgressLabelRequired(
+                        focus.requiredModules,
+                        placements
+                    ),
                 };
                 acc.push(entryRequired);
             }
@@ -19,6 +23,11 @@ export default class FocusModulesTodo {
                     label: this.getLabelOptional(focus),
                     checked: this.validateOptional(
                         focus.optionalModules,
+                        placements,
+                        focus.requiredNumberOfOptionalModules
+                    ),
+                    progressLabel: this.getProgressLabelOptional(
+                        focus.requiredModules,
                         placements,
                         focus.requiredNumberOfOptionalModules
                     ),
@@ -80,5 +89,23 @@ export default class FocusModulesTodo {
             ).length == requiredNumberOfOptionalModules
         )
             return true;
+    }
+
+    getProgressLabelRequired(modules, placements) {
+        const current = modules.filter((module) =>
+            placements.find((placement) => placement.moduleId == module.id)
+        ).length;
+        return `${current} / ${modules.length}`;
+    }
+
+    getProgressLabelOptional(
+        modules,
+        placements,
+        requiredNumberOfOptionalModules
+    ) {
+        const current = modules.filter((module) =>
+            placements.find((placement) => placement.moduleId == module.id)
+        ).length;
+        return `${current} / ${requiredNumberOfOptionalModules}`;
     }
 }

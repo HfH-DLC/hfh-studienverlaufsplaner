@@ -4,6 +4,7 @@ export default class ECTSPerCategoryTodo {
             .filter((category) => category.minECTS || category.maxECTS)
             .map((category) => ({
                 label: this.getLabel(category),
+                progressLabel: `${category.currentECTS}`,
                 checked: this.validate(category),
             }));
         return entries;

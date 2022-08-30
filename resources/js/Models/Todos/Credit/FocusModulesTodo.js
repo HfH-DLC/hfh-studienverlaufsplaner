@@ -20,6 +20,11 @@ export default class FocusModulesTodo {
                         creditedModuleIds,
                         focus.requiredNumberOfOptionalModules
                     ),
+                    progressLabel: this.getProgressLabel(
+                        focus.optionalModules,
+                        creditedModuleIds,
+                        focus.requiredNumberOfOptionalModules
+                    ),
                 };
                 acc.push(entryOptional);
             }
@@ -53,5 +58,17 @@ export default class FocusModulesTodo {
             ).length == requiredNumberOfOptionalModules
         )
             return true;
+    }
+
+    getProgressLabel(
+        optionalModules,
+        creditedModuleIds,
+        requiredNumberOfOptionalModules
+    ) {
+        const current = optionalModules.filter((optionalModule) =>
+            creditedModuleIds.includes(optionalModule.id)
+        ).length;
+
+        return `${current} / ${requiredNumberOfOptionalModules}`;
     }
 }

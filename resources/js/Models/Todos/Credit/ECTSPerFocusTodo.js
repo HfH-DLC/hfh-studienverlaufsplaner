@@ -14,9 +14,13 @@ export default class ECTSPerFocusTodo {
                     (focusSelection) => focusSelection.id == focusSelectionId
                 );
                 if (focusSelection) {
+                    const focusModules = modules.filter((module) =>
+                        moduleIds.includes(module.id)
+                    );
                     acc.push({
                         label: this.getLabel(focusSelection.focus),
-                        checked: this.validate(moduleIds, modules),
+                        checked: this.validate(focusModules),
+                        progressLabel: this.getProgressLabel(focusModules),
                     });
                 }
                 return acc;
@@ -44,8 +48,7 @@ export default class ECTSPerFocusTodo {
         return label;
     }
 
-    validate(moduleIds, modules) {
-        modules = modules.filter((module) => moduleIds.includes(module.id));
+    validate(modules) {
         const totalECTS = modules.reduce((acc, cur) => {
             return acc + cur.ects;
         }, 0);
@@ -56,5 +59,12 @@ export default class ECTSPerFocusTodo {
             return false;
         }
         return true;
+    }
+
+    getProgressLabel(modules) {
+        const current = modules.reduce((acc, cur) => {
+            return acc + cur.ects;
+        }, 0);
+        return `${current}`;
     }
 }

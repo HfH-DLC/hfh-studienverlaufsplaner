@@ -4,6 +4,7 @@ export default class AtLeastOneFocusTodo {
             {
                 label: `Wählen Sie mindestens einen Studienschwerpunkt.`,
                 checked: this.validate(focusSelections),
+                progressLabel: `${focusSelections.length}`,
             },
         ];
     }

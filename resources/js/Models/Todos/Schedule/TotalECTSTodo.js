@@ -4,6 +4,7 @@ export default class TotalECTSTodo {
             {
                 label: `Belegen Sie genau ${requiredECTS} ECTS Kreditpunkte.`,
                 checked: ects == requiredECTS,
+                progressLabel: `${ects} / ${requiredECTS}`,
             },
         ];
     }
