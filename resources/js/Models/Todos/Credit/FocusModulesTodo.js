@@ -12,9 +12,23 @@ export default class FocusModulesTodo {
                 ? modulesByFocusSelection.moduleIds
                 : [];
             const focus = cur.focus;
+            if (focus.requiredModules.length > 0) {
+                const entryOptional = {
+                    label: this.getLabel(focus, true),
+                    checked: this.validate(
+                        focus.requiredModules,
+                        creditedModuleIds
+                    ),
+                    progressLabel: this.getProgressLabel(
+                        focus.requiredModules,
+                        creditedModuleIds
+                    ),
+                };
+                acc.push(entryOptional);
+            }
             if (focus.optionalModules.length > 0) {
                 const entryOptional = {
-                    label: this.getLabel(focus),
+                    label: this.getLabel(focus, false),
                     checked: this.validate(
                         focus.optionalModules,
                         creditedModuleIds,
@@ -32,43 +46,48 @@ export default class FocusModulesTodo {
         }, []);
     }
 
-    getLabel(focus) {
-        const modules = focus.optionalModules;
-        const number = focus.requiredNumberOfOptionalModules;
+    getLabel(focus, isRequired) {
+        const modules = isRequired
+            ? focus.requiredModules
+            : focus.optionalModules;
         if (modules.length == 1) {
             const module = modules[0];
             return `Rechnen Sie das das Modul ${module.id} an den SSP "${focus.name}" an.`;
         }
         const moduleNames = modules.map((module) => `${module.id}`);
-        const moduleString = joinStrings(moduleNames, "oder");
-        return `Rechnen Sie ${numToWord(number, {
-            uppercase: false,
-            indefinite_eines: true,
-        })} der Module ${moduleString} an den SSP "${focus.name}" an.`;
+        if (isRequired) {
+            const moduleString = joinStrings(moduleNames, "und");
+            console.log(moduleNames);
+            return `Rechnen Sie die Module ${moduleString} an den SSP "${focus.name}" an.`;
+        } else {
+            const number = focus.requiredNumberOfOptionalModules;
+            const moduleString = joinStrings(moduleNames, "oder");
+            return `Rechnen Sie ${numToWord(number, {
+                uppercase: false,
+                indefinite_eines: true,
+            })} der Module ${moduleString} an den SSP "${focus.name}" an.`;
+        }
     }
 
-    validate(
-        optionalModules,
-        creditedModuleIds,
-        requiredNumberOfOptionalModules
-    ) {
+    validate(modules, creditedModuleIds, requiredNumber = -1) {
+        if (requiredNumber < 0) {
+            requiredNumber = modules.length;
+        }
         if (
-            optionalModules.filter((optionalModule) =>
-                creditedModuleIds.includes(optionalModule.id)
-            ).length == requiredNumberOfOptionalModules
+            modules.filter((module) => creditedModuleIds.includes(module.id))
+                .length == requiredNumber
         )
             return true;
     }
 
-    getProgressLabel(
-        optionalModules,
-        creditedModuleIds,
-        requiredNumberOfOptionalModules
-    ) {
-        const current = optionalModules.filter((optionalModule) =>
-            creditedModuleIds.includes(optionalModule.id)
+    getProgressLabel(modules, creditedModuleIds, requiredNumber = -1) {
+        if (requiredNumber < 0) {
+            requiredNumber = modules.length;
+        }
+        const current = modules.filter((module) =>
+            creditedModuleIds.includes(module.id)
         ).length;
 
-        return `${current} / ${requiredNumberOfOptionalModules}`;
+        return `${current} / ${requiredNumber}`;
     }
 }
