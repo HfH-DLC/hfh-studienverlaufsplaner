@@ -1,7 +1,11 @@
 <template>
   <div class="min-h-screen flex flex-col">
     <header>
-      <PlanHeader />
+      <PlanHeader
+        :planerSlug="planerSlug"
+        :planSlug="planResource.data.slug"
+        :showNavigation="focusSelectionEnabled"
+      />
     </header>
     <main class="flex-1 flex flex-col">
       <Flash class="fixed top-4 left-1/2 -translate-x-1/2" />
