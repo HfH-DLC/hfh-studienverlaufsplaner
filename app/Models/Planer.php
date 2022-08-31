@@ -34,6 +34,12 @@ class Planer extends Model
         return $this->hasMany(Rule::class);
     }
 
+    public function todos()
+    {
+        return $this->hasMany(Todo::class);
+    }
+
+
     public function getModules($query)
     {
         $modules = collect();

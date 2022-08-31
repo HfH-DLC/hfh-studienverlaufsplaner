@@ -3,9 +3,7 @@ import emitter from "../emitter";
 import flashTypes from "../flashTypes";
 import { SAVE_STATUS_SAVED, SAVE_STATUS_SAVING } from "../constants";
 import { getRule } from "../Models/Rules/RuleFactory";
-import ECTSPerFocusTodo from "../Models/Todos/Credit/ECTSPerFocusTodo";
-import AtLeastOneOfModulesPerFocusTodo from "../Models/Todos/Credit/AtLeastOneOfModulesPerFocusTodo";
-import FocusModulesTodo from "../Models/Todos/Credit/FocusModulesTodo";
+import { getTodo } from "../Models/Todos/Credit/TodoFactory";
 
 const initialState = {
     focusSelections: [],
@@ -67,7 +65,15 @@ export default {
             state.saveStatus = value;
         },
         [SET_TODOS](state, todos) {
-            state.todos = todos;
+            const todoObjects = todos.reduce((array, rule) => {
+                try {
+                    array.push(getTodo(state, rule));
+                } catch (error) {
+                    console.error(error);
+                }
+                return array;
+            }, []);
+            state.todos = todoObjects;
         },
         [SET_TODO_ENTRIES](state, todoEntries) {
             state.todoEntries = todoEntries;
@@ -79,20 +85,13 @@ export default {
     actions: {
         init(
             { commit, dispatch },
-            { planerSlug, plan, modules, focusSelections, rules }
+            { planerSlug, plan, modules, focusSelections, rules, todos }
         ) {
             dataAdapter = new DataAdapter(planerSlug, plan.slug);
 
             commit(RESET_STATE);
             commit(SET_FOCUS_SELECTIONS, focusSelections);
             commit(SET_MODULES, modules);
-            const todos = [
-                new ECTSPerFocusTodo({ minECTS: 30, maxECTS: 65 }),
-                new FocusModulesTodo(),
-                new AtLeastOneOfModulesPerFocusTodo({
-                    moduleIds: ["BP5_01.1.SHP", "BP5_01.2.SHP", "BP5_01.3.SHP"],
-                }),
-            ];
             commit(SET_TODOS, todos);
             commit(SET_RULES, rules);
             dispatch("validate");

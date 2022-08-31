@@ -10,6 +10,7 @@ use App\Http\Resources\ModuleResource;
 use App\Http\Resources\PlanerResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\RuleResource;
+use App\Http\Resources\TodoResource;
 use App\Imports\JSONImport;
 use App\Mail\PlanCreated;
 use App\Models\FocusSelection;
@@ -125,7 +126,8 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
                 'planerSlug' => $planer->slug,
                 'planResource' => $planResource,
                 'creditableModulesResource' => CreditableModuleResource::collection($plan->getCreditableModules()),
-                'rulesResource' => RuleResource::collection($planer->rules()->where('type', 'FocusCredit')->get())
+                'rulesResource' => RuleResource::collection($planer->rules()->where('type', 'Credit')->get()),
+                'todosResource' => TodoResource::collection($planer->todos()->where('type', 'Credit')->get())
             )
         );
     })->name('plan-credit');
@@ -146,7 +148,8 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
     Route::get('/{plan:slug}/zeitplan', function (Planer $planer, Plan $plan) {
         $planResource = new PlanResource($plan->load('placements'));
         $categoriesResource = CategoryResource::collection($plan->getCategoriesWithAllModules());
-        $rulesResource = RuleResource::collection($planer->rules()->where('type', 'Placement')->get());
+        $rulesResource = RuleResource::collection($planer->rules()->where('type', 'Schedule')->get());
+        $todosResource = TodoResource::collection($planer->todos()->where('type', 'Schedule')->get());
         $fociResource = FocusResource::collection($planer->foci()->get());
         return Inertia::render(
             'Schedule',
@@ -158,6 +161,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
                 'focusSelectionEnabled' => $planer->focus_selection_enabled,
                 'fociResource' => $fociResource,
                 'rulesResource' => $rulesResource,
+                'todosResource' => $todosResource,
                 'requiredECTS' => $planer->required_ects,
             )
         );

@@ -410,19 +410,64 @@
             "rules": [
                 {
                     "name": "Date",
-                    "type": "Placement"
+                    "type": "Schedule"
                 },
                 {
                     "name": "Prerequisites",
-                    "type": "Placement"
+                    "type": "Schedule"
                 },
                 {
                     "name": "ExcludeSemester",
-                    "type": "Placement",
+                    "type": "Schedule",
                     "params": {
                         "excludePositions": [0, 1],
                         "moduleId": "M5_03"
                     }
+                }
+            ],
+            "todos": [
+                {
+                    "name": "AtLeastOneFocusTodo",
+                    "type": "Schedule"
+                },
+                {
+                    "name": "ECTSPerCategoryTodo",
+                    "type": "Schedule"
+                },
+                {
+                    "name": "FocusModulesTodo",
+                    "type": "Schedule"
+                },
+                {
+                    "name": "RequiredModulesTodo",
+                    "type": "Schedule"
+                },
+                {
+                    "name": "TotalECTSTodo",
+                    "type": "Schedule"
+                },
+                {
+                    "name": "AtLeastOneOfModulesPerFocusTodo",
+                    "type": "Credit",
+                    "params": {
+                        "moduleIds": [
+                            "BP5_01.1.SHP",
+                            "BP5_01.2.SHP",
+                            "BP5_01.3.SHP"
+                        ]
+                    }
+                },
+                {
+                    "name": "ECTSPerFocusTodo",
+                    "type": "Credit",
+                    "params": {
+                        "minECTS": 30,
+                        "maxECTS": 65
+                    }
+                },
+                {
+                    "name": "FocusModulesTodo",
+                    "type": "Credit"
                 }
             ]
         },
@@ -474,19 +519,33 @@
             "rules": [
                 {
                     "name": "Date",
-                    "type": "Placement"
+                    "type": "Schedule"
                 },
                 {
                     "name": "Prerequisites",
-                    "type": "Placement"
+                    "type": "Schedule"
                 },
                 {
                     "name": "ExcludeSemester",
-                    "type": "Placement",
+                    "type": "Schedule",
                     "params": {
                         "excludePositions": [0, 1],
                         "moduleId": "M5_03"
                     }
+                }
+            ],
+            "todos": [
+                {
+                    "name": "RequiredModulesTodo",
+                    "type": "Schedule"
+                },
+                {
+                    "name": "ECTSPerCategoryTodo",
+                    "type": "Schedule"
+                },
+                {
+                    "name": "TotalECTSTodo",
+                    "type": "Schedule"
                 }
             ]
         }

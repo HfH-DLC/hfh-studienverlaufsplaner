@@ -77,6 +77,10 @@ export default {
       type: Object,
       required: true,
     },
+    todosResource: {
+      type: Object,
+      required: true,
+    },
   },
   created() {
     this.init({
@@ -85,6 +89,7 @@ export default {
       planerSlug: this.planerSlug,
       focusSelections: this.planResource.data.focusSelections,
       rules: this.rulesResource.data,
+      todos: this.todosResource.data,
     });
   },
 

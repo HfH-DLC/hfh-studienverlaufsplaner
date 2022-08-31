@@ -5,6 +5,7 @@ import emitter from "../emitter";
 import flashTypes from "../flashTypes";
 import { SAVE_STATUS_SAVED, SAVE_STATUS_SAVING } from "../constants";
 import { getRule } from "../Models/Rules/RuleFactory";
+import { getTodo } from "../Models/Todos/Schedule/TodoFactory";
 import {
     getCalendarYear,
     orderDay,
@@ -12,11 +13,6 @@ import {
     orderTime,
     orderTimeWindow,
 } from "../helpers";
-import TotalECTSTodo from "../Models/Todos/Schedule/TotalECTSTodo";
-import AtLeastOneFocusTodo from "../Models/Todos/Schedule/AtLeastOneFocusTodo";
-import ECTSPerCategoryTodo from "../Models/Todos/Schedule/ECTSPerCategoryTodo";
-import FocusModulesTodo from "../Models/Todos/Schedule/FocusModulesTodo";
-import RequiredModulesTodo from "../Models/Todos/Schedule/RequiredModulesTodo";
 
 const RESET_STATE = "RESET_STATE";
 const SET_RULES = "SET_RULES";
@@ -98,7 +94,15 @@ export default {
             state.placementErrors = placementErrors;
         },
         [SET_TODOS](state, todos) {
-            state.todos = todos;
+            const todoObjects = todos.reduce((array, rule) => {
+                try {
+                    array.push(getTodo(state, rule));
+                } catch (error) {
+                    console.error(error);
+                }
+                return array;
+            }, []);
+            state.todos = todoObjects;
         },
         [SET_TODO_ENTRIES](state, todoEntries) {
             state.todoEntries = todoEntries;
@@ -151,7 +155,7 @@ export default {
     actions: {
         init(
             { commit, dispatch },
-            { planerSlug, plan, categories, rules, foci, requiredECTS }
+            { planerSlug, plan, categories, rules, todos, foci, requiredECTS }
         ) {
             dataAdapter = new DataAdapter(planerSlug, plan.slug);
             commit(RESET_STATE);
@@ -160,14 +164,6 @@ export default {
             commit(SET_FOCI, foci);
             commit(SET_FOCUS_SELECTIONS, plan.focusSelections);
             commit(SET_PLACEMENTS, plan.placements);
-
-            const todos = [
-                new AtLeastOneFocusTodo(),
-                new TotalECTSTodo(),
-                new RequiredModulesTodo(),
-                new ECTSPerCategoryTodo(),
-                new FocusModulesTodo(),
-            ];
             commit(SET_TODOS, todos);
             commit(SET_RULES, rules);
             commit(SET_START_YEAR, plan.startYear);

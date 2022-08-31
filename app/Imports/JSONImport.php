@@ -8,6 +8,7 @@ use App\Models\Focus;
 use App\Models\Module;
 use App\Models\Planer;
 use App\Models\Rule;
+use App\Models\Todo;
 use Illuminate\Support\Facades\DB;
 
 class JSONImport
@@ -123,6 +124,7 @@ class JSONImport
             $this->importCategories($planerData, $planer);
             $this->importFoci($planerData, $planer);
             $this->importRules($planerData, $planer);
+            $this->importTodos($planerData, $planer);
         }
     }
 
@@ -198,6 +200,23 @@ class JSONImport
                 $rule->params = $ruleData->params;
             }
             $planer->rules()->save($rule);
+        }
+    }
+
+    private function importTodos($planerData, $planer)
+    {
+        if (!isset($planerData->rules)) {
+            return;
+        }
+        $planer->todos()->delete();
+        foreach ($planerData->todos as $todoData) {
+            $todo = new Todo();
+            $todo->name = $todoData->name;
+            $todo->type = $todoData->type;
+            if (isset($todoData->params)) {
+                $todo->params = $todoData->params;
+            }
+            $planer->todos()->save($todo);
         }
     }
 

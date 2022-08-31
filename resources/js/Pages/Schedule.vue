@@ -101,6 +101,10 @@ export default {
       type: Object,
       required: true,
     },
+    todosResource: {
+      type: Object,
+      required: true,
+    },
   },
   created() {
     this.init({
@@ -108,6 +112,7 @@ export default {
       plan: this.planResource.data,
       planerSlug: this.planerSlug,
       rules: this.rulesResource.data,
+      todos: this.todosResource.data,
       foci: this.fociResource.data,
       requiredECTS: this.requiredECTS,
     });
