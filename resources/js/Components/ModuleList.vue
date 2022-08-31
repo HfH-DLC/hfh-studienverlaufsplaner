@@ -46,6 +46,12 @@ export default {
     ChevronUpIcon,
     Module,
   },
+  props: {
+    hashModuleId: {
+      type: String,
+      default: "",
+    },
+  },
   data() {
     return {
       currentOpen: 0,
@@ -54,19 +60,9 @@ export default {
   computed: {
     ...mapGetters("schedule", ["categories"]),
   },
-  mounted() {
-    this.openActiveAccordion(window.location.hash);
-    window.onhashchange = (event) => {
-      this.openActiveAccordion(new URL(event.newURL).hash);
-    };
-  },
-  beforeUnmount() {
-    window.onhashchange = null;
-  },
   methods: {
-    openActiveAccordion(hash) {
-      if (hash && hash.startsWith("#module-")) {
-        const moduleId = hash.slice("#module-".length);
+    openActiveAccordion(moduleId) {
+      if (moduleId) {
         const index = this.categories.findIndex((category) =>
           category.modules.some((module) => module.id == moduleId)
         );
@@ -74,6 +70,11 @@ export default {
           this.currentOpen = index;
         }
       }
+    },
+  },
+  watch: {
+    hashModuleId(newValue) {
+      this.openActiveAccordion(newValue);
     },
   },
 };

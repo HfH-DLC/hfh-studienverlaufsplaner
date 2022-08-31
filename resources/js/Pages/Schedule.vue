@@ -23,7 +23,10 @@
                   tourActive ? tourSelectedModule : selectedModule
                 "
               />
-              <ModuleList v-show="!selectedModule" />
+              <ModuleList
+                v-show="!selectedModule"
+                :hashModuleId="hashModuleId"
+              />
             </StickyColumn>
             <StickyColumn id="time-table" class="w-6/12">
               <TimeTable ref="timeTable" />
@@ -157,7 +160,9 @@ export default {
     selectModuleFromHash(hash) {
       if (hash && hash.startsWith("#module-")) {
         const moduleId = hash.slice("#module-".length);
+        this.hashModuleId = moduleId;
         this.selectModule(moduleId);
+        window.location.hash = "";
       }
     },
   },
