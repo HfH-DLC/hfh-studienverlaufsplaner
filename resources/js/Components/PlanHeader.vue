@@ -3,21 +3,19 @@
     class="flex justify-between items-end h-full p-4 border-b border-gray-300"
   >
     <div>
-      <Link :href="`/${$page.props.planerSlug}`"
+      <Link :href="`/${planerSlug}`"
         ><div class="text-xl">
           Studienverlaufsplaner
-          <span v-if="$page.props.planerName">{{
-            $page.props.planerName
-          }}</span>
+          <span v-if="planerName">{{ planerName }}</span>
         </div></Link
       >
       <p class="text-sm">(Änderungen vorbehalten)</p>
     </div>
     <div class="flex items-center justify-between gap-4">
-      <ul class="flex gap-x-4 items-center">
+      <ul class="flex gap-x-4 items-center" v-if="showNavigation">
         <li>
           <Link
-            :href="`/${$page.props.planerSlug}/${$page.props.planResource.data.slug}/zeitplan`"
+            :href="`/${planerSlug}/${planSlug}/zeitplan`"
             :class="{
               active: $page.component === 'Schedule',
             }"
@@ -26,7 +24,7 @@
         </li>
         <li>
           <Link
-            :href="`/${$page.props.planerSlug}/${$page.props.planResource.data.slug}/anrechnung`"
+            :href="`/${planerSlug}/${$planSlug}/anrechnung`"
             :class="{
               active: $page.component === 'Credit',
             }"
@@ -61,6 +59,20 @@ export default {
     QuestionMarkCircleIcon,
     PrintButton,
     SaveStatus,
+  },
+  props: {
+    planerSlug: {
+      type: String,
+      required: true,
+    },
+    planSlug: {
+      type: String,
+      required: true,
+    },
+    showNavigation: {
+      type: Boolean,
+      required: true,
+    },
   },
   methods: {
     startTour() {
