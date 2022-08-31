@@ -185,7 +185,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
     });
 
     Route::put('/{plan:slug}/zeitplan', function (UpdateScheduleRequest $request, Planer $planer, Plan $plan) {
-        DB::transaction(function () use ($plan, $request) {
+        DB::transaction(function () use ($request, $planer, $plan) {
             $validated = $request->validated();
             if (Arr::exists($validated, 'placements')) {
                 $placements_data = $validated['placements'];
@@ -215,11 +215,11 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
                 })->delete();
 
                 foreach ($focusSelectionsData as $focusSelectionData) {
-                    $focusSelection = FocusSelection::where('position', $focusSelectionData['position'])->where('focus_id', $focusSelectionData['focusId'])->first();
+                    $focusSelection = $plan->focusSelections()->where('position', $focusSelectionData['position'])->where('focus_id', $focusSelectionData['focusId'])->first();
                     if (!$focusSelection) {
                         $focusSelection = new FocusSelection();
                         $focusSelection->position = $focusSelectionData['position'];
-                        $focusSelection->focus()->associate(Focus::findOrFail($focusSelectionData['focusId']));
+                        $focusSelection->focus()->associate($planer->foci()->findOrFail($focusSelectionData['focusId']));
                         $plan->focusSelections()->save($focusSelection);
                     }
                     $focusSelection->save();
