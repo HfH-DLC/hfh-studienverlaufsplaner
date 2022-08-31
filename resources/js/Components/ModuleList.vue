@@ -23,7 +23,7 @@
               :module="module"
               :disabled="
                 !module.placement &&
-                category.maxECTS &&
+                !!category.maxECTS &&
                 category.currentECTS >= category.maxECTS
               "
             />
