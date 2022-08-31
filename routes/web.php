@@ -2,27 +2,21 @@
 
 use App\Http\Requests\StorePlanRequest;
 use App\Http\Requests\UpdateFocusCreditRequest;
-use App\Http\Requests\UpdateFocusSelectionRequest;
-use App\Http\Requests\UpdateModuleSelectionRequest;
 use App\Http\Requests\UpdateScheduleRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CreditableModuleResource;
 use App\Http\Resources\FocusResource;
-use App\Http\Resources\FocusSelectionResource;
 use App\Http\Resources\ModuleResource;
 use App\Http\Resources\PlanerResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\RuleResource;
 use App\Imports\JSONImport;
-use App\Imports\Rules\RuleImport;
 use App\Mail\PlanCreated;
-use App\Models\Focus;
 use App\Models\FocusSelection;
 use App\Models\Module;
 use App\Models\Placement;
 use App\Models\Plan;
 use App\Models\Planer;
-use App\Models\Rule;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
