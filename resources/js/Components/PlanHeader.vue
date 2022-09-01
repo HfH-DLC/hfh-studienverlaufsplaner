@@ -3,12 +3,10 @@
     class="flex justify-between items-end h-full p-4 border-b border-gray-300"
   >
     <div>
-      <Link :href="`/${planerSlug}`"
-        ><div class="text-xl">
-          Studienverlaufsplaner
-          <span v-if="planerName">{{ planerName }}</span>
-        </div></Link
-      >
+      <div class="text-xl">
+        Studienverlaufsplaner
+        <span v-if="planerName">{{ planerName }}</span>
+      </div>
       <p class="text-sm">(Änderungen vorbehalten)</p>
     </div>
     <div class="flex items-center justify-between gap-4">
@@ -24,7 +22,7 @@
         </li>
         <li>
           <Link
-            :href="`/${planerSlug}/${$planSlug}/anrechnung`"
+            :href="`/${planerSlug}/${planSlug}/anrechnung`"
             :class="{
               active: $page.component === 'Credit',
             }"
@@ -62,6 +60,10 @@ export default {
   },
   props: {
     planerSlug: {
+      type: String,
+      required: true,
+    },
+    planerName: {
       type: String,
       required: true,
     },

@@ -3,6 +3,7 @@
     <header>
       <PlanHeader
         :planerSlug="planerSlug"
+        :planerName="planerName"
         :planSlug="planResource.data.slug"
         :showNavigation="focusSelectionEnabled"
       />
@@ -96,6 +97,10 @@ export default {
       type: String,
       required: true,
     },
+    planerName: {
+      type: String,
+      required: true,
+    },
     planResource: {
       type: Object,
       required: true,
@@ -112,6 +117,11 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return {
+      hashModuleId: null,
+    };
   },
   created() {
     this.init({

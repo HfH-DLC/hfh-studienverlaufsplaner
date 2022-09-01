@@ -1,7 +1,12 @@
 <template>
   <div class="min-h-screen flex flex-col">
     <header>
-      <PlanHeader />
+      <PlanHeader
+        :planerSlug="planerSlug"
+        :planerName="planerName"
+        :planSlug="planResource.data.slug"
+        :showNavigation="true"
+      />
     </header>
     <main class="flex-1 flex flex-col p-4">
       <h1 class="text-3xl mt-4 mb-2">Anrechnung an die Studienschwerpunkte</h1>
@@ -70,6 +75,10 @@ export default {
       required: true,
     },
     planerSlug: {
+      type: String,
+      required: true,
+    },
+    planerName: {
       type: String,
       required: true,
     },
