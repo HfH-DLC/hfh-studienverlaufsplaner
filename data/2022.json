@@ -246,21 +246,46 @@
             "id": "BP5_01.1.SHP",
             "name": "Berufspraxis 1 & Portfolio",
             "ects": 5,
-            "creditable": true
+            "creditable": true,
+            "modifiers": [
+                {
+                    "page": "credit",
+                    "values": {
+                        "name": "Berufspraxis 1"
+                    }
+                }
+            ]
         },
         {
             "id": "BP5_01.2.SHP",
             "name": "Berufspraxis 2 & Portfolio",
             "ects": 5,
             "creditable": true,
-            "prerequisites": ["BP5_01.1.SHP"]
+            "prerequisites": ["BP5_01.1.SHP"],
+            "modifiers": [
+                {
+                    "page": "credit",
+                    "values": {
+                        "name": "Berufspraxis 2"
+                    }
+                }
+            ]
         },
         {
             "id": "BP5_01.3.SHP",
             "name": "Berufspraxis 3 & Portfolio",
-            "ects": 5,
+            "ects": 10,
             "creditable": true,
-            "prerequisites": ["BP5_01.1.SHP", "BP5_01.2.SHP"]
+            "prerequisites": ["BP5_01.1.SHP", "BP5_01.2.SHP"],
+            "modifiers": [
+                {
+                    "page": "credit",
+                    "values": {
+                        "name": "Berufspraxis 3",
+                        "ects": 5
+                    }
+                }
+            ]
         },
         {
             "id": "BP5_01.1.HFE",
@@ -278,7 +303,7 @@
         {
             "id": "BP5_01.3.HFE",
             "name": "Berufspraxis 3 & Portfolio",
-            "ects": 5,
+            "ects": 10,
             "creditable": true,
             "prerequisites": ["BP5_01.1.HFE", "BP5_01.2.HFE"]
         },
@@ -410,15 +435,15 @@
             "rules": [
                 {
                     "name": "Date",
-                    "type": "Schedule"
+                    "type": "schedule"
                 },
                 {
                     "name": "Prerequisites",
-                    "type": "Schedule"
+                    "type": "schedule"
                 },
                 {
                     "name": "ExcludeSemester",
-                    "type": "Schedule",
+                    "type": "schedule",
                     "params": {
                         "excludePositions": [0, 1],
                         "moduleId": "M5_03"
@@ -428,27 +453,27 @@
             "todos": [
                 {
                     "name": "AtLeastOneFocusTodo",
-                    "type": "Schedule"
+                    "type": "schedule"
                 },
                 {
                     "name": "ECTSPerCategoryTodo",
-                    "type": "Schedule"
+                    "type": "schedule"
                 },
                 {
                     "name": "FocusModulesTodo",
-                    "type": "Schedule"
+                    "type": "schedule"
                 },
                 {
                     "name": "RequiredModulesTodo",
-                    "type": "Schedule"
+                    "type": "schedule"
                 },
                 {
                     "name": "TotalECTSTodo",
-                    "type": "Schedule"
+                    "type": "schedule"
                 },
                 {
                     "name": "AtLeastOneOfModulesPerFocusTodo",
-                    "type": "Credit",
+                    "type": "credit",
                     "params": {
                         "moduleIds": [
                             "BP5_01.1.SHP",
@@ -459,7 +484,7 @@
                 },
                 {
                     "name": "ECTSPerFocusTodo",
-                    "type": "Credit",
+                    "type": "credit",
                     "params": {
                         "minECTS": 30,
                         "maxECTS": 65
@@ -467,7 +492,7 @@
                 },
                 {
                     "name": "FocusModulesTodo",
-                    "type": "Credit"
+                    "type": "credit"
                 }
             ]
         },
@@ -519,15 +544,15 @@
             "rules": [
                 {
                     "name": "Date",
-                    "type": "Schedule"
+                    "type": "schedule"
                 },
                 {
                     "name": "Prerequisites",
-                    "type": "Schedule"
+                    "type": "schedule"
                 },
                 {
                     "name": "ExcludeSemester",
-                    "type": "Schedule",
+                    "type": "schedule",
                     "params": {
                         "excludePositions": [0, 1],
                         "moduleId": "M5_03"
@@ -537,15 +562,15 @@
             "todos": [
                 {
                     "name": "RequiredModulesTodo",
-                    "type": "Schedule"
+                    "type": "schedule"
                 },
                 {
                     "name": "ECTSPerCategoryTodo",
-                    "type": "Schedule"
+                    "type": "schedule"
                 },
                 {
                     "name": "TotalECTSTodo",
-                    "type": "Schedule"
+                    "type": "schedule"
                 }
             ]
         }

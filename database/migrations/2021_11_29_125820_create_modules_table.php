@@ -19,6 +19,7 @@ class CreateModulesTable extends Migration
             $table->string('name');
             $table->integer('ects');
             $table->boolean('creditable');
+            $table->text('modifiers')->nullable();
         });
     }
 

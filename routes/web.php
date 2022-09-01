@@ -119,15 +119,19 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
     Route::get('/{plan:slug}/anrechnung', function (Planer $planer, Plan $plan) {
         $plan->load('focusSelections.focus');
         $planResource = new PlanResource($plan);
+        $modules = $plan->getCreditableModules();
+        foreach ($modules as $module) {
+            $module->applyModifiers("credit");
+        }
         return Inertia::render(
             'Credit',
             array(
                 'planerName' => $planer->name,
                 'planerSlug' => $planer->slug,
                 'planResource' => $planResource,
-                'creditableModulesResource' => CreditableModuleResource::collection($plan->getCreditableModules()),
-                'rulesResource' => RuleResource::collection($planer->rules()->where('type', 'Credit')->get()),
-                'todosResource' => TodoResource::collection($planer->todos()->where('type', 'Credit')->get())
+                'creditableModulesResource' => CreditableModuleResource::collection($modules),
+                'rulesResource' => RuleResource::collection($planer->rules()->where('type', 'credit')->get()),
+                'todosResource' => TodoResource::collection($planer->todos()->where('type', 'credit')->get())
             )
         );
     })->name('plan-credit');

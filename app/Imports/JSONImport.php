@@ -79,6 +79,9 @@ class JSONImport
         $module->name = $moduleData->name;
         $module->ects = $moduleData->ects;
         $module->creditable = $moduleData->creditable;
+        if (isset($moduleData->modifiers)) {
+            $module->modifiers = $moduleData->modifiers;
+        }
         $module->save();
         $this->modulesCache[$id] = $module;
     }

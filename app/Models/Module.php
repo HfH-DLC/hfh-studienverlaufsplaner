@@ -12,7 +12,7 @@ class Module extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $casts = ['category_id' => 'integer', 'ects' => 'integer'];
+    protected $casts = ['category_id' => 'integer', 'ects' => 'integer', 'modifiers' => 'array'];
 
     public function categories()
     {
@@ -42,5 +42,19 @@ class Module extends Model
     public function foci()
     {
         return $this->belongsToMany(Focus::class);
+    }
+
+    public function applyModifiers($page)
+    {
+        if (!isset($this->modifiers)) {
+            return;
+        }
+        foreach ($this->modifiers as $modifier) {
+            if (isset($modifier["page"]) && $modifier["page"] == $page) {
+                foreach ($modifier["values"] as $key => $value) {
+                    $this[$key] = $value;
+                }
+            }
+        }
     }
 }
