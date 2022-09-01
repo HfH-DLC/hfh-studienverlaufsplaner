@@ -19,14 +19,7 @@
       <template v-slot:content>
         <ul>
           <li v-for="module in category.modules" :key="module.id">
-            <Module
-              :module="module"
-              :disabled="
-                !module.placement &&
-                !!category.maxECTS &&
-                category.currentECTS >= category.maxECTS
-              "
-            />
+            <Module :module="module" />
           </li>
         </ul>
       </template>
