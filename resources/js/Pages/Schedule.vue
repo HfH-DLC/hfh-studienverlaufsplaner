@@ -6,6 +6,7 @@
         :planerName="planerName"
         :planSlug="planResource.data.slug"
         :showNavigation="focusSelectionEnabled"
+        :showTour="!!tour"
       />
     </header>
     <main class="flex-1 flex flex-col">
@@ -55,14 +56,12 @@
           </div>
         </div>
         <Tour
+          v-if="tour"
           :steps="tour.steps"
           :startOnMount="!tourCompleted"
           @completed="completeTour"
         />
       </template>
-      <div v-else class="text-2xl text-center p-4 flex-1">
-        Plan wird geladen...
-      </div>
     </main>
   </div>
 </template>
@@ -134,7 +133,7 @@ export default {
       type: Object,
       required: true,
     },
-    tour: {
+    tourData: {
       type: Object,
       required: true,
     },
@@ -153,6 +152,7 @@ export default {
       todos: this.todosResource.data,
       foci: this.fociResource.data,
       requiredECTS: this.requiredECTS,
+      tour: this.tourData,
     });
     this.$emitter.on("retry-save", this.retrySave);
   },
@@ -172,6 +172,7 @@ export default {
     ...mapState("schedule", [
       "initialized",
       "flash",
+      "tour",
       "tourCompleted",
       "tourActive",
       "tourSelectedModule",

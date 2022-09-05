@@ -6,13 +6,14 @@
         :planerName="planerName"
         :planSlug="planResource.data.slug"
         :showNavigation="true"
+        :showTour="!!tour"
       />
     </header>
     <main class="flex-1 flex flex-col p-4">
       <h1 class="text-3xl mt-4 mb-2">Anrechnung an die Studienschwerpunkte</h1>
       <ErrorList class="mt-4 space-y-2" :errors="errors" />
       <div class="flex mt-4 gap-x-8">
-        <table class="w-9/12">
+        <table class="w-9/12" id="modules">
           <template v-for="(module, index) in modules" :key="module.id">
             <tr
               :class="{
@@ -49,9 +50,15 @@
             </tr>
           </template>
         </table>
-        <Checklist :entries="todoEntries" class="w-3/12" />
+        <Checklist :entries="todoEntries" id="todos" class="w-3/12" />
       </div>
     </main>
+    <Tour
+      v-if="tour"
+      :steps="tour.steps"
+      :startOnMount="!tourCompleted"
+      @completed="completeTour"
+    />
   </div>
 </template>
 
@@ -61,10 +68,11 @@ import ErrorList from "../Components/ErrorList.vue";
 import HfHButton from "../Components/HfHButton.vue";
 import HfHSelect from "../Components/HfHSelect.vue";
 import PlanHeader from "../Components/PlanHeader.vue";
+import Tour from "../Components/Tour.vue";
 
 import { mapActions, mapState } from "vuex";
 export default {
-  components: { Checklist, ErrorList, HfHButton, HfHSelect, PlanHeader },
+  components: { Checklist, ErrorList, HfHButton, HfHSelect, PlanHeader, Tour },
   props: {
     creditableModulesResource: {
       type: Object,
@@ -90,6 +98,10 @@ export default {
       type: Object,
       required: true,
     },
+    tourData: {
+      type: Object,
+      required: true,
+    },
   },
   created() {
     this.init({
@@ -99,6 +111,7 @@ export default {
       focusSelections: this.planResource.data.focusSelections,
       rules: this.rulesResource.data,
       todos: this.todosResource.data,
+      tour: this.tourData,
     });
   },
 
@@ -108,6 +121,8 @@ export default {
       "modules",
       "focusSelections",
       "todoEntries",
+      "tour",
+      "tourCompleted",
     ]),
     focusOptions() {
       return this.focusSelections.map((focusSelection) => ({
@@ -118,9 +133,12 @@ export default {
   },
 
   methods: {
-    ...mapActions("credit", ["init", "creditModuleAgainstFocusSelection"]),
+    ...mapActions("credit", [
+      "init",
+      "creditModuleAgainstFocusSelection",
+      "completeTour",
+    ]),
     getFocusName(focusSelectionId) {
-      console.log(focusSelectionId);
       return this.focusSelections.find(
         (focusSelection) => focusSelection.id == focusSelectionId
       ).focus.name;

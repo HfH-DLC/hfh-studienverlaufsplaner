@@ -35,6 +35,7 @@
       <SaveStatus />
       <div>
         <button
+          v-if="showTour"
           id="start-tour"
           class="p-2 flex items-center gap-1 hover:text-thunderbird-red"
           @click="startTour"
@@ -74,6 +75,10 @@ export default {
       required: true,
     },
     showNavigation: {
+      type: Boolean,
+      required: true,
+    },
+    showTour: {
       type: Boolean,
       required: true,
     },

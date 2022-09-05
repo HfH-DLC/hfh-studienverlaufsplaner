@@ -14,10 +14,10 @@ export default class DataAdapter {
         return response.data.data;
     }
 
-    async saveFocusCredits(focusCredits) {
+    async saveCredit(focusCredits, tourCompleted) {
         const response = await axios.put(
             `/${this.planerSlug}/${this.planSlug}/anrechnung`,
-            { focusCredits }
+            { focusCredits, tourCompleted }
         );
         return response.data.data;
     }

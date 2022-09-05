@@ -121,9 +121,7 @@ export default {
     start() {
       this.$store.commit("schedule/" + SET_TOUR_ACTIVE, true);
       this.isOpen = true;
-      if (this.currentElement) {
-        this.createPopper();
-      }
+      this.updateCurrentElement();
     },
     getStep(index) {
       return this.steps[index];
@@ -180,17 +178,7 @@ export default {
       if (newIndex == this.steps.length) {
         this.complete();
       } else {
-        if (this.popper) {
-          this.popper.destroy();
-        }
         this.currentIndex = newIndex;
-        this.$nextTick(() => {
-          this.currentElement = this.getElement(this.currentIndex);
-          if (this.currentElement) {
-            this.createPopper();
-          }
-          this.updateOverlayStyle();
-        });
       }
       if (this.currentStep.beforeAction) {
         const { name, value } = this.currentStep.beforeAction;
@@ -203,6 +191,18 @@ export default {
     onDialogClosed() {
       this.end();
     },
+    updateCurrentElement() {
+      this.$nextTick(() => {
+        if (this.popper) {
+          this.popper.destroy();
+        }
+        this.currentElement = this.getElement(this.currentIndex);
+        if (this.currentElement) {
+          this.createPopper();
+        }
+        this.updateOverlayStyle();
+      });
+    },
     updateOverlayStyle() {
       if (!this.currentElement) {
         return "";
@@ -213,6 +213,13 @@ export default {
       };
     },
     ...mapActions(["setShowTour"]),
+  },
+  watch: {
+    currentIndex() {
+      if (this.isOpen) {
+        this.updateCurrentElement();
+      }
+    },
   },
 };
 </script>

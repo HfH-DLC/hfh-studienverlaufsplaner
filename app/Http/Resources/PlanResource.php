@@ -19,7 +19,8 @@ class PlanResource extends JsonResource
             'slug' => $this->slug,
             'placements' => PlacementResource::collection($this->whenLoaded('placements')),
             'startYear' => $this->start_year,
-            'tourCompleted' => $this->tour_completed,
+            'scheduleTourCompleted' => $this->schedule_tour_completed,
+            'creditTourCompleted' => $this->credit_tour_completed,
             'focusSelections' => FocusSelectionResource::collection($this->focusSelections)
         ];
     }

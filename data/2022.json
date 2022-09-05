@@ -563,6 +563,28 @@
                             "placement": "left"
                         }
                     ]
+                },
+                "credit": {
+                    "steps": [
+                        {
+                            "title": "Module-Liste",
+                            "content": "Wählen Sie für jedes Modul in der Liste, ob und an welchen Studienschwerpunkt Sie es anrechnen möchten.",
+                            "ref": "modules",
+                            "placement": "top"
+                        },
+                        {
+                            "title": "Checkliste",
+                            "content": "In der Checkliste sehen Sie die Anforderungen an Ihre Anrechnung sowie Ihren aktuellen Fortschritt bei deren Erfüllung.",
+                            "ref": "todos",
+                            "placement": "left-start"
+                        },
+                        {
+                            "title": "Tour «Einführung»",
+                            "content": "Um diese Einführung später erneut anzuschauen, klicken Sie auf das Fragezeichen. Viel Erfolg beim Planen!",
+                            "ref": "start-tour",
+                            "placement": "left"
+                        }
+                    ]
                 }
             }
         },

@@ -123,6 +123,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
         foreach ($modules as $module) {
             $module->applyModifiers("credit");
         }
+        $tour = isset($planer->tour["credit"]) ? $planer->tour["credit"] : null;
         return Inertia::render(
             'Credit',
             array(
@@ -131,7 +132,8 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
                 'planResource' => $planResource,
                 'creditableModulesResource' => CreditableModuleResource::collection($modules),
                 'rulesResource' => RuleResource::collection($planer->rules()->where('type', 'credit')->get()),
-                'todosResource' => TodoResource::collection($planer->todos()->where('type', 'credit')->get())
+                'todosResource' => TodoResource::collection($planer->todos()->where('type', 'credit')->get()),
+                'tourData' => $tour,
             )
         );
     })->name('plan-credit');
@@ -139,11 +141,15 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
     Route::put('/{plan:slug}/anrechnung', function (UpdateFocusCreditRequest $request, Planer $planer, Plan $plan) {
         $validated = $request->validated();
         $focusCredits = $validated['focusCredits'];
-        DB::transaction(function () use ($focusCredits) {
+        DB::transaction(function () use ($focusCredits, $validated, $plan) {
             foreach ($focusCredits as $focusCredit) {
                 $focusSelection = FocusSelection::findOrFail($focusCredit['focusSelectionId']);
                 $focusSelection->creditedModules()->sync($focusCredit['moduleIds']);
                 $focusSelection->save();
+            }
+            if (Arr::exists($validated, 'tourCompleted')) {
+                $plan->credit_tour_completed = $validated['tourCompleted'];
+                $plan->save();
             }
         });
         return response()->noContent();
@@ -155,6 +161,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
         $rulesResource = RuleResource::collection($planer->rules()->where('type', 'Schedule')->get());
         $todosResource = TodoResource::collection($planer->todos()->where('type', 'Schedule')->get());
         $fociResource = FocusResource::collection($planer->foci()->get());
+        $tour = $tour = isset($planer->tour["schedule"]) ? $planer->tour["schedule"] : null;
         return Inertia::render(
             'Schedule',
             array(
@@ -167,7 +174,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
                 'rulesResource' => $rulesResource,
                 'todosResource' => $todosResource,
                 'requiredECTS' => $planer->required_ects,
-                'tour' => $planer->tour["schedule"],
+                'tourData' => $tour,
             )
         );
     })->name('plan-schedule');
@@ -230,7 +237,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
             }
 
             if (Arr::exists($validated, 'tourCompleted')) {
-                $plan->tour_completed = $validated['tourCompleted'];;
+                $plan->schedule_tour_completed = $validated['tourCompleted'];;
             }
             $plan->save();
         });

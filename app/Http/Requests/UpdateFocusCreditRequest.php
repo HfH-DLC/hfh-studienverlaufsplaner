@@ -28,7 +28,8 @@ class UpdateFocusCreditRequest extends FormRequest
             'focusCredits.*' => 'array',
             'focusCredits.*.focusSelectionId' =>  'required|exists:focus_selections,id',
             'focusCredits.*.moduleIds' =>  'present|array',
-            'focusCredits.*.moduleIds.*' => 'required|exists:modules,id'
+            'focusCredits.*.moduleIds.*' => 'required|exists:modules,id',
+            'tourCompleted' => 'required|boolean'
         ];
     }
 }

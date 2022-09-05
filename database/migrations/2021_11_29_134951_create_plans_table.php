@@ -20,7 +20,8 @@ class CreatePlansTable extends Migration
             $table->string('email');
             $table->year('start_year');
             $table->string('slug')->nullable()->unique();
-            $table->boolean('tour_completed')->default(false);
+            $table->boolean('schedule_tour_completed')->default(false);
+            $table->boolean('credit_tour_completed')->default(false);
             $table->foreignId('planer_id')->constrained();
         });
     }

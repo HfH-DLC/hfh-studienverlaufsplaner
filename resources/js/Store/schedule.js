@@ -31,6 +31,7 @@ const SELECT_FOCUS = "SELECT_FOCUS";
 const SET_START_YEAR = "SET_START_YEAR";
 const SET_CATEGORIES = "SET_CATEGORIES";
 export const SET_TOUR_ACTIVE = "SET_TOUR_ACTIVE";
+const SET_TOUR = "SET_TOUR";
 const SET_TOUR_SELECTED_MODULE = "SET_TOUR_SELECTED_MODULE";
 const SET_TOUR_COMPLETED = "SET_TOUR_COMPLETED";
 const SET_SAVE_STATUS = "SET_SAVE_STATUS";
@@ -54,6 +55,7 @@ const initialState = {
     initialized: false,
     saveStatus: SAVE_STATUS_SAVED,
     //tour
+    tour: null,
     tourActive: false,
     tourSelectedModule: null,
 };
@@ -121,11 +123,14 @@ export default {
                 (p) => p.id !== placement.id
             );
         },
+        [SET_TOUR](state, value) {
+            state.tour = value;
+        },
         [SET_TOUR_ACTIVE](state, value) {
             state.tourActive = value;
         },
-        [SET_TOUR_COMPLETED](state) {
-            state.tourCompleted = true;
+        [SET_TOUR_COMPLETED](state, value) {
+            state.tourCompleted = value;
         },
         [SET_TOUR_SELECTED_MODULE](state, value) {
             state.tourSelectedModule = value;
@@ -161,7 +166,16 @@ export default {
     actions: {
         init(
             { commit, dispatch },
-            { planerSlug, plan, categories, rules, todos, foci, requiredECTS }
+            {
+                planerSlug,
+                plan,
+                categories,
+                rules,
+                todos,
+                foci,
+                requiredECTS,
+                tour,
+            }
         ) {
             dataAdapter = new DataAdapter(planerSlug, plan.slug);
             commit(RESET_STATE);
@@ -173,7 +187,8 @@ export default {
             commit(SET_TODOS, todos);
             commit(SET_RULES, rules);
             commit(SET_START_YEAR, plan.startYear);
-            commit(SET_TOUR_COMPLETED, plan.tourCompleted);
+            commit(SET_TOUR, tour);
+            commit(SET_TOUR_COMPLETED, plan.scheduleTourCompleted);
             dispatch("validate");
             commit(INIT_FINISHED);
         },
@@ -288,7 +303,7 @@ export default {
             commit(SET_PLACEMENT_ERRORS, placementErrors);
         },
         completeTour({ commit, dispatch }) {
-            commit(SET_TOUR_COMPLETED);
+            commit(SET_TOUR_COMPLETED, true);
             dispatch("save");
         },
         setShowTour({ commit }, value) {

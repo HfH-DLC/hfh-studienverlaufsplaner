@@ -11,6 +11,9 @@ const initialState = {
     modules: [],
     rules: [],
     errors: [],
+    tour: null,
+    tourActive: false,
+    tourCompleted: false,
 };
 
 const CREDIT_MODULE = "CREDIT_MODULE";
@@ -23,6 +26,9 @@ const SET_SAVE_STATUS = "SET_SAVE_STATUS";
 const SET_TODOS = "SET_TODOS";
 const SET_TODO_ENTRIES = "SET_TODO_ENTRIES";
 const RESET_STATE = "RESET_STATE";
+export const SET_TOUR_ACTIVE = "SET_TOUR_ACTIVE";
+const SET_TOUR = "SET_TOUR";
+const SET_TOUR_COMPLETED = "SET_TOUR_COMPLETED";
 
 let dataAdapter;
 
@@ -81,11 +87,20 @@ export default {
         [RESET_STATE](state) {
             state = initialState;
         },
+        [SET_TOUR](state, value) {
+            state.tour = value;
+        },
+        [SET_TOUR_ACTIVE](state, value) {
+            state.tourActive = value;
+        },
+        [SET_TOUR_COMPLETED](state, value) {
+            state.tourCompleted = value;
+        },
     },
     actions: {
         init(
             { commit, dispatch },
-            { planerSlug, plan, modules, focusSelections, rules, todos }
+            { planerSlug, plan, modules, focusSelections, rules, todos, tour }
         ) {
             dataAdapter = new DataAdapter(planerSlug, plan.slug);
 
@@ -94,6 +109,8 @@ export default {
             commit(SET_MODULES, modules);
             commit(SET_TODOS, todos);
             commit(SET_RULES, rules);
+            commit(SET_TOUR, tour);
+            commit(SET_TOUR_COMPLETED, plan.creditTourCompleted);
             dispatch("validate");
             commit(INIT_FINISHED);
         },
@@ -104,6 +121,10 @@ export default {
             commit(CREDIT_MODULE, { moduleId, focusSelectionId });
             dispatch("validate");
             await dispatch("save");
+        },
+        completeTour({ commit, dispatch }) {
+            commit(SET_TOUR_COMPLETED, true);
+            dispatch("save");
         },
         validate({ dispatch }) {
             dispatch("validateRules");
@@ -126,8 +147,9 @@ export default {
         async save({ state, commit, getters }) {
             try {
                 commit(SET_SAVE_STATUS, SAVE_STATUS_SAVING);
-                await dataAdapter.saveFocusCredits(
-                    getters.creditedModulesByFocusSelection
+                await dataAdapter.saveCredit(
+                    getters.creditedModulesByFocusSelection,
+                    state.tourCompleted
                 );
                 commit(SET_SAVE_STATUS, SAVE_STATUS_SAVED);
                 return true;
