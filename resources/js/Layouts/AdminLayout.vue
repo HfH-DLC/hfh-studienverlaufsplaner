@@ -25,16 +25,12 @@ export default {
     return {
       links: [
         {
-          label: "Import",
-          href: `/admin/import`,
+          label: "Daten",
+          href: `/admin/data`,
         },
         {
-          label: "Studiengänge",
-          href: `/admin/planers`,
-        },
-        {
-          label: "Module",
-          href: `/admin/modules`,
+          label: "Templates",
+          href: `/admin/templates`,
         },
       ],
     };
