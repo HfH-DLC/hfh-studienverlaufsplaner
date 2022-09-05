@@ -243,6 +243,18 @@
             "prerequisites": ["WP4_05.1"]
         },
         {
+            "id": "WXY_01",
+            "name": "Wahlmodul Platzhalter 1",
+            "ects": 5,
+            "creditable": false
+        },
+        {
+            "id": "WXY_02",
+            "name": "Wahlmodul Platzhalter 2",
+            "ects": 5,
+            "creditable": false
+        },
+        {
             "id": "BP5_01.1.SHP",
             "name": "Berufspraxis 1 & Portfolio",
             "ects": 5,
@@ -417,7 +429,7 @@
                 },
                 {
                     "name": "Wahl",
-                    "modules": [],
+                    "modules": ["WXY_01", "WXY_02"],
                     "minECTS": 0,
                     "maxECTS": 10
                 },
@@ -875,6 +887,20 @@
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["e"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WXY_01",
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "times": ["g", "h"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WXY_02",
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "times": ["g", "h"],
             "locations": ["ZH"]
         },
         {
