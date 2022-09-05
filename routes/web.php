@@ -6,15 +6,12 @@ use App\Http\Requests\UpdateScheduleRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CreditableModuleResource;
 use App\Http\Resources\FocusResource;
-use App\Http\Resources\ModuleResource;
-use App\Http\Resources\PlanerResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\RuleResource;
 use App\Http\Resources\TodoResource;
 use App\Imports\JSONImport;
 use App\Mail\PlanCreated;
 use App\Models\FocusSelection;
-use App\Models\Module;
 use App\Models\Placement;
 use App\Models\Plan;
 use App\Models\Planer;
@@ -26,6 +23,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Mews\Purifier\Facades\Purifier;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,7 +57,7 @@ Route::post('/admin/login', function (Request $request) {
 
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/', function () {
-        return Redirect::route('admin-planers');
+        return Redirect::route('admin-data');
     })->name('admin');
 
     Route::post('/logout', function (Request $request) {
@@ -69,11 +67,11 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         return Redirect::route('login');
     });
 
-    Route::get('/import', function (Request $request) {
-        return Inertia::render('Admin/Import');
-    })->name('admin-import');
+    Route::get('/data', function (Request $request) {
+        return Inertia::render('Admin/Data');
+    })->name('admin-data');
 
-    Route::post('/import', function (Request $request) {
+    Route::post('/data', function (Request $request) {
         $attributes = $request->validate([
             'import' => ['required', 'mimes:json'],
         ]);
@@ -82,35 +80,24 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             $import = new JSONImport($file);
             $import->run();
         });
-        return Redirect::route('admin-import');
+        return Redirect::route('admin-data');
     });
-
-    Route::get('/modules', function (Request $request) {
-        $modules = ModuleResource::collection(Module::all());
-        return Inertia::render('Admin/Modules', ['modulesResource' => $modules]);
-    })->name('admin-modules');
-
-    Route::get('/modules/{module}', function (Request $request, Module $module) {
-        $moduleResource = new ModuleResource($module);
-        return Inertia::render(
-            'Admin/Module',
-            [
-                'moduleResource' => $moduleResource
-            ]
-        );
-    })->name('admin-module');
-
-    Route::get('/planers', function () {
-        $planers = PlanerResource::collection(Planer::all());
-        return Inertia::render('Admin/Planers', ['planersResource' => $planers]);
-    })->name('admin-planers');
 });
 
 Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
     Route::get('/', function (Planer $planer) {
-        return Inertia::render('Planer', ['slug' => $planer->slug, 'name' => $planer->name]);
+        $infoTemplatePath = base_path("data/" . $planer->slug . ".html");
+        $infoTemplate = file_get_contents($infoTemplatePath);
+        $infoTemplate = Purifier::clean($infoTemplate);
+        return Inertia::render(
+            'Planer',
+            array(
+                'slug' => $planer->slug,
+                'name' => $planer->name,
+                'infoTemplate' => $infoTemplate
+            )
+        );
     })->name('planer');
-
 
     Route::get('/{plan:slug}', function (Planer $planer, Plan $plan) {
         return Redirect::route('plan-schedule', array('planer' => $planer, 'plan' => $plan->slug));
