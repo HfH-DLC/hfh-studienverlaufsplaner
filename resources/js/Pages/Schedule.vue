@@ -19,24 +19,26 @@
           >
             <ErrorList class="space-y-2" :errors="errors" />
           </div>
-          <FocusSelection v-if="focusSelectionEnabled" class="p-4" />
+          <FocusSelection
+            v-if="focusSelectionEnabled"
+            id="focus-selection"
+            class="p-4"
+          />
           <div class="flex flex-1 items-start">
-            <StickyColumn id="module-list" class="w-3/12">
+            <StickyColumn id="modules" class="w-3/12">
               <ModuleInformation
-                v-show="selectedModule"
-                :selectedModule="
-                  tourActive ? tourSelectedModule : selectedModule
-                "
+                v-show="selectedOrTourModule"
+                :selectedModule="selectedOrTourModule"
               />
               <ModuleList
-                v-show="!selectedModule"
+                v-show="!selectedOrTourModule"
                 :hashModuleId="hashModuleId"
               />
             </StickyColumn>
             <StickyColumn id="time-table" class="w-6/12">
               <TimeTable ref="timeTable" />
             </StickyColumn>
-            <StickyColumn id="info-column" class="w-3/12" aria-live="polite">
+            <StickyColumn id="todos" class="w-3/12" aria-live="polite">
               <p
                 v-if="
                   focusSelectionEnabled &&
@@ -52,7 +54,11 @@
             </StickyColumn>
           </div>
         </div>
-        <Tour :startOnMount="!tourCompleted" @completed="completeTour" />
+        <Tour
+          :steps="tour.steps"
+          :startOnMount="!tourCompleted"
+          @completed="completeTour"
+        />
       </template>
       <div v-else class="text-2xl text-center p-4 flex-1">
         Plan wird geladen...
@@ -128,6 +134,10 @@ export default {
       type: Object,
       required: true,
     },
+    tour: {
+      type: Object,
+      required: true,
+    },
   },
   data() {
     return {
@@ -170,6 +180,9 @@ export default {
     ...mapGetters("schedule", ["ects", "placementErrors", "selectedModule"]),
     errors() {
       return this.placementErrors.map((error) => error.text);
+    },
+    selectedOrTourModule() {
+      return this.tourActive ? this.tourSelectedModule : this.selectedModule;
     },
   },
   methods: {

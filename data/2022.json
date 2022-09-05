@@ -506,7 +506,65 @@
                     "name": "FocusModulesTodo",
                     "type": "credit"
                 }
-            ]
+            ],
+            "tour": {
+                "schedule": {
+                    "steps": [
+                        {
+                            "title": "Willkommen zum Studienverlaufsplaner MA SHP",
+                            "content": "Hier können Sie Ihren gewünschten Studienverlauf über alle Semester Ihres Studiums provisorisch planen. So geht's..."
+                        },
+                        {
+                            "title": "Nicht alles in einem Schwung!",
+                            "content": "Um zu einem späteren Zeitpunkt wieder auf Ihren Plan zuzugreifen, haben wir Ihnen eine E-Mail geschickt mit dem Link zu Ihrem HfH Studienverlaufsplan. Noch schneller auffindbar: Setzen Sie ein Lesezeichen in ihrem Browser für diese Seite. So müssen Sie nie von Vorne anfangen und können in Ruhe planen."
+                        },
+                        {
+                            "title": "Schwerpunkt-Auswahl",
+                            "content": "Wählen Sie als Erstes ihren Studienschwerpunkt (SSP). Optional können Sie auch noch einen zweiten SSP wählen.",
+                            "ref": "focus-selection",
+                            "placement": "bottom"
+                        },
+                        {
+                            "title": "Modul-Liste",
+                            "content": "In der Liste können Sie die gewünschten Module per Klick auswählen. Am besten fangen Sie damit an, die Pflichtmodule zu platzieren.",
+                            "ref": "modules",
+                            "placement": "right"
+                        },
+                        {
+                            "title": "Modul-Details",
+                            "content": "Wenn Sie ein Modul angewählt haben, sehen Sie genauere Informationen, zum Beispiel Kreditpunkte und Voraussetzungen des Moduls.",
+                            "ref": "modules",
+                            "placement": "right",
+                            "beforeAction": {
+                                "name": "schedule/setShowTourSelectedModule",
+                                "value": "true"
+                            },
+                            "afterAction": {
+                                "name": "schedule/setShowTourSelectedModule",
+                                "value": false
+                            }
+                        },
+                        {
+                            "title": "Semester-Stundenpläne",
+                            "content": "Sobald Sie ein Modul ausgewählt haben, können Sie es platzieren. Klicken Sie dafür auf ein aktiviertes Feld!",
+                            "ref": "time-table",
+                            "placement": "left-start"
+                        },
+                        {
+                            "title": "Checkliste",
+                            "content": "In der Checkliste sehen Sie die Anforderungen an Ihren Plan sowie Ihren aktuellen Fortschritt bei deren Erfüllung.",
+                            "ref": "todos",
+                            "placement": "left-start"
+                        },
+                        {
+                            "title": "Tour «Einführung»",
+                            "content": "Um diese Einführung später erneut anzuschauen, klicken Sie auf das Fragezeichen. Viel Erfolg beim Planen!",
+                            "ref": "start-tour",
+                            "placement": "left"
+                        }
+                    ]
+                }
+            }
         },
         {
             "name": "Master Heilpädagogische Früherziehung",
@@ -584,7 +642,59 @@
                     "name": "TotalECTSTodo",
                     "type": "schedule"
                 }
-            ]
+            ],
+            "tour": {
+                "schedule": {
+                    "steps": [
+                        {
+                            "title": "Willkommen zum Studienverlaufsplaner MA HFE",
+                            "content": "Hier können Sie Ihren gewünschten Studienverlauf über alle Semester Ihres Studiums provisorisch planen. So geht's..."
+                        },
+                        {
+                            "title": "Nicht alles in einem Schwung!",
+                            "content": "Um zu einem späteren Zeitpunkt wieder auf Ihren Plan zuzugreifen, haben wir Ihnen eine E-Mail geschickt mit dem Link zu Ihrem HfH Studienverlaufsplan. Noch schneller auffindbar: Setzen Sie ein Lesezeichen in ihrem Browser für diese Seite. So müssen Sie nie von Vorne anfangen und können in Ruhe planen."
+                        },
+                        {
+                            "title": "Modul-Liste",
+                            "content": "In der Liste können Sie die gewünschten Module per Klick auswählen. Am besten fangen Sie damit an, die Pflichtmodule zu platzieren.",
+                            "ref": "modules",
+                            "placement": "right"
+                        },
+                        {
+                            "title": "Modul-Details",
+                            "content": "Wenn Sie ein Modul angewählt haben, sehen Sie genauere Informationen, zum Beispiel Kreditpunkte und Voraussetzungen des Moduls.",
+                            "ref": "modules",
+                            "placement": "right",
+                            "beforeAction": {
+                                "name": "schedule/setShowTourSelectedModule",
+                                "value": "true"
+                            },
+                            "afterAction": {
+                                "name": "schedule/setShowTourSelectedModule",
+                                "value": false
+                            }
+                        },
+                        {
+                            "title": "Semester-Stundenpläne",
+                            "content": "Sobald Sie ein Modul ausgewählt haben, können Sie es platzieren. Klicken Sie dafür auf ein aktiviertes Feld!",
+                            "ref": "time-table",
+                            "placement": "left-start"
+                        },
+                        {
+                            "title": "Checkliste",
+                            "content": "In der Checkliste sehen Sie die Anforderungen an Ihren Plan sowie Ihren aktuellen Fortschritt bei deren Erfüllung.",
+                            "ref": "todos",
+                            "placement": "left-start"
+                        },
+                        {
+                            "title": "Tour «Einführung»",
+                            "content": "Um diese Einführung später erneut anzuschauen, klicken Sie auf das Fragezeichen. Viel Erfolg beim Planen!",
+                            "ref": "start-tour",
+                            "placement": "left"
+                        }
+                    ]
+                }
+            }
         }
     ],
     "events": [

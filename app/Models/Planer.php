@@ -12,6 +12,7 @@ class Planer extends Model
     protected $casts = [
         'required_ects' => 'integer',
         'focus_selection_enabled' => 'boolean',
+        'tour' => 'array'
     ];
 
     public function plans()

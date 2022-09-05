@@ -31,6 +31,7 @@ const SELECT_FOCUS = "SELECT_FOCUS";
 const SET_START_YEAR = "SET_START_YEAR";
 const SET_CATEGORIES = "SET_CATEGORIES";
 export const SET_TOUR_ACTIVE = "SET_TOUR_ACTIVE";
+const SET_TOUR_SELECTED_MODULE = "SET_TOUR_SELECTED_MODULE";
 const SET_TOUR_COMPLETED = "SET_TOUR_COMPLETED";
 const SET_SAVE_STATUS = "SET_SAVE_STATUS";
 const SET_REQUIRED_ECTS = "SET_REQUIRED_ECTS";
@@ -54,13 +55,15 @@ const initialState = {
     saveStatus: SAVE_STATUS_SAVED,
     //tour
     tourActive: false,
-    tourSelectedModule: {
-        id: "P1_01",
-        name: "Grundfragen der Heilpädagogik",
-        prerequisites: [],
-        infos: [],
-        ects: 5,
-    },
+    tourSelectedModule: null,
+};
+
+const TOUR_SELECTED_MODULE = {
+    id: "P1_01",
+    name: "Grundfragen der Heilpädagogik",
+    prerequisites: [],
+    infos: [],
+    ects: 5,
 };
 
 export default {
@@ -123,6 +126,9 @@ export default {
         },
         [SET_TOUR_COMPLETED](state) {
             state.tourCompleted = true;
+        },
+        [SET_TOUR_SELECTED_MODULE](state, value) {
+            state.tourSelectedModule = value;
         },
         [SET_SAVE_STATUS](state, value) {
             state.saveStatus = value;
@@ -287,6 +293,12 @@ export default {
         },
         setShowTour({ commit }, value) {
             commit(SET_SHOW_TOUR, value);
+        },
+        setShowTourSelectedModule({ commit }, value) {
+            commit(
+                SET_TOUR_SELECTED_MODULE,
+                value ? TOUR_SELECTED_MODULE : null
+            );
         },
     },
     getters: {

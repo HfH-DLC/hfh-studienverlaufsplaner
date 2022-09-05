@@ -167,6 +167,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
                 'rulesResource' => $rulesResource,
                 'todosResource' => $todosResource,
                 'requiredECTS' => $planer->required_ects,
+                'tour' => $planer->tour["schedule"],
             )
         );
     })->name('plan-schedule');

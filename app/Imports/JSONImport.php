@@ -122,6 +122,7 @@ class JSONImport
             $planer->slug = $planerData->slug;
             $planer->required_ects = $planerData->requiredECTS;
             $planer->focus_selection_enabled = $planerData->focusSelectionEnabled;
+            $planer->tour = $planerData->tour;
             $planer->save();
 
             $this->importCategories($planerData, $planer);
