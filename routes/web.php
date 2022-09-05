@@ -147,10 +147,9 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
                 $focusSelection->creditedModules()->sync($focusCredit['moduleIds']);
                 $focusSelection->save();
             }
-            if (Arr::exists($validated, 'tourCompleted')) {
-                $plan->credit_tour_completed = $validated['tourCompleted'];
-                $plan->save();
-            }
+            $plan->credit_tour_completed = $validated['tourCompleted'];
+            $plan->credit_valid = $validated['valid'];
+            $plan->save();
         });
         return response()->noContent();
     });
@@ -235,10 +234,8 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
                     $focusSelection->save();
                 }
             }
-
-            if (Arr::exists($validated, 'tourCompleted')) {
-                $plan->schedule_tour_completed = $validated['tourCompleted'];;
-            }
+            $plan->schedule_tour_completed = $validated['tourCompleted'];
+            $plan->schedule_valid = $validated['valid'];
             $plan->save();
         });
 

@@ -13,44 +13,51 @@
       <h1 class="text-3xl mt-4 mb-2">Anrechnung an die Studienschwerpunkte</h1>
       <ErrorList class="mt-4 space-y-2" :errors="errors" />
       <div class="flex mt-4 gap-x-8">
-        <table class="w-9/12" id="modules">
-          <template v-for="(module, index) in modules" :key="module.id">
-            <tr
-              :class="{
-                'bg-gray-300': index % 2 == 0,
-                'bg-gray-100': index % 2 != 0,
-              }"
-            >
-              <td class="p-4 whitespace-nowrap w-full">
-                <label :for="`credit-${module.id}`"
-                  >{{ module.id }} {{ module.name }}</label
-                >
-              </td>
-              <td class="p-4">
-                <div v-if="module.requiredCredit">
-                  {{ getFocusName(module.creditedAgainst) }}
-                </div>
-                <HfHSelect
-                  v-else
-                  class="w-fit"
-                  :id="`credit-${module.id}`"
-                  :options="focusOptions"
-                  :modelValue="
-                    module.creditedAgainst ? module.creditedAgainst : ''
-                  "
-                  @update:modelValue="
-                    creditModuleAgainstFocusSelection({
-                      moduleId: module.id,
-                      focusSelectionId: $event,
-                    })
-                  "
-                  emptyOptionLabel="Nicht anrechnen"
-                />
-              </td>
-            </tr>
-          </template>
-        </table>
-        <Checklist :entries="todoEntries" id="todos" class="w-3/12" />
+        <template v-if="planResource.data.scheduleValid">
+          <table class="w-9/12" id="modules">
+            <template v-for="(module, index) in modules" :key="module.id">
+              <tr
+                :class="{
+                  'bg-gray-300': index % 2 == 0,
+                  'bg-gray-100': index % 2 != 0,
+                }"
+              >
+                <td class="p-4 whitespace-nowrap w-full">
+                  <label :for="`credit-${module.id}`"
+                    >{{ module.id }} {{ module.name }}</label
+                  >
+                </td>
+                <td class="p-4">
+                  <div v-if="module.requiredCredit">
+                    {{ getFocusName(module.creditedAgainst) }}
+                  </div>
+                  <HfHSelect
+                    v-else
+                    class="w-fit"
+                    :id="`credit-${module.id}`"
+                    :options="focusOptions"
+                    :modelValue="
+                      module.creditedAgainst ? module.creditedAgainst : ''
+                    "
+                    @update:modelValue="
+                      creditModuleAgainstFocusSelection({
+                        moduleId: module.id,
+                        focusSelectionId: $event,
+                      })
+                    "
+                    emptyOptionLabel="Nicht anrechnen"
+                  />
+                </td>
+              </tr>
+            </template>
+          </table>
+          <Checklist :entries="todoEntries" id="todos" class="w-3/12" />
+        </template>
+        <p v-else>
+          Bitte erfüllen sie zuerst alle Anforderungen an Ihren
+          <Link href="zeitplan">Zeitplan</Link>, bevor Sie mit der Anrechnung an
+          die Studienschwerpunkte beginnen.
+        </p>
       </div>
     </main>
     <Tour

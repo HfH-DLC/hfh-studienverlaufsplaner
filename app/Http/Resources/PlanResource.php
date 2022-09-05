@@ -21,7 +21,9 @@ class PlanResource extends JsonResource
             'startYear' => $this->start_year,
             'scheduleTourCompleted' => $this->schedule_tour_completed,
             'creditTourCompleted' => $this->credit_tour_completed,
-            'focusSelections' => FocusSelectionResource::collection($this->focusSelections)
+            'creditValid' => $this->credit_valid,
+            'scheduleValid' => $this->schedule_valid,
+            'focusSelections' => FocusSelectionResource::collection($this->focusSelections),
         ];
     }
 }

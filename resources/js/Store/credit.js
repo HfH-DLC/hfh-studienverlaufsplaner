@@ -14,6 +14,7 @@ const initialState = {
     tour: null,
     tourActive: false,
     tourCompleted: false,
+    valid: false,
 };
 
 const CREDIT_MODULE = "CREDIT_MODULE";
@@ -29,6 +30,7 @@ const RESET_STATE = "RESET_STATE";
 export const SET_TOUR_ACTIVE = "SET_TOUR_ACTIVE";
 const SET_TOUR = "SET_TOUR";
 const SET_TOUR_COMPLETED = "SET_TOUR_COMPLETED";
+const SET_VALID = "SET_VALID";
 
 let dataAdapter;
 
@@ -96,6 +98,9 @@ export default {
         [SET_TOUR_COMPLETED](state, value) {
             state.tourCompleted = value;
         },
+        [SET_VALID](state, value) {
+            state.valid = value;
+        },
     },
     actions: {
         init(
@@ -126,9 +131,13 @@ export default {
             commit(SET_TOUR_COMPLETED, true);
             dispatch("save");
         },
-        validate({ dispatch }) {
+        validate({ state, commit, dispatch }) {
             dispatch("validateRules");
             dispatch("validateTodos");
+            const valid =
+                state.errors.length == 0 &&
+                state.todoEntries.every((todo) => todo.checked);
+            commit(SET_VALID, valid);
         },
         validateRules({ state, getters, commit }) {
             const errors = [];
@@ -149,7 +158,8 @@ export default {
                 commit(SET_SAVE_STATUS, SAVE_STATUS_SAVING);
                 await dataAdapter.saveCredit(
                     getters.creditedModulesByFocusSelection,
-                    state.tourCompleted
+                    state.tourCompleted,
+                    state.valid
                 );
                 commit(SET_SAVE_STATUS, SAVE_STATUS_SAVED);
                 return true;

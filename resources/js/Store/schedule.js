@@ -36,6 +36,7 @@ const SET_TOUR_SELECTED_MODULE = "SET_TOUR_SELECTED_MODULE";
 const SET_TOUR_COMPLETED = "SET_TOUR_COMPLETED";
 const SET_SAVE_STATUS = "SET_SAVE_STATUS";
 const SET_REQUIRED_ECTS = "SET_REQUIRED_ECTS";
+const SET_VALID = "SET_VALID";
 
 let dataAdapter;
 
@@ -54,10 +55,10 @@ const initialState = {
     todoEntries: [],
     initialized: false,
     saveStatus: SAVE_STATUS_SAVED,
-    //tour
     tour: null,
     tourActive: false,
     tourSelectedModule: null,
+    valid: false,
 };
 
 const TOUR_SELECTED_MODULE = {
@@ -162,6 +163,9 @@ export default {
         [SET_REQUIRED_ECTS](state, requiredECTS) {
             state.requiredECTS = requiredECTS;
         },
+        [SET_VALID](state, value) {
+            state.valid = value;
+        },
     },
     actions: {
         init(
@@ -206,7 +210,8 @@ export default {
                 await dataAdapter.saveSchedule(
                     state.placements,
                     focusSelections,
-                    state.tourCompleted
+                    state.tourCompleted,
+                    state.valid
                 );
                 commit(SET_SAVE_STATUS, SAVE_STATUS_SAVED);
                 return true;
@@ -272,10 +277,17 @@ export default {
             dispatch("validate");
             dispatch("save");
         },
-        validate({ dispatch }) {
+        validate({ state, commit, dispatch, getters }) {
             dispatch("validateTodos");
             dispatch("validateModules");
             dispatch("validatePlacements");
+            const valid =
+                state.todoEntries.every((todo) => todo.checked) &&
+                getters.placements.every(
+                    (placement) => placement.errors.length == 0
+                );
+
+            commit(SET_VALID, valid);
         },
         validateTodos({ commit, state, getters }) {
             const todoEntries = state.todos.reduce((acc, cur) => {
@@ -305,9 +317,6 @@ export default {
         completeTour({ commit, dispatch }) {
             commit(SET_TOUR_COMPLETED, true);
             dispatch("save");
-        },
-        setShowTour({ commit }, value) {
-            commit(SET_SHOW_TOUR, value);
         },
         setShowTourSelectedModule({ commit }, value) {
             commit(

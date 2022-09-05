@@ -22,6 +22,8 @@ class CreatePlansTable extends Migration
             $table->string('slug')->nullable()->unique();
             $table->boolean('schedule_tour_completed')->default(false);
             $table->boolean('credit_tour_completed')->default(false);
+            $table->boolean('schedule_valid')->default(false);
+            $table->boolean('credit_valid')->default(false);
             $table->foreignId('planer_id')->constrained();
         });
     }
