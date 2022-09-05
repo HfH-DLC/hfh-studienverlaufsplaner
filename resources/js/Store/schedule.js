@@ -314,7 +314,12 @@ export default {
             });
             commit(SET_PLACEMENT_ERRORS, placementErrors);
         },
+        startTour({ commit, dispatch }) {
+            commit(SET_TOUR_ACTIVE, true);
+            dispatch("save");
+        },
         completeTour({ commit, dispatch }) {
+            commit(SET_TOUR_ACTIVE, false);
             commit(SET_TOUR_COMPLETED, true);
             dispatch("save");
         },

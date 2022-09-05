@@ -59,6 +59,7 @@
           v-if="tour"
           :steps="tour.steps"
           :startOnMount="!tourCompleted"
+          @started="startTour"
           @completed="completeTour"
         />
       </template>
@@ -187,7 +188,13 @@ export default {
     },
   },
   methods: {
-    ...mapActions("schedule", ["init", "completeTour", "save", "selectModule"]),
+    ...mapActions("schedule", [
+      "init",
+      "startTour",
+      "completeTour",
+      "save",
+      "selectModule",
+    ]),
     async retrySave() {
       if (await this.save()) {
         this.$emitter.emit("flash", {

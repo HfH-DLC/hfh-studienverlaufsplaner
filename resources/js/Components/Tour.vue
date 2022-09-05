@@ -60,8 +60,6 @@ import throttle from "lodash.throttle";
 import { XIcon } from "@heroicons/vue/outline";
 import { createPopper } from "@popperjs/core";
 import HfHButton from "./HfHButton.vue";
-import { mapActions } from "vuex";
-import { SET_TOUR_ACTIVE } from "../Store/schedule";
 export default {
   components: {
     Dialog,
@@ -71,7 +69,7 @@ export default {
     HfHButton,
     XIcon,
   },
-  emits: ["completed"],
+  emits: ["started", "completed"],
   props: {
     startOnMount: {
       type: Boolean,
@@ -119,7 +117,7 @@ export default {
   },
   methods: {
     start() {
-      this.$store.commit("schedule/" + SET_TOUR_ACTIVE, true);
+      this.$emit("started");
       this.isOpen = true;
       this.updateCurrentElement();
     },
@@ -158,7 +156,6 @@ export default {
         this.popper.destroy();
         this.popper = null;
       }
-      this.$store.commit("schedule/" + SET_TOUR_ACTIVE, false);
       this.$emit("completed");
     },
     cancel() {
@@ -212,7 +209,6 @@ export default {
         "clip-path": `polygon(0% 0%, 0% 100%, ${rect.left}px 100%,${rect.left}px ${rect.top}px, ${rect.right}px ${rect.top}px, ${rect.right}px ${rect.bottom}px, ${rect.left}px ${rect.bottom}px,${rect.left}px 100%, 100% 100%, 100% 0%)`,
       };
     },
-    ...mapActions(["setShowTour"]),
   },
   watch: {
     currentIndex() {

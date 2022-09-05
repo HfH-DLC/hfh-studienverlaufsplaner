@@ -64,6 +64,7 @@
       v-if="tour"
       :steps="tour.steps"
       :startOnMount="!tourCompleted"
+      @started="startTour"
       @completed="completeTour"
     />
   </div>
@@ -143,6 +144,7 @@ export default {
     ...mapActions("credit", [
       "init",
       "creditModuleAgainstFocusSelection",
+      "startTour",
       "completeTour",
     ]),
     getFocusName(focusSelectionId) {

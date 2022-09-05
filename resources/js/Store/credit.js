@@ -127,7 +127,12 @@ export default {
             dispatch("validate");
             await dispatch("save");
         },
+        startTour({ commit, dispatch }) {
+            commit(SET_TOUR_ACTIVE, true);
+            dispatch("save");
+        },
         completeTour({ commit, dispatch }) {
+            commit(SET_TOUR_ACTIVE, false);
             commit(SET_TOUR_COMPLETED, true);
             dispatch("save");
         },
