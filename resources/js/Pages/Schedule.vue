@@ -37,6 +37,17 @@
               <TimeTable ref="timeTable" />
             </StickyColumn>
             <StickyColumn id="info-column" class="w-3/12" aria-live="polite">
+              <p
+                v-if="
+                  focusSelectionEnabled &&
+                  errors.length == 0 &&
+                  !todoEntries.some((entry) => !entry.checked)
+                "
+                class="mb-8"
+              >
+                Ihr Plan erfüllt alle Anforderungen.
+                <Link href="anrechnung">Weiter zur Anrechnung.</Link>
+              </p>
               <Checklist :entries="todoEntries" />
             </StickyColumn>
           </div>
