@@ -27,29 +27,11 @@
         />
         <span>{{ placement.module.id }} {{ placement.module.name }}</span>
       </button>
-      <button
+      <ContextMenu
+        class="absolute -bottom-8 right-2"
         v-if="placement && placement.module.selected"
-        class="
-          -bottom-8
-          right-2
-          flex
-          justify-center
-          items-center
-          p-2
-          rounded-full
-          absolute
-          z-10
-          bg-gray-700
-          text-white
-          hover:bg-gray-900
-          focus:bg-gray-900
-          shadow
-        "
-        @click="removeModule(placement)"
-      >
-        <div class="sr-only">Modul entfernen</div>
-        <TrashIcon class="w-4 h-4" />
-      </button>
+        :placement="placement"
+      />
       <button
         ref="button"
         v-if="event && !placement"
@@ -79,17 +61,15 @@
 </template>
 
 <script>
-import {
-  CheckCircleIcon,
-  XCircleIcon,
-  TrashIcon,
-} from "@heroicons/vue/outline";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/vue/outline";
 import { mapActions } from "vuex";
+
+import ContextMenu from "./ContextMenu.vue";
 export default {
   components: {
+    ContextMenu,
     CheckCircleIcon,
     XCircleIcon,
-    TrashIcon,
   },
   props: {
     event: {
@@ -103,7 +83,6 @@ export default {
   },
   methods: {
     ...mapActions("schedule", [
-      "removeModule",
       "placeModule",
       "selectModule",
       "deselectModule",
