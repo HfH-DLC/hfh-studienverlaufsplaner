@@ -1,40 +1,19 @@
 <template>
   <nav class="flex justify-between items-end p-4 border-b border-gray-300">
-    <Link :href="`/${slug}`"
-      ><h1 class="text-3xl">
-        Studienverlaufsplaner
-        <span v-if="name">{{ name }}</span>
-      </h1></Link
-    >
+    <h1 class="text-xl">
+      Studienverlaufsplaner
+      <span v-if="name">{{ name }}</span>
+    </h1>
   </nav>
   <div class="p-4 max-w-6xl mx-auto">
     <h2 class="text-2xl mt-4 mb-4">Willkommen!</h2>
-
-    <p>
-      Hier können Sie Ihren gewünschten Studienverlauf über alle Semester
-      planen. Der zusammengestellte Plan dient als Orientierung! Die HfH behält
-      sich vor, Module bei zu geringer Nachfrage abzusagen.
-    </p>
-
-    <p class="mt-4">
-      Bevor Sie loslegen, empfehlen wir Ihnen die
-      <HfHLink :href="degreeLink">Studienbroschüre</HfHLink> und das
-      <HfHLink :href="moduleDirectoryLink"> Modulverzeichnis</HfHLink>.
-    </p>
-
-    <h3 class="text-xl mt-3">Wichtig</h3>
-    <p>
-      Unabhängig vom StVPl müssen Sie ihre Module offiziell in daylight-Web
-      buchen. Sie erhalten eine separate Info per Mail von der
-      Hochschuladministration.
-    </p>
-    <p class="mt-4 text-sm">{{ date }}, Änderungen vorbehalten.</p>
+    <HtmlContent :content="infoTemplate" />
     <div class="py-8">
       <div>
         <h2 class="text-xl">Ich möchte einen neuen Plan erstellen.</h2>
         <div>
           <form @submit.prevent="createPlan" class="mt-2 w-64">
-            <label for="email" class="text-sm uppercase">E-Mail</label>
+            <label for="email" class="text-sm">E-Mail</label>
             <input
               v-model="createForm.email"
               type="email"
@@ -52,7 +31,7 @@
                 mb-2
               "
             />
-            <label for="year" class="text-sm uppercase">Jahr</label>
+            <label for="year" class="text-sm">Jahr</label>
             <select
               v-model="createForm.startYear"
               required
@@ -81,11 +60,11 @@
 
 <script>
 import HfHButton from "../Components/HfHButton.vue";
-import HfHLink from "../Components/HfHLink.vue";
+import HtmlContent from "../Components/HtmlContent.vue";
 export default {
   components: {
     HfHButton,
-    HfHLink,
+    HtmlContent,
   },
   props: {
     slug: {
@@ -96,17 +75,9 @@ export default {
       type: String,
       required: true,
     },
-    degreeLink: {
+    infoTemplate: {
       type: String,
       required: true,
-      default:
-        "https://www.hfh.ch/sites/default/files/documents/StudienbroschuereMA_HFE_22.pdf", //todo get from server
-    },
-    moduleDirectoryLink: {
-      type: String,
-      required: true,
-      default:
-        "https://daylightweb.hfh.ch/modulverzeichnis-1/ma-heilpaedagogische-frueherziehung-hfe", //todo get from server
     },
   },
   data() {
@@ -117,11 +88,6 @@ export default {
       }),
       planSlug: "",
     };
-  },
-  computed: {
-    date() {
-      return new Date().toLocaleDateString();
-    },
   },
   methods: {
     createPlan() {
