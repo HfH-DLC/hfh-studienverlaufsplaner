@@ -6,7 +6,7 @@ select {
     @apply bg-white;
 }
 
-:where(.error-message, .checklist-entry) a {
+a {
     font-weight: bold;
 }
 
