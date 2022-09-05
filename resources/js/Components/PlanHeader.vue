@@ -14,6 +14,7 @@
         <li>
           <Link
             :href="`/${planerSlug}/${planSlug}/zeitplan`"
+            class="font-normal"
             :class="{
               active: $page.component === 'Schedule',
             }"
@@ -23,6 +24,7 @@
         <li>
           <Link
             :href="`/${planerSlug}/${planSlug}/anrechnung`"
+            class="font-normal"
             :class="{
               active: $page.component === 'Credit',
             }"
