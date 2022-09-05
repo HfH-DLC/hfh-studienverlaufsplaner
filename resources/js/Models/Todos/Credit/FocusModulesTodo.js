@@ -57,7 +57,6 @@ export default class FocusModulesTodo {
         const moduleNames = modules.map((module) => `${module.id}`);
         if (isRequired) {
             const moduleString = joinStrings(moduleNames, "und");
-            console.log(moduleNames);
             return `Rechnen Sie die Module ${moduleString} an den SSP "${focus.name}" an.`;
         } else {
             const number = focus.requiredNumberOfOptionalModules;
