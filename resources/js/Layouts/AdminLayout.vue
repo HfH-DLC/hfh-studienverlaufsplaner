@@ -28,10 +28,6 @@ export default {
           label: "Daten",
           href: `/admin/data`,
         },
-        {
-          label: "Templates",
-          href: `/admin/templates`,
-        },
       ],
     };
   },
