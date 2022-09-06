@@ -9,7 +9,9 @@ export default class PrerequisitesRule extends BaseScheduleRule {
         placements.forEach((placement) => {
             const missingPrerequisites = [];
             const prerequisites = placement.module.prerequisites;
-
+            if (prerequisites.length == 0) {
+                return;
+            }
             prerequisites.forEach((prerequisite) => {
                 const meetsPrerequisite = placements
                     .filter((prerequisitePlacement) => {
@@ -41,6 +43,9 @@ export default class PrerequisitesRule extends BaseScheduleRule {
 
     validateModule(module, state, { placements }, errors) {
         const prerequisites = module.prerequisites;
+        if (prerequisites.length == 0) {
+            return;
+        }
         const prerequisitesMet = module.events.some((event) =>
             this.eventMeetsPrerequisites(event, placements, prerequisites)
         );
@@ -53,7 +58,9 @@ export default class PrerequisitesRule extends BaseScheduleRule {
 
     validateSelection(module, state, { placements }, status) {
         const prerequisites = module.prerequisites;
-
+        if (prerequisites.length == 0) {
+            return;
+        }
         module.events.forEach((event) => {
             if (
                 !this.eventMeetsPrerequisites(event, placements, prerequisites)
