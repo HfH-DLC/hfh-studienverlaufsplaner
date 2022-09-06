@@ -242,6 +242,13 @@
             "creditable": true,
             "prerequisites": ["WP4_05.1"]
         },
+
+        {
+            "id": "W3_07",
+            "name": "Deutsch als Zweitsprache und Mehrsprachigkeit",
+            "ects": 5,
+            "creditable": false
+        },
         {
             "id": "WXY_01",
             "name": "Wahlmodul Platzhalter 1",
@@ -429,7 +436,7 @@
                 },
                 {
                     "name": "Wahl",
-                    "modules": ["WXY_01", "WXY_02"],
+                    "modules": ["W3_07", "WXY_01", "WXY_02"],
                     "minECTS": 0,
                     "maxECTS": 10
                 },
@@ -1019,6 +1026,14 @@
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["e"],
+            "locations": ["ZH"]
+        },
+
+        {
+            "module": "W3_07",
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "times": ["d", "h"],
             "locations": ["ZH"]
         },
         {
