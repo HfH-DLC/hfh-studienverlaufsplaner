@@ -1,20 +1,14 @@
 <template>
   <div>
-    <Accordion
+    <HfhAccordion
       v-for="(category, index) in categories"
       :key="category.id"
       :open="currentOpen === index"
       @opened="currentOpen = index"
-      @closed="currentOpen = -1"
+      @closed="currentOpen == index && (currentOpen = -1)"
     >
       <template v-slot:title>
-        <h2 class="flex items-center justify-between gap-2">
-          <div>{{ category.name }}</div>
-        </h2>
-        <ChevronUpIcon
-          :class="currentOpen === index ? 'transform rotate-180' : ''"
-          class="w-5 h-5 transition"
-        />
+        {{ category.name }}
       </template>
       <template v-slot:content>
         <ul>
@@ -23,18 +17,18 @@
           </li>
         </ul>
       </template>
-    </Accordion>
+    </HfhAccordion>
   </div>
 </template>
 
 <script>
 import { ChevronUpIcon, CheckCircleIcon } from "@heroicons/vue/outline";
+import { HfhAccordion } from "@hfh-dlc/hfh-styleguide";
 import Module from "../Components/Module.vue";
-import Accordion from "../Components/Accordion.vue";
 import { mapGetters } from "vuex";
 export default {
   components: {
-    Accordion,
+    HfhAccordion,
     CheckCircleIcon,
     ChevronUpIcon,
     Module,

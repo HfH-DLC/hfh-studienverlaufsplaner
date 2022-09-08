@@ -13,18 +13,18 @@
           required
         />
       </div>
-      <HfHButton type="submit" class="mt-4">Importieren</HfHButton>
+      <HfhButton type="submit" class="mt-4">Importieren</HfhButton>
     </form>
   </div>
 </template>
 
 <script>
-import HfHButton from "../../Components/HfHButton.vue";
+import { HfhButton } from "@hfh-dlc/hfh-styleguide";
 import AdminLayoutVue from "../../Layouts/AdminLayout.vue";
 export default {
   layout: AdminLayoutVue,
   components: {
-    HfHButton,
+    HfhButton,
   },
   data() {
     return {

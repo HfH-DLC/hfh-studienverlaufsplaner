@@ -1,21 +1,23 @@
 <template>
-  <div class="flex items-center gap-x-8 border-b border-gray-300">
+  <div class="flex items-center gap-x-8">
     <div class="max-w-64">
-      <label for="firstFocus">Erster Studienschwerpunkt</label>
-      <HfHSelect
-        id="firstFocus"
+      <HfhSelect
+        id="first-focus"
+        name="first-focus"
+        label="Erster Studienschwerpunkt"
         :required="true"
         :options="firstOptions"
         v-model="firstFocusId"
-        class="mt-1"
+        defaultOption="Bitte auswählen..."
       />
     </div>
     <div class="max-w-64">
-      <label for="secondFocus">Zweiter Studienschwerpunkt (Optional)</label>
-      <HfHSelect
-        id="secondFocus"
+      <HfhSelect
+        id="second-focus"
+        name="second-focus"
+        label="Zweiter Studienschwerpunkt (Optional)"
+        defaultOption="Bitte auswählen..."
         :options="secondOptions"
-        class="mt-2"
         v-model="secondFocusId"
       />
     </div>
@@ -24,10 +26,10 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import HfHSelect from "../Components/HfHSelect.vue";
+import { HfhSelect } from "@hfh-dlc/hfh-styleguide";
 export default {
   components: {
-    HfHSelect,
+    HfhSelect,
   },
   computed: {
     ...mapState("schedule", ["focusSelections", "foci"]),

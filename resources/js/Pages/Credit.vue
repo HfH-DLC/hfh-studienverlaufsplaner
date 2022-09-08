@@ -31,7 +31,7 @@
                   <div v-if="module.requiredCredit">
                     {{ getFocusName(module.creditedAgainst) }}
                   </div>
-                  <HfHSelect
+                  <HfhSelect
                     v-else
                     class="w-fit"
                     :id="`credit-${module.id}`"
@@ -45,7 +45,7 @@
                         focusSelectionId: $event,
                       })
                     "
-                    emptyOptionLabel="Nicht anrechnen"
+                    defaultOption="Nicht anrechnen"
                   />
                 </td>
               </tr>
@@ -55,8 +55,8 @@
         </template>
         <p v-else>
           Bitte erfüllen sie zuerst alle Anforderungen an Ihren
-          <Link href="zeitplan">Zeitplan</Link>, bevor Sie mit der Anrechnung an
-          die Studienschwerpunkte beginnen.
+          <HfhLink component="Link" href="zeitplan">Zeitplan</HfhLink>, bevor
+          Sie mit der Anrechnung an die Studienschwerpunkte beginnen.
         </p>
       </div>
     </main>
@@ -71,16 +71,23 @@
 </template>
 
 <script>
+import { HfhSelect, HfhLink } from "@hfh-dlc/hfh-styleguide";
+
 import Checklist from "../Components/Checklist.vue";
 import ErrorList from "../Components/ErrorList.vue";
-import HfHButton from "../Components/HfHButton.vue";
-import HfHSelect from "../Components/HfHSelect.vue";
 import PlanHeader from "../Components/PlanHeader.vue";
 import Tour from "../Components/Tour.vue";
 
 import { mapActions, mapState } from "vuex";
 export default {
-  components: { Checklist, ErrorList, HfHButton, HfHSelect, PlanHeader, Tour },
+  components: {
+    Checklist,
+    ErrorList,
+    HfhSelect,
+    HfhLink,
+    PlanHeader,
+    Tour,
+  },
   props: {
     creditableModulesResource: {
       type: Object,

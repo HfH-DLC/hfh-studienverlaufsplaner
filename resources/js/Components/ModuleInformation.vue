@@ -1,6 +1,6 @@
 <template>
   <div v-if="selectedModule">
-    <HfHButton @click="deselectModule" class="mb-4">Zurück</HfHButton>
+    <HfhButton @click="deselectModule" class="mb-4">Zurück</HfhButton>
     <h2 class="text-xl">{{ selectedModule.name }}</h2>
     <ErrorList
       class="mt-4 space-y-2"
@@ -31,12 +31,12 @@
 
 <script>
 import { mapActions } from "vuex";
+import { HfhButton } from "@hfh-dlc/hfh-styleguide";
 import ErrorList from "../Components/ErrorList.vue";
-import HfHButton from "../Components/HfHButton";
 export default {
   components: {
     ErrorList,
-    HfHButton,
+    HfhButton,
   },
   props: {
     selectedModule: {

@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex justify-between items-end p-4 border-b border-gray-300">
+  <nav class="flex justify-between items-end p-4">
     <h1 class="text-xl">
       Studienverlaufsplaner
       <span v-if="name">{{ name }}</span>
@@ -13,44 +13,30 @@
         <h2 class="text-xl">Ich möchte einen neuen Plan erstellen.</h2>
         <div>
           <form @submit.prevent="createPlan" class="mt-2 w-64">
-            <label for="email" class="text-sm">E-Mail</label>
-            <input
+            <HfhInput
+              class="w-full"
               v-model="createForm.email"
-              type="email"
-              name="email"
               id="email"
-              required
-              class="
-                leading-4
-                w-full
-                block
-                border border-gray-600
-                rounded
-                shadow-inner
-                p-2
-                mb-2
-              "
+              type="email"
+              label="E-Mail"
+              :required="true"
             />
-            <label for="year" class="text-sm">Jahr</label>
-            <select
+            <HfhSelect
+              class="w-full mt-4"
+              id="plan-start-year"
+              label="Jahr"
               v-model="createForm.startYear"
-              required
-              class="
-                block
-                border border-gray-600
-                rounded
-                shadow-inner
-                p-2
-                w-full
-              "
+              :required="true"
+              :options="yearOptions"
+              defaultOption="Bitte wählen..."
             >
-              <option value="" disabled>Bitte wählen...</option>
-              <option :value="2022">2022</option>
-            </select>
+            </HfhSelect>
             <div v-if="createForm.errors.startYear">
               {{ createForm.errors.startYear }}
             </div>
-            <HfHButton class="w-full mt-4">Plan erstellen</HfHButton>
+            <HfhButton :type="submit" :animated="true" class="w-full mt-4"
+              >Plan erstellen</HfhButton
+            >
           </form>
         </div>
       </div>
@@ -59,11 +45,13 @@
 </template>
 
 <script>
-import HfHButton from "../Components/HfHButton.vue";
+import { HfhButton, HfhInput, HfhSelect } from "@hfh-dlc/hfh-styleguide";
 import HtmlContent from "../Components/HtmlContent.vue";
 export default {
   components: {
-    HfHButton,
+    HfhButton,
+    HfhInput,
+    HfhSelect,
     HtmlContent,
   },
   props: {
@@ -86,7 +74,7 @@ export default {
         email: "",
         startYear: "",
       }),
-      planSlug: "",
+      yearOptions: [{ label: "2022", value: 2022 }],
     };
   },
   methods: {
@@ -94,9 +82,6 @@ export default {
       this.createForm.post(`/${this.slug}/plans`, {
         onSuccess: () => this.createForm.reset(),
       });
-    },
-    viewPlan() {
-      this.$inertia.get(`/${this.slug}/${this.planSlug}`);
     },
   },
 };

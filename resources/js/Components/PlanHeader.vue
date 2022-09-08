@@ -1,7 +1,5 @@
 <template>
-  <nav
-    class="flex justify-between items-end h-full p-4 border-b border-gray-300"
-  >
+  <div class="flex justify-between items-center h-full p-4">
     <div>
       <div class="text-xl">
         Studienverlaufsplaner
@@ -9,31 +7,18 @@
       </div>
       <p class="text-sm">(Änderungen vorbehalten)</p>
     </div>
+
     <div class="flex items-center justify-between gap-4">
-      <ul class="flex gap-x-4 items-center" v-if="showNavigation">
-        <li>
-          <Link
-            :href="`/${planerSlug}/${planSlug}/zeitplan`"
-            class="font-normal"
-            :class="{
-              active: $page.component === 'Schedule',
-            }"
-            >Zeitplan</Link
-          >
-        </li>
-        <li>
-          <Link
-            :href="`/${planerSlug}/${planSlug}/anrechnung`"
-            class="font-normal"
-            :class="{
-              active: $page.component === 'Credit',
-            }"
-            >Anrechnung</Link
-          >
-        </li>
-      </ul>
-      <SaveStatus />
-      <div>
+      <nav>
+        <HfhMenu
+          v-if="showNavigation"
+          :items="menuItems"
+          :primary="false"
+          :currentItem="$page.url"
+        />
+      </nav>
+      <SaveStatus class="pt-2.5 pb-[1.9375rem]" />
+      <div class="pt-2.5 pb-[1.9375rem]">
         <button
           v-if="showTour"
           id="start-tour"
@@ -44,19 +29,21 @@
           Hilfe
         </button>
       </div>
-      <div>
+      <div class="pt-2.5 pb-[1.9375rem]">
         <PrintButton />
       </div>
     </div>
-  </nav>
+  </div>
 </template>
 
 <script>
 import { QuestionMarkCircleIcon } from "@heroicons/vue/outline";
+import { HfhMenu } from "@hfh-dlc/hfh-styleguide";
 import PrintButton from "./PrintButton.vue";
 import SaveStatus from "./SaveStatus.vue";
 export default {
   components: {
+    HfhMenu,
     QuestionMarkCircleIcon,
     PrintButton,
     SaveStatus,
@@ -83,6 +70,20 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      menuItems: [
+        {
+          label: "Zeitplan",
+          link: `/${this.planerSlug}/${this.planSlug}/zeitplan`,
+        },
+        {
+          label: "Anrechnung",
+          link: `/${this.planerSlug}/${this.planSlug}/anrechnung`,
+        },
+      ],
+    };
+  },
   methods: {
     startTour() {
       this.$emitter.emit("start-tour", {});
@@ -93,6 +94,6 @@ export default {
 
 <style lang="scss" scoped>
 a.active {
-  font-weight: bold;
+  color: var(--c-thunderbird-red);
 }
 </style>
