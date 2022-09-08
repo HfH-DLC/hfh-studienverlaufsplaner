@@ -30,7 +30,7 @@ export default {
 <style lang="scss">
 .html-content {
   a {
-    @apply text-thunderbird-red hover:text-thunderbird-red-light hover:underline focus:text-thunderbird-red-light focus:underline;
+    @apply font-bold text-thunderbird-red  hover:underline focus:underline;
   }
   p:not(:first-child) {
     @apply mt-4;
