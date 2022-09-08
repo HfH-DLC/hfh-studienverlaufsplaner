@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 sticky top-0 overflow-y-auto max-h-screen">
+  <div class="mt-4 px-4 sticky top-0 overflow-y-auto max-h-screen">
     <slot></slot>
   </div>
 </template>
