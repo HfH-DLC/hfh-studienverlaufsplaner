@@ -18,3 +18,4 @@ yarn-error.log
 /public/build
 /public/mix-manifest.json
 .DS_Store
+.npmrc
