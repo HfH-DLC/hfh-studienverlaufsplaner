@@ -1,11 +1,19 @@
 <template>
   <div v-for="(year, yearIndex) in years" :key="yearIndex" class="mb-24">
     <div
-      class="mb-4 border border-gray-300"
+      class="mb-4"
       v-for="(semester, semesterIndex) in year.semesters"
       :key="semesterIndex"
     >
-      <table class="w-full divide-y divide-gray-300 table-fixed">
+      <table
+        class="
+          w-full
+          divide-y divide-gray-300
+          table-fixed
+          text-left
+          border border-gray-300
+        "
+      >
         <caption
           class="text-white py-2"
           :class="[semesterIndex % 2 === 0 ? 'bg-gray-900' : 'bg-gray-600']"
