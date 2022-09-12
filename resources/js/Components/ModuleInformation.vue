@@ -1,6 +1,6 @@
 <template>
   <div v-if="selectedModule">
-    <HfhButton @click="deselectModule" class="mb-4">Zurück</HfhButton>
+    <button @click="deselectModule" class="back-button mb-4">Zurück</button>
     <h2 class="text-xl">{{ selectedModule.name }}</h2>
     <ErrorList
       class="mt-4 space-y-2"
@@ -50,4 +50,33 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.back-button {
+  position: relative;
+  cursor: pointer;
+  background: var(--c-black);
+  color: var(--c-white);
+  border: none;
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.625rem;
+  min-height: 3.25rem;
+  text-align: left;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 1rem;
+    margin: auto;
+    background-image: var(--i-carret--thin);
+    display: block;
+    transform-origin: center center;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    transform: rotate(90deg);
+    width: 1.25rem;
+    height: 0.8125rem;
+  }
+}
+</style>
