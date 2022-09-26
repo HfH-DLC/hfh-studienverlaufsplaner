@@ -10,6 +10,10 @@ module.exports = {
                 "thunderbird-red": "#be1925",
                 "thunderbird-red-light": "#e31826",
             },
+            maxWidth: {
+                container: "var(--w-container)",
+                content: "var(--w-content)",
+            },
         },
     },
 };
