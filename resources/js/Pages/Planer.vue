@@ -55,7 +55,7 @@
             <div v-if="createForm.errors.startYear">
               {{ createForm.errors.startYear }}
             </div>
-            <HfhButton :type="submit" :animated="true" class="w-full mt-4"
+            <HfhButton type="submit" :animated="true" class="w-full mt-4"
               >Plan erstellen</HfhButton
             >
           </form>
