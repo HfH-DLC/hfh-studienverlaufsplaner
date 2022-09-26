@@ -27,10 +27,10 @@
         </caption>
         <thead class="bg-gray-50">
           <tr class="divide-x divide-gray-300">
-            <th id="blank"></th>
+            <th id="blank" class="w-1/5"></th>
             <th
               scope="col"
-              class="px-6 py-2 text-xs text-gray-500"
+              class="px-4 py-2 text-xs text-gray-600"
               v-for="timeWindow in semester.timeWindows"
               :key="timeWindow"
             >
@@ -59,11 +59,11 @@
               <th
                 scope="row"
                 class="
-                  px-6
+                  px-4
                   py-2
                   text-xs text-left
                   bg-gray-50
-                  text-gray-500
+                  text-gray-600
                   w-px
                 "
               >
