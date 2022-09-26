@@ -49,7 +49,9 @@
                 class="mb-8"
               >
                 Ihr Plan erfüllt alle Anforderungen.
-                <Link href="anrechnung">Weiter zur Anrechnung.</Link>
+                <HfhLink href="anrechnung" component="Link"
+                  >Weiter zur Anrechnung.</HfhLink
+                >
               </p>
               <Checklist :entries="todoEntries" />
             </StickyColumn>
@@ -82,6 +84,7 @@ import Flash from "../Components/Flash.vue";
 import flashTypes from "../flashTypes";
 import StickyColumn from "../Components/StickyColumn.vue";
 import Checklist from "../Components/Checklist.vue";
+import { HfhLink } from "@hfh-dlc/hfh-styleguide";
 
 export default {
   components: {
@@ -96,6 +99,7 @@ export default {
     Tour,
     PlanHeader,
     StickyColumn,
+    HfhLink,
   },
   props: {
     categoriesResource: {
