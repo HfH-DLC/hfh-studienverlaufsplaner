@@ -6,6 +6,7 @@ use App\Http\Requests\UpdateScheduleRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CreditableModuleResource;
 use App\Http\Resources\FocusResource;
+use App\Http\Resources\PlanerResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\RuleResource;
 use App\Http\Resources\TodoResource;
@@ -82,6 +83,12 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         });
         return Redirect::route('admin-data');
     });
+});
+
+Route::get('/', function (Request $request) {
+    return Inertia::render('Home', array(
+        'planersResource' => PlanerResource::collection(Planer::all())
+    ));
 });
 
 Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
