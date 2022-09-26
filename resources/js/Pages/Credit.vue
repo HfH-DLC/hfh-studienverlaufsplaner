@@ -14,7 +14,12 @@
       <div class="flex mt-4 gap-x-8">
         <template v-if="planResource.data.scheduleValid">
           <table
-            class="w-full divide-y divide-gray-300 border border-gray-300"
+            class="
+              w-9/12
+              divide-y divide-gray-300
+              border border-gray-300
+              text-left
+            "
             id="modules"
           >
             <caption class="text-white py-2 bg-gray-900">
@@ -22,8 +27,8 @@
             </caption>
             <thead class="bg-gray-50">
               <tr class="divide-x divide-gray-300">
-                <th class="px-6 py-2 text-xs text-gray-500">Modul</th>
-                <th class="px-6 py-2 text-xs text-gray-500">Anrechnung</th>
+                <th class="px-4 py-2 text-sm text-gray-600">Modul</th>
+                <th class="px-4 py-2 text-sm text-gray-600">Anrechnung</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-300">
@@ -171,7 +176,7 @@ export default {
 </script>
 
 <style scoped>
-/deep/ .hfh-select {
+:deep() .hfh-select {
   width: fit-content;
 }
 </style>
