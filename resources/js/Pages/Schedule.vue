@@ -215,5 +215,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+:root {
+  --w-container: 100%;
+}
 </style>

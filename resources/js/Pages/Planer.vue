@@ -12,7 +12,7 @@
       </div>
     </template>
   </HfhHeaderBar>
-  <div class="flex justify-between px-4 pt-4 pb-4">
+  <div class="flex justify-between px-4 pt-4 pb-4 max-w-container mx-auto">
     <div class="flex gap-x-8 items-center">
       <HfhLogo />
       <div>
@@ -23,12 +23,14 @@
       </div>
     </div>
   </div>
-  <div class="p-4 max-w-6xl mx-auto">
+  <div class="p-4 max-w-container mx-auto">
     <h2 class="text-2xl mt-4 mb-4">Willkommen!</h2>
     <HtmlContent :content="infoTemplate" />
-    <div class="py-8">
-      <div>
-        <h2 class="text-xl">Ich möchte einen neuen Plan erstellen.</h2>
+    <div class="py-8 flex justify-center">
+      <div class="flex flex-col items-center">
+        <h2 class="text-xl text-center">
+          Ich möchte einen neuen Plan erstellen.
+        </h2>
         <div>
           <form @submit.prevent="createPlan" class="mt-2 w-80">
             <HfhInput

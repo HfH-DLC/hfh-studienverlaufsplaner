@@ -1,7 +1,7 @@
 <template>
   <button
     class="
-      text-left text-sm
+      text-left
       mb-2
       p-1
       w-full

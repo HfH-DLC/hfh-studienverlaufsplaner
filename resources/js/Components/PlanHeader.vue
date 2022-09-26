@@ -23,13 +23,13 @@
         <p class="text-sm">(Änderungen vorbehalten)</p>
       </div>
     </div>
-    <div class="flex justify-between items-center gap-4">
+    <div class="flex justify-between items-center gap-4 text-base">
       <nav class="flex items-center">
         <ul class="flex gap-x-4" v-if="showNavigation">
           <li>
             <Link
               :href="`/${planerSlug}/${planSlug}/zeitplan`"
-              class="font-normal"
+              class="font-normal hover:text-thunderbird-red"
               :class="{
                 active: $page.component === 'Schedule',
               }"
@@ -39,7 +39,7 @@
           <li>
             <Link
               :href="`/${planerSlug}/${planSlug}/anrechnung`"
-              class="font-normal"
+              class="font-normal hover:text-thunderbird-red"
               :class="{
                 active: $page.component === 'Credit',
               }"

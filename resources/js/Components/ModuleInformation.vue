@@ -8,10 +8,10 @@
       :errors="selectedModule.infos"
     />
     <dl class="mt-4">
-      <dt class="text-sm text-gray-500 font-bold">Modulnummer</dt>
+      <dt class="hfh-label">Modulnummer</dt>
       <dd>{{ selectedModule.id }}</dd>
       <template v-if="selectedModule.prerequisites.length > 0">
-        <dt class="mt-2 text-sm text-gray-500 font-bold">Voraussetzungen</dt>
+        <dt class="hfh-label">Voraussetzungen</dt>
         <dd>
           <ul>
             <li
@@ -23,7 +23,7 @@
           </ul>
         </dd>
       </template>
-      <dt class="mt-2 text-sm text-gray-500 font-bold">Kreditpunkte</dt>
+      <dt class="hfh-label">Kreditpunkte</dt>
       <dd>{{ selectedModule.ects }}</dd>
     </dl>
   </div>
