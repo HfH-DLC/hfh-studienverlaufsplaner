@@ -30,7 +30,7 @@
       <div>
         <h2 class="text-xl">Ich möchte einen neuen Plan erstellen.</h2>
         <div>
-          <form @submit.prevent="createPlan" class="mt-2 w-64">
+          <form @submit.prevent="createPlan" class="mt-2 w-80">
             <HfhInput
               class="w-full"
               v-model="createForm.email"
