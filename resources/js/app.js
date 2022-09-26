@@ -1,5 +1,6 @@
 import { createApp, h } from "vue";
-import { createInertiaApp, Link, Head } from "@inertiajs/inertia-vue3";
+import { createInertiaApp, Link } from "@inertiajs/inertia-vue3";
+import AppHead from "./Components/AppHead.vue";
 import { InertiaProgress } from "@inertiajs/progress";
 import store from "./Store/index";
 import emitter from "./emitter";
@@ -16,15 +17,8 @@ createInertiaApp({
             .use(plugin)
             .use(store)
             .component("Link", Link)
-            .component("Head", Head)
+            .component("AppHead", AppHead)
             .mount(el);
-    },
-    title: (title) => {
-        const staticTitle = "Studienverlaufsplaner";
-        if (title) {
-            return `${title} | ${staticTitle}`;
-        }
-        return staticTitle;
     },
 });
 

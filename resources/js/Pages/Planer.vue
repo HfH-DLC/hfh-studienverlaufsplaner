@@ -1,4 +1,5 @@
 <template>
+  <AppHead :planerName="name" />
   <HfhHeaderBar>
     <template v-slot:right>
       <div class="px-4 py-3 leading-4">
