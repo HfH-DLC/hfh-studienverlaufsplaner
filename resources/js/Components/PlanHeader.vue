@@ -16,10 +16,10 @@
     <div class="flex gap-x-8 items-center">
       <HfhLogo />
       <div>
-        <div class="text-xl">
+        <h1 class="text-xl">
           Studienverlaufsplaner
           <span v-if="planerName">{{ planerName }}</span>
-        </div>
+        </h1>
         <p class="text-sm">(Änderungen vorbehalten)</p>
       </div>
     </div>

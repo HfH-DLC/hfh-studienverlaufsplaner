@@ -17,7 +17,7 @@
     <div class="flex gap-x-8 items-center">
       <HfhLogo />
       <div>
-        <div class="text-xl">Studienverlaufsplaner</div>
+        <h1 class="text-xl">Studienverlaufsplaner</h1>
       </div>
     </div>
   </div>
@@ -26,7 +26,7 @@
     <p>Bitte wählen Sie einen Studiengang.</p>
     <ul class="mt-4 grid grid-cols-2 gap-8">
       <li v-for="planer in planers" :key="planer.id">
-        <HfhLink :href="planer.slug"
+        <HfhLink :href="planer.slug" component="Link"
           ><HfhTeaser>{{ planer.name }}</HfhTeaser></HfhLink
         >
       </li>
