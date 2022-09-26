@@ -10,7 +10,7 @@
       />
     </header>
     <main class="flex-1 flex flex-col px-4 pb-4">
-      <ErrorList class="mt-4 space-y-2" :errors="errors" />
+      <ErrorList class="mt-4 space-y-2" :errors="errors" aria-live="polite" />
       <div class="flex mt-4 gap-x-8">
         <template v-if="planResource.data.scheduleValid">
           <table
@@ -63,7 +63,12 @@
               </template>
             </tbody>
           </table>
-          <Checklist :entries="todoEntries" id="todos" class="w-3/12" />
+          <Checklist
+            :entries="todoEntries"
+            id="todos"
+            class="w-3/12"
+            aria-live="polite"
+          />
         </template>
         <p v-else>
           Bitte erfüllen sie zuerst alle Anforderungen an Ihren

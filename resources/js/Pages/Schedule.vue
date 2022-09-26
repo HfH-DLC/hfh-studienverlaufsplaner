@@ -18,7 +18,7 @@
             role="alert"
             v-if="errors.length > 0"
           >
-            <ErrorList class="space-y-2" :errors="errors" />
+            <ErrorList class="space-y-2" :errors="errors" aria-live="polite" />
           </div>
           <FocusSelection
             v-if="focusSelectionEnabled"
