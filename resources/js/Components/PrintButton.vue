@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <button
-      class="p-2 flex items-center gap-1 hover:text-thunderbird-red"
-      @click="print"
-    >
-      <PrinterIcon class="w-5 h-5" aria-hidden="true" /> Drucken
-    </button>
-  </div>
+  <button
+    class="flex items-center gap-1 hover:text-thunderbird-red"
+    @click="print"
+  >
+    <PrinterIcon class="w-5 h-5" aria-hidden="true" /> Drucken
+  </button>
 </template>
 
 <script>
