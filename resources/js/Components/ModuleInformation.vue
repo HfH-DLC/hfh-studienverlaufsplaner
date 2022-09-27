@@ -11,7 +11,7 @@
       <dt class="hfh-label">Modulnummer</dt>
       <dd>{{ selectedModule.id }}</dd>
       <template v-if="selectedModule.prerequisites.length > 0">
-        <dt class="hfh-label">Voraussetzungen</dt>
+        <dt class="hfh-label mt-4">Voraussetzungen</dt>
         <dd>
           <ul>
             <li
@@ -23,7 +23,7 @@
           </ul>
         </dd>
       </template>
-      <dt class="hfh-label">Kreditpunkte</dt>
+      <dt class="hfh-label mt-4">Kreditpunkte</dt>
       <dd>{{ selectedModule.ects }}</dd>
     </dl>
   </div>
