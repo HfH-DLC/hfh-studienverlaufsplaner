@@ -1,5 +1,5 @@
 <template>
-  <HfhHeaderBar>
+  <HfhHeaderBar class="print:hidden">
     <template v-slot:right>
       <div class="px-4 py-3 leading-4">
         <a
@@ -23,7 +23,7 @@
         <p class="text-sm">(Änderungen vorbehalten)</p>
       </div>
     </div>
-    <div class="flex justify-between items-center gap-4 text-base">
+    <div class="flex justify-between items-center gap-4 text-base print:hidden">
       <nav class="flex items-center">
         <ul class="flex gap-x-4" v-if="showNavigation">
           <li>

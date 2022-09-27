@@ -1,5 +1,9 @@
 <template>
-  <div v-for="(year, yearIndex) in years" :key="yearIndex" class="mb-24">
+  <div
+    v-for="(year, yearIndex) in years"
+    :key="yearIndex"
+    class="mb-24 print:mb-4"
+  >
     <div
       class="mb-4"
       v-for="(semester, semesterIndex) in year.semesters"
@@ -15,7 +19,16 @@
         "
       >
         <caption
-          class="text-white py-2"
+          class="
+            text-white
+            py-2
+            print:border-t
+            print:border-l
+            print:border-r
+            print:text-black
+            print:border-gray-300
+            print:bg-transparent
+          "
           :class="[semesterIndex % 2 === 0 ? 'bg-gray-900' : 'bg-gray-600']"
         >
           {{
@@ -227,4 +240,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+table {
+  page-break-inside: avoid !important;
+}
+</style>

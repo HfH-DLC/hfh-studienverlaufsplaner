@@ -26,8 +26,8 @@
             id="focus-selection"
             class="p-4"
           />
-          <div class="flex flex-1 items-start">
-            <StickyColumn id="modules" class="w-3/12">
+          <div class="flex flex-1 items-start print:block">
+            <StickyColumn id="modules" class="w-3/12 print:hidden">
               <ModuleInformation
                 v-show="selectedOrTourModule"
                 :selectedModule="selectedOrTourModule"
@@ -37,10 +37,14 @@
                 :hashModuleId="hashModuleId"
               />
             </StickyColumn>
-            <StickyColumn id="time-table" class="w-6/12">
+            <StickyColumn id="time-table" class="w-6/12 print:w-full">
               <TimeTable ref="timeTable" />
             </StickyColumn>
-            <StickyColumn id="todos" class="w-3/12" aria-live="polite">
+            <StickyColumn
+              id="todos"
+              class="w-3/12 print:w-full"
+              aria-live="polite"
+            >
               <p
                 v-if="
                   focusSelectionEnabled &&

@@ -12,18 +12,31 @@
     </header>
     <main class="flex-1 flex flex-col px-4 pb-4">
       <ErrorList class="mt-4 space-y-2" :errors="errors" aria-live="polite" />
-      <div class="flex mt-4 gap-x-8">
+      <div class="flex mt-4 gap-x-8 print:block">
         <template v-if="planResource.data.scheduleValid">
           <table
             class="
               w-9/12
+              print:w-full
               divide-y divide-gray-300
               border border-gray-300
               text-left
             "
             id="modules"
           >
-            <caption class="text-white py-2 bg-gray-900">
+            <caption
+              class="
+                text-white
+                py-2
+                bg-gray-900
+                print:bg-transparent
+                print:text-black
+                print:border-t
+                print:border-r
+                print:border-l
+                print:border-gray-300
+              "
+            >
               Anrechnung an die Studienschwerpunkte
             </caption>
             <thead class="bg-gray-50">
@@ -67,7 +80,7 @@
           <Checklist
             :entries="todoEntries"
             id="todos"
-            class="w-3/12"
+            class="w-3/12 print:w-full print:mt-8"
             aria-live="polite"
           />
         </template>
@@ -184,5 +197,9 @@ export default {
 <style scoped>
 :deep() .hfh-select {
   width: fit-content;
+}
+
+table {
+  page-break-inside: avoid !important;
 }
 </style>

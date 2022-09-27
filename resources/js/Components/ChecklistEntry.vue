@@ -34,4 +34,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.checklist-entry {
+  page-break-inside: avoid;
+}
 </style>
