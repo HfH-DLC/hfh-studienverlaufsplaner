@@ -1,8 +1,8 @@
 <template>
-  <div class="lg:hidden">
+  <div class="lg:hidden print:hidden">
     <MobileWarning />
   </div>
-  <div class="hidden lg:block">
+  <div class="hidden lg:block print:block">
     <slot />
   </div>
 </template>
