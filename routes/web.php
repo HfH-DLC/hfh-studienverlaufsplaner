@@ -16,6 +16,7 @@ use App\Models\FocusSelection;
 use App\Models\Placement;
 use App\Models\Plan;
 use App\Models\Planer;
+use App\Models\Import;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -96,12 +97,17 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
         $infoTemplatePath = base_path("data/" . $planer->slug . ".html");
         $infoTemplate = file_get_contents($infoTemplatePath);
         $infoTemplate = Purifier::clean($infoTemplate);
+        $years = Import::orderBy('year', 'asc')->groupBy('year')->pluck('year')->toArray();
+        $minYear = min($years);
+        $maxYear = max($years);
+        $allowedYears = range($minYear, $maxYear);
         return Inertia::render(
             'Planer',
             array(
                 'slug' => $planer->slug,
                 'name' => $planer->name,
-                'infoTemplate' => $infoTemplate
+                'infoTemplate' => $infoTemplate,
+                'allowedYears' => $allowedYears
             )
         );
     })->name('planer');

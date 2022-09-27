@@ -96,6 +96,9 @@ export default {
       type: String,
       required: true,
     },
+    allowedYears: {
+      type: Array,
+    },
   },
   data() {
     return {
@@ -103,7 +106,10 @@ export default {
         email: "",
         startYear: "",
       }),
-      yearOptions: [{ label: "2022", value: 2022 }],
+      yearOptions: this.allowedYears.map((year) => ({
+        label: year,
+        value: year,
+      })),
     };
   },
   methods: {
