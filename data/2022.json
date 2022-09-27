@@ -465,7 +465,7 @@
                     "name": "ExcludeSemester",
                     "type": "schedule",
                     "params": {
-                        "excludePositions": [0, 1],
+                        "excludePositions": [0],
                         "moduleId": "M5_03"
                     }
                 }
@@ -654,7 +654,7 @@
                     "name": "ExcludeSemester",
                     "type": "schedule",
                     "params": {
-                        "excludePositions": [0, 1],
+                        "excludePositions": [0],
                         "moduleId": "M5_03"
                     }
                 }
