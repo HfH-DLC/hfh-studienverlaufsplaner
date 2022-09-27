@@ -108,9 +108,11 @@ import Checklist from "../Components/Checklist.vue";
 import ErrorList from "../Components/ErrorList.vue";
 import PlanHeader from "../Components/PlanHeader.vue";
 import Tour from "../Components/Tour.vue";
+import MainLayout from "../Layouts/MainLayout.vue";
 
 import { mapActions, mapState } from "vuex";
 export default {
+  layout: MainLayout,
   components: {
     Checklist,
     ErrorList,

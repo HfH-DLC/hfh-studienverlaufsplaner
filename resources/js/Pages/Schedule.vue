@@ -89,9 +89,11 @@ import Flash from "../Components/Flash.vue";
 import flashTypes from "../flashTypes";
 import StickyColumn from "../Components/StickyColumn.vue";
 import Checklist from "../Components/Checklist.vue";
+import MainLayout from "../Layouts/MainLayout.vue";
 import { HfhLink } from "@hfh-dlc/hfh-styleguide";
 
 export default {
+  layout: MainLayout,
   components: {
     CheckCircleIcon,
     Checklist,
