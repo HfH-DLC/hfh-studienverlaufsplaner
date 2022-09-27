@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Models\Category;
 use App\Models\Event;
 use App\Models\Focus;
+use App\Models\Import;
 use App\Models\Module;
 use App\Models\Planer;
 use App\Models\Rule;
@@ -37,6 +38,7 @@ class JSONImport
             $this->importModules($data);
             $this->importPlaners($data);
             $this->importEvents($data);
+            $this->saveImport($data);
         });
     }
 
@@ -258,5 +260,13 @@ class JSONImport
         return Event::firstOrCreate([
             'module_id' => $moduleID, 'year' => $year, 'semester' => $semester, 'time_window' => $timeWindow, 'day' => $day, 'time' => $time, 'location' => $location
         ]);
+    }
+
+    private function saveImport($data)
+    {
+        $import = new Import();
+        $import->year = $data->year;
+        $import->version = $data->version;
+        $import->save();
     }
 }
