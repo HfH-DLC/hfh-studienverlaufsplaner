@@ -1,5 +1,5 @@
 <template>
-  <AppHead :planerName="name" title="Zeitplan" />
+  <AppHead :planerName="planerName" title="Zeitplan" />
   <div class="min-h-screen flex flex-col">
     <header>
       <PlanHeader
