@@ -27,7 +27,7 @@ export default class FocusModulesTodo {
                         focus.requiredNumberOfOptionalModules
                     ),
                     progressLabel: this.getProgressLabelOptional(
-                        focus.requiredModules,
+                        focus.optionalModules,
                         placements,
                         focus.requiredNumberOfOptionalModules
                     ),
