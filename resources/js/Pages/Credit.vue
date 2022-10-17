@@ -1,5 +1,5 @@
 <template>
-  <AppHead :planerName="name" title="Anrechnung" />
+  <AppHead :planerName="planerName" title="Anrechnung" />
   <div class="min-h-screen flex flex-col">
     <header>
       <PlanHeader
@@ -7,7 +7,7 @@
         :planerName="planerName"
         :planSlug="planResource.data.slug"
         :showNavigation="true"
-        :showTour="!!tour"
+        :showTour="!!tour && planResource.data.scheduleValid"
       />
     </header>
     <main class="flex-1 flex flex-col px-4 pb-4">
@@ -77,12 +77,16 @@
               </template>
             </tbody>
           </table>
-          <Checklist
-            :entries="todoEntries"
-            id="todos"
-            class="w-3/12 print:w-full print:mt-8"
-            aria-live="polite"
-          />
+          <p
+            v-if="
+              errors.length == 0 && !todoEntries.some((entry) => !entry.checked)
+            "
+            class="mb-8"
+          ></p>
+          <div class="w-3/12 print:w-full print:mt-8" aria-live="polite">
+            <p class="mb-8">Ihre Planung erfüllt alle Anforderungen.</p>
+            <Checklist :entries="todoEntries" id="todos" />
+          </div>
         </template>
         <p v-else>
           Bitte erfüllen sie zuerst alle Anforderungen an Ihren
