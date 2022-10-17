@@ -24,7 +24,7 @@
           <FocusSelection
             v-if="focusSelectionEnabled"
             id="focus-selection"
-            class="p-4"
+            class="px-4 py-8"
           />
           <div class="flex flex-1 items-start print:block">
             <StickyColumn id="modules" class="w-3/12 print:hidden">
@@ -37,7 +37,10 @@
                 :hashModuleId="hashModuleId"
               />
             </StickyColumn>
-            <StickyColumn id="time-table" class="w-6/12 print:w-full">
+            <StickyColumn
+              id="time-table"
+              class="w-6/12 print:w-full lg:mx-0 xl:mx-8"
+            >
               <TimeTable ref="timeTable" />
             </StickyColumn>
             <StickyColumn
@@ -53,7 +56,7 @@
                 "
                 class="mb-8"
               >
-                Ihr Plan erfüllt alle Anforderungen.
+                Ihre Planung erfüllt alle Anforderungen.
                 <HfhLink href="anrechnung" component="Link"
                   >Weiter zur Anrechnung.</HfhLink
                 >
