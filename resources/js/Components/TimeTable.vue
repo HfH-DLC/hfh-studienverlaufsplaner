@@ -32,7 +32,7 @@
           :class="[semesterIndex % 2 === 0 ? 'bg-gray-900' : 'bg-gray-600']"
         >
           {{
-            semester.value
+            getSemesterString(semester.value)
           }}
           {{
             semester.calendarYear
@@ -43,7 +43,7 @@
             <th id="blank" class="w-1/5"></th>
             <th
               scope="col"
-              class="px-4 py-2 text-xs text-gray-600"
+              class="px-4 py-2 text-base text-gray-600 font-normal"
               v-for="timeWindow in semester.timeWindows"
               :key="timeWindow"
             >
@@ -74,37 +74,38 @@
                 class="
                   px-4
                   py-2
-                  text-xs text-left
+                  text-base text-left
                   bg-gray-50
                   text-gray-600
                   w-px
+                  font-normal
                 "
               >
-                {{ day }} {{ time }}
+                {{ day }}: {{ time }}
               </th>
-              <TimeSlot
-                v-for="timeWindow in semester.timeWindows"
-                :key="timeWindow"
-                :ref="setSlotRef"
-                :event="
-                  selectableEventByDate(
-                    year.value,
-                    semester.value,
-                    timeWindow,
-                    day,
-                    time
-                  )
-                "
-                :placement="
-                  placementByDate(
-                    year.value,
-                    semester.value,
-                    timeWindow,
-                    day,
-                    time
-                  )
-                "
-              />
+              <td v-for="timeWindow in semester.timeWindows" :key="timeWindow">
+                <TimeSlot
+                  :ref="setSlotRef"
+                  :event="
+                    selectableEventByDate(
+                      year.value,
+                      semester.value,
+                      timeWindow,
+                      day,
+                      time
+                    )
+                  "
+                  :placement="
+                    placementByDate(
+                      year.value,
+                      semester.value,
+                      timeWindow,
+                      day,
+                      time
+                    )
+                  "
+                />
+              </td>
             </tr>
           </template>
         </tbody>
@@ -224,6 +225,14 @@ export default {
     },
     setTimeWindowInfoVisible(value) {
       this.isTimeWindowInfoVisible = value;
+    },
+    getSemesterString(value) {
+      if (value == "HS") {
+        return "Herbstsemester";
+      }
+      if (value == "FS") {
+        return "Frühlingssemester";
+      }
     },
   },
   watch: {

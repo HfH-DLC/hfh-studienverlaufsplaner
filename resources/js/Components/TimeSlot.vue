@@ -1,63 +1,61 @@
 <template>
-  <td>
-    <div class="min-h-16 relative p-1">
-      <button
-        ref="button"
-        v-if="placement"
-        class="
-          text-sm text-left
-          disabled:cursor-default
-          w-full
-          p-4
-          border border-gray-300
-          rounded
-          'bg-gray-50'
-          transition-all
-          truncate
-          focus:outline-none focus:ring-2 focus:ring-indigo-500
-        "
-        :class="{
-          'slot--invalid': invalidPlacement,
-        }"
-        @click="onModuleClick"
-      >
-        <XCircleIcon
-          v-if="invalidPlacement"
-          class="text-red-600 inline-block mr-2 w-5 h-5"
-        />
-        <span>{{ placement.module.id }} {{ placement.module.name }}</span>
-      </button>
-      <ContextMenu
-        class="absolute -bottom-8 right-2"
-        v-if="placement && placement.module.selected"
-        :placement="placement"
+  <div class="min-h-16 relative p-1">
+    <button
+      ref="button"
+      v-if="placement"
+      class="
+        text-sm text-left
+        disabled:cursor-default
+        w-full
+        p-4
+        border border-gray-300
+        rounded
+        'bg-gray-50'
+        transition-all
+        truncate
+        focus:outline-none focus:ring-2 focus:ring-indigo-500
+      "
+      :class="{
+        'slot--invalid': invalidPlacement,
+      }"
+      @click="onModuleClick"
+    >
+      <XCircleIcon
+        v-if="invalidPlacement"
+        class="text-red-600 inline-block mr-2 w-5 h-5"
       />
-      <button
-        ref="button"
-        v-if="event && !placement"
-        class="
-          text-sm text-left
-          disabled:cursor-default
-          w-full
-          p-4
-          border border-gray-300
-          rounded
-          bg-white
-          transition-all
-          truncate
-          focus:outline-none focus:ring-2 focus:ring-indigo-500
-          shadow-inner
-        "
-        :class="event.valid ? 'slot--valid' : 'slot--invalid'"
-        @click="onPlaceModule"
-      >
-        <span>
-          <CheckCircleIcon v-if="event.valid" class="text-green-700 w-5 h-5" />
-          <XCircleIcon v-else class="text-red-600 inline-block mr-2 w-5 h-5" />
-        </span>
-      </button>
-    </div>
-  </td>
+      <span>{{ placement.module.id }} {{ placement.module.name }}</span>
+    </button>
+    <ContextMenu
+      class="absolute -bottom-8 right-2"
+      v-if="placement && placement.module.selected"
+      :placement="placement"
+    />
+    <button
+      ref="button"
+      v-if="event && !placement"
+      class="
+        text-sm text-left
+        disabled:cursor-default
+        w-full
+        p-4
+        border border-gray-300
+        rounded
+        bg-white
+        transition-all
+        truncate
+        focus:outline-none focus:ring-2 focus:ring-indigo-500
+        shadow-inner
+      "
+      :class="event.valid ? 'slot--valid' : 'slot--invalid'"
+      @click="onPlaceModule"
+    >
+      <span>
+        <CheckCircleIcon v-if="event.valid" class="text-green-700 w-5 h-5" />
+        <XCircleIcon v-else class="text-red-600 inline-block mr-2 w-5 h-5" />
+      </span>
+    </button>
+  </div>
 </template>
 
 <script>
