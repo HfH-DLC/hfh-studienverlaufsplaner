@@ -31,7 +31,8 @@
     <HfhInfoField class="max-w-content mx-4 md:mx-auto"
       >Der Studienverlaufsplaner ist nicht für die Betrachtung auf mobilen
       Geräten ausgelegt. Bitte verwenden Sie ein Gerät mit einer Breite von
-      mindestens 1024 Pixel.</HfhInfoField
+      mindestens 1024 Pixel oder vergrössern Sie das Fenster Ihres
+      Browsers.</HfhInfoField
     >
   </main>
 </template>
