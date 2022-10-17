@@ -554,7 +554,7 @@
                         },
                         {
                             "title": "Semester-Stundenpläne",
-                            "content": "Sobald Sie ein Modul ausgewählt haben, können Sie es platzieren. Klicken Sie dafür auf ein aktiviertes Feld!",
+                            "content": "In der Tabelle in der Mitte können die Module platziert werden. Sobald Sie in der Liste links ein Modul ausgewählt haben, erscheinen die verfügbaren Termine in grün.",
                             "ref": "time-table",
                             "placement": "left-start"
                         },
@@ -710,7 +710,7 @@
                         },
                         {
                             "title": "Semester-Stundenpläne",
-                            "content": "Sobald Sie ein Modul ausgewählt haben, können Sie es platzieren. Klicken Sie dafür auf ein aktiviertes Feld!",
+                            "content": "In der Tabelle in der Mitte können die Module platziert werden. Sobald Sie in der Liste links ein Modul ausgewählt haben, erscheinen die verfügbaren Termine in grün.",
                             "ref": "time-table",
                             "placement": "left-start"
                         },
