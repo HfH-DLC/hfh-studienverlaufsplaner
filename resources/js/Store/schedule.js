@@ -62,9 +62,11 @@ const initialState = {
 };
 
 const TOUR_SELECTED_MODULE = {
-    id: "P1_01",
-    name: "Grundfragen der Heilpädagogik",
-    prerequisites: [],
+    id: "WP2_04.2",
+    name: "Heilpädagogik im Bereich Hören 2",
+    prerequisites: [
+        { id: "WP2_04.1", name: "Heilpädagogik im Bereich Hören 1" },
+    ],
     infos: [],
     ects: 5,
 };
