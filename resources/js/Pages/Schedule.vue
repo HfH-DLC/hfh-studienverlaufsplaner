@@ -50,14 +50,16 @@
             >
               <p
                 v-if="
-                  focusSelectionEnabled &&
                   errors.length == 0 &&
                   !todoEntries.some((entry) => !entry.checked)
                 "
                 class="mb-8"
               >
                 Ihre Planung erfüllt alle Anforderungen.
-                <HfhLink href="anrechnung" component="Link"
+                <HfhLink
+                  v-if="focusSelectionEnabled"
+                  href="anrechnung"
+                  component="Link"
                   >Weiter zur Anrechnung.</HfhLink
                 >
               </p>
