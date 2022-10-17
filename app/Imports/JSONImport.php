@@ -125,6 +125,7 @@ class JSONImport
             $planer->required_ects = $planerData->requiredECTS;
             $planer->focus_selection_enabled = $planerData->focusSelectionEnabled;
             $planer->tour = $planerData->tour;
+            $planer->meta = $planerData->meta;
             $planer->save();
 
             $this->importCategories($planerData, $planer);
@@ -211,7 +212,7 @@ class JSONImport
 
     private function importTodos($planerData, $planer)
     {
-        if (!isset($planerData->rules)) {
+        if (!isset($planerData->todos)) {
             return;
         }
         $planer->todos()->delete();
