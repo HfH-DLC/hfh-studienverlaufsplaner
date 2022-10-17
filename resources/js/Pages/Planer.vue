@@ -26,7 +26,41 @@
   </div>
   <div class="p-4 max-w-container mx-auto">
     <h2 class="text-2xl mt-4 mb-4">Willkommen!</h2>
-    <HtmlContent :content="infoTemplate" />
+    <p>
+      Hier können Sie Ihren gewünschten Studienverlauf über alle Semester
+      planen. Der zusammengestellte Plan dient als Orientierung! Die HfH behält
+      sich vor, Module bei zu geringer Nachfrage abzusagen.
+    </p>
+    <p class="mt-4">
+      Bevor Sie loslegen, empfehlen wir Ihnen die
+      <a
+        class="font-bold text-thunderbird-red hover:underline focus:underline;"
+        target="_blank"
+        rel="noopener noreferrer"
+        :href="brochureUrl"
+        >Studienbroschüre</a
+      >
+      und das
+      <a
+        class="font-bold text-thunderbird-red hover:underline focus:underline;"
+        target="_blank"
+        rel="noopener noreferrer"
+        :href="moduleDirectoryUrl"
+      >
+        Modulverzeichnis</a
+      >.
+    </p>
+
+    <h3 class="text-xl mt-3 normal-case text-black">Wichtig</h3>
+    <p class="mt-4">
+      Unabhängig vom Studienverlaufsplaner müssen Sie ihre Module offiziell in
+      daylight-Web buchen. Sie erhalten eine separate Info per Mail von der
+      Hochschuladministration.
+    </p>
+    <p class="text-sm mt-4">
+      {{ new Date().toLocaleDateString() }}, Änderungen vorbehalten.
+    </p>
+
     <div class="py-8 flex justify-center">
       <div class="flex flex-col items-center">
         <h2 class="text-xl text-center">
@@ -92,7 +126,11 @@ export default {
       type: String,
       required: true,
     },
-    infoTemplate: {
+    brochureUrl: {
+      type: String,
+      required: true,
+    },
+    moduleDirectoryUrl: {
       type: String,
       required: true,
     },

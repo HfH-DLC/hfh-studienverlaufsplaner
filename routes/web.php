@@ -25,7 +25,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
-use Mews\Purifier\Facades\Purifier;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,21 +93,32 @@ Route::get('/', function (Request $request) {
 
 Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
     Route::get('/', function (Planer $planer) {
-        $infoTemplatePath = base_path("data/" . $planer->slug . ".html");
-        $infoTemplate = file_get_contents($infoTemplatePath);
-        $infoTemplate = Purifier::clean($infoTemplate);
         $years = Import::orderBy('year', 'asc')->groupBy('year')->pluck('year')->toArray();
         $minYear = min($years);
         $maxYear = max($years);
         $allowedYears = range($minYear, $maxYear);
+
+        $props =  array(
+            'slug' => $planer->slug,
+            'name' => $planer->name,
+            'allowedYears' => $allowedYears
+        );
+
+        if (isset($planer->meta)) {
+            if (isset($planer->meta['brochureUrl'])) {
+
+                $props['brochureUrl'] = $planer->meta['brochureUrl'];
+            }
+            if (isset($planer->meta['moduleDirectoryUrl'])) {
+                $props['moduleDirectoryUrl'] = $planer->meta['moduleDirectoryUrl'];
+            }
+        }
+
+
+
         return Inertia::render(
             'Planer',
-            array(
-                'slug' => $planer->slug,
-                'name' => $planer->name,
-                'infoTemplate' => $infoTemplate,
-                'allowedYears' => $allowedYears
-            )
+            $props
         );
     })->name('planer');
 
