@@ -391,12 +391,12 @@
             ],
             "categories": [
                 {
-                    "name": "Pflicht",
+                    "name": "Pflichtbereich",
                     "modules": ["P1_01", "P1_03", "P3_01", "P4_01"],
                     "required": true
                 },
                 {
-                    "name": "Wahlpflicht 1",
+                    "name": "Wahlpflichtbereich 1",
                     "modules": [
                         "WP2_01.1",
                         "WP2_01.2",
@@ -419,7 +419,7 @@
                     "maxECTS": 20
                 },
                 {
-                    "name": "Wahlpflicht 2",
+                    "name": "Wahlpflichtbereich 2",
                     "modules": [
                         "WP3_02",
                         "WP3_03",
@@ -436,7 +436,7 @@
                     "maxECTS": 20
                 },
                 {
-                    "name": "Wahl",
+                    "name": "Wahlbereich",
                     "modules": ["W3_07", "WXY_01", "WXY_02"],
                     "minECTS": 0,
                     "maxECTS": 10
@@ -476,15 +476,15 @@
                     "type": "schedule"
                 },
                 {
+                    "name": "RequiredModulesTodo",
+                    "type": "schedule"
+                },
+                {
                     "name": "ECTSPerCategoryTodo",
                     "type": "schedule"
                 },
                 {
                     "name": "FocusModulesTodo",
-                    "type": "schedule"
-                },
-                {
-                    "name": "RequiredModulesTodo",
                     "type": "schedule"
                 },
                 {
@@ -524,7 +524,7 @@
                         },
                         {
                             "title": "Nicht alles in einem Schwung!",
-                            "content": "Um zu einem späteren Zeitpunkt wieder auf Ihren Plan zuzugreifen, haben wir Ihnen eine E-Mail geschickt mit dem Link zu Ihrem HfH Studienverlaufsplan. Noch schneller auffindbar: Setzen Sie ein Lesezeichen in ihrem Browser für diese Seite. So müssen Sie nie von Vorne anfangen und können in Ruhe planen."
+                            "content": "Um zu einem späteren Zeitpunkt wieder auf Ihren Plan zuzugreifen, haben wir Ihnen eine E-Mail geschickt mit dem Link zu Ihrem HfH-Studienverlaufsplan. Noch schneller auffindbar: Setzen Sie ein Lesezeichen in ihrem Browser für diese Seite. So müssen Sie nie von Vorne anfangen und können in Ruhe planen."
                         },
                         {
                             "title": "Schwerpunkt-Auswahl",
@@ -560,7 +560,7 @@
                         },
                         {
                             "title": "Checkliste",
-                            "content": "In der Checkliste sehen Sie die Anforderungen an Ihren Plan sowie Ihren aktuellen Fortschritt bei deren Erfüllung.",
+                            "content": "In der Checkliste sehen Sie, welche Anforderungen Sie in Ihrer Planung noch erfüllen müssen.",
                             "ref": "todos",
                             "placement": "left-start"
                         },
@@ -582,7 +582,7 @@
                         },
                         {
                             "title": "Checkliste",
-                            "content": "In der Checkliste sehen Sie die Anforderungen an Ihre Anrechnung sowie Ihren aktuellen Fortschritt bei deren Erfüllung.",
+                            "content": "In der Checkliste sehen Sie, welche Anforderungen Sie in Ihrer Planung noch erfüllen müssen.",
                             "ref": "todos",
                             "placement": "left-start"
                         },
@@ -594,6 +594,10 @@
                         }
                     ]
                 }
+            },
+            "meta": {
+                "moduleDirectoryUrl": "https://daylightweb.hfh.ch/modulverzeichnis",
+                "brochureUrl": "https://www.hfh.ch/sites/default/files/documents/StudienbroschuereMA_SHP_22_web.pdf"
             }
         },
         {
@@ -604,7 +608,7 @@
             "focusSelectionEnabled": false,
             "categories": [
                 {
-                    "name": "Pflicht",
+                    "name": "Pflichtbereich",
                     "modules": [
                         "P1_01",
                         "P1_03",
@@ -617,7 +621,7 @@
                     "required": true
                 },
                 {
-                    "name": "Wahlpflicht",
+                    "name": "Wahlpflichtbereich",
                     "modules": [
                         "WP2_04.1",
                         "WP2_04.2",
@@ -682,7 +686,7 @@
                         },
                         {
                             "title": "Nicht alles in einem Schwung!",
-                            "content": "Um zu einem späteren Zeitpunkt wieder auf Ihren Plan zuzugreifen, haben wir Ihnen eine E-Mail geschickt mit dem Link zu Ihrem HfH Studienverlaufsplan. Noch schneller auffindbar: Setzen Sie ein Lesezeichen in ihrem Browser für diese Seite. So müssen Sie nie von Vorne anfangen und können in Ruhe planen."
+                            "content": "Um zu einem späteren Zeitpunkt wieder auf Ihren Plan zuzugreifen, haben wir Ihnen eine E-Mail geschickt mit dem Link zu Ihrem HfH-Studienverlaufsplan. Noch schneller auffindbar: Setzen Sie ein Lesezeichen in ihrem Browser für diese Seite. So können Sie schnell auf Ihre Planung zugreifen und diese in mehreren Schritten bearbeiten - Ihre Zwischenergebnisse werden automatisch gespeichert."
                         },
                         {
                             "title": "Modul-Liste",
@@ -712,7 +716,7 @@
                         },
                         {
                             "title": "Checkliste",
-                            "content": "In der Checkliste sehen Sie die Anforderungen an Ihren Plan sowie Ihren aktuellen Fortschritt bei deren Erfüllung.",
+                            "content": "In der Checkliste sehen Sie, welche Anforderungen Sie in Ihrer Planung noch erfüllen müssen.",
                             "ref": "todos",
                             "placement": "left-start"
                         },
@@ -724,6 +728,10 @@
                         }
                     ]
                 }
+            },
+            "meta": {
+                "moduleDirectoryUrl": "https://daylightweb.hfh.ch/modulverzeichnis-1/ma-heilpaedagogische-frueherziehung-hfe",
+                "brochureUrl": "https://www.hfh.ch/sites/default/files/documents/StudienbroschuereMA_HFE_22.pdf"
             }
         }
     ],
