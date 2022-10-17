@@ -41,7 +41,7 @@ class PlanCreated extends Mailable
             ->with([
                 'url' => $url,
                 'brochure_url' => $this->plan->planer->meta["brochureUrl"],
-                'module_directory_url' => $this->plan->meta["moduleDirectoryUrl"]
+                'module_directory_url' => $this->plan->planer->meta["moduleDirectoryUrl"]
             ]);
     }
 }
