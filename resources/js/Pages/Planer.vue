@@ -24,14 +24,14 @@
       </div>
     </div>
   </div>
-  <div class="p-4 max-w-container mx-auto">
-    <h2 class="text-2xl mt-4 mb-4">Willkommen!</h2>
+  <div class="p-4 max-w-container mx-auto content">
+    <h1 class="mt-4">Willkommen!</h1>
     <p>
       Hier können Sie Ihren gewünschten Studienverlauf über alle Semester
       planen. Der zusammengestellte Plan dient als Orientierung! Die HfH behält
       sich vor, Module bei zu geringer Nachfrage abzusagen.
     </p>
-    <p class="mt-4">
+    <p>
       Bevor Sie loslegen, empfehlen wir Ihnen die
       <a
         class="font-bold text-thunderbird-red hover:underline focus:underline;"
@@ -51,51 +51,55 @@
       >.
     </p>
 
-    <h3 class="text-xl mt-3 normal-case text-black">Wichtig</h3>
-    <p class="mt-4">
+    <h2>Wichtig</h2>
+    <p>
       Unabhängig vom Studienverlaufsplaner müssen Sie ihre Module offiziell in
       daylight-Web buchen. Sie erhalten eine separate Info per Mail von der
       Hochschuladministration.
     </p>
-    <p class="text-sm mt-4">
-      {{ new Date().toLocaleDateString() }}, Änderungen vorbehalten.
+
+    <h2>Nutzung des Studienverlaufsplaners</h2>
+    <p>
+      Falls Sie bereits einen Plan erstellt haben, haben wir Ihnen eine E-Mail
+      geschickt. Darin finden Sie die den Link zu Ihrem aktuellen
+      HfH-Studienverlaufsplan.
     </p>
 
-    <div class="py-8 flex justify-center">
-      <div class="flex flex-col items-center">
-        <h2 class="text-xl text-center">
-          Ich möchte einen neuen Plan erstellen.
-        </h2>
-        <div>
-          <form @submit.prevent="createPlan" class="mt-2 w-80">
-            <HfhInput
-              class="w-full"
-              v-model="createForm.email"
-              id="email"
-              type="email"
-              label="E-Mail"
-              :required="true"
-            />
-            <HfhSelect
-              class="w-full mt-4"
-              id="plan-start-year"
-              label="Jahr"
-              v-model="createForm.startYear"
-              :required="true"
-              :options="yearOptions"
-              defaultOption="Bitte wählen..."
-            >
-            </HfhSelect>
-            <div v-if="createForm.errors.startYear">
-              {{ createForm.errors.startYear }}
-            </div>
-            <HfhButton type="submit" :animated="true" class="w-full mt-4"
-              >Plan erstellen</HfhButton
-            >
-          </form>
-        </div>
+    <div>
+      <h2>Ich möchte einen neuen Plan erstellen.</h2>
+      <div>
+        <form @submit.prevent="createPlan" class="mt-2 w-80">
+          <HfhInput
+            class="w-full"
+            v-model="createForm.email"
+            id="email"
+            type="email"
+            label="E-Mail"
+            :required="true"
+          />
+          <HfhSelect
+            class="w-full mt-4"
+            id="plan-start-year"
+            label="Jahr"
+            v-model="createForm.startYear"
+            :required="true"
+            :options="yearOptions"
+            defaultOption="Bitte wählen..."
+          >
+          </HfhSelect>
+          <div v-if="createForm.errors.startYear">
+            {{ createForm.errors.startYear }}
+          </div>
+          <HfhButton type="submit" :animated="true" class="w-full mt-8"
+            >Plan erstellen</HfhButton
+          >
+        </form>
       </div>
     </div>
+
+    <p class="text-sm mt-8">
+      {{ new Date().toLocaleDateString() }}, Änderungen vorbehalten.
+    </p>
   </div>
 </template>
 
@@ -160,4 +164,18 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+h1 {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  font-size: 2.25rem;
+}
+h2 {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+p {
+  margin-bottom: 1.5rem;
+}
+</style>
