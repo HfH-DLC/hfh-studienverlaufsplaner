@@ -16,13 +16,11 @@
   <div class="flex justify-between px-4 pt-4 pb-4 max-w-container mx-auto">
     <div class="flex gap-x-8 items-center">
       <HfhLogo />
-      <div>
-        <h1 class="text-xl">Studienverlaufsplaner</h1>
-      </div>
+      <div class="text-xl">Studienverlaufsplaner</div>
     </div>
   </div>
   <div class="p-4 max-w-container mx-auto">
-    <h2 class="text-2xl mt-4 mb-4">Willkommen!</h2>
+    <h1>Willkommen!</h1>
     <p>Bitte wählen Sie einen Studiengang.</p>
     <ul class="mt-4 grid grid-cols-2 gap-8">
       <li v-for="planer in planers" :key="planer.id">
@@ -70,4 +68,18 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+h1 {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  font-size: 2.25rem;
+}
+h2 {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+p {
+  margin-bottom: 1.5rem;
+}
+</style>
