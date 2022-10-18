@@ -17,7 +17,7 @@
     <div class="flex gap-x-8 items-center">
       <HfhLogo />
       <div>
-        <div class="text-xl">
+        <div class="text-2xl">
           Studienverlaufsplaner
           <span v-if="name">{{ name }}</span>
         </div>

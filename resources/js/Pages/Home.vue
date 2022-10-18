@@ -16,7 +16,7 @@
   <div class="flex justify-between px-4 pt-4 pb-4 max-w-container mx-auto">
     <div class="flex gap-x-8 items-center">
       <HfhLogo />
-      <div class="text-xl">Studienverlaufsplaner</div>
+      <div class="text-2xl">Studienverlaufsplaner</div>
     </div>
   </div>
   <div class="p-4 max-w-container mx-auto">
