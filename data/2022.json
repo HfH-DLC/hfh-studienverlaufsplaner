@@ -1,6 +1,6 @@
 {
     "year": 2022,
-    "version": 1,
+    "version": 2,
     "modules": [
         {
             "id": "P1_01",
@@ -392,7 +392,7 @@
             "categories": [
                 {
                     "name": "Pflichtbereich",
-                    "modules": ["P1_01", "P1_03", "P3_01", "P4_01"],
+                    "modules": ["P1_01", "P1_02", "P3_01", "P4_01"],
                     "required": true
                 },
                 {
@@ -738,6 +738,7 @@
     "events": [
         {
             "module": "P1_01",
+            "planers": ["hfe", "shp"],
             "semesters": ["HS", "FS"],
             "timeWindow": 1,
             "times": ["b", "f"],
@@ -745,6 +746,7 @@
         },
         {
             "module": "P1_02",
+            "planers": ["shp"],
             "semesters": ["HS", "FS"],
             "timeWindow": 1,
             "times": ["a", "e"],
@@ -752,6 +754,7 @@
         },
         {
             "module": "P1_03",
+            "planers": ["hfe"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["a"],
@@ -759,6 +762,7 @@
         },
         {
             "module": "P3_01",
+            "planers": ["shp"],
             "semesters": ["HS", "FS"],
             "timeWindow": 1,
             "times": ["d", "h"],
@@ -766,6 +770,7 @@
         },
         {
             "module": "P4_01",
+            "planers": ["shp"],
             "semesters": ["HS", "FS"],
             "timeWindow": 1,
             "times": ["c", "g"],
@@ -773,6 +778,7 @@
         },
         {
             "module": "P4_02",
+            "planers": ["hfe"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["a"],
@@ -780,6 +786,7 @@
         },
         {
             "module": "P4_06",
+            "planers": ["hfe"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["b"],
@@ -787,6 +794,7 @@
         },
         {
             "module": "P4_07",
+            "planers": ["hfe"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["f"],
@@ -794,6 +802,7 @@
         },
         {
             "module": "P4_08",
+            "planers": ["hfe"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["e"],
@@ -801,6 +810,7 @@
         },
         {
             "module": "P4_09",
+            "planers": ["hfe"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["e"],
@@ -808,6 +818,7 @@
         },
         {
             "module": "WP2_01.1",
+            "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["a", "e"],
@@ -815,6 +826,7 @@
         },
         {
             "module": "WP2_01.1",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["b", "f"],
@@ -822,6 +834,7 @@
         },
         {
             "module": "WP2_01.2",
+            "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["b"],
@@ -829,6 +842,7 @@
         },
         {
             "module": "WP2_01.2",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["a", "e"],
@@ -836,6 +850,7 @@
         },
         {
             "module": "WP2_02.1",
+            "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["c", "g"],
@@ -843,6 +858,7 @@
         },
         {
             "module": "WP2_02.1",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["d", "h"],
@@ -850,6 +866,7 @@
         },
         {
             "module": "WP2_02.2",
+            "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["d"],
@@ -857,6 +874,7 @@
         },
         {
             "module": "WP2_02.2",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["c", "g"],
@@ -864,6 +882,7 @@
         },
         {
             "module": "WP2_03.1",
+            "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["b"],
@@ -871,6 +890,7 @@
         },
         {
             "module": "WP2_03.1",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["f"],
@@ -878,6 +898,7 @@
         },
         {
             "module": "WP2_03.2",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["b"],
@@ -885,6 +906,7 @@
         },
         {
             "module": "WP2_04.1",
+            "planers": ["hfe", "shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["f"],
@@ -892,6 +914,7 @@
         },
         {
             "module": "WP2_04.2",
+            "planers": ["hfe", "shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["f"],
@@ -899,6 +922,7 @@
         },
         {
             "module": "WP2_05.1",
+            "planers": ["hfe", "shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["f"],
@@ -906,6 +930,7 @@
         },
         {
             "module": "WP2_05.2",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["f"],
@@ -913,6 +938,7 @@
         },
         {
             "module": "WP2_06.1",
+            "planers": ["hfe", "shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["b"],
@@ -920,6 +946,7 @@
         },
         {
             "module": "WP2_06.2",
+            "planers": ["hfe", "shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["b"],
@@ -927,6 +954,7 @@
         },
         {
             "module": "WP2_07",
+            "planers": ["hfe", "shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["a"],
@@ -934,6 +962,7 @@
         },
         {
             "module": "WP2_08",
+            "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["c"],
@@ -941,6 +970,7 @@
         },
         {
             "module": "WP2_09",
+            "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["c"],
@@ -948,6 +978,7 @@
         },
         {
             "module": "WP2_10",
+            "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["c", "h"],
@@ -955,6 +986,7 @@
         },
         {
             "module": "WP2_10",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["d", "h"],
@@ -962,6 +994,7 @@
         },
         {
             "module": "WP2_11",
+            "planers": ["hfe"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["f"],
@@ -969,6 +1002,7 @@
         },
         {
             "module": "WP3_02",
+            "planers": ["shp"],
             "semesters": ["HS", "FS"],
             "timeWindow": 1,
             "times": ["c", "g"],
@@ -976,6 +1010,7 @@
         },
         {
             "module": "WP3_03",
+            "planers": ["shp"],
             "semesters": ["HS", "FS"],
             "timeWindow": 1,
             "times": ["a", "e"],
@@ -983,6 +1018,7 @@
         },
         {
             "module": "WP3_04",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["d", "h"],
@@ -990,6 +1026,7 @@
         },
         {
             "module": "WP3_05",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["d"],
@@ -997,6 +1034,7 @@
         },
         {
             "module": "WP3_06",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["a"],
@@ -1004,6 +1042,7 @@
         },
         {
             "module": "WP4_03",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["c"],
@@ -1011,6 +1050,7 @@
         },
         {
             "module": "WP4_04.1",
+            "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["f"],
@@ -1018,6 +1058,7 @@
         },
         {
             "module": "WP4_04.2",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["f"],
@@ -1025,6 +1066,7 @@
         },
         {
             "module": "WP4_05.1",
+            "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["e"],
@@ -1032,6 +1074,7 @@
         },
         {
             "module": "WP4_05.2",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["e"],
@@ -1040,6 +1083,7 @@
 
         {
             "module": "W3_07",
+            "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["d", "h"],
@@ -1047,6 +1091,7 @@
         },
         {
             "module": "WXY_01",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["g", "h"],
@@ -1054,6 +1099,7 @@
         },
         {
             "module": "WXY_02",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["g", "h"],
@@ -1061,6 +1107,7 @@
         },
         {
             "module": "BP5_01.1.SHP",
+            "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 2,
             "times": ["a", "c", "e", "g"],
@@ -1068,6 +1115,7 @@
         },
         {
             "module": "BP5_01.1.SHP",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 2,
             "times": ["b", "f"],
@@ -1075,6 +1123,7 @@
         },
         {
             "module": "BP5_01.2.SHP",
+            "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 2,
             "times": ["b", "d", "f", "h"],
@@ -1082,6 +1131,7 @@
         },
         {
             "module": "BP5_01.2.SHP",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 2,
             "times": ["a", "c", "e", "g"],
@@ -1089,6 +1139,7 @@
         },
         {
             "module": "BP5_01.3.SHP",
+            "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 2,
             "times": ["a", "e"],
@@ -1096,6 +1147,7 @@
         },
         {
             "module": "BP5_01.3.SHP",
+            "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 2,
             "times": ["b", "d", "f", "h"],
@@ -1103,6 +1155,7 @@
         },
         {
             "module": "BP5_01.1.HFE",
+            "planers": ["hfe"],
             "semesters": ["HS"],
             "timeWindow": 2,
             "times": ["a"],
@@ -1110,6 +1163,7 @@
         },
         {
             "module": "BP5_01.2.HFE",
+            "planers": ["hfe"],
             "semesters": ["FS"],
             "timeWindow": 2,
             "times": ["a"],
@@ -1117,6 +1171,7 @@
         },
         {
             "module": "BP5_01.3.HFE",
+            "planers": ["hfe"],
             "semesters": ["FS"],
             "timeWindow": 2,
             "times": ["f"],
@@ -1124,6 +1179,7 @@
         },
         {
             "module": "M5_03",
+            "planers": ["hfe", "shp"],
             "semesters": ["HS", "FS"],
             "timeWindow": 2,
             "times": ["a", "e"],
