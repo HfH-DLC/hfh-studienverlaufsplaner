@@ -64,7 +64,7 @@ class Plan extends Model
 
     public function getCategoriesWithAllModules()
     {
-        $filter = $this->getYearFilter();
+        $filter = $this->getFilter();
         return $this->planer->categories()->with([
             'modules' => function ($query) use ($filter) {
                 $query->whereHas('events', $filter);
@@ -74,7 +74,7 @@ class Plan extends Model
         ])->get()->sortBy('position');
     }
 
-    private function getYearFilter()
+    private function getFilter()
     {
         $years = array();
         $numberOfYears = 4;
@@ -82,6 +82,7 @@ class Plan extends Model
             $years[] = $this->start_year + $i;
         }
         return function ($query) use ($years) {
+            $query->where('planer', $this->planer->slug);
             $query->whereIn('year', $years);
         };
     }
