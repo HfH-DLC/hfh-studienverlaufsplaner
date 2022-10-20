@@ -906,7 +906,7 @@
         },
         {
             "module": "WP2_05.2",
-            "semesters": ["HS"],
+            "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["f"],
             "locations": ["ZH"]

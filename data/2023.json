@@ -1,6 +1,6 @@
 {
     "year": 2023,
-    "version": 1,
+    "version": 2,
     "modules": [
         {
             "id": "P1_01",
@@ -626,6 +626,7 @@
                         "WP2_04.1",
                         "WP2_04.2",
                         "WP2_05.1",
+                        "WP2_05.2",
                         "WP2_06.1",
                         "WP2_06.2",
                         "WP2_07",
@@ -824,7 +825,7 @@
             "module": "WP2_01.2",
             "semesters": ["HS"],
             "timeWindow": 1,
-            "times": ["b"],
+            "times": ["b", "f"],
             "locations": ["ZH"]
         },
         {
@@ -906,7 +907,7 @@
         },
         {
             "module": "WP2_05.2",
-            "semesters": ["HS"],
+            "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["f"],
             "locations": ["ZH"]
@@ -983,9 +984,16 @@
         },
         {
             "module": "WP3_04",
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "times": ["h"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP3_04",
             "semesters": ["FS"],
             "timeWindow": 1,
-            "times": ["d", "h"],
+            "times": ["d"],
             "locations": ["ZH"]
         },
         {
