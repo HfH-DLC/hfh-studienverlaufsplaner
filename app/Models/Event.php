@@ -9,7 +9,7 @@ class Event extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['module_id', 'year', 'semester', 'time_window', 'day', 'time', 'location'];
+    protected $fillable = ['module_id', 'year', 'semester', 'time_window', 'day', 'time', 'location', 'planer'];
     protected $casts = ['year' => 'integer'];
 
     public function module()
