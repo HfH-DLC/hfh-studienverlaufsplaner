@@ -231,6 +231,7 @@ class JSONImport
     {
         $eventIds = array();
         foreach ($data->events as $eventData) {
+            $planers = $eventData->planers;
 
             $semesters = $eventData->semesters;
             $timeWindow = $this->timeWindows[$eventData->timeWindow]['name'];
@@ -239,15 +240,18 @@ class JSONImport
             $timeLetters = $eventData->times;
 
             $moduleID = $eventData->module;
-            foreach ($locations as $location) {
-                foreach ($semesters as $semester) {
-                    foreach ($timeLetters as $timeLetter) {
-                        $day = $this->times[$timeLetter]['day'];
-                        $time = $this->times[$timeLetter]['time'];
-                        for ($i = 0; $i < self::NUMBER_OF_YEARS; $i++) {
-                            $year = $this->year + $i;
-                            $event =  $this->createEvent($moduleID, $year, $semester, $timeWindow, $day, $time, $location);
-                            $eventIds[] = $event->id;
+
+            foreach ($planers as $planer) {
+                foreach ($locations as $location) {
+                    foreach ($semesters as $semester) {
+                        foreach ($timeLetters as $timeLetter) {
+                            $day = $this->times[$timeLetter]['day'];
+                            $time = $this->times[$timeLetter]['time'];
+                            for ($i = 0; $i < self::NUMBER_OF_YEARS; $i++) {
+                                $year = $this->year + $i;
+                                $event =  $this->createEvent($moduleID, $year, $semester, $timeWindow, $day, $time, $location, $planer);
+                                $eventIds[] = $event->id;
+                            }
                         }
                     }
                 }
@@ -256,10 +260,10 @@ class JSONImport
         Event::where('year', '>=', $this->year)->whereNotIn('id', $eventIds)->delete();
     }
 
-    private function createEvent($moduleID, $year, $semester, $timeWindow, $day, $time, $location)
+    private function createEvent($moduleID, $year, $semester, $timeWindow, $day, $time, $location, $planer)
     {
         return Event::firstOrCreate([
-            'module_id' => $moduleID, 'year' => $year, 'semester' => $semester, 'time_window' => $timeWindow, 'day' => $day, 'time' => $time, 'location' => $location
+            'module_id' => $moduleID, 'year' => $year, 'semester' => $semester, 'time_window' => $timeWindow, 'day' => $day, 'time' => $time, 'location' => $location, 'planer' => $planer
         ]);
     }
 
