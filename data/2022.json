@@ -252,13 +252,13 @@
         },
         {
             "id": "WXY_01",
-            "name": "Wahlmodul Platzhalter 1",
+            "name": "Wahlmodule Platzhalter 1",
             "ects": 5,
             "creditable": false
         },
         {
             "id": "WXY_02",
-            "name": "Wahlmodul Platzhalter 2",
+            "name": "Wahlmodule Platzhalter 2",
             "ects": 5,
             "creditable": false
         },
@@ -1241,11 +1241,8 @@
     "locations": [
         {
             "id": "ZH",
-            "name": "Zürich"
-        },
-        {
-            "id": "SG",
-            "name": "Rorschach"
+            "name": "Zürich",
+            "default": true
         },
         {
             "id": "GR",
