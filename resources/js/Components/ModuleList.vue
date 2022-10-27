@@ -1,7 +1,7 @@
 <template>
   <div>
     <HfhAccordion
-      v-for="(category, index) in categories"
+      v-for="(category, index) in filteredCategories"
       :key="category.id"
       :open="currentOpen === index"
       @opened="currentOpen = index"
@@ -25,7 +25,7 @@
 import { ChevronUpIcon, CheckCircleIcon } from "@heroicons/vue/outline";
 import { HfhAccordion } from "@hfh-dlc/hfh-styleguide";
 import Module from "../Components/Module.vue";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 export default {
   components: {
     HfhAccordion,
@@ -45,7 +45,29 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("schedule", ["categories"]),
+    ...mapState("schedule", ["locations"]),
+    ...mapGetters("schedule", [
+      "categories",
+      "selectableLocations",
+      "checkedLocations",
+    ]),
+    filteredCategories() {
+      return this.categories.map((category) => ({
+        ...category,
+        modules: category.modules
+          .filter((module) =>
+            module.events.some((event) =>
+              this.checkedLocations.includes(event.location)
+            )
+          )
+          .map((module) => ({
+            ...module,
+            events: module.events.filter((event) =>
+              this.checkedLocations.includes(event.location)
+            ),
+          })),
+      }));
+    },
   },
   methods: {
     openActiveAccordion(moduleId) {

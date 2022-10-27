@@ -32,10 +32,10 @@
                 v-show="selectedOrTourModule"
                 :selectedModule="selectedOrTourModule"
               />
-              <ModuleList
-                v-show="!selectedOrTourModule"
-                :hashModuleId="hashModuleId"
-              />
+              <div v-show="!selectedOrTourModule">
+                <LocationSelect v-if="locations.length > 1" class="mb-4" />
+                <ModuleList :hashModuleId="hashModuleId" />
+              </div>
             </StickyColumn>
             <StickyColumn
               id="time-table"
@@ -94,6 +94,7 @@ import Flash from "../Components/Flash.vue";
 import flashTypes from "../flashTypes";
 import StickyColumn from "../Components/StickyColumn.vue";
 import Checklist from "../Components/Checklist.vue";
+import LocationSelect from "../Components/LocationSelect.vue";
 import MainLayout from "../Layouts/MainLayout.vue";
 import { HfhLink } from "@hfh-dlc/hfh-styleguide";
 
@@ -112,6 +113,7 @@ export default {
     PlanHeader,
     StickyColumn,
     HfhLink,
+    LocationSelect,
   },
   props: {
     categoriesResource: {
@@ -150,6 +152,10 @@ export default {
       type: Object,
       required: true,
     },
+    locationsResource: {
+      type: Object,
+      required: true,
+    },
     tourData: {
       type: Object,
       required: true,
@@ -168,6 +174,7 @@ export default {
       rules: this.rulesResource.data,
       todos: this.todosResource.data,
       foci: this.fociResource.data,
+      locations: this.locationsResource.data,
       requiredECTS: this.requiredECTS,
       tour: this.tourData,
     });
@@ -194,6 +201,7 @@ export default {
       "tourActive",
       "tourSelectedModule",
       "todoEntries",
+      "locations",
     ]),
     ...mapGetters("schedule", ["ects", "placementErrors", "selectedModule"]),
     errors() {

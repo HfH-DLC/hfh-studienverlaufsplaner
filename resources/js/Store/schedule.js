@@ -37,6 +37,8 @@ const SET_TOUR_COMPLETED = "SET_TOUR_COMPLETED";
 const SET_SAVE_STATUS = "SET_SAVE_STATUS";
 const SET_REQUIRED_ECTS = "SET_REQUIRED_ECTS";
 const SET_VALID = "SET_VALID";
+const SET_LOCATIONS = "SET_LOCATIONS";
+const SET_LOCATION_CHECKED = "SET_LOCATION_CHECKED";
 
 let dataAdapter;
 
@@ -59,6 +61,7 @@ const initialState = {
     tourActive: false,
     tourSelectedModule: null,
     valid: false,
+    locations: [],
 };
 
 const TOUR_SELECTED_MODULE = {
@@ -168,6 +171,15 @@ export default {
         [SET_VALID](state, value) {
             state.valid = value;
         },
+        [SET_LOCATIONS](state, value) {
+            value = value.map((location) => {
+                return { ...location, checked: location.default };
+            });
+            state.locations = value;
+        },
+        [SET_LOCATION_CHECKED](state, { index, checked }) {
+            state.locations[index].checked = checked;
+        },
     },
     actions: {
         init(
@@ -179,6 +191,7 @@ export default {
                 rules,
                 todos,
                 foci,
+                locations,
                 requiredECTS,
                 tour,
             }
@@ -189,6 +202,7 @@ export default {
             commit(SET_CATEGORIES, categories);
             commit(SET_FOCI, foci);
             commit(SET_FOCUS_SELECTIONS, plan.focusSelections);
+            commit(SET_LOCATIONS, locations);
             commit(SET_PLACEMENTS, plan.placements);
             commit(SET_TODOS, todos);
             commit(SET_RULES, rules);
@@ -486,6 +500,12 @@ export default {
                     };
                 });
         },
+        events(state, { modules }) {
+            return modules.reduce((acc, cur) => {
+                acc.push(...cur.events);
+                return acc;
+            }, []);
+        },
         selectableEvents(state, { selectedModule }) {
             if (!selectedModule) {
                 return [];
@@ -503,10 +523,10 @@ export default {
                     };
                 });
         },
-        selectableEventByDate:
+        selectableEventsByDate:
             (state, { selectableEvents }) =>
             (year, semester, timeWindow, day, time) => {
-                const result = selectableEvents.find((event) => {
+                const result = selectableEvents.filter((event) => {
                     return (
                         event.year == year &&
                         event.semester == semester &&
@@ -517,6 +537,16 @@ export default {
                 });
                 return result;
             },
+        selectableLocations(state, { events }) {
+            return state.locations.filter((location) =>
+                new Set(events.map((event) => event.location)).has(location.id)
+            );
+        },
+        checkedLocations(state) {
+            return state.locations
+                .filter((location) => location.checked)
+                .map((location) => location.id);
+        },
     },
 };
 

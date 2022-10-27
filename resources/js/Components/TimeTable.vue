@@ -86,8 +86,9 @@
               <td v-for="timeWindow in semester.timeWindows" :key="timeWindow">
                 <TimeSlot
                   :ref="setSlotRef"
-                  :event="
-                    selectableEventByDate(
+                  :showLocation="showLocations"
+                  :events="
+                    selectableEventsByDate(
                       year.value,
                       semester.value,
                       timeWindow,
@@ -148,9 +149,10 @@
 
 <script>
 import TimeSlot from "./TimeSlot.vue";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import { InformationCircleIcon, XIcon } from "@heroicons/vue/outline";
 import { Dialog, DialogOverlay, DialogTitle } from "@headlessui/vue";
+import { placements } from "@popperjs/core";
 export default {
   components: {
     Dialog,
@@ -183,32 +185,50 @@ export default {
     };
   },
   computed: {
+    ...mapState("schedule", ["locations"]),
     ...mapGetters("schedule", [
       "years",
-      "selectableEventByDate",
+      "selectableEventsByDate",
+      "placements",
       "placementByDate",
       "selectedModule",
     ]),
+    showLocations() {
+      if (this.locations.filter((location) => location.checked).length > 1) {
+        return true;
+      }
+      const placedLocations = this.placements.reduce((acc, cur) => {
+        acc.add(cur.location);
+        return acc;
+      }, new Set());
+      if (placedLocations.size > 1) {
+        return true;
+      }
+      return false;
+    },
   },
   methods: {
-    focusSelectableSlot() {
-      //todo focus invalid slot if no valid ones are available?
+    focusSlot() {
       this.$nextTick(() => {
         const slotRef = this.slotRefs.find((ref) => {
-          return !ref.placement && ref.event && ref.event.valid;
+          return (
+            !ref.placement &&
+            ref.events.length > 0 &&
+            ref.events.some((event) => event.valid)
+          );
         });
         if (slotRef) {
-          slotRef.focusButton();
+          slotRef.focusSlot();
         }
       });
     },
-    focusSlot(placementId) {
+    focusPlacement(placementId) {
       this.$nextTick(() => {
         const slotRef = this.slotRefs.find((ref) => {
           return ref.placement && ref.placement.id === placementId;
         });
         if (slotRef) {
-          slotRef.focusButton();
+          slotRef.focusPlacement();
         }
       });
     },
@@ -239,9 +259,9 @@ export default {
     selectedModule(newValue, oldValue) {
       if (newValue) {
         if (newValue.placement) {
-          this.focusSlot(newValue.placement.id);
+          this.focusPlacement(newValue.placement.id);
         } else {
-          this.focusSelectableSlot();
+          this.focusSlot();
         }
       }
     },
