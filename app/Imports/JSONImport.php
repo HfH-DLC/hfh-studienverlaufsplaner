@@ -10,6 +10,7 @@ use App\Models\Module;
 use App\Models\Planer;
 use App\Models\Rule;
 use App\Models\Todo;
+use App\Models\Location;
 use Illuminate\Support\Facades\DB;
 
 class JSONImport
@@ -38,6 +39,7 @@ class JSONImport
             $this->importModules($data);
             $this->importPlaners($data);
             $this->importEvents($data);
+            $this->importLocations($data);
             $this->saveImport($data);
         });
     }
@@ -265,6 +267,19 @@ class JSONImport
         return Event::firstOrCreate([
             'module_id' => $moduleID, 'year' => $year, 'semester' => $semester, 'time_window' => $timeWindow, 'day' => $day, 'time' => $time, 'location' => $location, 'planer' => $planer
         ]);
+    }
+
+    private function importLocations($data)
+    {
+        foreach ($data->locations as $location) {
+            $default = false;
+            if (isset($location->default)) {
+                $default = $location->default;
+            }
+            $location = Location::firstOrCreate(['id' => $location->id, 'name' => $location->name]);
+            $location->default = $default;
+            $location->save();
+        }
     }
 
     private function saveImport($data)

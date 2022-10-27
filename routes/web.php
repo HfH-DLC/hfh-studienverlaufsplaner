@@ -6,6 +6,7 @@ use App\Http\Requests\UpdateScheduleRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CreditableModuleResource;
 use App\Http\Resources\FocusResource;
+use App\Http\Resources\LocationResource;
 use App\Http\Resources\PlanerResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\RuleResource;
@@ -17,6 +18,7 @@ use App\Models\Placement;
 use App\Models\Plan;
 use App\Models\Planer;
 use App\Models\Import;
+use App\Models\Location;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -170,6 +172,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
         $rulesResource = RuleResource::collection($planer->rules()->where('type', 'Schedule')->get());
         $todosResource = TodoResource::collection($planer->todos()->where('type', 'Schedule')->get());
         $fociResource = FocusResource::collection($planer->foci()->get());
+        $locationsResource = LocationResource::collection(Location::all());
         $tour = $tour = isset($planer->tour["schedule"]) ? $planer->tour["schedule"] : null;
         return Inertia::render(
             'Schedule',
@@ -182,6 +185,7 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
                 'fociResource' => $fociResource,
                 'rulesResource' => $rulesResource,
                 'todosResource' => $todosResource,
+                'locationsResource' => $locationsResource,
                 'requiredECTS' => $planer->required_ects,
                 'tourData' => $tour,
             )
