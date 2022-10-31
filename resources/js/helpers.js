@@ -45,7 +45,7 @@ export const pluralize = (count, singular, plural) => {
 };
 
 export const joinStrings = (strings, connector) => {
-    if (strings.length == 0) {
+    if (strings.length == 1) {
         return strings[0];
     }
     return (

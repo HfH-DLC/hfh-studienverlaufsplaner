@@ -8,10 +8,12 @@ import { getRule } from "../Models/Rules/RuleFactory";
 import { getTodo } from "../Models/Todos/Schedule/TodoFactory";
 import {
     getCalendarYear,
+    joinStrings,
     orderDay,
     orderSemester,
     orderTime,
     orderTimeWindow,
+    pluralize,
 } from "../helpers";
 
 const RESET_STATE = "RESET_STATE";
@@ -546,6 +548,52 @@ export default {
             return state.locations
                 .filter((location) => location.checked)
                 .map((location) => location.id);
+        },
+        infos(state, { moduleById, checkedLocations }) {
+            let infos = [];
+            state.focusSelections.forEach((focusSelection) => {
+                const modules = [
+                    ...focusSelection.focus.requiredModules,
+                    ...focusSelection.focus.optionalModules,
+                ];
+                const moduleIds = modules.map((module) => module.id);
+                const notAvailableModuleIds = moduleIds.filter((id) => {
+                    const module = moduleById(id);
+                    return !module.events.find((event) => {
+                        return checkedLocations.includes(event.location);
+                    });
+                });
+                if (notAvailableModuleIds.length > 0) {
+                    const moduleString = pluralize(
+                        notAvailableModuleIds.length,
+                        "ist das Modul",
+                        "sind die Module"
+                    );
+                    const locationString = pluralize(
+                        checkedLocations.length,
+                        "am Standort",
+                        "an den Standorten"
+                    );
+                    infos.push(
+                        `Für den SSP ${
+                            focusSelection.focus.name
+                        } ${moduleString} ${joinStrings(
+                            notAvailableModuleIds,
+                            "und"
+                        )} ${locationString} ${joinStrings(
+                            checkedLocations.map(
+                                (checkedLocation) =>
+                                    state.locations.find(
+                                        (location) =>
+                                            checkedLocation == location.id
+                                    ).name
+                            ),
+                            "und"
+                        )} nicht verfügbar.`
+                    );
+                }
+            });
+            return infos;
         },
     },
 };

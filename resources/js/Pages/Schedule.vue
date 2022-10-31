@@ -15,11 +15,22 @@
       <template v-if="initialized">
         <div>
           <div
-            class="p-4 border-b border-gray-300"
+            class="p-4 border-b border-gray-300 space-y-4"
             role="alert"
-            v-if="errors.length > 0"
+            v-if="errors.length > 0 || infos.length > 0"
           >
-            <ErrorList class="space-y-2" :errors="errors" aria-live="polite" />
+            <InfoList
+              class="space-y-2"
+              v-if="infos.length > 0"
+              :infos="infos"
+              aria-live="polite"
+            />
+            <ErrorList
+              class="space-y-2"
+              v-if="errors.length > 0"
+              :errors="errors"
+              aria-live="polite"
+            />
           </div>
           <FocusSelection
             v-if="focusSelectionEnabled"
@@ -84,6 +95,7 @@ import { mapGetters, mapActions, mapState } from "vuex";
 // Components
 import { CheckCircleIcon } from "@heroicons/vue/outline";
 import ErrorList from "../Components/ErrorList.vue";
+import InfoList from "../Components/InfoList.vue";
 import FocusSelection from "../Components/FocusSelection.vue";
 import ModuleInformation from "../Components/ModuleInformation.vue";
 import ModuleList from "../Components/ModuleList.vue";
@@ -104,6 +116,7 @@ export default {
     CheckCircleIcon,
     Checklist,
     ErrorList,
+    InfoList,
     Flash,
     FocusSelection,
     TimeTable,
@@ -203,7 +216,12 @@ export default {
       "todoEntries",
       "locations",
     ]),
-    ...mapGetters("schedule", ["ects", "placementErrors", "selectedModule"]),
+    ...mapGetters("schedule", [
+      "ects",
+      "placementErrors",
+      "infos",
+      "selectedModule",
+    ]),
     errors() {
       return this.placementErrors.map((error) => error.text);
     },
