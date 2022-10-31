@@ -1,4 +1,3 @@
-import { pluralize, joinStrings } from "../../../helpers";
 export default class RequiredModulesTodo {
     getEntries(state, { categories }) {
         const requiredCategories = categories.filter(
