@@ -575,9 +575,9 @@ export default {
                         "an den Standorten"
                     );
                     infos.push(
-                        `Für den SSP ${
+                        `Für den SSP "${
                             focusSelection.focus.name
-                        } ${moduleString} ${joinStrings(
+                        }" ${moduleString} ${joinStrings(
                             notAvailableModuleIds,
                             "und"
                         )} ${locationString} ${joinStrings(
