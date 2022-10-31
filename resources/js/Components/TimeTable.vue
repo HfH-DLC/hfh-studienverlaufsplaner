@@ -32,10 +32,11 @@
           :class="[semesterIndex % 2 === 0 ? 'bg-gray-900' : 'bg-gray-600']"
         >
           {{
-            getSemesterString(semester.value)
-          }}
-          {{
-            semester.calendarYear
+            getSemesterString(
+              yearIndex * 2 + semesterIndex + 1,
+              semester.value,
+              semester.calendarYear
+            )
           }}
         </caption>
         <thead class="bg-gray-50">
@@ -246,13 +247,14 @@ export default {
     setTimeWindowInfoVisible(value) {
       this.isTimeWindowInfoVisible = value;
     },
-    getSemesterString(value) {
-      if (value == "HS") {
-        return "Herbstsemester";
+    getSemesterString(count, semester, year) {
+      if (semester == "HS") {
+        semester = "Herbst";
+      } else if (semester == "FS") {
+        semester = "Frühling";
       }
-      if (value == "FS") {
-        return "Frühlingssemester";
-      }
+
+      return `${count}. Semester (${semester} ${year})`;
     },
   },
   watch: {
