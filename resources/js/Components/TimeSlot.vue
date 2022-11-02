@@ -153,9 +153,6 @@ export default {
         const isCurrent = this.placement
           ? this.placementMatchesEvent(this.placement, event)
           : false;
-        console.log("location", event.location);
-        console.log("isActiveLocation", isActiveLocation);
-        console.log("isCurrent", isCurrent);
         return isActiveLocation && !isCurrent;
       });
     },
