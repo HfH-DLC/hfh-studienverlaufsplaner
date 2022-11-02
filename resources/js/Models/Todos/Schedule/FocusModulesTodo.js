@@ -1,8 +1,18 @@
 import { numToWord } from "num-words-de";
 import { joinStrings } from "../../../helpers";
+import { bestPath } from "../../../tree.js";
+
+function intersection(a, b) {
+    return new Set([...a].filter((x) => b.has(x)));
+}
+
 export default class FocusModulesTodo {
     getEntries({ focusSelections, placements }, getters) {
-        return focusSelections.reduce((acc, cur) => {
+        const foci = focusSelections.map(
+            (focusSelection) => focusSelection.focus
+        );
+
+        const entriesRequired = focusSelections.reduce((acc, cur) => {
             const focus = cur.focus;
             if (focus.requiredModules.length > 0) {
                 const entryRequired = {
@@ -18,24 +28,12 @@ export default class FocusModulesTodo {
                 };
                 acc.push(entryRequired);
             }
-            if (focus.optionalModules.length > 0) {
-                const entryOptional = {
-                    label: this.getLabelOptional(focus),
-                    checked: this.validateOptional(
-                        focus.optionalModules,
-                        placements,
-                        focus.requiredNumberOfOptionalModules
-                    ),
-                    progressLabel: this.getProgressLabelOptional(
-                        focus.optionalModules,
-                        placements,
-                        focus.requiredNumberOfOptionalModules
-                    ),
-                };
-                acc.push(entryOptional);
-            }
             return acc;
         }, []);
+
+        const entriesOptional = this.validateOptional(placements, foci);
+
+        return [...entriesRequired, ...entriesOptional];
     }
 
     getLabelRequired(focus) {
@@ -82,13 +80,37 @@ export default class FocusModulesTodo {
         return true;
     }
 
-    validateOptional(modules, placements, requiredNumberOfOptionalModules) {
-        if (
-            modules.filter((module) =>
-                placements.find((placement) => placement.moduleId == module.id)
-            ).length == requiredNumberOfOptionalModules
-        )
-            return true;
+    validateOptional(placements, foci) {
+        let placedModuleIds = new Set(
+            placements.map((placement) => placement.moduleId)
+        );
+
+        const optionalModuleIds = foci.reduce((acc, cur) => {
+            cur.optionalModules
+                .map((module) => module.id)
+                .forEach((id) => acc.add(id));
+            return acc;
+        }, new Set());
+
+        const moduleIdsToPlace = intersection(
+            optionalModuleIds,
+            placedModuleIds
+        );
+
+        const path = bestPath(foci, moduleIdsToPlace);
+
+        let entries = [];
+        foci.forEach((focus) => {
+            const ids = path[focus.id] || [];
+
+            const entryOptional = {
+                label: this.getLabelOptional(focus),
+                checked: ids.length == focus.requiredNumberOfOptionalModules,
+                progressLabel: `${ids.length} / ${focus.requiredNumberOfOptionalModules}`,
+            };
+            entries.push(entryOptional);
+        });
+        return entries;
     }
 
     getProgressLabelRequired(modules, placements) {
@@ -96,16 +118,5 @@ export default class FocusModulesTodo {
             placements.find((placement) => placement.moduleId == module.id)
         ).length;
         return `${current} / ${modules.length}`;
-    }
-
-    getProgressLabelOptional(
-        modules,
-        placements,
-        requiredNumberOfOptionalModules
-    ) {
-        const current = modules.filter((module) =>
-            placements.find((placement) => placement.moduleId == module.id)
-        ).length;
-        return `${current} / ${requiredNumberOfOptionalModules}`;
     }
 }
