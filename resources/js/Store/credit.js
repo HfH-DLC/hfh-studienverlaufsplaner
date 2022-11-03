@@ -15,6 +15,7 @@ const initialState = {
     tourActive: false,
     tourCompleted: false,
     valid: false,
+    readOnly: false,
 };
 
 const CREDIT_MODULE = "CREDIT_MODULE";
@@ -31,6 +32,7 @@ const SET_TOUR_ACTIVE = "SET_TOUR_ACTIVE";
 const SET_TOUR = "SET_TOUR";
 const SET_TOUR_COMPLETED = "SET_TOUR_COMPLETED";
 const SET_VALID = "SET_VALID";
+const SET_READ_ONLY = "SET_READ_ONLY";
 
 let dataAdapter;
 
@@ -101,6 +103,9 @@ export default {
         [SET_VALID](state, value) {
             state.valid = value;
         },
+        [SET_READ_ONLY](state, value) {
+            state.readOnly = value;
+        },
     },
     actions: {
         init(
@@ -110,6 +115,7 @@ export default {
             dataAdapter = new DataAdapter(planerSlug, plan.slug);
 
             commit(RESET_STATE);
+            commit(SET_READ_ONLY, plan.readOnly);
             commit(SET_FOCUS_SELECTIONS, focusSelections);
             commit(SET_MODULES, modules);
             commit(SET_TODOS, todos);

@@ -177,6 +177,7 @@ export default {
   data() {
     return {
       hashModuleId: null,
+      readOnly: true,
     };
   },
   created() {

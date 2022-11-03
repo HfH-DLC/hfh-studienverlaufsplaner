@@ -41,6 +41,7 @@ const SET_REQUIRED_ECTS = "SET_REQUIRED_ECTS";
 const SET_VALID = "SET_VALID";
 const SET_LOCATIONS = "SET_LOCATIONS";
 const SET_LOCATION_CHECKED = "SET_LOCATION_CHECKED";
+const SET_READ_ONLY = "SET_READ_ONLY";
 
 let dataAdapter;
 
@@ -64,6 +65,7 @@ const initialState = {
     tourSelectedModule: null,
     valid: false,
     locations: [],
+    readOnly: false,
 };
 
 const TOUR_SELECTED_MODULE = {
@@ -182,6 +184,9 @@ export default {
         [SET_LOCATION_CHECKED](state, { index, checked }) {
             state.locations[index].checked = checked;
         },
+        [SET_READ_ONLY](state, value) {
+            state.readOnly = value;
+        },
     },
     actions: {
         init(
@@ -200,6 +205,7 @@ export default {
         ) {
             dataAdapter = new DataAdapter(planerSlug, plan.slug);
             commit(RESET_STATE);
+            commit(SET_READ_ONLY, plan.readOnly);
             commit(SET_REQUIRED_ECTS, requiredECTS);
             commit(SET_CATEGORIES, categories);
             commit(SET_FOCI, foci);

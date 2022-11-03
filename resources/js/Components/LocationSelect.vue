@@ -9,7 +9,9 @@
             :value="option.id"
             :checked="option.checked"
             @change="onChange($event, index)"
-            :disabled="option.checked && checkedLocations.length == 1"
+            :disabled="
+              readOnly || (option.checked && checkedLocations.length == 1)
+            "
             class="accent-thunderbird-red w-5 h-5"
           />
           {{ option.name }}</label
@@ -20,9 +22,10 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters, mapState } from "vuex";
 export default {
   computed: {
+    ...mapState("schedule", ["readOnly"]),
     ...mapGetters("schedule", ["selectableLocations", "checkedLocations"]),
   },
   methods: {

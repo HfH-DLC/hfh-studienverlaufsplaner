@@ -24,6 +24,7 @@ class PlanResource extends JsonResource
             'creditValid' => $this->credit_valid,
             'scheduleValid' => $this->schedule_valid,
             'focusSelections' => FocusSelectionResource::collection($this->focusSelections),
+            'readOnly' => $this->read_only
         ];
     }
 }

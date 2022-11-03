@@ -71,6 +71,7 @@
                         })
                       "
                       defaultOption="Nicht anrechnen"
+                      :disabled="readOnly"
                     />
                   </td>
                 </tr>
@@ -175,6 +176,7 @@ export default {
       "todoEntries",
       "tour",
       "tourCompleted",
+      "readOnly",
     ]),
     focusOptions() {
       return this.focusSelections.map((focusSelection) => ({

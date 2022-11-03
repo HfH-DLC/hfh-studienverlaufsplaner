@@ -36,11 +36,14 @@
       </button>
       <ContextMenu
         class="absolute -bottom-8 right-2"
-        v-if="placement.module.selected"
+        v-if="!readOnly && placement.module.selected"
         :placement="placement"
       />
     </template>
-    <div v-if="filteredEvents.length > 0" class="flex flex-wrap gap-2">
+    <div
+      v-if="!readOnly && filteredEvents.length > 0"
+      class="flex flex-wrap gap-2"
+    >
       <template v-for="event in filteredEvents" :key="event.id">
         <button
           ref="slot"
@@ -139,7 +142,7 @@ export default {
     },
   },
   computed: {
-    ...mapState("schedule", ["locations"]),
+    ...mapState("schedule", ["locations", "readOnly"]),
     invalidPlacement() {
       return this.placement.errors && this.placement.errors.length > 0;
     },

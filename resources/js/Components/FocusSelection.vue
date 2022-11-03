@@ -9,6 +9,7 @@
         :options="firstOptions"
         v-model="firstFocusId"
         defaultOption="Bitte auswählen..."
+        :disabled="readOnly"
       />
     </div>
     <div class="max-w-64">
@@ -19,6 +20,7 @@
         defaultOption="Bitte auswählen..."
         :options="secondOptions"
         v-model="secondFocusId"
+        :disabled="readOnly"
       />
     </div>
   </div>
@@ -32,7 +34,7 @@ export default {
     HfhSelect,
   },
   computed: {
-    ...mapState("schedule", ["focusSelections", "foci"]),
+    ...mapState("schedule", ["focusSelections", "foci", "readOnly"]),
     firstFocusId: {
       get() {
         const focusSelection = this.focusSelections.find(
