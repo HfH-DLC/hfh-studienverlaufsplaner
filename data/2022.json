@@ -524,11 +524,11 @@
                         },
                         {
                             "title": "Nicht alles in einem Schwung!",
-                            "content": "Um zu einem späteren Zeitpunkt wieder auf Ihren Plan zuzugreifen, haben wir Ihnen eine E-Mail geschickt mit dem Link zu Ihrem HfH-Studienverlaufsplan. Noch schneller auffindbar: Setzen Sie ein Lesezeichen in ihrem Browser für diese Seite. So müssen Sie nie von Vorne anfangen und können in Ruhe planen."
+                            "content": "Um zu einem späteren Zeitpunkt wieder auf Ihren Plan zuzugreifen, haben wir Ihnen eine E-Mail geschickt mit dem Link zu Ihrem HfH-Studienverlaufsplan. Noch schneller auffindbar: Setzen Sie ein Lesezeichen in Ihrem Browser für diese Seite. So müssen Sie nie von Vorne anfangen und können in Ruhe planen."
                         },
                         {
                             "title": "Schwerpunkt-Auswahl",
-                            "content": "Wählen Sie als Erstes ihren Studienschwerpunkt (SSP). Optional können Sie auch noch einen zweiten SSP wählen.",
+                            "content": "Wählen Sie als Erstes Ihren Studienschwerpunkt (SSP). Optional können Sie auch noch einen zweiten SSP wählen.",
                             "ref": "focus-selection",
                             "placement": "bottom"
                         },
@@ -686,7 +686,7 @@
                         },
                         {
                             "title": "Nicht alles in einem Schwung!",
-                            "content": "Um zu einem späteren Zeitpunkt wieder auf Ihren Plan zuzugreifen, haben wir Ihnen eine E-Mail geschickt mit dem Link zu Ihrem HfH-Studienverlaufsplan. Noch schneller auffindbar: Setzen Sie ein Lesezeichen in ihrem Browser für diese Seite. So können Sie schnell auf Ihre Planung zugreifen und diese in mehreren Schritten bearbeiten - Ihre Zwischenergebnisse werden automatisch gespeichert."
+                            "content": "Um zu einem späteren Zeitpunkt wieder auf Ihren Plan zuzugreifen, haben wir Ihnen eine E-Mail geschickt mit dem Link zu Ihrem HfH-Studienverlaufsplan. Noch schneller auffindbar: Setzen Sie ein Lesezeichen in Ihrem Browser für diese Seite. So können Sie schnell auf Ihre Planung zugreifen und diese in mehreren Schritten bearbeiten - Ihre Zwischenergebnisse werden automatisch gespeichert."
                         },
                         {
                             "title": "Modul-Liste",

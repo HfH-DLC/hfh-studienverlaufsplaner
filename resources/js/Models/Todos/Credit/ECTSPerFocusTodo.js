@@ -35,7 +35,7 @@ export default class ECTSPerFocusTodo {
             if (this.minECTS == this.maxECTS) {
                 label = `Rechnen Sie ${this.minECTS} ECTS Kreditpunkte an den SSP "${focus.name}" an.`;
             } else {
-                label = `Rechnen Sie zwischen ${this.minECTS} und ${this.maxECTS} ECTS Kreditpunkte and den SSP "${focus.name}" an.`;
+                label = `Rechnen Sie zwischen ${this.minECTS} und ${this.maxECTS} ECTS Kreditpunkte an den SSP "${focus.name}" an.`;
             }
         } else {
             if (this.minECTS) {
