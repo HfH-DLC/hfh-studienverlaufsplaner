@@ -78,14 +78,16 @@
               </template>
             </tbody>
           </table>
-          <p
-            v-if="
-              errors.length == 0 && !todoEntries.some((entry) => !entry.checked)
-            "
-            class="mb-8"
-          ></p>
           <div class="w-3/12 print:w-full print:mt-8" aria-live="polite">
-            <p class="mb-8">Ihre Planung erfüllt alle Anforderungen.</p>
+            <p
+              class="mb-8"
+              v-if="
+                errors.length == 0 &&
+                !todoEntries.some((entry) => !entry.checked)
+              "
+            >
+              Ihre Planung erfüllt alle Anforderungen.
+            </p>
             <Checklist :entries="todoEntries" id="todos" />
           </div>
         </template>
