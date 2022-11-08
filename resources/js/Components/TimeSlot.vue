@@ -1,5 +1,7 @@
 <template>
-  <div class="min-h-16 relative p-1 flex flex-col gap-y-2">
+  <div
+    class="min-h-16 h-full relative p-1 flex flex-col gap-y-2 justify-center"
+  >
     <template v-if="placement">
       <button
         ref="placement"
@@ -41,7 +43,7 @@
       />
     </template>
     <div
-      v-if="!readOnly && filteredEvents.length > 0"
+      v-else-if="!readOnly && filteredEvents.length > 0"
       class="flex flex-wrap gap-2"
     >
       <template v-for="event in filteredEvents" :key="event.id">
@@ -78,13 +80,42 @@
         </button>
       </template>
     </div>
+    <div v-else class="flex justify-center items-center h-full">
+      <button
+        class="p-2 grid place-items-center gap-1 hover:text-thunderbird-red"
+        @click="openDialog"
+      >
+        <InformationCircleIcon
+          class="w-5 h-5 text-gray-600"
+          aria-hidden="true"
+        />
+        <span class="sr-only">Verfügbare Module anzeigen</span>
+      </button>
+      <HfhDialog
+        v-if="isDialogVisible"
+        :open="isDialogVisible"
+        title="Verfügbare Module"
+        @closed="onDialogClosed"
+      >
+        <ul>
+          <li v-for="module in availableModules" :key="module.id">
+            {{ module.id }} {{ module.name }}
+          </li>
+        </ul>
+      </HfhDialog>
+    </div>
   </div>
 </template>
 
 <script>
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/vue/outline";
-import { mapActions, mapGetters, mapState } from "vuex";
+import {
+  CheckCircleIcon,
+  XCircleIcon,
+  InformationCircleIcon,
+} from "@heroicons/vue/outline";
+import { mapActions, mapState } from "vuex";
 import { isSameDate } from "../helpers.js";
+import HfhDialog from "./HfhDialog.vue";
 
 import ContextMenu from "./ContextMenu.vue";
 export default {
@@ -92,6 +123,8 @@ export default {
     ContextMenu,
     CheckCircleIcon,
     XCircleIcon,
+    InformationCircleIcon,
+    HfhDialog,
   },
   props: {
     events: {
@@ -106,6 +139,15 @@ export default {
       type: Boolean,
       required: true,
     },
+    availableModules: {
+      type: Array,
+      default: [],
+    },
+  },
+  data() {
+    return {
+      isDialogVisible: false,
+    };
   },
   methods: {
     ...mapActions("schedule", [
@@ -139,6 +181,12 @@ export default {
     locationById(id) {
       const location = this.locations.find((location) => location.id == id);
       return location;
+    },
+    openDialog() {
+      this.isDialogVisible = true;
+    },
+    onDialogClosed() {
+      this.isDialogVisible = false;
     },
   },
   computed: {

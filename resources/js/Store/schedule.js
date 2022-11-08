@@ -8,6 +8,7 @@ import { getRule } from "../Models/Rules/RuleFactory";
 import { getTodo } from "../Models/Todos/Schedule/TodoFactory";
 import {
     getCalendarYear,
+    isSameDate,
     joinStrings,
     orderDay,
     orderSemester,
@@ -413,6 +414,21 @@ export default {
             (id) => {
                 return modules.find((module) => module.id == id);
             },
+        modulesByDate:
+            (state, { modules }) =>
+            (year, semester, timeWindow, day, time) => {
+                return modules.filter((module) =>
+                    module.events.some((event) =>
+                        isSameDate(event, {
+                            year,
+                            semester,
+                            timeWindow,
+                            day,
+                            time,
+                        })
+                    )
+                );
+            },
         selectedModule(state, { moduleById }) {
             return moduleById(state.selectionStatus.moduleId);
         },
@@ -584,7 +600,9 @@ export default {
                         `Für den SSP "${
                             focusSelection.focus.name
                         }" ${moduleString} ${joinStrings(
-                            notAvailableModuleIds,
+                            notAvailableModuleIds.map((id) => {
+                                return `<button data-action="focus-module" data-module=${id}>${id}</button>`;
+                            }),
                             "und"
                         )} ${locationString} ${joinStrings(
                             checkedLocations.map(

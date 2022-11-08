@@ -106,6 +106,15 @@
                       time
                     )
                   "
+                  :availableModules="
+                    modulesByDate(
+                      year.value,
+                      semester.value,
+                      timeWindow,
+                      day,
+                      time
+                    )
+                  "
                 />
               </td>
             </tr>
@@ -114,51 +123,23 @@
       </table>
     </div>
   </div>
-  <Dialog
-    :open="isTimeWindowInfoVisible"
-    @close="setTimeWindowInfoVisible(false)"
-    class="fixed inset-0 z-10 overflow-y-auto"
-  >
-    <DialogOverlay class="fixed inset-0 pointer-events-none bg-black/60" />
-    <div
-      class="
-        max-w-2xl
-        absolute
-        bg-white
-        shadow-lg
-        p-4
-        top-1/2
-        left-1/2
-        -translate-x-1/2 -translate-y-1/2
-      "
-    >
-      <DialogTitle class="text-lg font-bold mr-20">{{
-        timeWindowInfo.title
-      }}</DialogTitle>
-      <button
-        @click="setTimeWindowInfoVisible(false)"
-        class="absolute top-2 right-2 p-2"
-      >
-        <XIcon class="block w-6 h-6" aria-hidden="true" />
-        <span class="sr-only">Schliessen</span>
-      </button>
-
-      <div class="mt-2" v-html="timeWindowInfo.content"></div>
-    </div>
-  </Dialog>
+  <HfhDialog
+    v-if="dialogInfo"
+    :open="isDialogVisible"
+    :title="dialogInfo.title"
+    @closed="onDialogClosed"
+    ><div v-html="dialogInfo.content"></div
+  ></HfhDialog>
 </template>
 
 <script>
 import TimeSlot from "./TimeSlot.vue";
 import { mapGetters, mapState } from "vuex";
 import { InformationCircleIcon, XIcon } from "@heroicons/vue/outline";
-import { Dialog, DialogOverlay, DialogTitle } from "@headlessui/vue";
-import { placements } from "@popperjs/core";
+import HfhDialog from "./HfhDialog.vue";
 export default {
   components: {
-    Dialog,
-    DialogOverlay,
-    DialogTitle,
+    HfhDialog,
     TimeSlot,
     InformationCircleIcon,
     XIcon,
@@ -166,8 +147,8 @@ export default {
   data() {
     return {
       slotRefs: [],
-      isTimeWindowInfoVisible: false,
-      timeWindowInfos: [
+      isDialogVisible: false,
+      timeWindowContentList: [
         {
           title: "Pflichtmodule & Wahlpflichtmodule",
           content: "Semesterwochen 2, 3, 4, 5, 7, 8, 9, 11, 12, 13",
@@ -182,7 +163,7 @@ export default {
             </p>`,
         },
       ],
-      timeWindowInfo: null,
+      dialogInfo: null,
     };
   },
   computed: {
@@ -193,6 +174,7 @@ export default {
       "placements",
       "placementByDate",
       "selectedModule",
+      "modulesByDate",
     ]),
     showLocations() {
       if (this.locations.filter((location) => location.checked).length > 1) {
@@ -239,13 +221,13 @@ export default {
       }
     },
     setTimeWindowInfo(timeWindow) {
-      this.timeWindowInfo = this.timeWindowInfos.find(
+      this.dialogInfo = this.timeWindowContentList.find(
         (info) => info.title === timeWindow
       );
-      this.setTimeWindowInfoVisible(true);
+      this.isDialogVisible = true;
     },
-    setTimeWindowInfoVisible(value) {
-      this.isTimeWindowInfoVisible = value;
+    onDialogClosed() {
+      this.isDialogVisible = false;
     },
     getSemesterString(count, semester, year) {
       if (semester == "HS") {
