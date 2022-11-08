@@ -6,6 +6,7 @@
       :open="currentOpen === index"
       @opened="currentOpen = index"
       @closed="currentOpen == index && (currentOpen = -1)"
+      :ref="setCategoryRef"
     >
       <template v-slot:title>
         {{ category.name }}
@@ -38,9 +39,14 @@ export default {
       type: String,
       default: "",
     },
+    hashCategoryId: {
+      type: String,
+      default: "",
+    },
   },
   data() {
     return {
+      categoryRefs: [],
       currentOpen: 0,
     };
   },
@@ -70,20 +76,49 @@ export default {
     },
   },
   methods: {
-    openActiveAccordion(moduleId) {
-      if (moduleId) {
-        const index = this.categories.findIndex((category) =>
-          category.modules.some((module) => module.id == moduleId)
+    openActiveAccordion(categoryId) {
+      if (categoryId) {
+        const index = this.categories.findIndex(
+          (category) => category.id == categoryId
         );
         if (index > -1) {
           this.currentOpen = index;
         }
       }
     },
+    setCategoryRef(el) {
+      if (el) {
+        this.categoryRefs.push(el);
+      }
+    },
+    focusCategory(categoryId) {
+      console.log("focusCategory");
+      const index = this.categories.findIndex(
+        (category) => category.id == categoryId
+      );
+      if (index >= 0) {
+        this.$nextTick(() => {
+          const ref = this.categoryRefs[index];
+          const summary = ref.$el.querySelector("summary");
+          if (summary) {
+            summary.focus();
+          }
+        });
+      }
+    },
   },
   watch: {
-    hashModuleId(newValue) {
-      this.openActiveAccordion(newValue);
+    hashModuleId(moduleId) {
+      if (moduleId) {
+        const category = this.categories.find((category) =>
+          category.modules.some((module) => module.id == moduleId)
+        );
+        this.openActiveAccordion(category.id);
+      }
+    },
+    hashCategoryId(categoryId) {
+      this.openActiveAccordion(categoryId);
+      this.focusCategory(categoryId);
     },
   },
 };

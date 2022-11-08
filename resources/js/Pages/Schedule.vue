@@ -45,7 +45,10 @@
               />
               <div v-show="!selectedOrTourModule">
                 <LocationSelect v-if="locations.length > 1" class="mb-4" />
-                <ModuleList :hashModuleId="hashModuleId" />
+                <ModuleList
+                  :hashModuleId="hashModuleId"
+                  :hashCategoryId="hashCategoryId"
+                />
               </div>
             </StickyColumn>
             <StickyColumn
@@ -177,6 +180,7 @@ export default {
   data() {
     return {
       hashModuleId: null,
+      hashCategoryId: null,
       readOnly: true,
     };
   },
@@ -198,9 +202,9 @@ export default {
     this.$emitter.off("retry-save", this.retrySave);
   },
   mounted() {
-    this.selectModuleFromHash(window.location.hash);
+    this.processHash(window.location.hash);
     window.onhashchange = (event) => {
-      this.selectModuleFromHash(new URL(event.newURL).hash);
+      this.processHash(new URL(event.newURL).hash);
     };
   },
   beforeUnmount() {
@@ -246,11 +250,15 @@ export default {
         });
       }
     },
-    selectModuleFromHash(hash) {
+    processHash(hash) {
       if (hash && hash.startsWith("#module-")) {
         const moduleId = hash.slice("#module-".length);
         this.hashModuleId = moduleId;
         this.selectModule(moduleId);
+        window.location.hash = "";
+      }
+      if (hash && hash.startsWith("#category-")) {
+        this.hashCategoryId = hash.slice("#category-".length);
         window.location.hash = "";
       }
     },
