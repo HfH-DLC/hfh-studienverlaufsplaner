@@ -18,14 +18,13 @@ main a:hover {
     text-decoration: underline;
 }
 
-.checklist-entry a {
-    color: inherit;
-}
-
-.checklist-entry label {
+.checklist-entry button,
+.error-message button,
+.info-message button {
     font-weight: bold;
     text-decoration: underline;
     cursor: pointer;
+    text-align: left;
 }
 
 .hfh-accordion {

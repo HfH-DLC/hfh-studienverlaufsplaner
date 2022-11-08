@@ -197,18 +197,11 @@ export default {
       tour: this.tourData,
     });
     this.$emitter.on("retry-save", this.retrySave);
+    this.$emitter.on("focus-module", this.selectModule);
   },
   beforeDestroy() {
     this.$emitter.off("retry-save", this.retrySave);
-  },
-  mounted() {
-    this.processHash(window.location.hash);
-    window.onhashchange = (event) => {
-      this.processHash(new URL(event.newURL).hash);
-    };
-  },
-  beforeUnmount() {
-    window.onhashchange = null;
+    this.$emitter.off("focus-module", this.selectModule);
   },
   computed: {
     ...mapState("schedule", [
@@ -248,18 +241,6 @@ export default {
           type: flashTypes.SUCCESS,
           message: "Ihr Plan wurde erfolgreich gespeichert.",
         });
-      }
-    },
-    processHash(hash) {
-      if (hash && hash.startsWith("#module-")) {
-        const moduleId = hash.slice("#module-".length);
-        this.hashModuleId = moduleId;
-        this.selectModule(moduleId);
-        window.location.hash = "";
-      }
-      if (hash && hash.startsWith("#category-")) {
-        this.hashCategoryId = hash.slice("#category-".length);
-        window.location.hash = "";
       }
     },
   },

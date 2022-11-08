@@ -90,7 +90,7 @@ export default class PrerequisitesRule extends BaseScheduleRule {
     getModuleErrorMessage(module, missingPrerequisites) {
         if (missingPrerequisites.length === 1) {
             const prerequisite = missingPrerequisites[0];
-            return `<a href="#module-${prerequisite.id}">${prerequisite.id} ${prerequisite.name}</a> muss vor diesem Modul belegt werden.`;
+            return `<button data-action="focus-module" data-module="${prerequisite.id}">${prerequisite.id} ${prerequisite.name}</button> muss vor diesem Modul belegt werden.`;
         }
         return `Die Module ${missingPrerequisites
             .map(
@@ -103,15 +103,22 @@ export default class PrerequisitesRule extends BaseScheduleRule {
     getPlacementErrorMessage(module, missingPrerequisites) {
         if (missingPrerequisites.length === 1) {
             const prerequisite = missingPrerequisites[0];
-            return `<a href="#module-${prerequisite.id}">${prerequisite.id} ${prerequisite.name}</a> muss vor <a href="#module-${module.id}">${module.id} ${module.name}</a> belegt werden.`;
+            return `<button data-action="focus-module" data-module="${prerequisite.id}">${prerequisite.id} ${prerequisite.name}</button> muss vor <button data-action="focus-module" data-module="${module.id}">${module.id} ${module.name}</button> belegt werden.`;
         }
         return `Die Module ${missingPrerequisites
             .map(
                 (prerequisite) =>
-                    `<a href="#module-${prerequisite.id}">${prerequisite.id} ${prerequisite.name}</a>`
+                    `<button
+                    data-action="focus-module"
+                    data-module="${prerequisite.id}"
+                >
+                    ${prerequisite.id} ${prerequisite.name}
+                </button>`
             )
-            .join(", ")} müssen vor <a href="#module-${module.id}">${
+            .join(
+                ", "
+            )} müssen vor <button data-action="focus-module" data-module="${
             module.id
-        } ${module.name}</a> belegt werden.`;
+        }">${module.id} ${module.name}</button> belegt werden.`;
     }
 }

@@ -26,7 +26,7 @@
 import { ChevronUpIcon, CheckCircleIcon } from "@heroicons/vue/outline";
 import { HfhAccordion } from "@hfh-dlc/hfh-styleguide";
 import Module from "../Components/Module.vue";
-import { mapGetters, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 export default {
   components: {
     HfhAccordion,
@@ -34,21 +34,19 @@ export default {
     ChevronUpIcon,
     Module,
   },
-  props: {
-    hashModuleId: {
-      type: String,
-      default: "",
-    },
-    hashCategoryId: {
-      type: String,
-      default: "",
-    },
-  },
   data() {
     return {
       categoryRefs: [],
       currentOpen: 0,
     };
+  },
+  mounted() {
+    this.$emitter.on("focus-category", this.focusCategory);
+    this.$emitter.on("focus-module", this.openCategoryByModule);
+  },
+  beforeUnmount() {
+    this.$emitter.off("focus-category", this.focusCategory);
+    this.$emitter.on("focus-module", this.openCategoryByModule);
   },
   computed: {
     ...mapState("schedule", ["locations"]),
@@ -76,14 +74,10 @@ export default {
     },
   },
   methods: {
-    openActiveAccordion(categoryId) {
-      if (categoryId) {
-        const index = this.categories.findIndex(
-          (category) => category.id == categoryId
-        );
-        if (index > -1) {
-          this.currentOpen = index;
-        }
+    ...mapActions("schedule", ["deselectModule"]),
+    openActiveAccordion(index) {
+      if (index > -1) {
+        this.currentOpen = index;
       }
     },
     setCategoryRef(el) {
@@ -91,12 +85,21 @@ export default {
         this.categoryRefs.push(el);
       }
     },
+    openCategoryByModule(moduleId) {
+      const index = this.categories.findIndex((category) =>
+        category.modules.some((module) => module.id == moduleId)
+      );
+      if (index >= 0) {
+        this.openActiveAccordion(index);
+      }
+    },
     focusCategory(categoryId) {
-      console.log("focusCategory");
       const index = this.categories.findIndex(
         (category) => category.id == categoryId
       );
       if (index >= 0) {
+        this.deselectModule();
+        this.openActiveAccordion(index);
         this.$nextTick(() => {
           const ref = this.categoryRefs[index];
           const summary = ref.$el.querySelector("summary");
@@ -105,20 +108,6 @@ export default {
           }
         });
       }
-    },
-  },
-  watch: {
-    hashModuleId(moduleId) {
-      if (moduleId) {
-        const category = this.categories.find((category) =>
-          category.modules.some((module) => module.id == moduleId)
-        );
-        this.openActiveAccordion(category.id);
-      }
-    },
-    hashCategoryId(categoryId) {
-      this.openActiveAccordion(categoryId);
-      this.focusCategory(categoryId);
     },
   },
 };

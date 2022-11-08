@@ -40,10 +40,11 @@ export default class FocusModulesTodo {
         const modules = focus.requiredModules;
         if (modules.length == 1) {
             const module = modules[0];
-            return `Belegen Sie für den SSP "${focus.name}" das Modul <a href="#module-${module.id}">${module.id}</a>.`;
+            return `Belegen Sie für den SSP "${focus.name}" das Modul <button data-action='focus-module' data-module='${module.id}'>${module.id}</button>.`;
         }
         const moduleNames = modules.map(
-            (module) => `<a href="#module-${module.id}">${module.id}</a>`
+            (module) =>
+                `<button data-action='focus-module' data-module='${module.id}'>${module.id}</button>`
         );
         const moduleString = joinStrings(moduleNames, "und");
         return `Belegen Sie für den SSP "${focus.name}" die Module ${moduleString}.`;
@@ -54,10 +55,11 @@ export default class FocusModulesTodo {
         const number = focus.requiredNumberOfOptionalModules;
         if (modules.length == 1) {
             const module = modules[0];
-            return `Belegen Sie für den SSP "${focus.name}" das Modul <a href="#module-${module.id}">${module.id}</a>.`;
+            return `Belegen Sie für den SSP "${focus.name}" das Modul <button data-action='focus-module' data-module='${module.id}'>${module.id}</button>.`;
         }
         const moduleNames = modules.map(
-            (module) => `<a href="#module-${module.id}">${module.id}</a>`
+            (module) =>
+                `<button data-action='focus-module' data-module='${module.id}'>${module.id}</button>`
         );
         const moduleString = joinStrings(moduleNames, "oder");
         return `Belegen Sie für den SSP "${focus.name}" ${numToWord(number, {
@@ -101,14 +103,17 @@ export default class FocusModulesTodo {
 
         let entries = [];
         foci.forEach((focus) => {
-            const ids = path[focus.id] || [];
+            if (focus.optionalModules.length > 0) {
+                const ids = path[focus.id] || [];
 
-            const entryOptional = {
-                label: this.getLabelOptional(focus),
-                checked: ids.length == focus.requiredNumberOfOptionalModules,
-                progressLabel: `${ids.length} / ${focus.requiredNumberOfOptionalModules}`,
-            };
-            entries.push(entryOptional);
+                const entryOptional = {
+                    label: this.getLabelOptional(focus),
+                    checked:
+                        ids.length == focus.requiredNumberOfOptionalModules,
+                    progressLabel: `${ids.length} / ${focus.requiredNumberOfOptionalModules}`,
+                };
+                entries.push(entryOptional);
+            }
         });
         return entries;
     }

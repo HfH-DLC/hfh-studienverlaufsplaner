@@ -28,7 +28,7 @@ export default class ExcludeSemesterRule extends BaseScheduleRule {
                         ""
                     );
                     errors[placement.id].push(
-                        `<a href="#module-${placement.module.id}">${placement.module.id} ${placement.module.name}</a> kann nicht im ${text} Semester belegt werden.`
+                        `<button data-action="focus-module" data-module="${placement.module.id}">${placement.module.id} ${placement.module.name}</button> kann nicht im ${text} Semester belegt werden.`
                     );
                 }
             });

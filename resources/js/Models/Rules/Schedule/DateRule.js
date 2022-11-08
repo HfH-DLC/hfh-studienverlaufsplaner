@@ -13,7 +13,7 @@ export default class DateRule extends BaseScheduleRule {
                 )
             ) {
                 errors[placement.id].push(
-                    `<a href="#module-${placement.module.id}">${placement.module.id} ${placement.module.name}</a> ist am Datum ${placement.semester} ${placement.year}, ${placement.timeWindow}, ${placement.day} ${placement.time} nicht verfügbar.`
+                    `<button data-action="focus-module" data-module="${placement.module.id}">${placement.module.id} ${placement.module.name}</button> ist am Datum ${placement.semester} ${placement.year}, ${placement.timeWindow}, ${placement.day} ${placement.time} nicht verfügbar.`
                 );
             }
         });

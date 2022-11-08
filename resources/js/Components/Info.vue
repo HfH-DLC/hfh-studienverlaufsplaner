@@ -1,6 +1,7 @@
 <template>
   <div
     class="
+      info-message
       bg-blue-50
       text-blue-600
       border border-blue-300

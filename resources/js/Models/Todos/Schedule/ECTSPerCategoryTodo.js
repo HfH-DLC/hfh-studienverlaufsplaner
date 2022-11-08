@@ -14,16 +14,16 @@ export default class ECTSPerCategoryTodo {
         let label;
         if (category.minECTS && category.maxECTS) {
             if (category.minECTS == category.maxECTS) {
-                label = `Belegen Sie im Bereich "${category.name}" ${category.minECTS} ECTS Kreditpunkte.`;
+                label = `Belegen Sie im Bereich <button data-action='focus-category' data-category='${category.id}'>"${category.name}"</button> ${category.minECTS} ECTS Kreditpunkte.`;
             } else {
-                label = `Belegen Sie im Bereich "${category.name}" zwischen ${category.minECTS} und ${category.maxECTS} ECTS Kreditpunkte.`;
+                label = `Belegen Sie im Bereich <button data-action='focus-category' data-category='${category.id}'>"${category.name}"</button> zwischen ${category.minECTS} und ${category.maxECTS} ECTS Kreditpunkte.`;
             }
         } else {
             if (category.minECTS) {
-                label = `Belegen Sie im Bereich "${category.name}" mindestens ${category.minECTS} ECTS Kreditpunkte.`;
+                label = `Belegen Sie im Bereich <button data-action='focus-category' data-category='${category.id}'>"${category.name}"</button> mindestens ${category.minECTS} ECTS Kreditpunkte.`;
             }
             if (category.maxECTS) {
-                label = `Belegen Sie im Bereich "${category.name}" bis zu ${category.maxECTS} ECTS Kreditpunkte.`;
+                label = `Belegen Sie im Bereich <button data-action='focus-category' data-category='${category.id}'>"${category.name}"</button> bis zu ${category.maxECTS} ECTS Kreditpunkte.`;
             }
         }
         return label;

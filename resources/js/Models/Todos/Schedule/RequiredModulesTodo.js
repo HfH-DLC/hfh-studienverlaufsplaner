@@ -15,7 +15,7 @@ export default class RequiredModulesTodo {
     }
 
     getLabel(category) {
-        return `Belegen Sie alle Module des Bereiches "${category.name}"`;
+        return `Belegen Sie alle Module des Bereiches <button data-action='focus-category' data-category='${category.id}'>"${category.name}"</button>`;
     }
 
     validate(category) {

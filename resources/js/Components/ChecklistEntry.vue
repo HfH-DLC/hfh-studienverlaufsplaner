@@ -7,7 +7,7 @@
       />
       <CircleIcon class="inline-block w-5 h-5 flex-shrink-0 mt-0.5" v-else />
       <div :class="{ 'text-green-700': entry.checked }">
-        <div v-html="entry.label"></div>
+        <div v-html="entry.label" ref="label"></div>
         <div v-if="entry.progressLabel">
           (Aktuell: {{ entry.progressLabel }})
         </div>
@@ -29,6 +29,21 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  mounted() {
+    this.$refs.label.querySelectorAll("button").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        const button = event.currentTarget;
+        const action = button.dataset.action;
+        if (action == "focus-category") {
+          const categoryId = button.dataset.category;
+          this.$emitter.emit(action, categoryId);
+        } else if (action == "focus-module") {
+          const moduleId = button.dataset.module;
+          this.$emitter.emit(action, moduleId);
+        }
+      });
+    });
   },
 };
 </script>
