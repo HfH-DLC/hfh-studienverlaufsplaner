@@ -98,8 +98,6 @@ export function bestPath(foci, moduleIds) {
         return cur.score > acc.score ? cur : acc;
     }, null);
 
-    console.log("bestPath", bestPath);
-
     return bestPath ? bestPath.pathGroupedByFocus : {};
 }
 
