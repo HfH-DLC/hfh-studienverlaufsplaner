@@ -8,6 +8,8 @@
         :planSlug="planResource.data.slug"
         :showNavigation="true"
         :showTour="!!tour && planResource.data.scheduleValid"
+        :brochureUrl="brochureUrl"
+        :moduleDirectoryUrl="moduleDirectoryUrl"
       />
     </header>
     <main class="flex-1 flex flex-col px-4 pb-4">
@@ -157,6 +159,14 @@ export default {
       type: Object,
       required: true,
     },
+    brochureUrl: {
+      type: String,
+      required: true,
+    },
+    moduleDirectoryUrl: {
+      type: String,
+      required: true,
+    },
   },
   created() {
     this.init({
@@ -203,6 +213,12 @@ export default {
   },
 };
 </script>
+
+<style>
+:root {
+  --w-container: 100%;
+}
+</style>
 
 <style scoped>
 :deep() .hfh-select {

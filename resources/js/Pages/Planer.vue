@@ -3,13 +3,37 @@
   <HfhHeaderBar>
     <template v-slot:right>
       <div class="px-4 py-3 leading-4">
-        <a
-          class="hover:text-thunderbird-red"
-          href="https://hfh.ch"
-          rel="noopener noreferer"
-          target="_blank"
-          >hfh.ch</a
-        >
+        <nav>
+          <ul class="flex gap-x-4">
+            <li v-if="moduleDirectoryUrl">
+              <a
+                class="hover:text-thunderbird-red"
+                :href="moduleDirectoryUrl"
+                rel="noopener noreferer"
+                target="_blank"
+                >Modulverzeichnis</a
+              >
+            </li>
+            <li v-if="brochureUrl">
+              <a
+                class="hover:text-thunderbird-red"
+                :href="brochureUrl"
+                rel="noopener noreferer"
+                target="_blank"
+                >Studienbroschüre</a
+              >
+            </li>
+            <li>
+              <a
+                class="hover:text-thunderbird-red"
+                href="https://hfh.ch"
+                rel="noopener noreferer"
+                target="_blank"
+                >hfh.ch</a
+              >
+            </li>
+          </ul>
+        </nav>
       </div>
     </template>
   </HfhHeaderBar>
@@ -80,7 +104,7 @@
           <HfhSelect
             class="w-full mt-4"
             id="plan-start-year"
-            label="Jahr"
+            label="Studienstart"
             v-model="createForm.startYear"
             :required="true"
             :options="yearOptions"

@@ -136,17 +136,31 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
             $module->applyModifiers("credit");
         }
         $tour = isset($planer->tour["credit"]) ? $planer->tour["credit"] : null;
+
+
+        $props = array(
+            'planerName' => $planer->name,
+            'planerSlug' => $planer->slug,
+            'planResource' => $planResource,
+            'creditableModulesResource' => CreditableModuleResource::collection($modules),
+            'rulesResource' => RuleResource::collection($planer->rules()->where('type', 'credit')->get()),
+            'todosResource' => TodoResource::collection($planer->todos()->where('type', 'credit')->get()),
+            'tourData' => $tour,
+        );
+
+        if (isset($planer->meta)) {
+            if (isset($planer->meta['brochureUrl'])) {
+
+                $props['brochureUrl'] = $planer->meta['brochureUrl'];
+            }
+            if (isset($planer->meta['moduleDirectoryUrl'])) {
+                $props['moduleDirectoryUrl'] = $planer->meta['moduleDirectoryUrl'];
+            }
+        }
+
         return Inertia::render(
             'Credit',
-            array(
-                'planerName' => $planer->name,
-                'planerSlug' => $planer->slug,
-                'planResource' => $planResource,
-                'creditableModulesResource' => CreditableModuleResource::collection($modules),
-                'rulesResource' => RuleResource::collection($planer->rules()->where('type', 'credit')->get()),
-                'todosResource' => TodoResource::collection($planer->todos()->where('type', 'credit')->get()),
-                'tourData' => $tour,
-            )
+            $props
         );
     })->name('plan-credit');
 
@@ -174,21 +188,34 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
         $fociResource = FocusResource::collection($planer->foci()->get());
         $locationsResource = LocationResource::collection(Location::all());
         $tour = $tour = isset($planer->tour["schedule"]) ? $planer->tour["schedule"] : null;
+
+
+        $props =    array(
+            'planerName' => $planer->name,
+            'planerSlug' => $planer->slug,
+            'planResource' => $planResource,
+            'categoriesResource' => $categoriesResource,
+            'focusSelectionEnabled' => $planer->focus_selection_enabled,
+            'fociResource' => $fociResource,
+            'rulesResource' => $rulesResource,
+            'todosResource' => $todosResource,
+            'locationsResource' => $locationsResource,
+            'requiredECTS' => $planer->required_ects,
+            'tourData' => $tour,
+        );
+
+        if (isset($planer->meta)) {
+            if (isset($planer->meta['brochureUrl'])) {
+
+                $props['brochureUrl'] = $planer->meta['brochureUrl'];
+            }
+            if (isset($planer->meta['moduleDirectoryUrl'])) {
+                $props['moduleDirectoryUrl'] = $planer->meta['moduleDirectoryUrl'];
+            }
+        }
         return Inertia::render(
             'Schedule',
-            array(
-                'planerName' => $planer->name,
-                'planerSlug' => $planer->slug,
-                'planResource' => $planResource,
-                'categoriesResource' => $categoriesResource,
-                'focusSelectionEnabled' => $planer->focus_selection_enabled,
-                'fociResource' => $fociResource,
-                'rulesResource' => $rulesResource,
-                'todosResource' => $todosResource,
-                'locationsResource' => $locationsResource,
-                'requiredECTS' => $planer->required_ects,
-                'tourData' => $tour,
-            )
+            $props
         );
     })->name('plan-schedule');
 

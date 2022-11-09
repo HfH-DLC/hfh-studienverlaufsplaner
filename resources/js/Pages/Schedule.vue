@@ -8,6 +8,8 @@
         :planSlug="planResource.data.slug"
         :showNavigation="focusSelectionEnabled"
         :showTour="!!tour"
+        :brochureUrl="brochureUrl"
+        :moduleDirectoryUrl="moduleDirectoryUrl"
       />
     </header>
     <main class="flex-1 flex flex-col">
@@ -174,6 +176,14 @@ export default {
     },
     tourData: {
       type: Object,
+      required: true,
+    },
+    brochureUrl: {
+      type: String,
+      required: true,
+    },
+    moduleDirectoryUrl: {
+      type: String,
       required: true,
     },
   },
