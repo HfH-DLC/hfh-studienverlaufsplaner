@@ -56,21 +56,23 @@ export default {
       "checkedLocations",
     ]),
     filteredCategories() {
-      return this.categories.map((category) => ({
-        ...category,
-        modules: category.modules
-          .filter((module) =>
-            module.events.some((event) =>
-              this.checkedLocations.includes(event.location)
+      return this.categories
+        .map((category) => ({
+          ...category,
+          modules: category.modules
+            .filter((module) =>
+              module.events.some((event) =>
+                this.checkedLocations.includes(event.location)
+              )
             )
-          )
-          .map((module) => ({
-            ...module,
-            events: module.events.filter((event) =>
-              this.checkedLocations.includes(event.location)
-            ),
-          })),
-      }));
+            .map((module) => ({
+              ...module,
+              events: module.events.filter((event) =>
+                this.checkedLocations.includes(event.location)
+              ),
+            })),
+        }))
+        .filter((category) => category.modules.length > 0);
     },
   },
   methods: {
