@@ -1,9 +1,5 @@
 <template>
-  <div
-    v-for="(year, yearIndex) in years"
-    :key="yearIndex"
-    class="mb-24 print:mb-4"
-  >
+  <div v-for="(year, yearIndex) in years" :key="yearIndex">
     <div
       class="mb-4"
       v-for="(semester, semesterIndex) in year.semesters"

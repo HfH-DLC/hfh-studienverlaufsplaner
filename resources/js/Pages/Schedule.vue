@@ -40,7 +40,7 @@
             class="px-4 py-8"
           />
           <div class="flex flex-1 items-start print:block">
-            <StickyColumn id="modules" class="w-3/12 print:hidden">
+            <StickyColumn id="modules" class="w-3/12 print:hidden pb-24">
               <ModuleInformation
                 v-show="selectedOrTourModule"
                 :selectedModule="selectedOrTourModule"
@@ -55,13 +55,13 @@
             </StickyColumn>
             <StickyColumn
               id="time-table"
-              class="w-6/12 print:w-full lg:mx-0 xl:mx-8"
+              class="w-6/12 print:w-full lg:mx-0 xl:mx-8 pb-24 print:pb-4"
             >
               <TimeTable ref="timeTable" />
             </StickyColumn>
             <StickyColumn
               id="todos"
-              class="w-3/12 print:w-full"
+              class="w-3/12 print:w-full pb-24 print:pb-4"
               aria-live="polite"
             >
               <p
