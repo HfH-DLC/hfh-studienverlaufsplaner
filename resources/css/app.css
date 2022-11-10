@@ -19,6 +19,7 @@ main a:hover {
 }
 
 .checklist-entry button,
+.checklist-entry label,
 .error-message button,
 .info-message button {
     font-weight: bold;
