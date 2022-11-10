@@ -1,6 +1,8 @@
 <template>
-  <div v-if="selectedModule">
-    <button @click="deselectModule" class="back-button mb-4">Zurück</button>
+  <div v-if="selectedModule" aria-live="polite">
+    <button @click="deselectModule" class="back-button mb-4" ref="back">
+      Zurück
+    </button>
     <h2 class="text-xl">{{ selectedModule.name }}</h2>
     <ErrorList
       class="mt-4 space-y-2"
