@@ -50,6 +50,7 @@
         <button
           ref="slot"
           class="
+            slot
             text-sm text-left
             disabled:cursor-default
             w-full
@@ -169,7 +170,11 @@ export default {
     },
     focusSlot() {
       if (this.$refs.slot) {
-        this.$refs.slot.focus();
+        if (Array.isArray(this.$refs.slot) && this.$refs.slot.length > 0) {
+          this.$refs.slot[0].focus();
+        } else {
+          this.$refs.slot.focus();
+        }
       }
     },
     placementMatchesEvent(placement, event) {
@@ -217,7 +222,8 @@ export default {
 .slot--valid {
   @apply bg-green-50;
 }
-.placement:focus {
+.placement:focus,
+.slot:focus {
   outline: 2px solid var(--c-blue);
   outline-offset: 0;
 }
