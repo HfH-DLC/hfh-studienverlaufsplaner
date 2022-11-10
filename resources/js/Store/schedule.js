@@ -543,14 +543,17 @@ export default {
                 return acc;
             }, []);
         },
-        selectableEvents(state, { selectedModule }) {
+        selectableEvents(state, { selectedModule, checkedLocations }) {
             if (!selectedModule) {
                 return [];
             }
             return selectedModule.events
                 .filter((event) => {
                     const status = state.selectionStatus.status[event.id];
-                    return status.dateAllowed;
+                    return (
+                        status.dateAllowed &&
+                        checkedLocations.includes(event.location)
+                    );
                 })
                 .map((event) => {
                     const status = state.selectionStatus.status[event.id];
