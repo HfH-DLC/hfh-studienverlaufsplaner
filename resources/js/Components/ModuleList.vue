@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pb-4">
     <HfhAccordion
       v-for="(category, index) in filteredCategories"
       :key="category.id"
@@ -88,7 +88,7 @@ export default {
       }
     },
     openCategoryByModule(moduleId) {
-      const index = this.categories.findIndex((category) =>
+      const index = this.filteredCategories.findIndex((category) =>
         category.modules.some((module) => module.id == moduleId)
       );
       if (index >= 0) {
@@ -96,7 +96,7 @@ export default {
       }
     },
     focusCategory(categoryId) {
-      const index = this.categories.findIndex(
+      const index = this.filteredCategories.findIndex(
         (category) => category.id == categoryId
       );
       if (index >= 0) {

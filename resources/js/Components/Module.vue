@@ -1,14 +1,6 @@
 <template>
   <button
-    class="
-      text-left
-      mb-2
-      p-1
-      w-full
-      rounded
-      focus:outline-none focus:ring-2 focus:ring-indigo-600
-      disabled:cursor-default
-    "
+    class="text-left mb-2 p-1 w-full rounded disabled:cursor-default"
     :class="{
       'module--selected': module.selected,
       'module--placed': module.placement && !module.misplaced,

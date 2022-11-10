@@ -6,6 +6,7 @@
       <button
         ref="placement"
         class="
+          placement
           text-sm text-left
           disabled:cursor-default
           w-full
@@ -14,7 +15,6 @@
           rounded
           'bg-gray-50'
           transition-all
-          focus:outline-none focus:ring-2 focus:ring-indigo-500
         "
         :class="{
           'slot--invalid': invalidPlacement,
@@ -58,7 +58,6 @@
             rounded
             bg-white
             transition-all
-            focus:outline-none focus:ring-2 focus:ring-indigo-500
             shadow-inner
             grow-1
             shrink-1
@@ -217,5 +216,9 @@ export default {
 }
 .slot--valid {
   @apply bg-green-50;
+}
+.placement:focus {
+  outline: 2px solid var(--c-blue);
+  outline-offset: 0;
 }
 </style>
