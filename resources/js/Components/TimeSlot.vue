@@ -168,8 +168,8 @@ export default {
       this.$refs.placement.focus();
     },
     focusSlot() {
-      if (this.$refs.slot.length > 0) {
-        this.$refs.slot[0].focus();
+      if (this.$refs.slot) {
+        this.$refs.slot.focus();
       }
     },
     placementMatchesEvent(placement, event) {
