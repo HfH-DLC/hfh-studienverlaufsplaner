@@ -7,7 +7,13 @@
       />
       <CircleIcon class="inline-block w-5 h-5 flex-shrink-0 mt-0.5" v-else />
       <div :class="{ 'text-green-700': entry.checked }">
-        <div v-html="entry.label" ref="label"></div>
+        <component
+          v-if="entry.labelProps"
+          :is="entry.labelProps.component"
+          ref="label"
+          v-bind="entry.labelProps"
+        />
+        <div v-if="entry.label" v-html="entry.label"></div>
         <div v-if="entry.progressLabel">
           (Aktuell: {{ entry.progressLabel }})
         </div>
@@ -19,31 +25,24 @@
 <script>
 import { CheckCircleIcon } from "@heroicons/vue/outline";
 import CircleIcon from "../Icons/CirleIcon";
+import OptionalFocusModulesLabel from "./Todos/Schedule/OptionalFocusModulesLabel.vue";
+import RequiredFocusModulesLabel from "./Todos/Schedule/RequiredFocusModulesLabel.vue";
+import ECTSPerCategoryLabel from "./Todos/Schedule/ECTSPerCategoryLabel.vue";
+import RequiredModulesLabel from "./Todos/Schedule/RequiredModulesLabel.vue";
 export default {
   components: {
     CheckCircleIcon,
     CircleIcon,
+    OptionalFocusModulesLabel,
+    RequiredFocusModulesLabel,
+    ECTSPerCategoryLabel,
+    RequiredModulesLabel,
   },
   props: {
     entry: {
       type: Object,
       required: true,
     },
-  },
-  mounted() {
-    this.$refs.label.querySelectorAll("button").forEach((button) => {
-      button.addEventListener("click", (event) => {
-        const button = event.currentTarget;
-        const action = button.dataset.action;
-        if (action == "focus-category") {
-          const categoryId = button.dataset.category;
-          this.$emitter.emit(action, categoryId);
-        } else if (action == "focus-module") {
-          const moduleId = button.dataset.module;
-          this.$emitter.emit(action, moduleId);
-        }
-      });
-    });
   },
 };
 </script>

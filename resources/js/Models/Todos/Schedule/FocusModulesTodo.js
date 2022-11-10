@@ -1,5 +1,3 @@
-import { numToWord } from "num-words-de";
-import { joinStrings } from "../../../helpers";
 import { bestPath } from "../../../tree.js";
 
 function intersection(a, b) {
@@ -16,7 +14,11 @@ export default class FocusModulesTodo {
             const focus = cur.focus;
             if (focus.requiredModules.length > 0) {
                 const entryRequired = {
-                    label: this.getLabelRequired(focus),
+                    labelProps: {
+                        component: "RequiredFocusModulesLabel",
+                        focusName: focus.name,
+                        modules: focus.requiredModules,
+                    },
                     checked: this.validateRequired(
                         focus.requiredModules,
                         placements
@@ -34,38 +36,6 @@ export default class FocusModulesTodo {
         const entriesOptional = this.validateOptional(placements, foci);
 
         return [...entriesRequired, ...entriesOptional];
-    }
-
-    getLabelRequired(focus) {
-        const modules = focus.requiredModules;
-        if (modules.length == 1) {
-            const module = modules[0];
-            return `Belegen Sie für den SSP "${focus.name}" das Modul <button data-action='focus-module' data-module='${module.id}'>${module.id}</button>.`;
-        }
-        const moduleNames = modules.map(
-            (module) =>
-                `<button data-action='focus-module' data-module='${module.id}'>${module.id}</button>`
-        );
-        const moduleString = joinStrings(moduleNames, "und");
-        return `Belegen Sie für den SSP "${focus.name}" die Module ${moduleString}.`;
-    }
-
-    getLabelOptional(focus) {
-        const modules = focus.optionalModules;
-        const number = focus.requiredNumberOfOptionalModules;
-        if (modules.length == 1) {
-            const module = modules[0];
-            return `Belegen Sie für den SSP "${focus.name}" das Modul <button data-action='focus-module' data-module='${module.id}'>${module.id}</button>.`;
-        }
-        const moduleNames = modules.map(
-            (module) =>
-                `<button data-action='focus-module' data-module='${module.id}'>${module.id}</button>`
-        );
-        const moduleString = joinStrings(moduleNames, "oder");
-        return `Belegen Sie für den SSP "${focus.name}" ${numToWord(number, {
-            uppercase: false,
-            indefinite_eines: true,
-        })} der Module ${moduleString}.`;
     }
 
     validateRequired(modules, placements) {
@@ -107,7 +77,12 @@ export default class FocusModulesTodo {
                 const ids = path[focus.id] || [];
 
                 const entryOptional = {
-                    label: this.getLabelOptional(focus),
+                    labelProps: {
+                        component: "OptionalFocusModulesLabel",
+                        focusName: focus.name,
+                        modules: focus.optionalModules,
+                        requiredNumber: focus.requiredNumberOfOptionalModules,
+                    },
                     checked:
                         ids.length == focus.requiredNumberOfOptionalModules,
                     progressLabel: `${ids.length} / ${focus.requiredNumberOfOptionalModules}`,

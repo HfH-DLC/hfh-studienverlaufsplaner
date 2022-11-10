@@ -6,16 +6,15 @@ export default class RequiredModulesTodo {
         const entries = [];
         requiredCategories.forEach((category) => {
             entries.push({
-                label: this.getLabel(category),
+                labelProps: {
+                    component: "RequiredModulesLabel",
+                    category,
+                },
                 checked: this.validate(category),
                 progressLabel: this.getProgressLabel(category),
             });
         });
         return entries;
-    }
-
-    getLabel(category) {
-        return `Belegen Sie alle Module des Bereiches <button data-action='focus-category' data-category='${category.id}'>"${category.name}"</button>`;
     }
 
     validate(category) {
