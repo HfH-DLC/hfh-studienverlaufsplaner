@@ -176,9 +176,15 @@ export default {
         [SET_VALID](state, value) {
             state.valid = value;
         },
-        [SET_LOCATIONS](state, value) {
-            value = value.map((location) => {
-                return { ...location, checked: location.default };
+        [SET_LOCATIONS](state, { locations, planLocations }) {
+            const value = locations.map((location) => {
+                let checked = location.default;
+                if (planLocations.length > 0) {
+                    checked = planLocations.find(
+                        (planLocation) => location.id == planLocation.id
+                    );
+                }
+                return { ...location, checked };
             });
             state.locations = value;
         },
@@ -211,7 +217,7 @@ export default {
             commit(SET_CATEGORIES, categories);
             commit(SET_FOCI, foci);
             commit(SET_FOCUS_SELECTIONS, plan.focusSelections);
-            commit(SET_LOCATIONS, locations);
+            commit(SET_LOCATIONS, { locations, planLocations: plan.locations });
             commit(SET_PLACEMENTS, plan.placements);
             commit(SET_TODOS, todos);
             commit(SET_RULES, rules);
@@ -236,7 +242,10 @@ export default {
                     state.placements,
                     focusSelections,
                     state.tourCompleted,
-                    state.valid
+                    state.valid,
+                    state.locations
+                        .filter((location) => location.checked)
+                        .map((location) => location.id)
                 );
                 commit(SET_SAVE_STATUS, SAVE_STATUS_SAVED);
                 return true;
@@ -353,6 +362,10 @@ export default {
                 SET_TOUR_SELECTED_MODULE,
                 value ? TOUR_SELECTED_MODULE : null
             );
+        },
+        setLocationChecked({ commit, dispatch }, value) {
+            commit(SET_LOCATION_CHECKED, value);
+            dispatch("save");
         },
     },
     getters: {

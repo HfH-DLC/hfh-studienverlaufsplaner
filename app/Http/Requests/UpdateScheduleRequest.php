@@ -37,7 +37,9 @@ class UpdateScheduleRequest extends FormRequest
             'focusSelections.*.focusId' => 'required|string|exists:foci,id',
             'focusSelections.*.position' => 'required|integer|min:0',
             'tourCompleted' => 'boolean',
-            'valid' => 'required|boolean'
+            'valid' => 'required|boolean',
+            'locations' => 'array',
+            'locations.*' => 'required|exists:locations,id',
         ];
     }
 }

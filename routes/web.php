@@ -253,7 +253,6 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
                     $plan->placements()->save($placement);
                 });
             }
-
             if (Arr::exists($validated, 'focusSelections')) {
                 $focusSelectionsData = $validated['focusSelections'];
                 $plan->focusSelections()->whereNot(function ($q1) use ($focusSelectionsData) {
@@ -274,6 +273,9 @@ Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
                     }
                     $focusSelection->save();
                 }
+            }
+            if (Arr::exists($validated, 'locations')) {
+                $plan->locations()->sync($validated['locations']);
             }
             $plan->schedule_tour_completed = $validated['tourCompleted'];
             $plan->schedule_valid = $validated['valid'];

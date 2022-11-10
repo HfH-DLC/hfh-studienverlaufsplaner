@@ -22,17 +22,17 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters, mapState } from "vuex";
+import { mapMutations, mapGetters, mapState, mapActions } from "vuex";
 export default {
   computed: {
     ...mapState("schedule", ["readOnly"]),
     ...mapGetters("schedule", ["selectableLocations", "checkedLocations"]),
   },
   methods: {
-    ...mapMutations("schedule", ["SET_LOCATION_CHECKED"]),
+    ...mapActions("schedule", ["setLocationChecked"]),
     onChange(event, index) {
       const checked = event.currentTarget.checked;
-      this.SET_LOCATION_CHECKED({
+      this.setLocationChecked({
         index,
         checked,
       });

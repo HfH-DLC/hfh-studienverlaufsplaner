@@ -6,10 +6,16 @@ export default class DataAdapter {
         this.planSlug = planSlug;
     }
 
-    async saveSchedule(placements, focusSelections, tourCompleted, valid) {
+    async saveSchedule(
+        placements,
+        focusSelections,
+        tourCompleted,
+        valid,
+        locations
+    ) {
         const response = await axios.put(
             `/${this.planerSlug}/${this.planSlug}/zeitplan`,
-            { placements, focusSelections, tourCompleted, valid }
+            { placements, focusSelections, tourCompleted, valid, locations }
         );
         return response.data.data;
     }
