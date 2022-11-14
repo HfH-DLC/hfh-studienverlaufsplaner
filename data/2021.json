@@ -745,12 +745,28 @@
             "locations": ["ZH"]
         },
         {
+            "module": "P1_01",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "times": ["g"],
+            "locations": ["GR"]
+        },
+        {
             "module": "P1_02",
             "planers": ["shp"],
             "semesters": ["HS", "FS"],
             "timeWindow": 1,
             "times": ["a", "e"],
             "locations": ["ZH"]
+        },
+        {
+            "module": "P1_02",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "times": ["g"],
+            "locations": ["GR"]
         },
         {
             "module": "P1_03",
@@ -769,12 +785,28 @@
             "locations": ["ZH"]
         },
         {
+            "module": "P3_01",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "times": ["e"],
+            "locations": ["GR"]
+        },
+        {
             "module": "P4_01",
             "planers": ["shp"],
             "semesters": ["HS", "FS"],
             "timeWindow": 1,
             "times": ["c", "g"],
             "locations": ["ZH"]
+        },
+        {
+            "module": "P4_01",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "times": ["e"],
+            "locations": ["GR"]
         },
         {
             "module": "P4_02",
@@ -833,6 +865,14 @@
             "locations": ["ZH"]
         },
         {
+            "module": "WP2_01.1",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "times": ["f"],
+            "locations": ["GR"]
+        },
+        {
             "module": "WP2_01.2",
             "planers": ["shp"],
             "semesters": ["HS"],
@@ -863,6 +903,14 @@
             "timeWindow": 1,
             "times": ["d", "h"],
             "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_02.1",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "times": ["f"],
+            "locations": ["GR"]
         },
         {
             "module": "WP2_02.2",
@@ -1120,6 +1168,14 @@
             "timeWindow": 2,
             "times": ["b", "f"],
             "locations": ["ZH"]
+        },
+        {
+            "module": "BP5_01.1.SHP",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 2,
+            "times": ["e"],
+            "locations": ["GR"]
         },
         {
             "module": "BP5_01.2.SHP",
