@@ -427,18 +427,19 @@ export default {
             (id) => {
                 return modules.find((module) => module.id == id);
             },
-        modulesByDate:
-            (state, { modules }) =>
+        modulesByDateAndLocation:
+            (state, { modules, checkedLocations }) =>
             (year, semester, timeWindow, day, time) => {
                 return modules.filter((module) =>
-                    module.events.some((event) =>
-                        isSameDate(event, {
-                            year,
-                            semester,
-                            timeWindow,
-                            day,
-                            time,
-                        })
+                    module.events.some(
+                        (event) =>
+                            isSameDate(event, {
+                                year,
+                                semester,
+                                timeWindow,
+                                day,
+                                time,
+                            }) && checkedLocations.includes(event.location)
                     )
                 );
             },

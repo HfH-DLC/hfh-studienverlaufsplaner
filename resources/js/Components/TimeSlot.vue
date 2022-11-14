@@ -80,7 +80,10 @@
         </button>
       </template>
     </div>
-    <div v-else class="flex justify-center items-center h-full">
+    <div
+      v-else-if="availableModules.length > 0"
+      class="flex justify-center items-center h-full"
+    >
       <button
         class="p-2 grid place-items-center gap-1 hover:text-thunderbird-red"
         @click="openDialog"

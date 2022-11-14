@@ -103,7 +103,7 @@
                     )
                   "
                   :availableModules="
-                    modulesByDate(
+                    modulesByDateAndLocation(
                       year.value,
                       semester.value,
                       timeWindow,
@@ -170,7 +170,7 @@ export default {
       "placements",
       "placementByDate",
       "selectedModule",
-      "modulesByDate",
+      "modulesByDateAndLocation",
     ]),
     showLocations() {
       if (this.locations.filter((location) => location.checked).length > 1) {
