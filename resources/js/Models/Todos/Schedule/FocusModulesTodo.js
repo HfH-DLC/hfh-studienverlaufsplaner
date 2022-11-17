@@ -77,8 +77,8 @@ export default class FocusModulesTodo {
                 const ids = path[focus.id] || [];
 
                 const entryOptional = {
+                    component: "OptionalFocusModulesLabel",
                     labelProps: {
-                        component: "OptionalFocusModulesLabel",
                         focusName: focus.name,
                         modules: focus.optionalModules,
                         requiredNumber: focus.requiredNumberOfOptionalModules,
