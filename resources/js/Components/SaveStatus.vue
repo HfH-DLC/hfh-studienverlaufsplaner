@@ -1,7 +1,7 @@
 <template>
   <div class="flex gap-1 items-center" :class="messageClass">
     <CheckCircleIcon
-      class="inline-block w-5 h-5 flex-shrink-0 text-green-700"
+      class="inline-block w-5 h-5 shrink-0 text-green-700"
       v-if="saved"
     />
     <div

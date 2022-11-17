@@ -12,9 +12,12 @@ export default class DateRule extends BaseScheduleRule {
                     isSameDate(placement, event)
                 )
             ) {
-                errors[placement.id].push(
-                    `<button data-action="focus-module" data-module="${placement.module.id}">${placement.module.id} ${placement.module.name}</button> ist am Datum ${placement.semester} ${placement.year}, ${placement.timeWindow}, ${placement.day} ${placement.time} nicht verfügbar.`
-                );
+                errors[placement.id].push({
+                    component: "DateRulePlacementLabel",
+                    labelProps: {
+                        placement,
+                    },
+                });
             }
         });
     }
@@ -26,7 +29,9 @@ export default class DateRule extends BaseScheduleRule {
                 placements.find((placement) => isSameDate(placement, event))
             )
         ) {
-            errors.push("Alle Termine für dieses Modul sind bereits besetzt.");
+            errors.push({
+                label: "Alle Termine für dieses Modul sind bereits besetzt.",
+            });
         }
     }
 }

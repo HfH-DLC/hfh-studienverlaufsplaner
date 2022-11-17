@@ -11,7 +11,7 @@
       >
         {{ module.id }}
       </button>
-      <span v-if="index < modules.length - 1">, </span> </template
+      <span v-if="index < modules.length - 1">, </span></template
     >.
   </div>
 </template>
@@ -19,7 +19,6 @@
 <script>
 import { numToWord } from "num-words-de";
 export default {
-  emits: ["focus-module"],
   props: {
     focusName: {
       type: String,

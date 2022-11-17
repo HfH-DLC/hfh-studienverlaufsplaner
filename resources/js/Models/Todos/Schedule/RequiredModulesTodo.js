@@ -6,8 +6,8 @@ export default class RequiredModulesTodo {
         const entries = [];
         requiredCategories.forEach((category) => {
             entries.push({
+                component: "RequiredModulesLabel",
                 labelProps: {
-                    component: "RequiredModulesLabel",
                     category,
                 },
                 checked: this.validate(category),

@@ -2,18 +2,18 @@
   <div class="checklist-entry">
     <div class="flex gap-x-1 items-top">
       <CheckCircleIcon
-        class="w-5 h-5 flex-shrink-0 mt-0.5 text-green-700"
+        class="w-5 h-5 shrink-0 mt-0.5 text-green-700"
         v-if="entry.checked"
       />
-      <CircleIcon class="inline-block w-5 h-5 flex-shrink-0 mt-0.5" v-else />
+      <CircleIcon class="inline-block w-5 h-5 shrink-0 mt-0.5" v-else />
       <div :class="{ 'text-green-700': entry.checked }">
         <component
-          v-if="entry.labelProps"
-          :is="entry.labelProps.component"
+          v-if="entry.component && entry.labelProps"
+          :is="entry.component"
           ref="label"
           v-bind="entry.labelProps"
         />
-        <div v-if="entry.label" v-html="entry.label"></div>
+        <div v-else-if="entry.label" v-html="entry.label"></div>
         <div v-if="entry.progressLabel">
           (Aktuell: {{ entry.progressLabel }})
         </div>

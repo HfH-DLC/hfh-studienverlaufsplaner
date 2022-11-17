@@ -12,11 +12,11 @@
   >
     <XCircleIcon
       v-if="module.misplaced"
-      class="inline-block w-5 h-5 flex-shrink-0 text-red-600"
+      class="inline-block w-5 h-5 shrink-0 text-red-600"
     />
     <CheckCircleIcon
       v-if="module.placement && !module.misplaced"
-      class="inline-block w-5 h-5 flex-shrink-0 text-green-700"
+      class="inline-block w-5 h-5 shrink-0 text-green-700"
     />
     {{ module.id }} {{ module.name }}
   </button>

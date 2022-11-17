@@ -180,7 +180,7 @@ export default {
             const value = locations.map((location) => {
                 let checked = location.default;
                 if (planLocations.length > 0) {
-                    checked = planLocations.find(
+                    checked = planLocations.some(
                         (planLocation) => location.id == planLocation.id
                     );
                 }

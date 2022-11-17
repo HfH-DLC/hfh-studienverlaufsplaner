@@ -24,7 +24,7 @@
         <div class="flex items-start">
           <XCircleIcon
             v-if="invalidPlacement"
-            class="text-red-600 mr-2 w-5 h-5"
+            class="text-red-600 mr-2 w-5 h-5 shrink-0"
           />
           <div class="overflow-hidden">
             <div class="truncate">

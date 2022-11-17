@@ -31,12 +31,13 @@ export default class PrerequisitesRule extends BaseScheduleRule {
             });
 
             if (missingPrerequisites.length > 0) {
-                errors[placement.id].push(
-                    this.getPlacementErrorMessage(
-                        placement.module,
-                        missingPrerequisites
-                    )
-                );
+                errors[placement.id].push({
+                    component: "PrerequisitesRuleLabel",
+                    labelProps: {
+                        missingPrerequisites,
+                        module: placement.module,
+                    },
+                });
             }
         });
     }
@@ -50,9 +51,13 @@ export default class PrerequisitesRule extends BaseScheduleRule {
             this.eventMeetsPrerequisites(event, placements, prerequisites)
         );
         if (!prerequisitesMet) {
-            errors.push(
-                this.getModuleErrorMessage(module, module.prerequisites)
-            );
+            errors.push({
+                component: "PrerequisitesRuleLabel",
+                labelProps: {
+                    missingPrerequisites: module.prerequisites,
+                    module,
+                },
+            });
         }
     }
 
@@ -85,40 +90,5 @@ export default class PrerequisitesRule extends BaseScheduleRule {
                     return isPreviousSemester(placement, event);
                 });
         });
-    }
-
-    getModuleErrorMessage(module, missingPrerequisites) {
-        if (missingPrerequisites.length === 1) {
-            const prerequisite = missingPrerequisites[0];
-            return `<button data-action="focus-module" data-module="${prerequisite.id}">${prerequisite.id} ${prerequisite.name}</button> muss vor diesem Modul belegt werden.`;
-        }
-        return `Die Module ${missingPrerequisites
-            .map(
-                (prerequisite) =>
-                    `<a href="#module-${prerequisite.id}">${prerequisite.id} ${prerequisite.name}</a>`
-            )
-            .join(", ")} müssen vor diesem Modul belegt werden.`;
-    }
-
-    getPlacementErrorMessage(module, missingPrerequisites) {
-        if (missingPrerequisites.length === 1) {
-            const prerequisite = missingPrerequisites[0];
-            return `<button data-action="focus-module" data-module="${prerequisite.id}">${prerequisite.id} ${prerequisite.name}</button> muss vor <button data-action="focus-module" data-module="${module.id}">${module.id} ${module.name}</button> belegt werden.`;
-        }
-        return `Die Module ${missingPrerequisites
-            .map(
-                (prerequisite) =>
-                    `<button
-                    data-action="focus-module"
-                    data-module="${prerequisite.id}"
-                >
-                    ${prerequisite.id} ${prerequisite.name}
-                </button>`
-            )
-            .join(
-                ", "
-            )} müssen vor <button data-action="focus-module" data-module="${
-            module.id
-        }">${module.id} ${module.name}</button> belegt werden.`;
     }
 }

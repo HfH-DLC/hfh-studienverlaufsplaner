@@ -3,8 +3,8 @@ export default class ECTSPerCategoryTodo {
         const entries = categories
             .filter((category) => category.minECTS || category.maxECTS)
             .map((category) => ({
+                component: "ECTSPerCategoryLabel",
                 labelProps: {
-                    component: "ECTSPerCategoryLabel",
                     category,
                 },
                 progressLabel: `${category.currentECTS}`,

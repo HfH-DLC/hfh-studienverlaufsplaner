@@ -14,8 +14,8 @@ export default class FocusModulesTodo {
             const focus = cur.focus;
             if (focus.requiredModules.length > 0) {
                 const entryRequired = {
+                    component: "RequiredFocusModulesLabel",
                     labelProps: {
-                        component: "RequiredFocusModulesLabel",
                         focusName: focus.name,
                         modules: focus.requiredModules,
                     },

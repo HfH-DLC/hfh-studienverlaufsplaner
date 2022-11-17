@@ -46,7 +46,10 @@
                 :selectedModule="selectedOrTourModule"
               />
               <div v-show="!selectedOrTourModule">
-                <LocationSelect v-if="locations.length > 1" class="mb-4" />
+                <LocationSelect
+                  v-if="selectableLocations.length > 1"
+                  class="mb-4"
+                />
                 <ModuleList
                   :hashModuleId="hashModuleId"
                   :hashCategoryId="hashCategoryId"
@@ -222,13 +225,13 @@ export default {
       "tourActive",
       "tourSelectedModule",
       "todoEntries",
-      "locations",
     ]),
     ...mapGetters("schedule", [
       "ects",
       "placementErrors",
       "infos",
       "selectedModule",
+      "selectableLocations",
     ]),
     errors() {
       return this.placementErrors.map((error) => error.text);

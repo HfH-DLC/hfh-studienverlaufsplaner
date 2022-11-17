@@ -12,7 +12,7 @@
       items-top
     "
   >
-    <InformationCircleIcon class="inline-block w-5 h-5 flex-shrink-0 mt-1.5" />
+    <InformationCircleIcon class="inline-block w-5 h-5 shrink-0 mt-1.5" />
     <span class="ml-1"><slot></slot></span>
   </div>
 </template>

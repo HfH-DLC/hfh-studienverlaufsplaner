@@ -27,9 +27,13 @@ export default class ExcludeSemesterRule extends BaseScheduleRule {
                         },
                         ""
                     );
-                    errors[placement.id].push(
-                        `<button data-action="focus-module" data-module="${placement.module.id}">${placement.module.id} ${placement.module.name}</button> kann nicht im ${text} Semester belegt werden.`
-                    );
+                    errors[placement.id].push({
+                        component: "ExcludeSemesterPlacementRuleLabel",
+                        labelProps: {
+                            excludePositions: this.excludePositions,
+                            placement,
+                        },
+                    });
                 }
             });
     }
@@ -46,9 +50,9 @@ export default class ExcludeSemesterRule extends BaseScheduleRule {
                     placements.find((placement) => isSameDate(placement, event))
             )
         ) {
-            errors.push(
-                "Alle Termine in den erlaubten Semestern für dieses Modul sind bereits besetzt."
-            );
+            errors.push({
+                label: "Alle Termine in den erlaubten Semestern für dieses Modul sind bereits besetzt.",
+            });
         }
     }
 

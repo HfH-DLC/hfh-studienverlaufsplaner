@@ -2,13 +2,16 @@
   <div>
     Belegen Sie im Bereich
     <button @click="focusCategory">"{{ category.name }}"</button>
-    <template v-if="hasMin && !hasMax"> mindestens </template>
-    <template v-if="minEqualsMax"> genau </template>
-    <template v-if="isRange"> zwischen </template>
-    <template v-if="hasMin">{{ category.minECTS }}</template>
-    <template v-if="isRange"> und </template>
-    <template v-if="!hasMin && hasMax"> höchstens </template>
-    <template v-if="hasMax">{{ category.maxECTS }}</template>
+    <template v-if="hasMin && !hasMax">
+      mindestens {{ category.minECTS }}
+    </template>
+    <template v-if="minEqualsMax"> genau {{ category.minECTS }} </template>
+    <template v-if="isRange">
+      zwischen {{ category.minECTS }} und {{ category.maxECTS }}
+    </template>
+    <template v-if="!hasMin && hasMax">
+      höchstens {{ category.maxECTS }}
+    </template>
     Kreditpunkte.
   </div>
 </template>

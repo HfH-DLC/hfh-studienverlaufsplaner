@@ -18,7 +18,6 @@
 
 <script>
 export default {
-  emits: ["focus-module"],
   props: {
     focusName: {
       type: String,
