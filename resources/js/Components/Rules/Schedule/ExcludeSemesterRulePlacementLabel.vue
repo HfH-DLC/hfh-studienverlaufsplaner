@@ -1,5 +1,6 @@
 <template>
   <div>
+    Das Modul
     <button @click="focusModule">
       {{ placement.module.id }} {{ placement.module.name }}
     </button>

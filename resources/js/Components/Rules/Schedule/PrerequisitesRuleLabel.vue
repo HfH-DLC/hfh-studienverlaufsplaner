@@ -20,8 +20,8 @@
         <button @click="focusModule(prerequisite)">
           {{ prerequisite.id }} {{ prerequisite.name }}
         </button>
-        <span v-if="index < missingPrerequisites.length - 2">, </span>
-        <span v-if="index == missingPrerequisites.length - 1">und </span>
+        <span v-if="index < missingPrerequisites.length - 3">, </span>
+        <span v-if="index == missingPrerequisites.length - 2"> und </span>
       </template>
       müssen vor
       <button @click="focusModule(module)">
