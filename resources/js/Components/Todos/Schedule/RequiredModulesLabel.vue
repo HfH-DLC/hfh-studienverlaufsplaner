@@ -1,7 +1,7 @@
 <template>
   <div>
     Belegen Sie alle Module des Bereiches
-    <button @click="focusCategory()">"{{ category.name }}"</button>
+    <button @click="focusCategory()">"{{ category.name }}"</button>.
   </div>
 </template>
 
