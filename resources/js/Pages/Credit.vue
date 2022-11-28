@@ -23,6 +23,7 @@
               divide-y divide-gray-300
               border border-gray-300
               text-left
+              layout-fixed
             "
             id="modules"
           >
@@ -43,14 +44,14 @@
             </caption>
             <thead class="bg-gray-50">
               <tr class="divide-x divide-gray-300">
-                <th class="px-4 py-2 text-sm text-gray-600">Modul</th>
+                <th class="px-4 py-2 text-sm text-gray-600 w-2/3">Modul</th>
                 <th class="px-4 py-2 text-sm text-gray-600">Anrechnung</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-300">
               <template v-for="module in modules" :key="module.id">
                 <tr class="divide-x divide-gray-300">
-                  <td class="p-4 w-full">
+                  <td class="p-4">
                     <label :for="`credit-${module.id}`"
                       >{{ module.id }} {{ module.name }}</label
                     >
@@ -74,6 +75,9 @@
                       "
                       defaultOption="Nicht anrechnen"
                       :disabled="readOnly"
+                      :class="{
+                        'hfh-selected-focus-option': !!module.creditedAgainst,
+                      }"
                     />
                   </td>
                 </tr>
@@ -221,11 +225,11 @@ export default {
 </style>
 
 <style scoped>
-:deep() .hfh-select {
-  width: fit-content;
-}
-
 table {
   page-break-inside: avoid !important;
+}
+
+:deep() .hfh-selected-focus-option select {
+  font-weight: 700;
 }
 </style>
