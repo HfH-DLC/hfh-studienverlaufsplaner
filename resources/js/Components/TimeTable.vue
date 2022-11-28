@@ -102,8 +102,8 @@
                       time
                     )
                   "
-                  :availableModules="
-                    modulesByDateAndLocation(
+                  :availableModulesGroupedByLocations="
+                    modulesByDateGroupedByLocations(
                       year.value,
                       semester.value,
                       timeWindow,
@@ -170,7 +170,7 @@ export default {
       "placements",
       "placementByDate",
       "selectedModule",
-      "modulesByDateAndLocation",
+      "modulesByDateGroupedByLocations",
     ]),
     showLocations() {
       if (this.locations.filter((location) => location.checked).length > 1) {

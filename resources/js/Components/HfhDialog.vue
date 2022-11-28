@@ -17,7 +17,7 @@
         -translate-x-1/2 -translate-y-1/2
       "
     >
-      <DialogTitle class="text-lg font-bold mr-20">{{ title }}</DialogTitle>
+      <DialogTitle class="mr-12">{{ title }}</DialogTitle>
       <button @click="onClose" class="absolute top-2 right-2 p-2">
         <XIcon class="block w-6 h-6" aria-hidden="true" />
         <span class="sr-only">Schliessen</span>

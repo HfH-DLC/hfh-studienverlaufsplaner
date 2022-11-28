@@ -81,7 +81,7 @@
       </template>
     </div>
     <div
-      v-else-if="availableModules.length > 0"
+      v-else-if="Object.entries(availableModulesGroupedByLocations).length > 0"
       class="flex justify-center items-center h-full"
     >
       <button
@@ -100,11 +100,18 @@
         title="Verfügbare Module"
         @closed="onDialogClosed"
       >
-        <ul>
-          <li v-for="module in availableModules" :key="module.id">
-            {{ module.id }} {{ module.name }}
-          </li>
-        </ul>
+        <div
+          v-for="entry in Object.entries(availableModulesGroupedByLocations)"
+          :key="entry[0]"
+          class="mb-4"
+        >
+          <h3 class="mb-2">Standort {{ locationById(entry[0]).name }}</h3>
+          <ul>
+            <li v-for="module in entry[1]" :key="module.id">
+              {{ module.id }} {{ module.name }}
+            </li>
+          </ul>
+        </div>
       </HfhDialog>
     </div>
   </div>
@@ -116,7 +123,7 @@ import {
   XCircleIcon,
   InformationCircleIcon,
 } from "@heroicons/vue/outline";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import { isSameDate } from "../helpers.js";
 import HfhDialog from "./HfhDialog.vue";
 
@@ -142,9 +149,9 @@ export default {
       type: Boolean,
       required: true,
     },
-    availableModules: {
-      type: Array,
-      default: [],
+    availableModulesGroupedByLocations: {
+      type: Object,
+      required: true,
     },
   },
   data() {

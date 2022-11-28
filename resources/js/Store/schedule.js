@@ -427,21 +427,28 @@ export default {
             (id) => {
                 return modules.find((module) => module.id == id);
             },
-        modulesByDateAndLocation:
+        modulesByDateGroupedByLocations:
             (state, { modules, checkedLocations }) =>
             (year, semester, timeWindow, day, time) => {
-                return modules.filter((module) =>
-                    module.events.some(
-                        (event) =>
-                            isSameDate(event, {
-                                year,
-                                semester,
-                                timeWindow,
-                                day,
-                                time,
-                            }) && checkedLocations.includes(event.location)
-                    )
-                );
+                const result = {};
+                checkedLocations.forEach((location) => {
+                    const matchingModules = modules.filter((module) => {
+                        return module.events.some(
+                            (event) =>
+                                isSameDate(event, {
+                                    year,
+                                    semester,
+                                    timeWindow,
+                                    day,
+                                    time,
+                                }) && event.location == location
+                        );
+                    });
+                    if (matchingModules.length > 0) {
+                        result[location] = matchingModules;
+                    }
+                });
+                return result;
             },
         selectedModule(state, { moduleById }) {
             return moduleById(state.selectionStatus.moduleId);
