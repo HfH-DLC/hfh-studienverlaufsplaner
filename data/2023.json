@@ -1,6 +1,6 @@
 {
     "year": 2023,
-    "version": 4,
+    "version": 5,
     "modules": [
         {
             "id": "P1_01",
@@ -130,13 +130,13 @@
         },
         {
             "id": "WP2_06.1",
-            "name": "Heilpädagogik im Bereich körperlich-motorische Entwicklung. Motorische Beeinträchtigungen",
+            "name": "Heilpädagogik im Bereich körperlich-motorische Entwicklung",
             "ects": 5,
             "creditable": true
         },
         {
             "id": "WP2_06.2",
-            "name": "Heilpädagogik im Bereich körperlich-motorische Entwicklung. Chronische Erkrankungen",
+            "name": "Heilpädagogik im Bereich chronische Krankheiten",
             "ects": 5,
             "creditable": true
         },
