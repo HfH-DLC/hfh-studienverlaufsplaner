@@ -52,7 +52,7 @@ export default class FocusModulesTodo {
             : focus.optionalModules;
         if (modules.length == 1) {
             const module = modules[0];
-            return `Rechnen Sie das das Modul ${module.id} an den SSP "${focus.name}" an.`;
+            return `Rechnen Sie das das Modul "${module.id}" an den SSP "${focus.name}" an.`;
         }
         const moduleNames = modules.map((module) => `${module.id}`);
         if (isRequired) {

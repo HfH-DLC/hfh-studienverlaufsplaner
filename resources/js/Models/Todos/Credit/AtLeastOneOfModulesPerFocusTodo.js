@@ -7,7 +7,11 @@ export default class AtLeastOneOfModulesPerFocusTodo {
     getEntries({ focusSelections, modules }, getters) {
         return focusSelections.reduce((acc, cur) => {
             acc.push({
-                label: this.getLabel(cur.focus),
+                component: "AtLeastOneOfModulesPerFocusLabel",
+                labelProps: {
+                    moduleIds: this.moduleIds,
+                    focusName: cur.focus.name,
+                },
                 checked: this.validate(cur, modules),
                 progressLabel: this.getProgressLabel(cur, modules),
             });

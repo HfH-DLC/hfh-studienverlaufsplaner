@@ -34,6 +34,7 @@
               aria-live="polite"
             />
           </div>
+          <h2 class="hfh-sr-only">Schwerpunkt-Auswahl</h2>
           <FocusSelection
             v-if="focusSelectionEnabled"
             id="focus-selection"
@@ -46,10 +47,12 @@
                 :selectedModule="selectedOrTourModule"
               />
               <div v-show="!selectedOrTourModule">
+                <h2 class="hfh-sr-only">Standort-Auswahl</h2>
                 <LocationSelect
                   v-if="selectableLocations.length > 1"
                   class="mb-4"
                 />
+                <h2 class="hfh-sr-only">Modul-Liste</h2>
                 <ModuleList
                   :hashModuleId="hashModuleId"
                   :hashCategoryId="hashCategoryId"
@@ -60,6 +63,7 @@
               id="time-table"
               class="w-6/12 print:w-full lg:mx-0 xl:mx-8 pb-24 print:pb-4"
             >
+              <h2 class="hfh-sr-only">Semester-Stundenpläne</h2>
               <TimeTable ref="timeTable" />
             </StickyColumn>
             <StickyColumn
@@ -67,6 +71,7 @@
               class="w-3/12 print:w-full pb-24 print:pb-4"
               aria-live="polite"
             >
+              <h2 class="hfh-sr-only">Checkliste</h2>
               <p
                 v-if="
                   errors.length == 0 &&

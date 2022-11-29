@@ -67,6 +67,7 @@
           :class="event.valid ? 'slot--valid' : 'slot--invalid'"
           @click="onPlaceModule(event)"
         >
+          <span class="hfh-sr-only">Modul platzieren</span>
           <span class="flex items-center gap-x-2">
             <CheckCircleIcon
               v-if="event.valid"

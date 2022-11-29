@@ -11,7 +11,7 @@ class Plan extends Model
 {
     use HasFactory;
 
-    protected $casts = ['start_year' => 'integer', 'schedule_tour_completed' => 'boolean', 'credit_tour_completed' => 'boolean',  'read_only' => 'boolean'];
+    protected $casts = ['start_year' => 'integer', 'schedule_tour_completed' => 'boolean', 'credit_tour_completed' => 'boolean',  'read_only' => 'boolean', 'schedule_valid' => 'boolean'];
 
     public function planer()
     {

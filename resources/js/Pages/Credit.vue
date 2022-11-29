@@ -16,6 +16,7 @@
       <ErrorList class="mt-4 space-y-2" :errors="errors" aria-live="polite" />
       <div class="flex mt-4 gap-x-8 print:block">
         <template v-if="planResource.data.scheduleValid">
+          <h2 class="hfh-sr-only">Anrechnung an die Studienschwerpunkte</h2>
           <table
             class="
               w-9/12
@@ -65,7 +66,9 @@
                       :id="`credit-${module.id}`"
                       :options="focusOptions"
                       :modelValue="
-                        module.creditedAgainst ? module.creditedAgainst : ''
+                        module.creditedAgainst
+                          ? `${module.creditedAgainst}`
+                          : ''
                       "
                       @update:modelValue="
                         creditModuleAgainstFocusSelection({
@@ -85,6 +88,7 @@
             </tbody>
           </table>
           <div class="w-3/12 print:w-full print:mt-8" aria-live="polite">
+            <h2 class="hfh-sr-only">Checkliste</h2>
             <p
               class="mb-8"
               v-if="
