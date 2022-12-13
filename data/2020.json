@@ -1,6 +1,6 @@
 {
     "year": 2020,
-    "version": 2,
+    "version": 3,
     "modules": [
         {
             "id": "P1_01",
@@ -1143,6 +1143,14 @@
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["d", "h"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "W3_07",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "times": ["d"],
             "locations": ["ZH"]
         },
         {
