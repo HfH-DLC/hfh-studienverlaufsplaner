@@ -139,13 +139,11 @@ class JSONImport
 
     private function importCategories($planerData, $planer)
     {
+        $planer->categories()->delete();
         foreach ($planerData->categories as $index => $categoryData) {
-            $categoryName = $categoryData->name;
-            $category = $planer->categories->where('name', $categoryName)->first();
-            if (!$category) {
-                $category = new Category();
-                $category->name = $categoryName;
-            }
+
+            $category = new Category();
+            $category->name = $categoryData->name;
             $category->position = $index;
             if (isset($categoryData->required)) {
                 $category->required = $categoryData->required;
@@ -158,7 +156,7 @@ class JSONImport
             }
             $category->required = isset($category->required) && $category->required == true;
             $planer->categories()->save($category);
-            $category->modules()->syncWithoutDetaching($categoryData->modules);
+            $category->modules()->sync($categoryData->modules);
             $category->save();
         }
     }
