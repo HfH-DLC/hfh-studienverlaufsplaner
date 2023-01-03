@@ -1,6 +1,6 @@
 {
     "year": 2023,
-    "version": 7,
+    "version": 8,
     "modules": [
         {
             "id": "P1_01",
@@ -207,8 +207,8 @@
             "creditable": true
         },
         {
-            "id": "WP3_03",
-            "name": "Sprache bei besonderem Bildungsbedarf",
+            "id": "WP3_07",
+            "name": "Unterstützte Kommunikation",
             "ects": 5,
             "creditable": true
         },
@@ -392,7 +392,7 @@
             "categories": [
                 {
                     "name": "Pflichtbereich",
-                    "modules": ["P1_01", "P1_03", "P3_01", "P4_01"],
+                    "modules": ["P1_01", "P1_02", "P3_01", "P4_01"],
                     "required": true
                 },
                 {
@@ -426,6 +426,7 @@
                         "WP3_04",
                         "WP3_05",
                         "WP3_06",
+                        "WP3_07",
                         "WP4_03",
                         "WP4_04.1",
                         "WP4_04.2",
@@ -621,7 +622,7 @@
                     "required": true
                 },
                 {
-                    "name": "Wahlpflichtbereich",
+                    "name": "Wahlpflichtbereich 1",
                     "modules": [
                         "WP2_04.1",
                         "WP2_04.2",
@@ -632,8 +633,14 @@
                         "WP2_07",
                         "WP2_11"
                     ],
-                    "minECTS": 15,
+                    "minECTS": 10,
                     "maxECTS": 15
+                },
+                {
+                    "name": "Wahlpflichtbereich 2",
+                    "modules": ["WP3_07"],
+                    "minECTS": 0,
+                    "maxECTS": 5
                 },
                 {
                     "name": "Berufspraxis und Portfolio",
@@ -1118,12 +1125,20 @@
             "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
-            "times": ["d"],
+            "times": ["e"],
             "locations": ["ZH"]
         },
         {
             "module": "WP3_06",
             "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "times": ["a"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP3_07",
+            "planers": ["hfe", "shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
             "times": ["a"],

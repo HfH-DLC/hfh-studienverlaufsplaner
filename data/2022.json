@@ -1,6 +1,6 @@
 {
     "year": 2022,
-    "version": 5,
+    "version": 6,
     "modules": [
         {
             "id": "P1_01",
@@ -203,12 +203,6 @@
         {
             "id": "WP3_06",
             "name": "Künste in der Schulischen Heilpädagogik",
-            "ects": 5,
-            "creditable": true
-        },
-        {
-            "id": "WP3_03",
-            "name": "Sprache bei besonderem Bildungsbedarf",
             "ects": 5,
             "creditable": true
         },
@@ -1085,7 +1079,7 @@
             "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
-            "times": ["d"],
+            "times": ["e"],
             "locations": ["ZH"]
         },
         {
