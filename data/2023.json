@@ -893,7 +893,7 @@
             "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
-            "times": ["b", "f"],
+            "times": ["b", "d"],
             "locations": ["ZH"]
         },
         {
