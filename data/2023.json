@@ -1,6 +1,6 @@
 {
     "year": 2023,
-    "version": 10,
+    "version": 11,
     "modules": [
         {
             "id": "P1_01",
@@ -1069,7 +1069,7 @@
             "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
-            "times": ["c", "h"],
+            "times": ["d", "h"],
             "locations": ["ZH"]
         },
         {
