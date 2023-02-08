@@ -176,7 +176,7 @@ class JSONImport
             } else {
                 $focus->name = $focusData->name;
             }
-            $modules = array();
+            $modules = [];
             foreach ($focusData->requiredModules as $module) {
                 $modules[$module] = ['required' => true];
             }
@@ -229,7 +229,7 @@ class JSONImport
 
     private function importEvents($data)
     {
-        $eventIds = array();
+        $eventIds = [];
         foreach ($data->events as $eventData) {
             $planers = $eventData->planers;
 

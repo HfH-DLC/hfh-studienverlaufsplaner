@@ -11,8 +11,8 @@ class HomeController extends Controller
 {
     public function show()
     {
-        return Inertia::render('Home', array(
+        return Inertia::render('Home', [
             'planersResource' => PlanerResource::collection(Planer::all())
-        ));
+        ]);
     }
 }

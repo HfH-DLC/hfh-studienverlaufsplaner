@@ -81,7 +81,7 @@ class Plan extends Model
 
     private function getFilter()
     {
-        $years = array();
+        $years = [];
         $numberOfYears = 4;
         for ($i = 0; $i < $numberOfYears; $i++) {
             $years[] = $this->start_year + $i;

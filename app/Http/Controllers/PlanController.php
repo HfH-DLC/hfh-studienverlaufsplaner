@@ -28,7 +28,7 @@ class PlanController extends Controller
 {
     public function show(Planer $planer, Plan $plan)
     {
-        return Redirect::route('plan-schedule', array('planer' => $planer, 'plan' => $plan->slug));
+        return Redirect::route('plan-schedule', ['planer' => $planer, 'plan' => $plan->slug]);
     }
 
     public function showSchedule(Planer $planer, Plan $plan)
@@ -41,7 +41,7 @@ class PlanController extends Controller
         $locationsResource = LocationResource::collection(Location::all());
         $tour = $tour = isset($planer->tour["schedule"]) ? $planer->tour["schedule"] : null;
 
-        $props = array(
+        $props = [
             'planerName' => $planer->name,
             'planerSlug' => $planer->slug,
             'planResource' => $planResource,
@@ -53,7 +53,7 @@ class PlanController extends Controller
             'locationsResource' => $locationsResource,
             'requiredECTS' => $planer->required_ects,
             'tourData' => $tour,
-        );
+        ];
 
         if (isset($planer->meta)) {
             if (isset($planer->meta['brochureUrl'])) {
@@ -81,7 +81,7 @@ class PlanController extends Controller
         $tour = isset($planer->tour["credit"]) ? $planer->tour["credit"] : null;
 
 
-        $props = array(
+        $props = [
             'planerName' => $planer->name,
             'planerSlug' => $planer->slug,
             'planResource' => $planResource,
@@ -89,7 +89,7 @@ class PlanController extends Controller
             'rulesResource' => RuleResource::collection($planer->rules()->where('type', 'credit')->get()),
             'todosResource' => TodoResource::collection($planer->todos()->where('type', 'credit')->get()),
             'tourData' => $tour,
-        );
+        ];
 
         if (isset($planer->meta)) {
             if (isset($planer->meta['brochureUrl'])) {
@@ -120,7 +120,7 @@ class PlanController extends Controller
 
         Mail::to($validated['email'])
             ->queue(new PlanCreated($plan));
-        return Redirect::route('plan', array('planer' => $planer, 'plan' => $plan->slug));
+        return Redirect::route('plan', ['planer' => $planer, 'plan' => $plan->slug]);
     }
 
     public function updateSchedule(UpdateScheduleRequest $request, Planer $planer, Plan $plan)
