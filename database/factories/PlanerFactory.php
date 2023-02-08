@@ -20,9 +20,15 @@ class PlanerFactory extends Factory
         $days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
 
         return [
-            'name' => $this->faker->name(),
-            'required_ects' => $this->faker->numberBetween(0, 500),
-            'options_day' => array_slice($days, random_int(0, count($days)), random_int(1, count($days)))
+            'name' => 'Master Fake',
+            'slug' => 'fake',
+            'required_ects' => 100,
+            'focus_selection_enabled' => false,
+            'tour' => '{}',
+            'meta' => [
+                'brochureUrl' => 'example.com/brochure',
+                'moduleDirectoryUrl' => 'example.com/moduleDirectory'
+            ]
         ];
     }
 

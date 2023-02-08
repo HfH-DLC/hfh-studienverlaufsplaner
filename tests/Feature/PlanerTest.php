@@ -2,14 +2,13 @@
 
 namespace Tests\Feature;
 
-use App\Models\Placement;
+use App\Models\Import;
 use App\Models\Plan;
 use App\Models\Planer;
-use Database\Seeders\PlanerSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Inertia\Testing\Assert;
 use Tests\TestCase;
+use Inertia\Testing\AssertableInertia as Assert;
 
 class PlanerTest extends TestCase
 {
@@ -21,8 +20,9 @@ class PlanerTest extends TestCase
      */
     public function show_planer_page()
     {
+        $import = Import::factory()->create();
         $planer = Planer::factory()->create();
-        $url = "/planers/$planer->slug";
+        $url = "/$planer->slug";
         $response = $this->get($url);
         $response->assertSuccessful();
         $response->assertInertia(fn (Assert $page) => $page
@@ -33,137 +33,89 @@ class PlanerTest extends TestCase
     /**
      * @test
      */
-    public function show_plan_page()
+    public function can_show_schedule_page()
     {
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create();
-        $url = "/planers/$planer->slug/plans/$plan->slug";
+        $url = "/$planer->slug/$plan->slug/zeitplan";
         $response = $this->get($url);
         $response->assertSuccessful();
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Plan')
-            ->where('planerName', $planer->name)
-            ->where('planerSlug', $planer->slug)
-            ->has('plan')
-            ->has('categories')
-            ->has('events')
-            ->has('modules')
-            ->has('rules')
-            ->has('requiredCredits')
-            ->has('optionsTimeWindow')
-            ->has('optionsDay')
-            ->has('optionsTime'));
+        $response->assertInertia(
+            fn (Assert $page) => $page
+                ->component('Schedule')
+                ->where('planerName', $planer->name)
+                ->where('planerSlug', $planer->slug)
+                ->has('planResource')
+                ->has('categoriesResource')
+                ->has('focusSelectionEnabled')
+                ->has('fociResource')
+                ->has('rulesResource')
+                ->has('todosResource')
+                ->has('locationsResource')
+                ->has('requiredECTS')
+                ->has('tourData')
+                ->has('brochureUrl')
+                ->has('moduleDirectoryUrl')
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function can_show_credit_page()
+    {
+        $planer = Planer::factory()->create();
+        $plan = Plan::factory()->for($planer)->create();
+        $url = "/$planer->slug/$plan->slug/anrechnung";
+        $response = $this->get($url);
+        $response->assertSuccessful();
+        $response->assertInertia(
+            fn (Assert $page) => $page
+                ->component('Credit')
+                ->where('planerName', $planer->name)
+                ->where('planerSlug', $planer->slug)
+                ->has('planResource')
+                ->has('creditableModulesResource')
+                ->has('rulesResource')
+                ->has('todosResource')
+                ->has('tourData')
+                ->has('brochureUrl')
+                ->has('moduleDirectoryUrl')
+        );
     }
 
     /** @test */
     public function store_plan()
     {
         $planer = Planer::factory()->create();
-        $url = "/planers/$planer->slug/plans";
-        $params = array('startYear' => 2022);
+        $url = "/$planer->slug/plans";
+        $params = array('startYear' => 2022, 'email' => 'jane.doe@example.com');
         $response = $this->post($url, $params);
         $response->assertSessionHasNoErrors();
         $this->assertDatabaseCount('plans', 1);
         $plan = $planer->plans()->first();
-        $response->assertRedirect("/planers/$planer->slug/plans/$plan->slug");
+        $response->assertRedirect("/$planer->slug/$plan->slug");
     }
 
     /** @test */
     public function cannot_store_plan_without_start_year()
     {
         $planer = Planer::factory()->create();
-        $url = "/planers/$planer->slug/plans";
-        $params = array();
+        $url = "/$planer->slug/plans";
+        $params = array('email' => 'jane.doe@example.com');
         $response = $this->post($url, $params);
         $response->assertSessionHasErrors("startYear");
         $this->assertDatabaseCount('plans', 0);
     }
 
     /** @test */
-    public function update_plan()
+    public function cannot_store_plan_without_email()
     {
-        $this->seed(PlanerSeeder::class);
-        $planer = Planer::first();
-
-        $plan = Plan::factory()->for($planer)->create();
-        $url = "/planers/$planer->slug/plans/$plan->slug";
-        $placements = [];
-        foreach ($this->validPlacements() as $placement) {
-            $placements[] = [
-                'moduleId' => $placement[0],
-                'eventId' => $placement[1]
-            ];
-        }
-        $data = array('placements' => $placements);
-
-        $response = $this->json('put', $url, $data);
-        $response->assertSuccessful();
-        $response->assertJsonStructure(['data' => [
-            'slug',
-            'placements'
-        ]]);
-        $response->assertJsonFragment(['slug' => $plan->slug]);
-        foreach ($placements as $placement) {
-            $response->assertJsonFragment($placement);
-        }
-        $plan = $plan->fresh();
-        $this->assertEquals(4, $plan->placements()->count());
-    }
-
-    public function validPlacements()
-    {
-        return [
-            [3, 109],
-            [4, 116],
-            [5, 108],
-            [6, 133]
-        ];
-    }
-
-    /** @test */
-    public function cannot_update_plan_with_invalid_placements()
-    {
-        $this->seed(PlanerSeeder::class);
-        $planer = Planer::first();
-
-        $plan = Plan::factory()->for($planer)->create();
-        $url = "/planers/$planer->slug/plans/$plan->slug";
-        $placements = [];
-        foreach ($this->invalidPlacements() as $placement) {
-            $placements[] = [
-                'moduleId' => $placement[0],
-                'eventId' => $placement[1]
-            ];
-        }
-        $data = array('placements' => $placements);
-
-        $response = $this->json('put', $url, $data);
-        $response->assertUnprocessable();
-        $response->assertJsonValidationErrors(array('placements.0.eventId', 'placements.0.moduleId'));
-        $plan = $plan->fresh();
-        $this->assertEquals(0, $plan->placements()->count());
-    }
-
-    /** @test */
-    public function cannot_update_plan_without_placements()
-    {
-        $this->seed(PlanerSeeder::class);
-        $planer = Planer::first();
-
-        $plan = Plan::factory()->for($planer)->create();
-        $url = "/planers/$planer->slug/plans/$plan->slug";
-        $data = array();
-
-        $response = $this->json('put', $url, $data);
-        $response->assertJsonValidationErrors('placements');
-        $plan = $plan->fresh();
-        $this->assertEquals(0, $plan->placements()->count());
-    }
-
-    public function invalidPlacements()
-    {
-        return [
-            [999, 999],
-        ];
+        $planer = Planer::factory()->create();
+        $url = "/$planer->slug/plans";
+        $params = array('startYear' => '2020');
+        $response = $this->post($url, $params);
+        $response->assertSessionHasErrors("email");
+        $this->assertDatabaseCount('plans', 0);
     }
 }

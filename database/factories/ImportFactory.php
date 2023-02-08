@@ -4,18 +4,21 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class PlanFactory extends Factory
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Import>
+ */
+class ImportFactory extends Factory
 {
     /**
      * Define the model's default state.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function definition()
     {
         return [
-            'start_year' => '2020',
-            'email' => 'jane.doe@example.com'
+            'year' => 2020,
+            'version' => 1
         ];
     }
 }
