@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Focus;
+use App\Models\FocusSelection;
 use App\Models\Location;
 use App\Models\Module;
 use App\Models\Plan;
@@ -277,5 +278,110 @@ class PlanTest extends TestCase
             ->where('location', $location->id)
             ->where('module_id', $module->id)
             ->count());
+    }
+
+    /** @test */
+    public function can_update_credit_focus_credits()
+    {
+        $planer = Planer::factory()->create();
+        $plan = Plan::factory()->for($planer)->create();
+        $focus =  Focus::factory()->create(['planer_id' => $planer->id]);
+        $focusSelection =  FocusSelection::factory()->for($plan)->for($focus)->create(['position' => 0]);
+        $module1 = Module::factory()->create([
+            'id' => 'P_AB'
+        ]);
+        $module2 = Module::factory()->create([
+            'id' => 'P_CD'
+        ]);
+        $url = "/$planer->slug/$plan->slug/anrechnung";
+        $params = [
+            'focusCredits' => [
+                [
+                    'focusSelectionId' => $focusSelection->id,
+                    'moduleIds' => [$module1->id, $module2->id]
+                ]
+            ],
+            'tourCompleted' => false,
+            'valid' => false
+        ];
+
+        $response = $this->put($url, $params);
+
+        $response->assertSuccessful();
+        $focusSelection = $focusSelection->fresh();
+        $this->assertCount(2, $focusSelection->creditedModules);
+        $this->assertEqualsCanonicalizing(['P_AB', 'P_CD'], $focusSelection->creditedModules->pluck('id')->all());
+    }
+
+    /** @test */
+    public function can_update_credits_tourCompleted()
+    {
+        $planer = Planer::factory()->create();
+        $plan = Plan::factory()->for($planer)->create(['credit_tour_completed' => false]);
+        $url = "/$planer->slug/$plan->slug/anrechnung";
+        $params = ['focusCredits' => [], 'valid' => false, 'tourCompleted' => true];
+
+        $response = $this->put($url, $params);
+
+        $response->assertSuccessful();
+        $plan = $plan->fresh();
+        $this->assertTrue($plan->credit_tour_completed);
+    }
+
+    /** @test */
+    public function can_update_credits_valid()
+    {
+        $planer = Planer::factory()->create();
+        $plan = Plan::factory()->for($planer)->create(['credit_valid' => false]);
+        $url = "/$planer->slug/$plan->slug/anrechnung";
+        $params = ['focusCredits' => [], 'valid' => true, 'tourCompleted' => false];
+
+        $response = $this->put($url, $params);
+
+        $response->assertSuccessful();
+        $plan = $plan->fresh();
+        $this->assertTrue($plan->credit_valid);
+    }
+
+    /** @test */
+    public function focus_credits_is_required_to_update_credits()
+    {
+        $planer = Planer::factory()->create();
+        $plan = Plan::factory()->for($planer)->create();
+        $url = "/$planer->slug/$plan->slug/anrechnung";
+        $params = ['tourCompleted' => false, 'valid' => false];
+
+        $response = $this->put($url, $params);
+
+        $response->assertRedirect('/');
+        $response->assertSessionHasErrors("focusCredits");
+    }
+
+    /** @test */
+    public function tour_completed_is_required_to_update_credits()
+    {
+        $planer = Planer::factory()->create();
+        $plan = Plan::factory()->for($planer)->create();
+        $url = "/$planer->slug/$plan->slug/anrechnung";
+        $params = ['focusCredits' => [], 'valid' => false];
+
+        $response = $this->put($url, $params);
+
+        $response->assertRedirect('/');
+        $response->assertSessionHasErrors("tourCompleted");
+    }
+
+    /** @test */
+    public function valid_is_required_to_update_credits()
+    {
+        $planer = Planer::factory()->create();
+        $plan = Plan::factory()->for($planer)->create();
+        $url = "/$planer->slug/$plan->slug/anrechnung";
+        $params = ['focusCredits' => [], 'tourCompleted' => false];
+
+        $response = $this->put($url, $params);
+
+        $response->assertRedirect('/');
+        $response->assertSessionHasErrors("valid");
     }
 }
