@@ -31,7 +31,7 @@ class UpdateScheduleRequest extends FormRequest
             'placements.*.timeWindow' => 'required',
             'placements.*.day' => 'required',
             'placements.*.time' => 'required',
-            'placements.*.location' => 'required',
+            'placements.*.location' => 'required|exists:locations,id',
             'placements.*.moduleId' => 'required|exists:modules,id',
             'focusSelections' => 'array',
             'focusSelections.*.focusId' => 'required|string|exists:foci,id',
