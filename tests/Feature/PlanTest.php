@@ -2,12 +2,17 @@
 
 namespace Tests\Feature;
 
+use App\Models\Focus;
+use App\Models\Location;
+use App\Models\Module;
 use App\Models\Plan;
 use App\Models\Planer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Inertia\Testing\AssertableInertia as Assert;
+
+use function PHPUnit\Framework\assertTrue;
 
 class PlanTest extends TestCase
 {
@@ -114,19 +119,6 @@ class PlanTest extends TestCase
     }
 
     /** @test */
-    public function can_update_schedule()
-    {
-        $planer = Planer::factory()->create();
-        $plan = Plan::factory()->for($planer)->create();
-        $url = "/$planer->slug/$plan->slug/zeitplan";
-        $params = ['placements' => [], 'focusSelections' => [], 'tourCompleted' => false, 'valid' => false, 'locations' => []];
-
-        $response = $this->put($url, $params);
-
-        $response->assertSuccessful();
-    }
-
-    /** @test */
     public function tour_completed_is_required_to_update_schedule()
     {
         $planer = Planer::factory()->create();
@@ -182,5 +174,108 @@ class PlanTest extends TestCase
         $response->assertSuccessful();
         $plan = $plan->fresh();
         $this->assertTrue($plan->schedule_valid);
+    }
+
+    /** @test */
+    public function can_update_schedule_locations()
+    {
+        $planer = Planer::factory()->create();
+        $plan = Plan::factory()->for($planer)->create();
+        Location::factory()->create(['id' => 'ZH', 'name' => 'Zürich', 'default' => 'true']);
+        Location::factory()->create(['id' => 'GR', 'name' => 'Chur']);
+        $this->assertTrue($plan->locations->isEmpty());
+
+        $url = "/$planer->slug/$plan->slug/zeitplan";
+        $params = ['valid' => true, 'tourCompleted' => false, 'locations' => ['ZH', 'GR']];
+
+        $response = $this->put($url, $params);
+
+        $response->assertSuccessful();
+        $plan = $plan->fresh();
+        $this->assertEqualsCanonicalizing(['ZH', 'GR'], $plan->locations->pluck('id')->all());
+    }
+
+    /** @test */
+    public function can_update_schedule_focus_selection()
+    {
+        $planer = Planer::factory()->create();
+        $plan = Plan::factory()->for($planer)->create();
+        Focus::factory()->create(['id' => 'SSP_A', 'name' => 'Studienschwerpunkt A', 'planer_id' => $planer->id]);
+        Focus::factory()->create(['id' => 'SSP_B',  'name' => 'Studienschwerpunkt B', 'planer_id' => $planer->id]);
+        Focus::factory()->create(['id' => 'SSP_C',  'name' => 'Studienschwerpunkt C', 'planer_id' => $planer->id]);
+        $this->assertTrue($plan->focusSelections->isEmpty());
+        $url = "/$planer->slug/$plan->slug/zeitplan";
+        $params = [
+            'valid' => true,
+            'tourCompleted' => false,
+            'focusSelections' => [
+                ['focusId' => 'SSP_A', 'position' => 0], ['focusId' => 'SSP_C', 'position' => 1]
+            ]
+        ];
+
+        $response = $this->put($url, $params);
+
+        $response->assertSuccessful();
+        $plan = $plan->fresh();
+        $this->assertEquals(1, $plan->focusSelections->where('focus_id', 'SSP_A')->where('position', 0)->count());
+        $this->assertEquals(1, $plan->focusSelections->where('focus_id', 'SSP_C')->where('position', 1)->count());
+    }
+
+    /** @test */
+    public function can_update_schedule_placements()
+    {
+        $planer = Planer::factory()->create();
+        $plan = Plan::factory()->for($planer)->create();
+        $location = Location::factory()->create(['id' => 'ZH', 'name' => 'Zürich', 'default' => 'true']);
+        $module = Module::factory()->create();
+        $this->assertTrue($plan->placements->isEmpty());
+        $url = "/$planer->slug/$plan->slug/zeitplan";
+        $params = [
+            'valid' => true,
+            'tourCompleted' => false,
+            'placements' => [
+                [
+                    'year' => 1999,
+                    'semester' => 'XY',
+                    'timeWindow' => 'Zeitfenster YZ',
+                    'day' => 'Montag',
+                    'time' => 'Nachmittag',
+                    'location' => $location->id,
+                    'moduleId' => $module->id
+                ],
+                [
+                    'year' => 2023,
+                    'semester' => 'AB',
+                    'timeWindow' => 'Zeitfenster UV',
+                    'day' => 'Montag',
+                    'time' => 'Nachmittag',
+                    'location' => $location->id,
+                    'moduleId' => $module->id
+                ]
+            ]
+        ];
+
+        $response = $this->put($url, $params);
+
+        $response->assertSuccessful();
+        $plan = $plan->fresh();
+        $this->assertEquals(1, $plan->placements
+            ->where('year', '1999')
+            ->where('semester', 'XY')
+            ->where('time_window', 'Zeitfenster YZ')
+            ->where('day', 'Montag')
+            ->where('time', 'Nachmittag')
+            ->where('location', $location->id)
+            ->where('module_id', $module->id)
+            ->count());
+        $this->assertEquals(1, $plan->placements
+            ->where('year', '2023')
+            ->where('semester', 'AB')
+            ->where('time_window', 'Zeitfenster UV')
+            ->where('day', 'Montag')
+            ->where('time', 'Nachmittag')
+            ->where('location', $location->id)
+            ->where('module_id', $module->id)
+            ->count());
     }
 }
