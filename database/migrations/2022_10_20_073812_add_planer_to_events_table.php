@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::table('events', function (Blueprint $table) {
             $table->text('planer');
-            $table->dropForeign(['module_id']);
+            if (env('DB_CONNECTION') !== 'sqlite') {
+                $table->dropForeign(['module_id']);
+            }
             $table->dropUnique('events_date_location_module_unique');
             $table->unique(['module_id', 'year', 'semester', 'time_window', 'day', 'time', 'location', 'planer'], 'event_unique');
         });
