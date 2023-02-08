@@ -14,8 +14,10 @@ class ModuleFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name(),
-            'ects' => $this->faker->numberBetween(1, 500),
+            'id' => 'P_XY',
+            'name' => 'Module XY',
+            'ects' => 5,
+            'creditable' => false,
         ];
     }
 
