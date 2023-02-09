@@ -3,10 +3,12 @@
     <li v-for="(error, index) in errors" :key="index" tabindex="-1">
       <Error>
         <component
-          v-if="error.labelProps"
+          v-if="error.component && error.labelProps"
           :is="error.component"
+          ref="label"
           v-bind="error.labelProps"
         />
+        <div v-else-if="error.label" v-html="error.label"></div>
       </Error>
     </li>
   </ul>
