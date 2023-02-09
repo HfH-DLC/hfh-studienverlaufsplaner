@@ -120,15 +120,15 @@
 
 <script>
 import { HfhSelect, HfhLink } from "@hfh-dlc/hfh-styleguide";
+import { mapActions, mapState } from "pinia";
 
+import { useCreditStore } from "../Store/credit";
 import Checklist from "../Components/Checklist.vue";
 import ErrorList from "../Components/ErrorList.vue";
 import PlanHeader from "../Components/PlanHeader.vue";
 import Tour from "../Components/Tour.vue";
 import MainLayout from "../Layouts/MainLayout.vue";
 
-import { mapActions, mapState } from "pinia";
-import { useCreditStore } from "../Store/credit";
 export default {
   layout: MainLayout,
   components: {
@@ -182,6 +182,10 @@ export default {
       todos: this.todosResource.data,
       tour: this.tourData,
     });
+    this.$emitter.on("focus-module", this.focusModule);
+  },
+  beforeDestroy() {
+    this.$emitter.off("focus-module", this.focusModule);
   },
 
   computed: {
@@ -213,6 +217,12 @@ export default {
       return this.focusSelections.find(
         (focusSelection) => focusSelection.id == focusSelectionId
       ).focus.name;
+    },
+    focusModule(moduleId) {
+      const selectElement = document.getElementById(`credit-${moduleId}`);
+      if (selectElement) {
+        selectElement.focus();
+      }
     },
   },
 };
