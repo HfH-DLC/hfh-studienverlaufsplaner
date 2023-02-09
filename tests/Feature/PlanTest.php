@@ -70,7 +70,6 @@ class PlanTest extends TestCase
                 ->where('planerSlug', $planer->slug)
                 ->has('planResource')
                 ->has('creditableModulesResource')
-                ->has('rulesResource')
                 ->has('todosResource')
                 ->has('tourData')
                 ->has('brochureUrl')

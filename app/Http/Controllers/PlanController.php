@@ -86,7 +86,6 @@ class PlanController extends Controller
             'planerSlug' => $planer->slug,
             'planResource' => $planResource,
             'creditableModulesResource' => CreditableModuleResource::collection($modules),
-            'rulesResource' => RuleResource::collection($planer->rules()->where('type', 'credit')->get()),
             'todosResource' => TodoResource::collection($planer->todos()->where('type', 'credit')->get()),
             'tourData' => $tour,
         ];
