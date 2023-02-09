@@ -20,7 +20,6 @@ export default {
   },
   methods: {
     focusModule() {
-      console.log("focusModule");
       this.$emitter.emit("focus-module", this.placement.module.id);
     },
   },

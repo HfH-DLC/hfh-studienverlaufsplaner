@@ -46,7 +46,6 @@ export default {
   },
   methods: {
     focusModule(module) {
-      console.log("focus-module", module.id);
       this.$emitter.emit("focus-module", module.id);
     },
   },
