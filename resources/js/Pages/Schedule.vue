@@ -104,7 +104,8 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapState } from "vuex";
+import { mapActions, mapState } from "pinia";
+import { useScheduleStore } from "../Store/schedule";
 // Components
 import { CheckCircleIcon } from "@heroicons/vue/outline";
 import ErrorList from "../Components/ErrorList.vue";
@@ -222,7 +223,7 @@ export default {
     this.$emitter.off("focus-module", this.selectModule);
   },
   computed: {
-    ...mapState("schedule", [
+    ...mapState(useScheduleStore, [
       "initialized",
       "flash",
       "tour",
@@ -230,8 +231,6 @@ export default {
       "tourActive",
       "tourSelectedModule",
       "todoEntries",
-    ]),
-    ...mapGetters("schedule", [
       "ects",
       "placementErrors",
       "infos",
@@ -246,7 +245,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("schedule", [
+    ...mapActions(useScheduleStore, [
       "init",
       "startTour",
       "completeTour",

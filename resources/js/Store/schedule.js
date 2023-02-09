@@ -1,11 +1,16 @@
+import { defineStore } from "pinia";
 import { v4 } from "uuid";
 
 import DataAdapter from "../DataAdapter";
 import emitter from "../emitter";
 import flashTypes from "../flashTypes";
-import { SAVE_STATUS_SAVED, SAVE_STATUS_SAVING } from "../constants";
-import { getRule } from "../Models/Rules/RuleFactory";
+import { getRule } from "../Models/Rules/Schedule/RuleFactory";
 import { getTodo } from "../Models/Todos/Schedule/TodoFactory";
+import {
+    SAVE_STATUS_ERROR,
+    SAVE_STATUS_SAVED,
+    SAVE_STATUS_SAVING,
+} from "../constants";
 import {
     getCalendarYear,
     isSameDate,
@@ -17,58 +22,6 @@ import {
     pluralize,
 } from "../helpers";
 
-const RESET_STATE = "RESET_STATE";
-const SET_RULES = "SET_RULES";
-const INIT_FINISHED = "INIT_FINISHED";
-const SET_MODULE_INFOS = "SET_MODULE_INFOS";
-const SET_SELECTION_STATUS = "SET_SELECTION_STATUS";
-const ADD_PLACEMENT = "ADD_PLACEMENT";
-const SET_PLACEMENTS = "SET_PLACEMENTS";
-const REMOVE_PLACEMENT = "REMOVE_PLACEMENT";
-const SET_PLACEMENT_ERRORS = "SET_PLACEMENT_ERRORS";
-const SET_TODOS = "SET_TODOS";
-const SET_TODO_ENTRIES = "SET_TODO_ENTRIES";
-const SET_FOCI = "SET_FOCI";
-const SET_FOCUS_SELECTIONS = "SET_FOCUS_SELECTIONS";
-const SELECT_FOCUS = "SELECT_FOCUS";
-const SET_START_YEAR = "SET_START_YEAR";
-const SET_CATEGORIES = "SET_CATEGORIES";
-const SET_TOUR_ACTIVE = "SET_TOUR_ACTIVE";
-const SET_TOUR = "SET_TOUR";
-const SET_TOUR_SELECTED_MODULE = "SET_TOUR_SELECTED_MODULE";
-const SET_TOUR_COMPLETED = "SET_TOUR_COMPLETED";
-const SET_SAVE_STATUS = "SET_SAVE_STATUS";
-const SET_REQUIRED_ECTS = "SET_REQUIRED_ECTS";
-const SET_VALID = "SET_VALID";
-const SET_LOCATIONS = "SET_LOCATIONS";
-const SET_LOCATION_CHECKED = "SET_LOCATION_CHECKED";
-const SET_READ_ONLY = "SET_READ_ONLY";
-
-let dataAdapter;
-
-const initialState = {
-    requiredECTS: null,
-    startYear: null,
-    categories: [],
-    placements: [],
-    focusSelections: [],
-    rules: [],
-    todos: [],
-    foci: [],
-    selectionStatus: {},
-    moduleInfos: {},
-    placementErrors: {},
-    todoEntries: [],
-    initialized: false,
-    saveStatus: SAVE_STATUS_SAVED,
-    tour: null,
-    tourActive: false,
-    tourSelectedModule: null,
-    valid: false,
-    locations: [],
-    readOnly: false,
-};
-
 const TOUR_SELECTED_MODULE = {
     id: "WP2_04.2",
     name: "Heilpädagogik im Bereich Hören 2",
@@ -79,158 +32,86 @@ const TOUR_SELECTED_MODULE = {
     ects: 5,
 };
 
-export default {
-    namespaced: true,
-    state: initialState,
-    mutations: {
-        [RESET_STATE](state) {
-            state = initialState;
-        },
-        [INIT_FINISHED](state) {
-            state.initialized = true;
-        },
-        [SET_RULES](state, rules) {
-            const ruleObjects = rules.reduce((array, rule) => {
-                try {
-                    array.push(getRule(state, rule));
-                } catch (error) {
-                    console.error(error);
-                }
-                return array;
-            }, []);
-            state.rules = ruleObjects;
-        },
-        [SET_SELECTION_STATUS](state, selectionStatus) {
-            state.selectionStatus = selectionStatus;
-        },
-        [SET_MODULE_INFOS](state, moduleInfos) {
-            state.moduleInfos = moduleInfos;
-        },
-        [SET_PLACEMENT_ERRORS](state, placementErrors) {
-            state.placementErrors = placementErrors;
-        },
-        [SET_TODOS](state, todos) {
-            const todoObjects = todos.reduce((array, rule) => {
-                try {
-                    array.push(getTodo(state, rule));
-                } catch (error) {
-                    console.error(error);
-                }
-                return array;
-            }, []);
-            state.todos = todoObjects;
-        },
-        [SET_TODO_ENTRIES](state, todoEntries) {
-            state.todoEntries = todoEntries;
-        },
-        [SET_PLACEMENTS](state, placements) {
-            state.placements = placements;
-        },
-        [ADD_PLACEMENT](state, placement) {
-            state.placements.push(placement);
-        },
-        [REMOVE_PLACEMENT](state, placement) {
-            state.placements = state.placements.filter(
-                (p) => p.id !== placement.id
-            );
-        },
-        [SET_TOUR](state, value) {
-            state.tour = value;
-        },
-        [SET_TOUR_ACTIVE](state, value) {
-            state.tourActive = value;
-        },
-        [SET_TOUR_COMPLETED](state, value) {
-            state.tourCompleted = value;
-        },
-        [SET_TOUR_SELECTED_MODULE](state, value) {
-            state.tourSelectedModule = value;
-        },
-        [SET_SAVE_STATUS](state, value) {
-            state.saveStatus = value;
-        },
-        [SET_FOCI](state, foci) {
-            state.foci = foci;
-        },
-        [SET_FOCUS_SELECTIONS](state, focusSelections) {
-            state.focusSelections = focusSelections;
-        },
-        [SELECT_FOCUS](state, { position, focusId }) {
-            state.focusSelections = state.focusSelections.filter(
-                (f) => f.position != position
-            );
-            const focus = state.foci.find((focus) => focus.id == focusId);
-            if (focus) {
-                state.focusSelections.push({ position, focus });
-            }
-        },
-        [SET_CATEGORIES](state, categories) {
-            state.categories = categories;
-        },
-        [SET_START_YEAR](state, startYear) {
-            state.startYear = startYear;
-        },
-        [SET_REQUIRED_ECTS](state, requiredECTS) {
-            state.requiredECTS = requiredECTS;
-        },
-        [SET_VALID](state, value) {
-            state.valid = value;
-        },
-        [SET_LOCATIONS](state, { locations, planLocations }) {
-            const value = locations.map((location) => {
+let dataAdapter;
+
+export const useScheduleStore = defineStore("schedule", {
+    state: () => ({
+        foci: [],
+        focusSelections: [],
+        initialized: false,
+        locations: [],
+        moduleInfos: {},
+        requiredECTS: null,
+        rawCategories: [],
+        rawPlacements: [],
+        rawPlacementErrors: {},
+        readOnly: false,
+        rules: [],
+        saveStatus: SAVE_STATUS_SAVED,
+        selectionStatus: {},
+        startYear: null,
+        todoEntries: [],
+        todos: [],
+        tour: null,
+        tourActive: false,
+        tourCompleted: false,
+        tourSelectedModule: null,
+    }),
+    actions: {
+        init({
+            planerSlug,
+            plan,
+            categories,
+            rules,
+            todos,
+            foci,
+            locations,
+            requiredECTS,
+            tour,
+        }) {
+            dataAdapter = new DataAdapter(planerSlug, plan.slug);
+            this.$reset();
+            this.readOnly = plan.readOnly;
+            this.requiredECTS = requiredECTS;
+            this.rawCategories = categories;
+            this.foci = foci;
+            this.focusSelections = plan.focusSelections;
+            this.locations = locations.map((location) => {
                 let checked = location.default;
-                if (planLocations.length > 0) {
-                    checked = planLocations.some(
+                if (plan.locations.length > 0) {
+                    checked = plan.locations.some(
                         (planLocation) => location.id == planLocation.id
                     );
                 }
                 return { ...location, checked };
             });
-            state.locations = value;
+            this.rawPlacements = plan.placements;
+            this.todos = todos.reduce((array, rule) => {
+                try {
+                    array.push(getTodo(rule));
+                } catch (error) {
+                    console.error(error);
+                }
+                return array;
+            }, []);
+            this.rules = rules.reduce((array, rule) => {
+                try {
+                    array.push(getRule(rule));
+                } catch (error) {
+                    console.error(error);
+                }
+                return array;
+            }, []);
+            this.startYear = plan.startYear;
+            this.tour = tour;
+            this.tourCompleted = plan.scheduleTourCompleted;
+            this.validate();
+            this.initialized = true;
         },
-        [SET_LOCATION_CHECKED](state, { index, checked }) {
-            state.locations[index].checked = checked;
-        },
-        [SET_READ_ONLY](state, value) {
-            state.readOnly = value;
-        },
-    },
-    actions: {
-        init(
-            { commit, dispatch },
-            {
-                planerSlug,
-                plan,
-                categories,
-                rules,
-                todos,
-                foci,
-                locations,
-                requiredECTS,
-                tour,
-            }
-        ) {
-            dataAdapter = new DataAdapter(planerSlug, plan.slug);
-            commit(RESET_STATE);
-            commit(SET_READ_ONLY, plan.readOnly);
-            commit(SET_REQUIRED_ECTS, requiredECTS);
-            commit(SET_CATEGORIES, categories);
-            commit(SET_FOCI, foci);
-            commit(SET_FOCUS_SELECTIONS, plan.focusSelections);
-            commit(SET_LOCATIONS, { locations, planLocations: plan.locations });
-            commit(SET_PLACEMENTS, plan.placements);
-            commit(SET_TODOS, todos);
-            commit(SET_RULES, rules);
-            commit(SET_START_YEAR, plan.startYear);
-            commit(SET_TOUR, tour);
-            commit(SET_TOUR_COMPLETED, plan.scheduleTourCompleted);
-            dispatch("validate");
-            commit(INIT_FINISHED);
-        },
-        async save({ state, commit }) {
+        async save() {
             try {
-                commit(SET_SAVE_STATUS, SAVE_STATUS_SAVING);
-                const focusSelections = state.focusSelections.map(
+                this.saveStatus = SAVE_STATUS_SAVING;
+                const focusSelections = this.focusSelections.map(
                     (focusSelection) => {
                         return {
                             position: focusSelection.position,
@@ -239,18 +120,18 @@ export default {
                     }
                 );
                 await dataAdapter.saveSchedule(
-                    state.placements,
+                    this.rawPlacements,
                     focusSelections,
-                    state.tourCompleted,
-                    state.valid,
-                    state.locations
+                    this.tourCompleted,
+                    this.valid,
+                    this.locations
                         .filter((location) => location.checked)
                         .map((location) => location.id)
                 );
-                commit(SET_SAVE_STATUS, SAVE_STATUS_SAVED);
+                this.saveStatus = SAVE_STATUS_SAVED;
                 return true;
             } catch (error) {
-                commit(SET_SAVE_STATUS, null);
+                this.saveStatus = SAVE_STATUS_ERROR;
                 emitter.emit("flash", {
                     type: flashTypes.ERROR,
                     message:
@@ -262,33 +143,40 @@ export default {
                 return false;
             }
         },
-        selectModule({ commit, state, getters }, moduleId) {
-            commit(SET_SELECTION_STATUS, {
-                moduleId,
-                status: validateSelection(
-                    getters.moduleById(moduleId),
-                    state,
-                    getters
-                ),
+        selectModule(moduleId) {
+            const module = this.moduleById(moduleId);
+            const status = module.events.reduce((acc, cur) => {
+                acc[cur.id] = {
+                    valid: true,
+                    dateAllowed: true,
+                };
+                return acc;
+            }, {});
+            this.rules.forEach((rule) => {
+                rule.validateSelection(module, this, status);
             });
+            this.selectionStatus = {
+                moduleId,
+                status,
+            };
         },
-        deselectModule({ commit }) {
-            commit(SET_SELECTION_STATUS, {
+        deselectModule() {
+            this.selectionStatus = {
                 moduleId: null,
                 status: {},
-            });
+            };
         },
-        placeModule({ commit, dispatch, state }, event) {
-            const existingPlacement = state.placements.find(
+        placeModule(event) {
+            const existingPlacement = this.placements.find(
                 (placement) =>
-                    placement.moduleId == state.selectionStatus.moduleId
+                    placement.moduleId == this.selectionStatus.moduleId
             );
             if (existingPlacement) {
-                commit(REMOVE_PLACEMENT, existingPlacement);
+                this.removePlacement(existingPlacement);
             }
-            commit(ADD_PLACEMENT, {
+            this.addPlacement({
                 id: v4(),
-                moduleId: state.selectionStatus.moduleId,
+                moduleId: this.selectionStatus.moduleId,
                 year: event.year,
                 semester: event.semester,
                 timeWindow: event.timeWindow,
@@ -296,97 +184,104 @@ export default {
                 time: event.time,
                 location: event.location,
             });
-            dispatch("deselectModule");
-            dispatch("validate");
-            dispatch("save");
+            this.deselectModule();
+            this.validate();
+            this.save();
         },
-        removeModule({ commit, dispatch }, placement) {
-            commit(REMOVE_PLACEMENT, placement);
-            dispatch("deselectModule");
-            dispatch("validate");
-            dispatch("save");
+        addPlacement(placement) {
+            this.rawPlacements.push(placement);
         },
-        selectFocus({ commit, dispatch }, { position, focusId }) {
-            commit(SELECT_FOCUS, { position, focusId });
-            dispatch("validate");
-            dispatch("save");
+        removePlacement(placement) {
+            this.rawPlacements = this.rawPlacements.filter(
+                (p) => p.id !== placement.id
+            );
         },
-        validate({ state, commit, dispatch, getters }) {
-            dispatch("validateTodos");
-            dispatch("validateModules");
-            dispatch("validatePlacements");
-            const valid =
-                state.todoEntries.every((todo) => todo.checked) &&
-                getters.placements.every(
-                    (placement) => placement.errors.length == 0
-                );
-
-            commit(SET_VALID, valid);
+        removeModule(placement) {
+            this.removePlacement(placement);
+            this.deselectModule();
+            this.validate();
+            this.save();
         },
-        validateTodos({ commit, state, getters }) {
-            const todoEntries = state.todos.reduce((acc, cur) => {
-                acc.push(...cur.getEntries(state, getters));
+        selectFocus({ position, focusId }) {
+            this.focusSelections = this.focusSelections.filter(
+                (f) => f.position != position
+            );
+            const focus = this.foci.find((focus) => focus.id == focusId);
+            if (focus) {
+                this.focusSelections.push({ position, focus });
+            }
+            this.validate();
+            this.save();
+        },
+        validate() {
+            this.validateTodos();
+            this.validateModules();
+            this.validatePlacements();
+        },
+        validateTodos() {
+            this.todoEntries = this.todos.reduce((acc, cur) => {
+                acc.push(...cur.getEntries(this));
                 return acc;
             }, []);
-            commit(SET_TODO_ENTRIES, todoEntries);
         },
-        validateModules({ commit, state, getters }) {
-            const moduleInfos = {};
-            const modules = getters.modules;
-            modules.forEach((module) => {
-                moduleInfos[module.id] = validateModule(module, state, getters);
+        validateModules() {
+            this.moduleInfos = {};
+            this.modules.forEach((module) => {
+                this.moduleInfos[module.id] = [];
+                this.rules.forEach((rule) => {
+                    rule.validateModule(
+                        module,
+                        this,
+                        this.moduleInfos[module.id]
+                    );
+                });
             });
-            commit(SET_MODULE_INFOS, moduleInfos);
         },
-        validatePlacements({ commit, state, getters }) {
-            const placementErrors = state.placements.reduce((acc, cur) => {
+        validatePlacements() {
+            this.rawPlacementErrors = this.placements.reduce((acc, cur) => {
                 acc[cur.id] = [];
                 return acc;
             }, {});
-            state.rules.forEach((rule) => {
-                rule.validatePlacements(state, getters, placementErrors);
+            this.rules.forEach((rule) => {
+                rule.validatePlacements(this, this.rawPlacementErrors);
             });
-            commit(SET_PLACEMENT_ERRORS, placementErrors);
         },
-        startTour({ commit, dispatch }) {
-            commit(SET_TOUR_ACTIVE, true);
-            dispatch("save");
+        startTour() {
+            this.tourActive = true;
+            this.save();
         },
-        completeTour({ commit, dispatch }) {
-            commit(SET_TOUR_ACTIVE, false);
-            commit(SET_TOUR_COMPLETED, true);
-            dispatch("save");
+        completeTour() {
+            this.tourActive = false;
+            this.tourCompleted = true;
+            this.save();
         },
-        setShowTourSelectedModule({ commit }, value) {
-            commit(
-                SET_TOUR_SELECTED_MODULE,
-                value ? TOUR_SELECTED_MODULE : null
-            );
+        setShowTourSelectedModule(value) {
+            this.tourSelectedModule = value ? TOUR_SELECTED_MODULE : null;
         },
-        setLocationChecked({ commit, dispatch }, value) {
-            commit(SET_LOCATION_CHECKED, value);
-            dispatch("save");
+        setLocationChecked({ index, checked }) {
+            this.locations[index].checked = checked;
+            this.save();
         },
     },
     getters: {
-        categories(state) {
-            return state.categories.map((category) => {
+        categories() {
+            return this.rawCategories.map((category) => {
                 const categoryModules = category.modules.map((module) => {
-                    const moduleInfos = state.moduleInfos[module.id];
-                    const placement = state.placements.find(
+                    const moduleInfos = this.moduleInfos[module.id];
+                    const placement = this.rawPlacements.find(
                         (placement) => placement.moduleId == module.id
                     );
                     const misplaced = !!(
                         placement &&
-                        state.placementErrors[placement.id] &&
-                        state.placementErrors[placement.id].length > 0
+                        this.rawPlacementErrors[placement.id] &&
+                        this.rawPlacementErrors[placement.id].length > 0
                     );
                     return {
                         ...module,
                         infos: moduleInfos,
                         selected:
-                            state.selectionStatus &&
-                            state.selectionStatus.moduleId == module.id,
+                            this.selectionStatus &&
+                            this.selectionStatus.moduleId == module.id,
                         placement: placement,
                         misplaced,
                     };
@@ -408,31 +303,28 @@ export default {
                 };
             });
         },
-        ects(state, { placements }) {
-            return placements
+        ects() {
+            return this.placements
                 .map((placements) => placements.module)
                 .reduce(
                     (total, module) => (module ? total + module.ects : total),
                     0
                 );
         },
-        modules(state, { categories }) {
-            return categories.reduce((acc, cur) => {
+        modules() {
+            return this.categories.reduce((acc, cur) => {
                 acc.push(...cur.modules);
                 return acc;
             }, []);
         },
-        moduleById:
-            (state, { modules }) =>
-            (id) => {
-                return modules.find((module) => module.id == id);
-            },
-        modulesByDateGroupedByLocations:
-            (state, { modules, checkedLocations }) =>
-            (year, semester, timeWindow, day, time) => {
+        moduleById() {
+            return (id) => this.modules.find((module) => module.id == id);
+        },
+        modulesByDateGroupedByLocations() {
+            return (year, semester, timeWindow, day, time) => {
                 const result = {};
-                checkedLocations.forEach((location) => {
-                    const matchingModules = modules.filter((module) => {
+                this.checkedLocations.forEach((location) => {
+                    const matchingModules = this.modules.filter((module) => {
                         return module.events.some(
                             (event) =>
                                 isSameDate(event, {
@@ -449,28 +341,27 @@ export default {
                     }
                 });
                 return result;
-            },
-        selectedModule(state, { moduleById }) {
-            return moduleById(state.selectionStatus.moduleId);
+            };
         },
-        placements(state, { moduleById }) {
-            return state.placements.map((placement) => {
+        selectedModule() {
+            return this.moduleById(this.selectionStatus.moduleId);
+        },
+        placements() {
+            return this.rawPlacements.map((placement) => {
                 return {
                     ...placement,
-                    module: moduleById(placement.moduleId),
-                    errors: state.placementErrors[placement.id],
+                    module: this.moduleById(placement.moduleId),
+                    errors: this.rawPlacementErrors[placement.id],
                 };
             });
         },
-        placementById:
-            (state, { placements }) =>
-            (id) => {
-                return placements.find((placements) => placements.id == id);
-            },
-        placementByDate:
-            (state, { placements }) =>
-            (year, semester, timeWindow, day, time) => {
-                return placements.find((placement) => {
+        placementById() {
+            return (id) =>
+                this.placements.find((placements) => placements.id == id);
+        },
+        placementByDate() {
+            return (year, semester, timeWindow, day, time) =>
+                this.placements.find((placement) => {
                     return (
                         placement.year == year &&
                         placement.semester == semester &&
@@ -479,12 +370,12 @@ export default {
                         placement.time == time
                     );
                 });
-            },
-        placementErrors(state, { placementById }) {
+        },
+        placementErrors() {
             const result = [];
-            Object.entries(state.placementErrors).forEach(
+            Object.entries(this.rawPlacementErrors).forEach(
                 ([placementId, errors]) => {
-                    const placement = placementById(placementId);
+                    const placement = this.placementById(placementId);
                     errors.forEach((error) => {
                         result.push({
                             placement,
@@ -495,12 +386,12 @@ export default {
             );
             return result;
         },
-        years(state, { placements, modules }) {
-            const events = modules.reduce((acc, cur) => {
+        years() {
+            const events = this.modules.reduce((acc, cur) => {
                 acc.push(...cur.events);
                 return acc;
             }, []);
-            const dates = [...events, ...placements];
+            const dates = [...events, ...this.placements];
             const years = [...new Set(dates.map((date) => date.year))].sort();
             return years
                 .sort((a, b) => a - b)
@@ -545,36 +436,35 @@ export default {
                     };
                 });
         },
-        events(state, { modules }) {
-            return modules.reduce((acc, cur) => {
+        events() {
+            return this.modules.reduce((acc, cur) => {
                 acc.push(...cur.events);
                 return acc;
             }, []);
         },
-        selectableEvents(state, { selectedModule, checkedLocations }) {
-            if (!selectedModule) {
+        selectableEvents() {
+            if (!this.selectedModule) {
                 return [];
             }
-            return selectedModule.events
+            return this.selectedModule.events
                 .filter((event) => {
-                    const status = state.selectionStatus.status[event.id];
+                    const status = this.selectionStatus.status[event.id];
                     return (
                         status.dateAllowed &&
-                        checkedLocations.includes(event.location)
+                        this.checkedLocations.includes(event.location)
                     );
                 })
                 .map((event) => {
-                    const status = state.selectionStatus.status[event.id];
+                    const status = this.selectionStatus.status[event.id];
                     return {
                         ...event,
                         valid: status.valid,
                     };
                 });
         },
-        selectableEventsByDate:
-            (state, { selectableEvents }) =>
-            (year, semester, timeWindow, day, time) => {
-                const result = selectableEvents.filter((event) => {
+        selectableEventsByDate() {
+            return (year, semester, timeWindow, day, time) => {
+                const result = this.selectableEvents.filter((event) => {
                     return (
                         event.year == year &&
                         event.semester == semester &&
@@ -584,29 +474,32 @@ export default {
                     );
                 });
                 return result;
-            },
-        selectableLocations(state, { events }) {
-            return state.locations.filter((location) =>
-                new Set(events.map((event) => event.location)).has(location.id)
+            };
+        },
+        selectableLocations() {
+            return this.locations.filter((location) =>
+                new Set(this.events.map((event) => event.location)).has(
+                    location.id
+                )
             );
         },
-        checkedLocations(state) {
-            return state.locations
+        checkedLocations() {
+            return this.locations
                 .filter((location) => location.checked)
                 .map((location) => location.id);
         },
-        infos(state, { moduleById, checkedLocations }) {
+        infos() {
             let infos = [];
-            state.focusSelections.forEach((focusSelection) => {
+            this.focusSelections.forEach((focusSelection) => {
                 const modules = [
                     ...focusSelection.focus.requiredModules,
                     ...focusSelection.focus.optionalModules,
                 ];
                 const moduleIds = modules.map((module) => module.id);
                 const notAvailableModuleIds = moduleIds.filter((id) => {
-                    const module = moduleById(id);
+                    const module = this.moduleById(id);
                     return !module.events.find((event) => {
-                        return checkedLocations.includes(event.location);
+                        return this.checkedLocations.includes(event.location);
                     });
                 });
                 if (notAvailableModuleIds.length > 0) {
@@ -616,7 +509,7 @@ export default {
                         "sind die Module"
                     );
                     const locationString = pluralize(
-                        checkedLocations.length,
+                        this.checkedLocations.length,
                         "am Standort",
                         "an den Standorten"
                     );
@@ -629,9 +522,9 @@ export default {
                             }),
                             "und"
                         )} ${locationString} ${joinStrings(
-                            checkedLocations.map(
+                            this.checkedLocations.map(
                                 (checkedLocation) =>
-                                    state.locations.find(
+                                    this.locations.find(
                                         (location) =>
                                             checkedLocation == location.id
                                     ).name
@@ -643,31 +536,13 @@ export default {
             });
             return infos;
         },
+        valid() {
+            return (
+                this.todoEntries.every((todo) => todo.checked) &&
+                this.placements.every(
+                    (placement) => placement.errors.length == 0
+                )
+            );
+        },
     },
-};
-
-function getStatus(events) {
-    return events.reduce((acc, cur) => {
-        acc[cur.id] = {
-            valid: true,
-            dateAllowed: true,
-        };
-        return acc;
-    }, {});
-}
-
-function validateModule(module, state, getters) {
-    const errors = [];
-    state.rules.forEach((rule) => {
-        rule.validateModule(module, state, getters, errors);
-    });
-    return errors;
-}
-
-function validateSelection(module, state, getters) {
-    const status = getStatus(module.events);
-    state.rules.forEach((rule) => {
-        rule.validateSelection(module, state, getters, status);
-    });
-    return status;
-}
+});

@@ -32,7 +32,8 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from "pinia";
+import { useScheduleStore } from "../Store/schedule";
 import { HfhButton } from "@hfh-dlc/hfh-styleguide";
 import ErrorList from "../Components/ErrorList.vue";
 export default {
@@ -47,7 +48,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("schedule", ["deselectModule"]),
+    ...mapActions(useScheduleStore, ["deselectModule"]),
   },
 };
 </script>

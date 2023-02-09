@@ -19,21 +19,29 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
+import { useScheduleStore } from "../Store/schedule";
 import { CheckCircleIcon } from "@heroicons/vue/outline";
-import { SAVE_STATUS_SAVED, SAVE_STATUS_SAVING } from "../constants";
+import {
+  SAVE_STATUS_SAVED,
+  SAVE_STATUS_SAVING,
+  SAVE_STATUS_ERROR,
+} from "../constants";
 
 export default {
   components: {
     CheckCircleIcon,
   },
   computed: {
-    ...mapState("schedule", ["saveStatus"]),
+    ...mapState(useScheduleStore, ["saveStatus"]),
     saved() {
       return this.saveStatus == SAVE_STATUS_SAVED;
     },
     saving() {
       return this.saveStatus == SAVE_STATUS_SAVING;
+    },
+    error() {
+      return this.saveStatus == SAVE_STATUS_ERROR;
     },
     message() {
       if (this.saving) {
@@ -41,6 +49,9 @@ export default {
       }
       if (this.saved) {
         return "Gespeichert";
+      }
+      if (this.error) {
+        return "Nicht gespeichert";
       }
       return "";
     },

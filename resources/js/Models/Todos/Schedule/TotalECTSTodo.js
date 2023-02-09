@@ -1,5 +1,5 @@
 export default class TotalECTSTodo {
-    getEntries({ requiredECTS }, { ects }) {
+    getEntries({ requiredECTS, ects }) {
         return [
             {
                 label: `Belegen Sie genau ${requiredECTS} ECTS Kreditpunkte.`,

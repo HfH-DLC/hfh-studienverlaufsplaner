@@ -1,5 +1,5 @@
 export default class ECTSPerCategoryTodo {
-    getEntries(state, { categories }) {
+    getEntries({ categories }) {
         const entries = categories
             .filter((category) => category.minECTS || category.maxECTS)
             .map((category) => ({

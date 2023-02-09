@@ -1,7 +1,7 @@
 import { numToWord } from "num-words-de";
 import { joinStrings } from "../../../helpers";
 export default class FocusModulesTodo {
-    getEntries({ focusSelections }, { creditedModulesByFocusSelection }) {
+    getEntries({ focusSelections, creditedModulesByFocusSelection }) {
         return focusSelections.reduce((acc, cur) => {
             const modulesByFocusSelection =
                 creditedModulesByFocusSelection.find(

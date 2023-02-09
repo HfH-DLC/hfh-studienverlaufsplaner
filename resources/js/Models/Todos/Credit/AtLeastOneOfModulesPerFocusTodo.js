@@ -4,7 +4,7 @@ export default class AtLeastOneOfModulesPerFocusTodo {
         this.moduleIds = params.moduleIds;
     }
 
-    getEntries({ focusSelections, modules }, getters) {
+    getEntries({ focusSelections, modules }) {
         return focusSelections.reduce((acc, cur) => {
             acc.push({
                 component: "AtLeastOneOfModulesPerFocusLabel",

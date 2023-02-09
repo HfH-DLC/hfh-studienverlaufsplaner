@@ -1,5 +1,5 @@
 export default class AtLeastOneFocusTodo {
-    getEntries({ focusSelections }, getters) {
+    getEntries({ focusSelections }) {
         return [
             {
                 label: `Wählen Sie mindestens einen Studienschwerpunkt.`,

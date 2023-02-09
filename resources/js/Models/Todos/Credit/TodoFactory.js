@@ -2,7 +2,7 @@ import AtLeastOneOfModulesPerFocusTodo from "./AtLeastOneOfModulesPerFocusTodo";
 import ECTSPerFocusTodo from "./ECTSPerFocusTodo";
 import FocusModulesTodo from "./FocusModulesTodo";
 
-export const getTodo = (state, { name, params }) => {
+export const getTodo = ({ name, params }) => {
     switch (name) {
         case "AtLeastOneOfModulesPerFocusTodo": {
             return new AtLeastOneOfModulesPerFocusTodo(params);

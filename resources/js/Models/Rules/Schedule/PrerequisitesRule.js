@@ -1,11 +1,6 @@
 import { isPreviousSemester, isSameDate } from "../../../helpers";
-import BaseScheduleRule from "./BaseScheduleRule";
-export default class PrerequisitesRule extends BaseScheduleRule {
-    constructor() {
-        super("Prerequisites");
-    }
-
-    validatePlacements(state, { placements }, errors) {
+export default class PrerequisitesRule {
+    validatePlacements({ placements }, errors) {
         placements.forEach((placement) => {
             const missingPrerequisites = [];
             const prerequisites = placement.module.prerequisites;
@@ -42,13 +37,19 @@ export default class PrerequisitesRule extends BaseScheduleRule {
         });
     }
 
-    validateModule(module, state, { placements }, errors) {
+    validateModule(module, { placements }, errors) {
         const prerequisites = module.prerequisites;
         if (prerequisites.length == 0) {
             return;
         }
-        const prerequisitesMet = module.events.some((event) =>
-            this.eventMeetsPrerequisites(event, placements, prerequisites)
+
+        const prerequisitesMet = module.events.some(
+            (event) =>
+                this.eventMeetsPrerequisites(
+                    event,
+                    placements,
+                    prerequisites
+                ) && this.timeSlotIsFree(module.id, event, placements)
         );
         if (!prerequisitesMet) {
             errors.push({
@@ -61,7 +62,7 @@ export default class PrerequisitesRule extends BaseScheduleRule {
         }
     }
 
-    validateSelection(module, state, { placements }, status) {
+    validateSelection(module, { placements }, status) {
         const prerequisites = module.prerequisites;
         if (prerequisites.length == 0) {
             return;
@@ -76,11 +77,6 @@ export default class PrerequisitesRule extends BaseScheduleRule {
     }
 
     eventMeetsPrerequisites(event, placements, prerequisites) {
-        //Fail if the event's time slot is already taken
-        if (placements.find((placement) => isSameDate(placement, event))) {
-            return false;
-        }
-        //check if all preqs are met
         return prerequisites.every((prerequisite) => {
             return placements
                 .filter((placement) => {
@@ -90,5 +86,15 @@ export default class PrerequisitesRule extends BaseScheduleRule {
                     return isPreviousSemester(placement, event);
                 });
         });
+    }
+
+    timeSlotIsFree(moduleId, event, placements) {
+        const placement = placements.find((placement) => {
+            return isSameDate(placement, event);
+        });
+        if (!placement) {
+            return true;
+        }
+        return placement.moduleId == moduleId;
     }
 }

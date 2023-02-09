@@ -130,7 +130,8 @@
 
 <script>
 import TimeSlot from "./TimeSlot.vue";
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "pinia";
+import { useScheduleStore } from "../Store/schedule";
 import { InformationCircleIcon, XIcon } from "@heroicons/vue/outline";
 import HfhDialog from "./HfhDialog.vue";
 export default {
@@ -163,8 +164,8 @@ export default {
     };
   },
   computed: {
-    ...mapState("schedule", ["locations"]),
-    ...mapGetters("schedule", [
+    ...mapState(useScheduleStore, [
+      "locations",
       "years",
       "selectableEventsByDate",
       "placements",

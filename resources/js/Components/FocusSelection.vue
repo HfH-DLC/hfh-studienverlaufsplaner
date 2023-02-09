@@ -27,14 +27,15 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapActions, mapState } from "pinia";
+import { useScheduleStore } from "../Store/schedule";
 import { HfhSelect } from "@hfh-dlc/hfh-styleguide";
 export default {
   components: {
     HfhSelect,
   },
   computed: {
-    ...mapState("schedule", ["focusSelections", "foci", "readOnly"]),
+    ...mapState(useScheduleStore, ["focusSelections", "foci", "readOnly"]),
     firstFocusId: {
       get() {
         const focusSelection = this.focusSelections.find(
@@ -80,7 +81,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("schedule", ["selectFocus"]),
+    ...mapActions(useScheduleStore, ["selectFocus"]),
   },
 };
 </script>

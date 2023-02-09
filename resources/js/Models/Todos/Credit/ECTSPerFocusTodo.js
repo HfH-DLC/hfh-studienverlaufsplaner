@@ -4,10 +4,7 @@ export default class ECTSPerFocusTodo {
         this.maxECTS = params.maxECTS;
     }
 
-    getEntries(
-        { focusSelections, modules },
-        { creditedModulesByFocusSelection }
-    ) {
+    getEntries({ focusSelections, modules, creditedModulesByFocusSelection }) {
         return creditedModulesByFocusSelection.reduce(
             (acc, { focusSelectionId, moduleIds }) => {
                 const focusSelection = focusSelections.find(

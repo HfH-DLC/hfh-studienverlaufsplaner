@@ -124,7 +124,8 @@ import {
   XCircleIcon,
   InformationCircleIcon,
 } from "@heroicons/vue/outline";
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapState } from "pinia";
+import { useScheduleStore } from "../Store/schedule";
 import { isSameDate } from "../helpers.js";
 import HfhDialog from "./HfhDialog.vue";
 
@@ -161,7 +162,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("schedule", [
+    ...mapActions(useScheduleStore, [
       "placeModule",
       "selectModule",
       "deselectModule",
@@ -205,7 +206,7 @@ export default {
     },
   },
   computed: {
-    ...mapState("schedule", ["locations", "readOnly"]),
+    ...mapState(useScheduleStore, ["locations", "readOnly"]),
     invalidPlacement() {
       return this.placement.errors && this.placement.errors.length > 0;
     },

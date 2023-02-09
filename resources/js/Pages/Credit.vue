@@ -127,7 +127,8 @@ import PlanHeader from "../Components/PlanHeader.vue";
 import Tour from "../Components/Tour.vue";
 import MainLayout from "../Layouts/MainLayout.vue";
 
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState } from "pinia";
+import { useCreditStore } from "../Store/credit";
 export default {
   layout: MainLayout,
   components: {
@@ -155,10 +156,6 @@ export default {
       type: String,
       required: true,
     },
-    rulesResource: {
-      type: Object,
-      required: true,
-    },
     todosResource: {
       type: Object,
       required: true,
@@ -182,14 +179,13 @@ export default {
       plan: this.planResource.data,
       planerSlug: this.planerSlug,
       focusSelections: this.planResource.data.focusSelections,
-      rules: this.rulesResource.data,
       todos: this.todosResource.data,
       tour: this.tourData,
     });
   },
 
   computed: {
-    ...mapState("credit", [
+    ...mapState(useCreditStore, [
       "errors",
       "modules",
       "focusSelections",
@@ -207,7 +203,7 @@ export default {
   },
 
   methods: {
-    ...mapActions("credit", [
+    ...mapActions(useCreditStore, [
       "init",
       "creditModuleAgainstFocusSelection",
       "startTour",

@@ -24,7 +24,8 @@
 
 <script>
 import { XCircleIcon, CheckCircleIcon } from "@heroicons/vue/outline";
-import { mapActions } from "vuex";
+import { mapActions } from "pinia";
+import { useScheduleStore } from "../Store/schedule";
 export default {
   components: {
     CheckCircleIcon,
@@ -46,7 +47,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("schedule", ["deselectModule", "selectModule"]),
+    ...mapActions(useScheduleStore, ["deselectModule", "selectModule"]),
     onClick() {
       if (this.module.selected) {
         this.deselectModule();

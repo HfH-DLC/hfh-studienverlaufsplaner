@@ -1,11 +1,6 @@
 import { isSameDate } from "../../../helpers";
-import BaseScheduleRule from "./BaseScheduleRule";
-export default class DateRule extends BaseScheduleRule {
-    constructor() {
-        super("Date");
-    }
-
-    validatePlacements(state, { placements }, errors) {
+export default class DateRule {
+    validatePlacements({ placements }, errors) {
         placements.forEach((placement) => {
             if (
                 !placement.module.events.find((event) =>
@@ -22,7 +17,7 @@ export default class DateRule extends BaseScheduleRule {
         });
     }
 
-    validateModule(module, state, { placements }, errors) {
+    validateModule(module, { placements }, errors) {
         if (
             !module.placement &&
             module.events.every((event) =>
@@ -34,4 +29,6 @@ export default class DateRule extends BaseScheduleRule {
             });
         }
     }
+
+    validateSelection() {}
 }

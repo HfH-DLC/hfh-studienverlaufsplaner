@@ -26,7 +26,8 @@
 import { ChevronUpIcon, CheckCircleIcon } from "@heroicons/vue/outline";
 import { HfhAccordion } from "@hfh-dlc/hfh-styleguide";
 import Module from "../Components/Module.vue";
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapState } from "pinia";
+import { useScheduleStore } from "../Store/schedule";
 export default {
   components: {
     HfhAccordion,
@@ -49,8 +50,8 @@ export default {
     this.$emitter.on("focus-module", this.openCategoryByModule);
   },
   computed: {
-    ...mapState("schedule", ["locations"]),
-    ...mapGetters("schedule", [
+    ...mapState(useScheduleStore, [
+      "locations",
       "categories",
       "selectableLocations",
       "checkedLocations",
@@ -76,7 +77,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("schedule", ["deselectModule"]),
+    ...mapActions(useScheduleStore, ["deselectModule"]),
     openActiveAccordion(index) {
       if (index > -1) {
         this.currentOpen = index;

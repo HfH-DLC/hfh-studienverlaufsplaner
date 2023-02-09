@@ -7,7 +7,8 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from "pinia";
+import { useScheduleStore } from "../Store/schedule";
 import ContextButton from "./ContextButton.vue";
 import { TrashIcon } from "@heroicons/vue/outline";
 export default {
@@ -22,7 +23,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("schedule", ["removeModule"]),
+    ...mapActions(useScheduleStore, ["removeModule"]),
   },
 };
 </script>

@@ -1,17 +1,15 @@
 import { isSameDate, semesterCount, semesterPosition } from "../../../helpers";
-import BaseScheduleRule from "./BaseScheduleRule";
-export default class ExcludeSemesterRule extends BaseScheduleRule {
+export default class ExcludeSemesterRule {
     constructor(params) {
-        super("ExcludeSemester");
         this.excludePositions = params.excludePositions;
         this.moduleId = params.moduleId;
     }
 
-    validatePlacements(state, { placements }, errors) {
+    validatePlacements({ placements, startYear }, errors) {
         placements
             .filter((placement) => placement.moduleId == this.moduleId)
             .forEach((placement) => {
-                if (!this.isAllowedSemester(placement, state.startYear)) {
+                if (!this.isAllowedSemester(placement, startYear)) {
                     const text = this.excludePositions.reduce(
                         (acc, cur, i, array) => {
                             return (
@@ -38,7 +36,7 @@ export default class ExcludeSemesterRule extends BaseScheduleRule {
             });
     }
 
-    validateModule(module, state, { placements }, errors) {
+    validateModule(module, { startYear, placements }, errors) {
         if (module.id !== this.moduleId) {
             return;
         }
@@ -46,7 +44,7 @@ export default class ExcludeSemesterRule extends BaseScheduleRule {
             !module.placement &&
             module.events.every(
                 (event) =>
-                    this.isAllowedSemester(event, state.startYear) ||
+                    this.isAllowedSemester(event, startYear) ||
                     placements.find((placement) => isSameDate(placement, event))
             )
         ) {
@@ -56,14 +54,14 @@ export default class ExcludeSemesterRule extends BaseScheduleRule {
         }
     }
 
-    validateSelection(module, state, getters, status) {
+    validateSelection(module, { startYear }, status) {
         if (module.id !== this.moduleId) {
             return;
         }
         module.events.forEach((event) => {
             status[event.id].dateAllowed = this.isAllowedSemester(
                 event,
-                state.startYear
+                startYear
             );
         });
     }

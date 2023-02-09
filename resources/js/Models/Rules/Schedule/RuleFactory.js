@@ -1,8 +1,8 @@
-import DateRule from "./Schedule/DateRule";
-import ExcludeSemesterRule from "./Schedule/ExcludeSemesterRule";
-import PrerequisitesRule from "./Schedule/PrerequisitesRule";
+import DateRule from "./DateRule";
+import ExcludeSemesterRule from "./ExcludeSemesterRule";
+import PrerequisitesRule from "./PrerequisitesRule";
 
-export const getRule = (state, { name, params }) => {
+export const getRule = ({ name, params }) => {
     switch (name) {
         case "Date": {
             return new DateRule(params);

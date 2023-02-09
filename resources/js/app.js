@@ -1,8 +1,9 @@
 import { createApp, h } from "vue";
 import { createInertiaApp, Link } from "@inertiajs/inertia-vue3";
-import AppHead from "./Components/AppHead.vue";
+import { createPinia } from "pinia";
 import { InertiaProgress } from "@inertiajs/progress";
-import store from "./Store/index";
+
+import AppHead from "./Components/AppHead.vue";
 import emitter from "./emitter";
 
 createInertiaApp({
@@ -12,6 +13,7 @@ createInertiaApp({
     },
     setup({ el, app, props, plugin }) {
         const vueApp = createApp({ render: () => h(app, props) });
+        const store = createPinia();
         vueApp.config.globalProperties.$emitter = emitter;
         vueApp
             .use(plugin)

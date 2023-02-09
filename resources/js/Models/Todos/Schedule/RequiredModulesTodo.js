@@ -1,5 +1,5 @@
 export default class RequiredModulesTodo {
-    getEntries(state, { categories }) {
+    getEntries({ categories }) {
         const requiredCategories = categories.filter(
             (category) => category.required
         );

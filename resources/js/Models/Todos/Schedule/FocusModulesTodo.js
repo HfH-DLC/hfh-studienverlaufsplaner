@@ -5,7 +5,7 @@ function intersection(a, b) {
 }
 
 export default class FocusModulesTodo {
-    getEntries({ focusSelections, placements }, getters) {
+    getEntries({ focusSelections, placements }) {
         const foci = focusSelections.map(
             (focusSelection) => focusSelection.focus
         );

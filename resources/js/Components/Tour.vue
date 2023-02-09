@@ -60,6 +60,7 @@ import throttle from "lodash.throttle";
 import { XIcon } from "@heroicons/vue/outline";
 import { createPopper } from "@popperjs/core";
 import TourButton from "./TourButton.vue";
+import { callStoreActionByString } from "../Store/helpers";
 export default {
   components: {
     Dialog,
@@ -170,7 +171,7 @@ export default {
     changeStep(newIndex) {
       if (this.currentStep.afterAction) {
         const { name, value } = this.currentStep.afterAction;
-        this.$store.dispatch(name, value);
+        callStoreActionByString(name, value);
       }
       if (newIndex == this.steps.length) {
         this.complete();
@@ -179,7 +180,7 @@ export default {
       }
       if (this.currentStep.beforeAction) {
         const { name, value } = this.currentStep.beforeAction;
-        this.$store.dispatch(name, value);
+        callStoreActionByString(name, value);
       }
     },
     complete() {

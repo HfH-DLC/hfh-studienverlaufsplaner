@@ -22,14 +22,18 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters, mapState, mapActions } from "vuex";
+import { mapActions, mapState } from "pinia";
+import { useScheduleStore } from "../Store/schedule";
 export default {
   computed: {
-    ...mapState("schedule", ["readOnly"]),
-    ...mapGetters("schedule", ["selectableLocations", "checkedLocations"]),
+    ...mapState(useScheduleStore, [
+      "readOnly",
+      "selectableLocations",
+      "checkedLocations",
+    ]),
   },
   methods: {
-    ...mapActions("schedule", ["setLocationChecked"]),
+    ...mapActions(useScheduleStore, ["setLocationChecked"]),
     onChange(event, index) {
       const checked = event.currentTarget.checked;
       this.setLocationChecked({
