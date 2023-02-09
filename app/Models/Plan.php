@@ -100,7 +100,7 @@ class Plan extends Model
     protected static function booted()
     {
         static::created(function ($plan) {
-            $hashids = new Hashids(config('app.name'), 6);
+            $hashids = new Hashids(config('app.name'), 7, 'abcdefghijklmnopqrstuvwxyz1234567890');
             $slug = $hashids->encode($plan->id);
             $plan->slug = $slug;
             $plan->save();
