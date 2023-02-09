@@ -72,7 +72,7 @@
           </li>
         </ul>
       </nav>
-      <SaveStatus />
+      <SaveStatus :saveStatus="saveStatus" />
       <button
         v-if="showTour"
         id="start-tour"
@@ -133,6 +133,10 @@ export default {
       required: true,
     },
     moduleDirectoryUrl: {
+      type: String,
+      required: true,
+    },
+    saveStatus: {
       type: String,
       required: true,
     },

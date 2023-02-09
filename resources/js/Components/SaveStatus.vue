@@ -4,6 +4,10 @@
       class="inline-block w-5 h-5 shrink-0 text-green-700"
       v-if="saved"
     />
+    <XCircleIcon
+      class="inline-block w-5 h-5 shrink-0 text-thunderbird-red"
+      v-if="error"
+    />
     <div
       v-if="saving"
       class="
@@ -19,9 +23,7 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
-import { useScheduleStore } from "../Store/schedule";
-import { CheckCircleIcon } from "@heroicons/vue/outline";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/vue/outline";
 import {
   SAVE_STATUS_SAVED,
   SAVE_STATUS_SAVING,
@@ -31,9 +33,15 @@ import {
 export default {
   components: {
     CheckCircleIcon,
+    XCircleIcon,
+  },
+  props: {
+    saveStatus: {
+      type: String,
+      required: true,
+    },
   },
   computed: {
-    ...mapState(useScheduleStore, ["saveStatus"]),
     saved() {
       return this.saveStatus == SAVE_STATUS_SAVED;
     },
@@ -61,6 +69,9 @@ export default {
       }
       if (this.saved) {
         return "text-green-700";
+      }
+      if (this.error) {
+        return "text-thunderbird-red";
       }
       return "";
     },

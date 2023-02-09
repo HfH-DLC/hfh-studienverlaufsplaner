@@ -10,9 +10,11 @@
         :showTour="!!tour && planResource.data.scheduleValid"
         :brochureUrl="brochureUrl"
         :moduleDirectoryUrl="moduleDirectoryUrl"
+        :saveStatus="saveStatus"
       />
     </header>
     <main class="flex-1 flex flex-col px-4 pb-4">
+      <Flash class="fixed top-4 left-1/2 -translate-x-1/2" />
       <ErrorList class="mt-4 space-y-2" :errors="errors" aria-live="polite" />
       <div class="flex mt-4 gap-x-8 print:block">
         <template v-if="planResource.data.scheduleValid">
@@ -125,6 +127,7 @@ import { mapActions, mapState } from "pinia";
 import { useCreditStore } from "../Store/credit";
 import Checklist from "../Components/Checklist.vue";
 import ErrorList from "../Components/ErrorList.vue";
+import Flash from "../Components/Flash.vue";
 import PlanHeader from "../Components/PlanHeader.vue";
 import Tour from "../Components/Tour.vue";
 import MainLayout from "../Layouts/MainLayout.vue";
@@ -138,6 +141,7 @@ export default {
     HfhLink,
     PlanHeader,
     Tour,
+    Flash,
   },
   props: {
     creditableModulesResource: {
@@ -182,9 +186,11 @@ export default {
       todos: this.todosResource.data,
       tour: this.tourData,
     });
+    this.$emitter.on("retry-save", this.retrySave);
     this.$emitter.on("focus-module", this.focusModule);
   },
   beforeDestroy() {
+    this.$emitter.off("retry-save", this.retrySave);
     this.$emitter.off("focus-module", this.focusModule);
   },
 
@@ -197,6 +203,7 @@ export default {
       "tour",
       "tourCompleted",
       "readOnly",
+      "saveStatus",
     ]),
     focusOptions() {
       return this.focusSelections.map((focusSelection) => ({
@@ -208,6 +215,7 @@ export default {
 
   methods: {
     ...mapActions(useCreditStore, [
+      "save",
       "init",
       "creditModuleAgainstFocusSelection",
       "startTour",
@@ -222,6 +230,14 @@ export default {
       const selectElement = document.getElementById(`credit-${moduleId}`);
       if (selectElement) {
         selectElement.focus();
+      }
+    },
+    async retrySave() {
+      if (await this.save()) {
+        this.$emitter.emit("flash", {
+          type: flashTypes.SUCCESS,
+          message: "Ihr Plan wurde erfolgreich gespeichert.",
+        });
       }
     },
   },

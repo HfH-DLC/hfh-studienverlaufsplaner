@@ -7,6 +7,7 @@ import {
 } from "../constants";
 import DataAdapter from "../DataAdapter";
 import emitter from "../emitter";
+import flashTypes from "../flashTypes";
 import { getTodo } from "../Models/Todos/Credit/TodoFactory";
 
 let dataAdapter;
