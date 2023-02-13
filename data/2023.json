@@ -1,6 +1,6 @@
 {
     "year": 2023,
-    "version": 12,
+    "version": 13,
     "modules": [
         {
             "id": "P1_01",
@@ -598,7 +598,7 @@
             },
             "meta": {
                 "moduleDirectoryUrl": "https://daylightweb.hfh.ch/modulverzeichnis",
-                "brochureUrl": "https://www.hfh.ch/sites/default/files/documents/StudienbroschuereMA_SHP_22_web.pdf"
+                "brochureUrl": "https://www.hfh.ch/sites/default/files/documents/StudienbroschuereMA_SHP_23_web.pdf"
             }
         },
         {
@@ -739,7 +739,7 @@
             },
             "meta": {
                 "moduleDirectoryUrl": "https://daylightweb.hfh.ch/modulverzeichnis-1/ma-heilpaedagogische-frueherziehung-hfe",
-                "brochureUrl": "https://www.hfh.ch/sites/default/files/documents/StudienbroschuereMA_HFE_22.pdf"
+                "brochureUrl": "https://www.hfh.ch/sites/default/files/documents/StudienbroschuereMA_HFE_23_web.pdf"
             }
         }
     ],
