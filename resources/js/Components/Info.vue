@@ -1,6 +1,5 @@
 <template>
-  <div
-    class="
+  <div class="
       info-message
       bg-blue-50
       text-blue-600
@@ -10,15 +9,16 @@
       w-fit
       flex
       items-top
-    "
-  >
+    ">
     <InformationCircleIcon class="inline-block w-5 h-5 shrink-0 mt-1.5" />
-    <span class="ml-1"><slot></slot></span>
+    <span class="ml-1">
+      <slot></slot>
+    </span>
   </div>
 </template>
 
-<script>
-import { InformationCircleIcon } from "@heroicons/vue/outline";
+<script lang="ts">
+import { InformationCircleIcon } from "@heroicons/vue/24/outline";
 export default {
   components: {
     InformationCircleIcon,
@@ -26,4 +26,6 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+
+</style>

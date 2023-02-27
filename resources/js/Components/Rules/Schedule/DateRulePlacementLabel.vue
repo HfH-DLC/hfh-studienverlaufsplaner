@@ -1,27 +1,28 @@
 <template>
-  <div>
-    Das Modul
-    <button @click="focusModule">
-      {{ placement.module.id }} {{ placement.module.name }}
-    </button>
-    ist am Datum {{ placement.semester }} {{ placement.year }},
-    {{ placement.timeWindow }}, {{ placement.day }} {{ placement.time }} nicht
-    verfügbar.
-  </div>
+    <div>
+        Das Modul
+        <button @click="focusModule">
+            {{ placement.module.id }} {{ placement.module.name }}
+        </button>
+        ist am Datum {{ placement.semester }} {{ placement.year }},
+        {{ placement.timeWindow }}, {{ placement.day }}
+        {{ placement.time }} nicht verfügbar.
+    </div>
 </template>
 
-<script>
-export default {
-  props: {
+<script lang="ts" setup>
+import { useEmitter } from "@/composables/useEmitter";
+import { SchedulePlacement } from "@/types";
+import { PropType } from "vue";
+
+const props = defineProps({
     placement: {
-      type: Object,
-      required: true,
+        type: Object as PropType<SchedulePlacement>,
+        required: true,
     },
-  },
-  methods: {
-    focusModule() {
-      this.$emitter.emit("focus-module", this.placement.module.id);
-    },
-  },
+});
+
+const focusModule = () => {
+    useEmitter().emit("focus-module", props.placement.module.id);
 };
 </script>

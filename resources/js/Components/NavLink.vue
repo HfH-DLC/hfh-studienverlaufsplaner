@@ -3,11 +3,14 @@
         :href="href"
         class="text-blue-600 hover:underline"
         :class="{ 'font-bold': active }"
-        ><slot
-    /></Link>
+    >
+        <slot />
+    </Link>
 </template>
 
-<script>
+<script lang="ts">
+import { Link } from "@inertiajs/vue3";
+
 export default {
     props: {
         href: {
@@ -19,6 +22,7 @@ export default {
             default: false,
         },
     },
+    components: { Link },
 };
 </script>
 

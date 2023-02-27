@@ -15,83 +15,80 @@
             {{ actionMessage }}
         </button>
         <button ref="close" @click="onClose" aria-label="Nachricht schliessen">
-            <XIcon class="w-5 h-5" aria-hidden="true" />
+            <XMarkIcon class="w-5 h-5" aria-hidden="true" />
         </button>
     </div>
 </template>
 
-<script>
-import flashTypes from "../flashTypes";
-import { XIcon } from "@heroicons/vue/outline";
-export default {
-    components: {
-        XIcon,
-    },
-    created() {
-        this.$emitter.on("flash", this.flash);
-    },
-    beforeDestroy() {
-        this.$emitter.off("flash", this.flash);
-    },
-    data() {
-        return {
-            type: null,
-            message: null,
-            actionMessage: null,
-            actionEvent: null,
-        };
-    },
-    methods: {
-        flash(event) {
-            this.type = event.type;
-            this.message = event.message;
-            this.actionMessage = event.actionMessage;
-            this.actionEvent = event.actionEvent;
-            this.$nextTick(() => {
-                if (this.$refs.action) {
-                    this.$refs.action.focus();
-                } else if (this.$refs.close) {
-                    this.$refs.close.focus();
-                }
-            });
-        },
-        onClose() {
-            this.type = null;
-            this.message = null;
-            this.actionMessage = null;
-            this.actionEvent = null;
-        },
-        onCallback() {
-            if (this.actionEvent) {
-                this.$emitter.emit(this.actionEvent);
-                this.onClose();
-            }
-        },
-    },
-    computed: {
-        typeClasses() {
-            switch (this.type) {
-                case flashTypes.ERROR: {
-                    return "bg-red-50 text-red-600 border border-red-300";
-                }
-                case flashTypes.SUCCESS: {
-                    return "bg-green-50 text-green-600 border border-green-300";
-                }
-                default:
-                    return "";
-            }
-        },
-        typeRole() {
-            switch (this.type) {
-                case flashTypes.ERROR: {
-                    return "alert";
-                }
-                default:
-                    return "status";
-            }
-        },
-    },
+<script lang="ts" setup>
+import { onBeforeUnmount, ref, Ref, nextTick, computed } from "vue";
+import { FlashData, FlashType } from "@/types";
+import { XMarkIcon } from "@heroicons/vue/24/outline";
+import { EmitterEvents, useEmitter } from "@/composables/useEmitter";
+
+const type: Ref<FlashType | null> = ref(null);
+const message = ref("");
+const actionMessage = ref("") as Ref<string | undefined>;
+const actionEvent = ref() as Ref<keyof EmitterEvents | null | undefined>;
+const actionButton = ref();
+const closeButton = ref();
+
+const flash = (event: FlashData) => {
+    type.value = event.type;
+    message.value = event.message;
+    actionMessage.value = event.actionMessage;
+    actionEvent.value = event.actionEvent;
+    nextTick(() => {
+        if (actionButton.value) {
+            actionButton.value.focus();
+        } else if (closeButton.value) {
+            closeButton.value.focus();
+        }
+    });
 };
+
+const emitter = useEmitter();
+emitter.on("flash", flash);
+
+onBeforeUnmount(() => {
+    emitter.off("flash", flash);
+});
+
+const onClose = () => {
+    type.value = null;
+    message.value = "";
+    actionMessage.value = "";
+    actionEvent.value = null;
+};
+const onCallback = () => {
+    if (actionEvent.value) {
+        emitter.emit(actionEvent.value);
+        onClose();
+    }
+};
+
+const typeClasses = computed(() => {
+    switch (type.value) {
+        case FlashType.Error: {
+            return "bg-red-50 text-red-600 border border-red-300";
+        }
+        case FlashType.Success: {
+            return "bg-green-50 text-green-600 border border-green-300";
+        }
+        default:
+            return "";
+    }
+});
+
+const typeRole = computed(() => {
+    switch (type.value) {
+        case FlashType.Error: {
+            return "alert";
+        }
+        default:
+            return "status";
+    }
+});
 </script>
 
 <style lang="scss" scoped></style>

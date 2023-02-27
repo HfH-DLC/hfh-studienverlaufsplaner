@@ -7,10 +7,10 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
     props: {
-        status: Number,
+        status: { type: Number, required: true },
     },
     computed: {
         title() {

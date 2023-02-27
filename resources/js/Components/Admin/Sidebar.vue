@@ -2,7 +2,7 @@
     <div class="border-l border-gray-300">
         <div class="bg-gray-700 flex justify-end items-center">
             <button class="text-3xl p-2 text-white" @click="$emit('close')">
-                <XIcon class="w-6 h-6" />
+                <XMarkIcon class="w-6 h-6" />
             </button>
         </div>
         <div class="p-4">
@@ -12,12 +12,12 @@
     </div>
 </template>
 
-<script>
-import { XIcon } from "@heroicons/vue/outline";
+<script lang="ts">
+import { XMarkIcon } from "@heroicons/vue/24/outline";
 export default {
     emits: ["close"],
     components: {
-        XIcon,
+        XMarkIcon,
     },
     props: {
         title: {

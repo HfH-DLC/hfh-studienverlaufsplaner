@@ -1,5 +1,0 @@
-const SAVE_STATUS_SAVING = "saving";
-const SAVE_STATUS_SAVED = "saved";
-const SAVE_STATUS_ERROR = "error";
-
-export { SAVE_STATUS_SAVED, SAVE_STATUS_SAVING, SAVE_STATUS_ERROR };

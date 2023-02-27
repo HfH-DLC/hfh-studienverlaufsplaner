@@ -16,11 +16,13 @@
     </ul>
 </template>
 
-<script>
+<script lang="ts">
+import { PropType } from "vue";
+
 export default {
     props: {
         entities: {
-            type: Array,
+            type: Array as PropType<Array<{ id: string; name: string }>>,
             required: true,
         },
     },

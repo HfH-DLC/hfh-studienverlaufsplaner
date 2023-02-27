@@ -11,7 +11,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { ChecklistEntryData } from "@/types";
+import { PropType } from "@vue/runtime-core";
 import ChecklistEntry from "./ChecklistEntry.vue";
 export default {
   components: {
@@ -19,7 +21,7 @@ export default {
   },
   props: {
     entries: {
-      type: Array,
+      type: Array as PropType<Array<ChecklistEntryData>>,
       required: true,
     },
   },
@@ -35,4 +37,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 </style>
