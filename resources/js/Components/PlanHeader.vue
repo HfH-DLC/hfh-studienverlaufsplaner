@@ -92,12 +92,7 @@
 <script lang="ts" setup>
 import { useEmitter } from "@/composables/useEmitter";
 import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
-import {
-    HfhMenu,
-    HfhLink,
-    HfhLogo,
-    HfhHeaderBar,
-} from "@hfh-dlc/hfh-styleguide";
+import { HfhLogo, HfhHeaderBar } from "@hfh-dlc/hfh-styleguide";
 import { Link } from "@inertiajs/vue3";
 import PrintButton from "./PrintButton.vue";
 import SaveStatusIndicator from "./SaveStatusIndicator.vue";

@@ -209,12 +209,5 @@ export interface TourStep {
     content: string;
     ref?: string;
     placement?: PopperPlacement;
-    beforeAction?: {
-        name: string;
-        value: string;
-    };
-    afterAction?: {
-        name: string;
-        value: string;
-    };
+    selectedModule: ScheduleModule;
 }

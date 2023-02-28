@@ -58,10 +58,14 @@ import TourButton from "./TourButton.vue";
 import { TourStep } from "@/types";
 import { useEmitter } from "@/composables/useEmitter";
 
-const emit = defineEmits(["started", "completed"]);
+const emit = defineEmits(["started", "stepChanged", "completed"]);
 const props = defineProps({
     startOnMount: {
         type: Boolean,
+        required: true,
+    },
+    currentIndex: {
+        type: Number,
         required: true,
     },
     steps: {
@@ -71,13 +75,15 @@ const props = defineProps({
 });
 
 const isOpen = ref(false);
-const currentIndex = ref(0);
 const currentElement = ref(null) as Ref<HTMLElement | null>;
 const overlayStyle = ref({});
 const popper = ref(null) as Ref<Instance | null>;
 const dialog = ref() as Ref<HTMLElement>;
 
 const onResize = throttle(() => updateOverlayStyle(), 100);
+const currentIndex = computed(() => {
+    return props.currentIndex;
+});
 
 const start = () => {
     emit("started");
@@ -139,7 +145,7 @@ const initPopper = () => {
 };
 const end = () => {
     isOpen.value = false;
-    currentIndex.value = 0;
+    emit("stepChanged", 0);
     if (popper.value) {
         popper.value.destroy();
         popper.value = null;
@@ -156,18 +162,10 @@ const previousStep = () => {
     changeStep(currentIndex.value - 1);
 };
 const changeStep = (newIndex: number) => {
-    if (currentStep.value.afterAction) {
-        const { name, value } = currentStep.value.afterAction;
-        //todo handle before action or refactor
-    }
     if (newIndex == props.steps.length) {
         complete();
     } else {
-        currentIndex.value = newIndex;
-    }
-    if (currentStep.value.beforeAction) {
-        const { name, value } = currentStep.value.beforeAction;
-        //todo handle before action or refactor
+        emit("stepChanged", newIndex);
     }
 };
 const complete = () => {
@@ -199,6 +197,7 @@ const updateOverlayStyle = () => {
 };
 
 watch(currentIndex, () => {
+    console.log("watch");
     if (isOpen.value) {
         updateCurrentElement();
     }

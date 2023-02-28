@@ -113,7 +113,7 @@
                 </template>
                 <p v-else>
                     Bitte erfüllen sie zuerst alle Anforderungen an Ihren
-                    <HfhLink component="Link" href="zeitplan">Zeitplan</HfhLink
+                    <HfhLink :component="Link" href="zeitplan">Zeitplan</HfhLink
                     >, bevor Sie mit der Anrechnung an die Studienschwerpunkte
                     beginnen.
                 </p>
@@ -122,6 +122,7 @@
         <Tour
             v-if="tour"
             :steps="tour.steps"
+            :current-index="tourCurrentStepIndex"
             :startOnMount="!tourCompleted"
             @started="store.startTour"
             @completed="store.completeTour"
@@ -131,6 +132,7 @@
 
 <script lang="ts" setup>
 import { HfhSelect, HfhLink } from "@hfh-dlc/hfh-styleguide";
+import { Link } from "@inertiajs/vue3";
 import { storeToRefs } from "pinia";
 import { PropType, computed, onBeforeUnmount } from "vue";
 import { useEmitter } from "@/composables/useEmitter";
@@ -225,6 +227,7 @@ const {
     todoEntries,
     tour,
     tourCompleted,
+    tourCurrentStepIndex,
     readOnly,
     saveStatus,
 } = storeToRefs(store);

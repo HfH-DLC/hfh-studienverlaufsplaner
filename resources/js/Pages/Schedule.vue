@@ -7,34 +7,34 @@
                 :planerName="planerName"
                 :planSlug="planResource.data.slug"
                 :showNavigation="focusSelectionEnabled"
-                :showTour="!!tour"
+                :showTour="!!store.tour"
                 :brochureUrl="brochureUrl"
                 :moduleDirectoryUrl="moduleDirectoryUrl"
-                :save-status="saveStatus"
+                :save-status="store.saveStatus"
             />
         </header>
         <main class="flex-1 flex flex-col">
             <Flash class="fixed top-4 left-1/2 -translate-x-1/2" />
-            <template v-if="initialized">
+            <template v-if="store.initialized">
                 <div>
                     <div
                         class="p-4 border-b border-gray-300 space-y-4"
                         role="alert"
                         v-if="
-                            placementErrorMessages.length > 0 ||
-                            infos.length > 0
+                            store.placementErrorMessages.length > 0 ||
+                            store.infos.length > 0
                         "
                     >
                         <InfoList
                             class="space-y-2"
-                            v-if="infos.length > 0"
-                            :infos="infos"
+                            v-if="store.infos.length > 0"
+                            :infos="store.infos"
                             aria-live="polite"
                         />
                         <ErrorList
                             class="space-y-2"
-                            v-if="placementErrorMessages.length > 0"
-                            :errors="placementErrorMessages"
+                            v-if="store.placementErrorMessages.length > 0"
+                            :errors="store.placementErrorMessages"
                             aria-live="polite"
                         />
                     </div>
@@ -56,7 +56,7 @@
                             <div v-show="!selectedOrTourModule">
                                 <h2 class="hfh-sr-only">Standort-Auswahl</h2>
                                 <LocationSelect
-                                    v-if="selectableLocations.length > 1"
+                                    v-if="store.selectableLocations.length > 1"
                                     class="mb-4"
                                 />
                                 <h2 class="hfh-sr-only">Modul-Liste</h2>
@@ -81,8 +81,10 @@
                             <h2 class="hfh-sr-only">Checkliste</h2>
                             <p
                                 v-if="
-                                    placementErrorMessages.length == 0 &&
-                                    !todoEntries.some((entry) => !entry.checked)
+                                    store.placementErrorMessages.length == 0 &&
+                                    !store.todoEntries.some(
+                                        (entry) => !entry.checked
+                                    )
                                 "
                                 class="mb-8"
                             >
@@ -90,20 +92,22 @@
                                 <HfhLink
                                     v-if="focusSelectionEnabled"
                                     href="anrechnung"
-                                    component="Link"
+                                    :component="Link"
                                     >Weiter zur Anrechnung.
                                 </HfhLink>
                             </p>
-                            <Checklist :entries="todoEntries" />
+                            <Checklist :entries="store.todoEntries" />
                         </StickyColumn>
                     </div>
                 </div>
                 <Tour
-                    v-if="tour"
-                    :steps="tour.steps"
-                    :startOnMount="!tourCompleted"
+                    v-if="store.tour"
+                    :steps="store.tour.steps"
+                    :current-index="store.tourCurrentStepIndex"
+                    :startOnMount="!store.tourCompleted"
                     @started="store.startTour"
                     @completed="store.completeTour"
+                    @step-changed="onTourStepChanged"
                 />
             </template>
         </main>
@@ -112,7 +116,6 @@
 
 <script lang="ts" setup>
 import { ref, onBeforeUnmount, computed } from "vue";
-import { storeToRefs } from "pinia";
 import { useScheduleStore } from "../Store/schedule";
 // Components
 import ErrorList from "../Components/ErrorList.vue";
@@ -129,6 +132,7 @@ import Checklist from "../Components/Checklist.vue";
 import LocationSelect from "../Components/LocationSelect.vue";
 import MainLayout from "../Layouts/MainLayout.vue";
 import { HfhLink } from "@hfh-dlc/hfh-styleguide";
+import { Link } from "@inertiajs/vue3";
 import { FlashType, TourData } from "@/types";
 import AppHead from "@/Components/AppHead.vue";
 import { PropType } from "vue";
@@ -193,7 +197,6 @@ const props = defineProps({
 
 const hashModuleId = ref();
 const hashCategoryId = ref();
-const readOnly = ref(true);
 
 const store = useScheduleStore();
 store.init({
@@ -225,23 +228,13 @@ onBeforeUnmount(() => {
     emitter.off("focus-module", store.selectModule);
 });
 
-const {
-    initialized,
-    tour,
-    tourCompleted,
-    tourActive,
-    tourSelectedModule,
-    todoEntries,
-    placementErrorMessages,
-    infos,
-    saveStatus,
-    selectedModule,
-    selectableLocations,
-} = storeToRefs(store);
-
 const selectedOrTourModule = computed(() => {
-    return tourActive ? tourSelectedModule.value : selectedModule.value;
+    return store.tourActive ? store.tourSelectedModule : store.selectedModule;
 });
+
+const onTourStepChanged = (index: number) => {
+    store.tourCurrentStepIndex = index;
+};
 </script>
 
 <style>

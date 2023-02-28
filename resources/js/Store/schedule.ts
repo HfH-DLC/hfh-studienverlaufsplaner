@@ -39,26 +39,6 @@ import {
 import { useEmitter } from "@/composables/useEmitter";
 import { toRefs } from "vue";
 
-const TOUR_SELECTED_MODULE: ScheduleModule = {
-    id: "WP2_04.2",
-    name: "Heilpädagogik im Bereich Hören 2",
-    prerequisites: [
-        {
-            id: "WP2_04.1",
-            name: "Heilpädagogik im Bereich Hören 1",
-            ects: 5,
-            events: [],
-            prerequisites: [],
-        },
-    ],
-    ects: 5,
-    events: [],
-    infos: [],
-    misplaced: false,
-    placement: undefined,
-    selected: true,
-};
-
 let dataAdapter: DataAdapter;
 const emitter = useEmitter();
 
@@ -96,7 +76,7 @@ export const useScheduleStore = defineStore("schedule", {
         tour: null as TourData | null,
         tourActive: false,
         tourCompleted: false,
-        tourSelectedModule: null as ScheduleModule | null,
+        tourCurrentStepIndex: 0,
     }),
     actions: {
         init({
@@ -306,9 +286,6 @@ export const useScheduleStore = defineStore("schedule", {
             this.tourActive = false;
             this.tourCompleted = true;
             this.save();
-        },
-        setShowTourSelectedModule(value: boolean) {
-            this.tourSelectedModule = value ? TOUR_SELECTED_MODULE : null;
         },
         setLocationChecked(index: number, checked: boolean) {
             this.locations[index].checked = checked;
@@ -645,6 +622,32 @@ export const useScheduleStore = defineStore("schedule", {
                     (placement) => placement.errors.length == 0
                 )
             );
+        },
+        tourSelectedModule(): ScheduleModule | null {
+            if (
+                this.tour &&
+                this.tourActive &&
+                this.tour.steps.length > this.tourCurrentStepIndex
+            ) {
+                const defaultModule: ScheduleModule = {
+                    id: "",
+                    name: "",
+                    infos: [],
+                    misplaced: false,
+                    placement: undefined,
+                    selected: false,
+                    events: [],
+                    ects: 0,
+                    prerequisites: [],
+                };
+                const module =
+                    this.tour?.steps[this.tourCurrentStepIndex].selectedModule;
+
+                if (module) {
+                    return { ...defaultModule, ...module };
+                }
+            }
+            return null;
         },
     },
 });

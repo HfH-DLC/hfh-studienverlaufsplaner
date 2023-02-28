@@ -39,7 +39,7 @@ import { PropType } from "vue";
 
 const props = defineProps({
     selectedModule: {
-        type: Object as PropType<ScheduleModule>,
+        type: Object as PropType<ScheduleModule | null>,
         default: null,
     },
 });

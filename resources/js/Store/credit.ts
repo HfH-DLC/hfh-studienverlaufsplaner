@@ -34,6 +34,7 @@ export const useCreditStore = defineStore("credit", {
         tour: null as TourData | null,
         tourActive: false,
         tourCompleted: false,
+        tourCurrentStepIndex: 0,
         valid: false,
     }),
     actions: {
