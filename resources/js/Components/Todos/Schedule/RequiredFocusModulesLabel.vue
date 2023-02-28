@@ -1,61 +1,60 @@
 <template>
-  <div>
-    Belegen Sie für den SSP "{{ focusName }}" {{ countString }}
-    <template v-for="(module, index) in modules" :key="module.id">
-      <span v-if="index < modules.length - 1" class="whitespace-nowrap">
-        <button
-          @click="focusModule(module)"
-          role="button"
-          tabIndex="0"
-          data-action="focus-module"
-          :data-module="module.id"
-        >
-          {{ module.id }}</button
-        >,
-      </span>
-      <span v-else class="whitespace-nowrap">
-        <button
-          @click="focusModule(module)"
-          role="button"
-          tabIndex="0"
-          data-action="focus-module"
-          :data-module="module.id"
-        >
-          {{ module.id }}</button
-        >.
-      </span>
-    </template>
-  </div>
+    <div>
+        Belegen Sie für den SSP "{{ focusName }}" {{ countString }}
+        <template v-for="(module, index) in modules" :key="module.id">
+            <span v-if="index < modules.length - 1" class="whitespace-nowrap">
+                <button
+                    @click="focusModule(module)"
+                    role="button"
+                    tabIndex="0"
+                    data-action="focus-module"
+                    :data-module="module.id"
+                >
+                    {{ module.id }}</button
+                >,
+            </span>
+            <span v-else class="whitespace-nowrap">
+                <button
+                    @click="focusModule(module)"
+                    role="button"
+                    tabIndex="0"
+                    data-action="focus-module"
+                    :data-module="module.id"
+                >
+                    {{ module.id }}</button
+                >.
+            </span>
+        </template>
+    </div>
 </template>
 
-<script>
-export default {
-  props: {
+<script lang="ts" setup>
+import { useEmitter } from "@/composables/useEmitter";
+import { ScheduleModule } from "@/types";
+import { PropType, computed } from "vue";
+
+const props = defineProps({
     focusName: {
-      type: String,
-      required: true,
+        type: String,
+        required: true,
     },
     modules: {
-      type: Array,
-      required: true,
+        type: Array as PropType<Array<ScheduleModule>>,
+        required: true,
     },
-  },
-  computed: {
-    countString() {
-      if (this.modules.length == 1) {
+});
+
+const countString = computed(() => {
+    if (props.modules.length == 1) {
         return "das Modul";
-      } else {
+    } else {
         return "die Module";
-      }
-    },
-  },
-  methods: {
-    focusModule(module) {
-      this.$emitter.emit("focus-module", module.id);
-    },
-  },
+    }
+});
+
+const focusModule = (module: ScheduleModule) => {
+    useEmitter().emit("focus-module", module.id);
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

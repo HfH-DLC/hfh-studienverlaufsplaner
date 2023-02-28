@@ -1,37 +1,38 @@
 <template>
-  <div>
-    Rechnen Sie mindestens eines der Module
-    <template v-for="(moduleId, index) in moduleIds" :key="moduleId">
-      <span class="whitespace-nowrap"
-        ><button @click="focusModule(moduleId)">
-          {{ moduleId }}</button
-        ><template v-if="index < moduleIds.length - 2">, </template></span
-      >
-      <template v-if="index == moduleIds.length - 2"> oder </template>
-    </template>
-    an den SSP "{{ focusName }}" an.
-  </div>
+    <div>
+        Rechnen Sie mindestens eines der Module
+        <template v-for="(moduleId, index) in moduleIds" :key="moduleId">
+            <span class="whitespace-nowrap"
+                ><button @click="focusModule(moduleId)">
+                    {{ moduleId }}</button
+                ><template v-if="index < moduleIds.length - 2"
+                    >,
+                </template></span
+            >
+            <template v-if="index == moduleIds.length - 2"> oder </template>
+        </template>
+        an den SSP "{{ focusName }}" an.
+    </div>
 </template>
 
-<script>
-export default {
-  props: {
+<script lang="ts" setup>
+import { useEmitter } from "@/composables/useEmitter";
+import { PropType } from "vue";
+
+const props = defineProps({
     moduleIds: {
-      type: Array,
-      required: true,
+        type: Array as PropType<Array<string>>,
+        required: true,
     },
     focusName: {
-      type: String,
-      required: true,
+        type: String,
+        required: true,
     },
-  },
-  methods: {
-    focusModule(id) {
-      this.$emitter.emit("focus-module", id);
-    },
-  },
+});
+
+const focusModule = (id: string) => {
+    useEmitter().emit("focus-module", id);
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -13,8 +13,6 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Inertia\Testing\AssertableInertia as Assert;
 
-use function PHPUnit\Framework\assertTrue;
-
 class PlanTest extends TestCase
 {
     use RefreshDatabase;
@@ -181,7 +179,7 @@ class PlanTest extends TestCase
     {
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create();
-        Location::factory()->create(['id' => 'ZH', 'name' => 'Zürich', 'default' => 'true']);
+        Location::factory()->create(['id' => 'ZH', 'name' => 'Zürich', 'default' => true]);
         Location::factory()->create(['id' => 'GR', 'name' => 'Chur']);
         $this->assertTrue($plan->locations->isEmpty());
 
@@ -226,7 +224,7 @@ class PlanTest extends TestCase
     {
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create();
-        $location = Location::factory()->create(['id' => 'ZH', 'name' => 'Zürich', 'default' => 'true']);
+        $location = Location::factory()->create(['id' => 'ZH', 'name' => 'Zürich', 'default' => true]);
         $module = Module::factory()->create();
         $this->assertTrue($plan->placements->isEmpty());
         $url = "/$planer->slug/$plan->slug/zeitplan";

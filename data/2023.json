@@ -544,13 +544,17 @@
                             "content": "Wenn Sie ein Modul angewählt haben, sehen Sie genauere Informationen, zum Beispiel Kreditpunkte und Voraussetzungen des Moduls.",
                             "ref": "modules",
                             "placement": "right",
-                            "beforeAction": {
-                                "name": "schedule/setShowTourSelectedModule",
-                                "value": "true"
-                            },
-                            "afterAction": {
-                                "name": "schedule/setShowTourSelectedModule",
-                                "value": false
+                            "selectedModule": {
+                                "id": "WP2_04.2",
+                                "name": "Heilpädagogik im Bereich Hören 2",
+                                "prerequisites": [
+                                    {
+                                        "id": "WP2_04.1",
+                                        "name": "Heilpädagogik im Bereich Hören 1",
+                                        "ects": 5
+                                    }
+                                ],
+                                "ects": 5
                             }
                         },
                         {
@@ -707,13 +711,17 @@
                             "content": "Wenn Sie ein Modul angewählt haben, sehen Sie genauere Informationen, zum Beispiel Kreditpunkte und Voraussetzungen des Moduls.",
                             "ref": "modules",
                             "placement": "right",
-                            "beforeAction": {
-                                "name": "schedule/setShowTourSelectedModule",
-                                "value": "true"
-                            },
-                            "afterAction": {
-                                "name": "schedule/setShowTourSelectedModule",
-                                "value": false
+                            "selectedModule": {
+                                "id": "WP2_04.2",
+                                "name": "Heilpädagogik im Bereich Hören 2",
+                                "prerequisites": [
+                                    {
+                                        "id": "WP2_04.1",
+                                        "name": "Heilpädagogik im Bereich Hören 1",
+                                        "ects": 5
+                                    }
+                                ],
+                                "ects": 5
                             }
                         },
                         {

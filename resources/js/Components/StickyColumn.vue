@@ -1,6 +1,5 @@
 <template>
-  <div
-    class="
+  <div class="
       mt-4
       px-4
       sticky
@@ -8,15 +7,15 @@
       overflow-y-auto
       max-h-screen
       print:max-h-full print:static
-    "
-  >
+    ">
     <slot></slot>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {};
 </script>
 
 <style lang="scss" scoped>
+
 </style>
