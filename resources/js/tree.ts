@@ -26,6 +26,9 @@ class Node {
         return child;
     }
 
+    /**
+     * Get all branches of the tree
+     */
     getPaths(): Array<Array<NodeValue>> {
         if (this.children.length == 0) {
             if (this.value) {
@@ -51,6 +54,9 @@ class Node {
         return childPaths;
     }
 
+    /**
+     * Get all the longest branches of the tree
+     */
     getLongestPaths() {
         const paths = this.getPaths();
         let maxSize = 0;
@@ -67,10 +73,17 @@ class Node {
     }
 }
 
+/**
+ * Finds the distribution of modules that fullfills the requirements of the selected foci the best
+ *
+ * @param foci
+ * @param moduleIds
+ *
+ */
 export function bestPath(foci: Array<Focus>, moduleIds: Set<string>) {
     const root = new Node();
 
-    const focusDataset = foci.map((focus) => {
+    const focusDataset: Array<FocusData> = foci.map((focus) => {
         return {
             id: focus.id,
             allowedIds: focus.optionalModules.map((module) => module.id),
@@ -121,6 +134,12 @@ export function bestPath(foci: Array<Focus>, moduleIds: Set<string>) {
     return bestPath ? bestPath.pathGroupedByFocus : {};
 }
 
+/**
+ * Scores a node path. The score increases for each focus whose requirements are met
+ *
+ * @param path
+ * @param focusDataset
+ */
 function scorePath(
     path: Record<string, string[]>,
     focusDataset: Array<FocusData>
