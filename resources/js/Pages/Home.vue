@@ -1,25 +1,29 @@
 <template>
     <AppHead />
-    <HfhHeaderBar>
-        <template v-slot:right>
-            <div class="px-4 py-3 leading-4">
-                <a
-                    class="hover:text-thunderbird-red"
-                    href="https://hfh.ch"
-                    rel="noopener noreferer"
-                    target="_blank"
-                    >hfh.ch</a
-                >
+    <header>
+        <HfhHeaderBar>
+            <template v-slot:right>
+                <div class="px-4 py-3 leading-4">
+                    <a
+                        class="hover:text-thunderbird-red"
+                        href="https://hfh.ch"
+                        rel="noopener noreferer"
+                        target="_blank"
+                        >hfh.ch</a
+                    >
+                </div>
+            </template>
+        </HfhHeaderBar>
+        <div
+            class="flex justify-between px-4 pt-4 pb-4 max-w-container mx-auto"
+        >
+            <div class="flex gap-x-8 items-center">
+                <HfhLogo />
+                <div class="text-2xl">Studienverlaufsplaner</div>
             </div>
-        </template>
-    </HfhHeaderBar>
-    <div class="flex justify-between px-4 pt-4 pb-4 max-w-container mx-auto">
-        <div class="flex gap-x-8 items-center">
-            <HfhLogo />
-            <div class="text-2xl">Studienverlaufsplaner</div>
         </div>
-    </div>
-    <div class="p-4 max-w-container mx-auto">
+    </header>
+    <main class="p-4 max-w-container mx-auto">
         <h1>Willkommen!</h1>
         <p>Bitte wählen Sie einen Studiengang.</p>
         <ul class="mt-4 grid grid-cols-2 gap-8">
@@ -31,7 +35,7 @@
                 ></HfhTeaser>
             </li>
         </ul>
-    </div>
+    </main>
 </template>
 
 <script lang="ts">
