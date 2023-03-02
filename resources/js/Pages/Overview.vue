@@ -96,20 +96,31 @@
                 <h2>{{ semester.value }} {{ semester.calendarYear }}</h2>
                 <template v-for="day in semester.days">
                     <template v-for="time in semester.times">
-                        <h3>{{ day }} - {{ time }}</h3>
-                        <ul>
-                            <li
-                                v-for="(module, index) in getModulesByDate(
+                        <template
+                            v-if="
+                                getModulesByDate(
                                     year.value,
                                     semester.value,
                                     day,
                                     time
-                                )"
-                                :key="index"
-                            >
-                                {{ module.id }} {{ module.name }}
-                            </li>
-                        </ul>
+                                ).length > 0
+                            "
+                        >
+                            <h3>{{ day }} - {{ time }}</h3>
+                            <ul>
+                                <li
+                                    v-for="(module, index) in getModulesByDate(
+                                        year.value,
+                                        semester.value,
+                                        day,
+                                        time
+                                    )"
+                                    :key="index"
+                                >
+                                    {{ module.id }} {{ module.name }}
+                                </li>
+                            </ul>
+                        </template>
                     </template>
                 </template>
             </template>
