@@ -1,4 +1,4 @@
-import { EventDate } from "./types";
+import { EventDate, Module } from "./types";
 
 export const isSameDate = (a: EventDate, b: EventDate) => {
     return (
@@ -43,6 +43,49 @@ const orderBy = (order: string[], a: string, b: string) =>
 
 export const getCalendarYear = (semester: string, schoolYear: number) => {
     return semester === HS ? schoolYear : schoolYear + 1;
+};
+
+export const getNestedDates = (dates: Array<EventDate>) => {
+    const years = [...new Set(dates.map((date) => date.year))].sort();
+    return {
+        years: years
+            .sort((a, b) => a - b)
+            .map((year) => {
+                const yearDates = dates.filter((date) => date.year === year);
+                const semesters = [
+                    ...new Set(yearDates.map((date) => date.semester)),
+                ]
+                    .sort(orderSemester)
+                    .map((semester) => {
+                        const semesterDates = yearDates.filter(
+                            (date) => date.semester === semester
+                        );
+                        return {
+                            value: semester,
+                            calendarYear: getCalendarYear(semester, year),
+                            timeWindows: [
+                                ...new Set(
+                                    semesterDates.map((date) => date.timeWindow)
+                                ),
+                            ].sort(orderTimeWindow),
+                            days: [
+                                ...new Set(
+                                    semesterDates.map((date) => date.day)
+                                ),
+                            ].sort(orderDay),
+                            times: [
+                                ...new Set(
+                                    semesterDates.map((date) => date.time)
+                                ),
+                            ].sort(orderTime),
+                        };
+                    });
+                return {
+                    value: year,
+                    semesters,
+                };
+            }),
+    };
 };
 
 export const pluralize = (count: number, singular: string, plural: string) => {

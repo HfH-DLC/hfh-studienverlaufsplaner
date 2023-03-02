@@ -5,6 +5,7 @@ import { getRule } from "../Models/Rules/Schedule/RuleFactory";
 import { getTodo } from "../Models/Todos/Schedule/TodoFactory";
 import {
     getCalendarYear,
+    getNestedDates,
     isSameDate,
     joinStrings,
     orderDay,
@@ -440,54 +441,12 @@ export const useScheduleStore = defineStore("schedule", {
             });
             return result;
         },
-        years() {
+        nestedDates() {
             const dates: Array<EventDate> = [
                 ...this.events,
                 ...this.placements,
             ];
-            const years = [...new Set(dates.map((date) => date.year))].sort();
-            return years
-                .sort((a, b) => a - b)
-                .map((year) => {
-                    const yearDates = dates.filter(
-                        (date) => date.year === year
-                    );
-                    const semesters = [
-                        ...new Set(yearDates.map((date) => date.semester)),
-                    ]
-                        .sort(orderSemester)
-                        .map((semester) => {
-                            const semesterDates = yearDates.filter(
-                                (date) => date.semester === semester
-                            );
-                            return {
-                                value: semester,
-                                calendarYear: getCalendarYear(semester, year),
-                                timeWindows: [
-                                    ...new Set(
-                                        semesterDates.map(
-                                            (date) => date.timeWindow
-                                        )
-                                    ),
-                                ].sort(orderTimeWindow),
-                                days: [
-                                    ...new Set(
-                                        semesterDates.map((date) => date.day)
-                                    ),
-                                ].sort(orderDay),
-                                times: [
-                                    ...new Set(
-                                        semesterDates.map((date) => date.time)
-                                    ),
-                                ].sort(orderTime),
-                            };
-                        });
-
-                    return {
-                        value: year,
-                        semesters,
-                    };
-                });
+            return getNestedDates(dates);
         },
         events(): Array<Event> {
             return this.modules.reduce(

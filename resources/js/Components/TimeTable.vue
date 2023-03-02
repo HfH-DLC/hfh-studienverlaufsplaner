@@ -1,5 +1,5 @@
 <template>
-    <div v-for="(year, yearIndex) in store.years" :key="yearIndex">
+    <div v-for="(year, yearIndex) in store.nestedDates.years" :key="yearIndex">
         <div
             class="mb-4"
             v-for="(semester, semesterIndex) in year.semesters"
