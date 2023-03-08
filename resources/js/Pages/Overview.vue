@@ -53,15 +53,11 @@
         </div>
     </header>
     <main class="p-4 max-w-container mx-auto hfh-content">
-        <h1>Angebot</h1>
+        <h1 class="mb-0">
+            Angebot {{ currentSchoolYear }}/{{ currentSchoolYear + 1 }}
+        </h1>
+        <p class="mt-0">(Änderungen vorbehalten)</p>
         <HfhFilterGroup @reset="onFilterReset">
-            <HfhSelect
-                id="filter-year"
-                label="Jahr"
-                :options="dateOptions.yearOptions"
-                defaultOption="Alle"
-                v-model="yearFilter"
-            ></HfhSelect>
             <HfhSelect
                 id="filter-semester"
                 label="Semester"
@@ -91,40 +87,37 @@
                 v-model="categoryFilter"
             ></HfhSelect>
         </HfhFilterGroup>
-        <div v-for="year in nestedDates.years" :key="year.value">
-            <template v-for="semester in year.semesters" :key="semester.value">
-                <h2>{{ semester.value }} {{ semester.calendarYear }}</h2>
-                <template v-for="day in semester.days">
-                    <template v-for="time in semester.times">
-                        <template
-                            v-if="
-                                getModulesByDate(
-                                    year.value,
+        <template
+            v-for="semester in nestedDates!.semesters"
+            :key="semester.value"
+        >
+            <h2>{{ getSemesterLabel(semester.value) }}</h2>
+
+            <template v-for="day in semester.days">
+                <template v-for="time in semester.times">
+                    <template
+                        v-if="
+                            getModulesByDate(semester.value, day, time).length >
+                            0
+                        "
+                    >
+                        <h3>{{ day }} - {{ time }}</h3>
+                        <ul>
+                            <li
+                                v-for="(module, index) in getModulesByDate(
                                     semester.value,
                                     day,
                                     time
-                                ).length > 0
-                            "
-                        >
-                            <h3>{{ day }} - {{ time }}</h3>
-                            <ul>
-                                <li
-                                    v-for="(module, index) in getModulesByDate(
-                                        year.value,
-                                        semester.value,
-                                        day,
-                                        time
-                                    )"
-                                    :key="index"
-                                >
-                                    {{ module.id }} {{ module.name }}
-                                </li>
-                            </ul>
-                        </template>
+                                )"
+                                :key="index"
+                            >
+                                {{ module.id }} {{ module.name }}
+                            </li>
+                        </ul>
                     </template>
                 </template>
             </template>
-        </div>
+        </template>
     </main>
 </template>
 
@@ -151,7 +144,6 @@ const planerName = props.planerResource.data.name;
 const moduleDirectoryUrl = props.planerResource.data.meta.moduleDirectoryUrl;
 const brochureUrl = props.planerResource.data.meta.brochureUrl;
 
-const yearFilter: Ref<string | undefined> = ref();
 const semesterFilter: Ref<string | undefined> = ref();
 const dayFilter: Ref<string | undefined> = ref();
 const timeFilter: Ref<string | undefined> = ref();
@@ -192,12 +184,22 @@ const getEventDates = (modules: Array<Module>): Array<EventDate> => {
     }, [] as Array<EventDate>);
 };
 
+const currentSchoolYear = computed(() => {
+    const now = new Date();
+    const schoolYearEndMonth = 4;
+    if (now.getMonth() > schoolYearEndMonth) {
+        return now.getFullYear();
+    }
+    return now.getFullYear() - 1;
+});
+
+const isInCurrentSchoolYear = (date: EventDate): boolean => {
+    return date.year == currentSchoolYear.value;
+};
+
 const filteredEventDates = computed(() =>
     getEventDates(filteredModules.value).filter((eventDate) => {
-        if (
-            yearFilter.value &&
-            eventDate.year.toString() !== yearFilter.value
-        ) {
+        if (!isInCurrentSchoolYear(eventDate)) {
             return false;
         }
         if (
@@ -219,18 +221,17 @@ const filteredEventDates = computed(() =>
     })
 );
 
-const nestedDates = computed(() => getNestedDates(filteredEventDates.value));
+const nestedDates = computed(() =>
+    getNestedDates(filteredEventDates.value).years.find(
+        (year) => year.value === currentSchoolYear.value
+    )
+);
 
-const getModulesByDate = (
-    year: number,
-    semester: string,
-    day: string,
-    time: string
-) => {
+const getModulesByDate = (semester: string, day: string, time: string) => {
     const result = filteredModules.value.filter((module) => {
         return module.events.some(
             (event) =>
-                event.year == year &&
+                event.year == currentSchoolYear.value &&
                 event.semester == semester &&
                 event.day == day &&
                 event.time == time
@@ -247,26 +248,19 @@ const categoryOptions: Ref<Array<SelectOption>> = computed(() =>
 );
 
 const dateOptions = computed(() => {
-    const years = new Set<number>();
     const semesters = new Set<string>();
     const days = new Set<string>();
     const times = new Set<string>();
 
     for (const eventDate of getEventDates(modules)) {
-        years.add(eventDate.year);
         semesters.add(eventDate.semester);
         days.add(eventDate.day);
         times.add(eventDate.time);
     }
 
-    const yearOptions: Array<SelectOption> = [...years].map((year) => ({
-        label: `${year} / ${year + 1}`,
-        value: year.toString(),
-    }));
-
     const semesterOptions: Array<SelectOption> = [...semesters].map(
         (semester) => ({
-            label: semester,
+            label: getSemesterLabel(semester),
             value: semester,
         })
     );
@@ -282,7 +276,6 @@ const dateOptions = computed(() => {
     }));
 
     return {
-        yearOptions,
         semesterOptions,
         dayOptions,
         timeOptions,
@@ -290,26 +283,29 @@ const dateOptions = computed(() => {
 });
 
 const onFilterReset = () => {
-    yearFilter.value = undefined;
     semesterFilter.value = undefined;
     dayFilter.value = undefined;
     timeFilter.value = undefined;
     categoryFilter.value = undefined;
 };
+
+const getSemesterLabel = (semesterAbbreviation: string): string => {
+    if (semesterAbbreviation === "HS") {
+        return "Herbstsemester";
+    }
+    if (semesterAbbreviation === "FS") {
+        return "Frühlingssemester";
+    }
+    console.log("Unknown semesterAbbreviation " + semesterAbbreviation);
+    return semesterAbbreviation;
+};
 </script>
 
 <style scoped>
 h1 {
-    display: inline-block;
-    margin-bottom: 1.5rem;
     font-size: 2.25rem;
 }
 h2 {
-    display: inline-block;
-    margin-bottom: 1.5rem;
     font-size: 1.5rem;
-}
-p {
-    margin-bottom: 1.5rem;
 }
 </style>
