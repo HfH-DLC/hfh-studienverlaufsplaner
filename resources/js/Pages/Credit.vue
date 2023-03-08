@@ -131,6 +131,7 @@
 </template>
 
 <script lang="ts" setup>
+import AppHead from "@/Components/AppHead.vue";
 import { HfhSelect, HfhLink } from "@hfh-dlc/hfh-styleguide";
 import { Link } from "@inertiajs/vue3";
 import { storeToRefs } from "pinia";
