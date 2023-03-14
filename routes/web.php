@@ -33,7 +33,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
 Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
     Route::get('/', [PlanerController::class, 'show'])->name('planer');
-    Route::get('/angebot', [OverviewController::class, 'show'])->name('overview');
+    Route::get('/uebersicht', [OverviewController::class, 'show'])->name('overview');
     Route::post('/plans', [PlanController::class, 'store']);
     Route::get('/{plan:slug}', [PlanController::class, 'show'])->name('plan');
     Route::get('/{plan:slug}/anrechnung', [PlanController::class, 'showCredit'])->name('plan-credit');

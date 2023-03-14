@@ -16,7 +16,7 @@ class OverviewTest extends TestCase
     public function can_show_overview_page()
     {
         $planer = Planer::factory()->create();
-        $url = "/$planer->slug/angebot";
+        $url = "/$planer->slug/uebersicht";
 
         $response = $this->get($url);
 
