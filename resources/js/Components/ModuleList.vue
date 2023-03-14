@@ -6,7 +6,7 @@
             :open="currentOpen === index"
             @opened="currentOpen = index"
             @closed="currentOpen == index && (currentOpen = -1)"
-            :ref="setCategoryRef"
+            ref="categoryRefs"
         >
             <template v-slot:title>
                 {{ category.name }}
@@ -99,12 +99,6 @@ const filteredCategories = computed(() => {
 const openActiveAccordion = (index: number) => {
     if (index > -1) {
         currentOpen.value = index;
-    }
-};
-
-const setCategoryRef = (el: ComponentPublicInstance) => {
-    if (el) {
-        categoryRefs.value.push(el);
     }
 };
 </script>
