@@ -7,7 +7,7 @@ import DefineOptions from "unplugin-vue-define-options/vite";
 export default defineConfig({
     plugins: [
         laravel({
-            input: "resources/js/app.ts",
+            input: ["resources/js/app.ts", "resources/css/tailwind.css"],
             refresh: true,
         }),
         vue({
