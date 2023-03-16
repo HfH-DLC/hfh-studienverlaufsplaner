@@ -49,7 +49,6 @@ import {
     HfhLink,
     HfhTeaser,
 } from "@hfh-dlc/hfh-styleguide";
-import HtmlContent from "../Components/HtmlContent.vue";
 export default {
     components: {
         AppHead,
@@ -59,7 +58,6 @@ export default {
         HfhLink,
         HfhLogo,
         HfhSelect,
-        HtmlContent,
         HfhTeaser,
     },
     props: {

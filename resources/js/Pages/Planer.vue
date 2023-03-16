@@ -139,7 +139,6 @@ import {
     HfhSelect,
 } from "@hfh-dlc/hfh-styleguide";
 import { PropType } from "vue";
-import HtmlContent from "../Components/HtmlContent.vue";
 import AppHead from "@/Components/AppHead.vue";
 
 export default {
@@ -150,7 +149,6 @@ export default {
         HfhInput,
         HfhLogo,
         HfhSelect,
-        HtmlContent,
     },
     props: {
         slug: {
