@@ -13,25 +13,17 @@
     </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import { ref } from "vue";
 import AdminNavigation from "../Components/Admin/AdminNavigation.vue";
 import Flash from "../Components/Flash.vue";
-export default {
-    components: {
-        AdminNavigation,
-        Flash,
+
+const links = ref([
+    {
+        label: "Daten",
+        href: `/admin/data`,
     },
-    data() {
-        return {
-            links: [
-                {
-                    label: "Daten",
-                    href: `/admin/data`,
-                },
-            ],
-        };
-    },
-};
+]);
 </script>
 
 <style lang="scss" scoped></style>

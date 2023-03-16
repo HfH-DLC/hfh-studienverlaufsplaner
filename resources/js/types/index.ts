@@ -1,5 +1,6 @@
 import { EmitterEvents } from "@/composables/useEmitter";
 import { Placement as PopperPlacement } from "@popperjs/core";
+import { Component } from "vue";
 
 export interface Category {
     id: number;
@@ -14,7 +15,7 @@ export type ChecklistEntryData = {
     checked: boolean;
     progressLabel: string;
     label?: string;
-    component?: string;
+    component?: Component;
     labelProps?: Record<any, any>;
 };
 export interface CreditInitParams {
@@ -33,7 +34,7 @@ export interface CreditModule extends Module {
 
 export type ErrorMessage = {
     label?: string;
-    component?: string;
+    component?: Component;
     labelProps?: Record<any, any>;
 };
 

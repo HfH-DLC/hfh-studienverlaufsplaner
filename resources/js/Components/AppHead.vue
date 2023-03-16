@@ -4,29 +4,24 @@
     </Head>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { Head } from "@inertiajs/vue3";
 import { PropType } from "@vue/runtime-core";
+import { computed } from "vue";
 
-export default {
-    components: {
-        Head,
-    },
-    props: {
-        title: { type: String as PropType<string>, default: "" },
-        planerName: { type: String as PropType<string>, default: "" },
-    },
-    computed: {
-        computedTitle(): string {
-            let result = "Studienverlaufsplaner";
-            if (this.title) {
-                result = this.title + " - " + result;
-            }
-            if (this.planerName) {
-                result = result + " " + this.planerName;
-            }
-            return result;
-        },
-    },
-};
+const props = defineProps({
+    title: { type: String as PropType<string>, default: "" },
+    planerName: { type: String as PropType<string>, default: "" },
+});
+
+const computedTitle = computed(() => {
+    let result = "Studienverlaufsplaner";
+    if (props.title) {
+        result = props.title + " - " + result;
+    }
+    if (props.planerName) {
+        result = result + " " + props.planerName;
+    }
+    return result;
+});
 </script>

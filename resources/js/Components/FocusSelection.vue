@@ -9,7 +9,7 @@
                 :options="firstOptions"
                 v-model="firstFocusId"
                 defaultOption="Bitte auswählen..."
-                :disabled="readOnly"
+                :disabled="store.readOnly"
             />
         </div>
         <div class="max-w-64">
@@ -20,70 +20,63 @@
                 defaultOption="Bitte auswählen..."
                 :options="secondOptions"
                 v-model="secondFocusId"
-                :disabled="readOnly"
+                :disabled="store.readOnly"
             />
         </div>
     </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { mapActions, mapState } from "pinia";
 import { useScheduleStore } from "../Store/schedule";
 import { HfhSelect } from "@hfh-dlc/hfh-styleguide";
-export default {
-    components: {
-        HfhSelect,
+import { computed } from "vue";
+
+const store = useScheduleStore();
+
+const firstFocusId = computed({
+    get() {
+        const focusSelection = store.focusSelections.find(
+            (focusSelection) => focusSelection.position == 0
+        );
+        if (focusSelection && focusSelection.focus) {
+            return focusSelection.focus.id;
+        }
+        return "";
     },
-    computed: {
-        ...mapState(useScheduleStore, ["focusSelections", "foci", "readOnly"]),
-        firstFocusId: {
-            get() {
-                const focusSelection = this.focusSelections.find(
-                    (focusSelection) => focusSelection.position == 0
-                );
-                if (focusSelection && focusSelection.focus) {
-                    return focusSelection.focus.id;
-                }
-                return "";
-            },
-            set(focusId: string) {
-                this.selectFocus(0, focusId);
-            },
-        },
-        secondFocusId: {
-            get() {
-                const focusSelection = this.focusSelections.find(
-                    (focusSelection) => focusSelection.position == 1
-                );
-                if (focusSelection && focusSelection.focus) {
-                    return focusSelection.focus.id;
-                }
-                return "";
-            },
-            set(focusId: string) {
-                this.selectFocus(1, focusId);
-            },
-        },
-        options() {
-            return this.foci.map((focus) => {
-                return { label: focus.name, value: focus.id };
-            });
-        },
-        firstOptions() {
-            return this.options.filter(
-                (option) => option.value !== this.secondFocusId
-            );
-        },
-        secondOptions() {
-            return this.options.filter(
-                (option) => option.value !== this.firstFocusId
-            );
-        },
+    set(focusId: string) {
+        store.selectFocus(0, focusId);
     },
-    methods: {
-        ...mapActions(useScheduleStore, ["selectFocus"]),
+});
+const secondFocusId = computed({
+    get() {
+        const focusSelection = store.focusSelections.find(
+            (focusSelection) => focusSelection.position == 1
+        );
+        if (focusSelection && focusSelection.focus) {
+            return focusSelection.focus.id;
+        }
+        return "";
     },
-};
+    set(focusId: string) {
+        store.selectFocus(1, focusId);
+    },
+});
+const options = computed(() => {
+    return store.foci.map((focus) => {
+        return { label: focus.name, value: focus.id };
+    });
+});
+const firstOptions = computed(() => {
+    return options.value.filter(
+        (option) => option.value !== secondFocusId.value
+    );
+});
+const secondOptions = computed(() => {
+    return options.value.filter(
+        (option) => option.value !== firstFocusId.value
+    );
+});
 </script>
 
 <style lang="scss" scoped></style>

@@ -1,5 +1,6 @@
+import RequiredModulesLabel from "@/Components/Todos/Schedule/RequiredModulesLabel.vue";
 import { ChecklistEntryData, ScheduleCategory, Todo } from "@/types";
-import { Ref } from "vue";
+import { markRaw, Ref } from "vue";
 
 export default class RequiredModulesTodo implements Todo {
     getEntries({ categories }: { categories: Ref<Array<ScheduleCategory>> }) {
@@ -9,7 +10,7 @@ export default class RequiredModulesTodo implements Todo {
         const entries: Array<ChecklistEntryData> = [];
         requiredCategories.forEach((category) => {
             entries.push({
-                component: "RequiredModulesLabel",
+                component: markRaw(RequiredModulesLabel),
                 labelProps: {
                     category,
                 },

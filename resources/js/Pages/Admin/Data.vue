@@ -19,36 +19,33 @@
 </template>
 
 <script lang="ts">
-import { HfhButton } from "@hfh-dlc/hfh-styleguide";
 import AdminLayoutVue from "../../Layouts/AdminLayout.vue";
 export default {
     layout: AdminLayoutVue,
-    components: {
-        HfhButton,
-    },
-    data() {
-        return {
-            form: this.$inertia.form({
-                import: null,
-            } as { import: File | null }),
-        };
-    },
-    methods: {
-        setFile(event: Event) {
-            const target = event.target as HTMLInputElement | null;
-            const files = target?.files;
-            if (files && files.length > 0) {
-                this.form.import = files[0];
-            } else {
-                this.form.import = null;
-            }
-        },
-        submit() {
-            this.form.post(`/admin/data`, {
-                onSuccess: () => this.form.reset(),
-            });
-        },
-    },
+};
+</script>
+
+<script lang="ts" setup>
+import { useForm } from "@inertiajs/vue3";
+import { HfhButton } from "@hfh-dlc/hfh-styleguide";
+
+const form = useForm({
+    import: null,
+} as { import: File | null });
+
+const setFile = (event: Event) => {
+    const target = event.target as HTMLInputElement | null;
+    const files = target?.files;
+    if (files && files.length > 0) {
+        form.import = files[0];
+    } else {
+        form.import = null;
+    }
+};
+const submit = () => {
+    form.post(`/admin/data`, {
+        onSuccess: () => form.reset(),
+    });
 };
 </script>
 

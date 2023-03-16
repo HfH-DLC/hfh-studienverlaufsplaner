@@ -1,6 +1,7 @@
-import { Ref } from "vue";
+import { markRaw, Ref } from "vue";
 import { ErrorMessage, Rule, ScheduleModule, SchedulePlacement } from "@/types";
 import { isSameDate } from "../../../helpers";
+import DateRulePlacementLabel from "@/Components/Rules/Schedule/DateRulePlacementLabel.vue";
 export default class DateRule implements Rule {
     validatePlacements(
         { placements }: { placements: Ref<Array<SchedulePlacement>> },
@@ -19,7 +20,7 @@ export default class DateRule implements Rule {
                     errors.set(placement.id, errorMessages);
                 }
                 errorMessages.push({
-                    component: "DateRulePlacementLabel",
+                    component: markRaw(DateRulePlacementLabel),
                     labelProps: {
                         placement,
                     },

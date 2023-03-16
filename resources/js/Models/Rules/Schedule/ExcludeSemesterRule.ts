@@ -1,3 +1,4 @@
+import ExcludeSemesterRulePlacementLabel from "@/Components/Rules/Schedule/ExcludeSemesterRulePlacementLabel.vue";
 import {
     ErrorMessage,
     EventDate,
@@ -6,7 +7,7 @@ import {
     SchedulePlacement,
     SelectionEventInfo,
 } from "@/types";
-import { Ref } from "vue";
+import { markRaw, Ref } from "vue";
 import { isSameDate, semesterCount, semesterPosition } from "../../../helpers";
 export default class ExcludeSemesterRule {
     private excludePositions: Array<Number>;
@@ -39,7 +40,7 @@ export default class ExcludeSemesterRule {
                         errors.set(placement.id, errorMessages);
                     }
                     errorMessages.push({
-                        component: "ExcludeSemesterPlacementRuleLabel",
+                        component: markRaw(ExcludeSemesterRulePlacementLabel),
                         labelProps: {
                             excludePositions: this.excludePositions,
                             placement,

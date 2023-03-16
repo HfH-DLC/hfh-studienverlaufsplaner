@@ -1,10 +1,11 @@
+import AtLeastOneOfModulesPerFocusLabel from "@/Components/Todos/Credit/AtLeastOneOfModulesPerFocusLabel.vue";
 import {
     ChecklistEntryData,
     CreditModule,
     Focus,
     FocusSelection,
 } from "@/types";
-import { Ref } from "vue";
+import { markRaw, Ref } from "vue";
 import { joinStrings } from "../../../helpers";
 export default class AtLeastOneOfModulesPerFocusTodo {
     private moduleIds: Array<string>;
@@ -23,7 +24,7 @@ export default class AtLeastOneOfModulesPerFocusTodo {
         return focusSelections.value.reduce(
             (acc: Array<ChecklistEntryData>, cur: FocusSelection) => {
                 acc.push({
-                    component: "AtLeastOneOfModulesPerFocusLabel",
+                    component: markRaw(AtLeastOneOfModulesPerFocusLabel),
                     labelProps: {
                         moduleIds: this.moduleIds,
                         focusName: cur.focus.name,

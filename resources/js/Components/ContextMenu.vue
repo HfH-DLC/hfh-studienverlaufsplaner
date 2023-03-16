@@ -6,30 +6,23 @@
     </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { PropType } from "vue";
-import { mapActions } from "pinia";
 import { useScheduleStore } from "../Store/schedule";
 import ContextButton from "./ContextButton.vue";
 import { TrashIcon } from "@heroicons/vue/24/outline";
 import { Placement } from "@/types";
-export default {
-    components: {
-        ContextButton,
-        TrashIcon,
+
+const props = defineProps({
+    placement: {
+        type: Object as PropType<Placement>,
+        required: true,
     },
-    props: {
-        placement: {
-            type: Object as PropType<Placement>,
-            required: true,
-        },
-    },
-    methods: {
-        ...mapActions(useScheduleStore, ["removeModule"]),
-        onRemoveModule() {
-            this.removeModule(this.placement);
-        },
-    },
+});
+
+const store = useScheduleStore();
+const onRemoveModule = () => {
+    store.removeModule(props.placement);
 };
 </script>
 

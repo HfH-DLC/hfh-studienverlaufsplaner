@@ -1,12 +1,13 @@
+import ECTSPerCategoryLabel from "@/Components/Todos/Schedule/ECTSPerCategoryLabel.vue";
 import { ScheduleCategory, Todo } from "@/types";
-import { Ref } from "vue";
+import { markRaw, Ref } from "vue";
 
 export default class ECTSPerCategoryTodo implements Todo {
     getEntries({ categories }: { categories: Ref<Array<ScheduleCategory>> }) {
         const entries = categories.value
             .filter((category) => category.minECTS || category.maxECTS)
             .map((category) => ({
-                component: "ECTSPerCategoryLabel",
+                component: markRaw(ECTSPerCategoryLabel),
                 labelProps: {
                     category,
                 },

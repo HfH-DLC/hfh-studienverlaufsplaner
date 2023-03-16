@@ -21,32 +21,22 @@
     </Dialog>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { Dialog, DialogOverlay, DialogTitle } from "@headlessui/vue";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
-export default {
-    components: {
-        Dialog,
-        DialogOverlay,
-        DialogTitle,
-        XMarkIcon,
+const emit = defineEmits(["closed"]);
+const props = defineProps({
+    open: {
+        type: Boolean,
+        required: true,
     },
-    emits: ["closed"],
-    props: {
-        open: {
-            type: Boolean,
-            required: true,
-        },
-        title: {
-            type: String,
-            required: true,
-        },
+    title: {
+        type: String,
+        required: true,
     },
-    methods: {
-        onClose() {
-            this.$emit("closed");
-        },
-    },
+});
+const onClose = () => {
+    emit("closed");
 };
 </script>
 

@@ -14,29 +14,17 @@
     </ul>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { ErrorMessage } from "@/types";
 import { PropType } from "vue";
-
 import Error from "./Error.vue";
-import DateRulePlacementLabel from "./Rules/Schedule/DateRulePlacementLabel.vue";
-import ExcludeSemesterRulePlacementLabel from "./Rules/Schedule/ExcludeSemesterRulePlacementLabel.vue";
-import PrerequisitesRuleLabel from "./Rules/Schedule/PrerequisitesRuleLabel.vue";
 
-export default {
-    components: {
-        Error,
-        DateRulePlacementLabel,
-        ExcludeSemesterRulePlacementLabel,
-        PrerequisitesRuleLabel,
+const props = defineProps({
+    errors: {
+        type: Array as PropType<Array<ErrorMessage>>,
+        required: true,
     },
-    props: {
-        errors: {
-            type: Array as PropType<Array<ErrorMessage>>,
-            required: true,
-        },
-    },
-};
+});
 </script>
 
 <style lang="scss" scoped></style>

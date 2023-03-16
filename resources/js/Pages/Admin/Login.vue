@@ -52,33 +52,23 @@
     </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import { useForm } from "@inertiajs/vue3";
 import AppHead from "../../Components/AppHead.vue";
 import Error from "../../Components/Error.vue";
-export default {
-    components: {
-        AppHead,
-        Error,
+
+const props = defineProps({
+    errors: {
+        type: Object,
+        default: {},
     },
-    props: {
-        errors: {
-            type: Object,
-            default: {},
-        },
-    },
-    data() {
-        return {
-            form: this.$inertia.form({
-                email: "",
-                password: "",
-            }),
-        };
-    },
-    methods: {
-        submit() {
-            this.form.post("/admin/login");
-        },
-    },
+});
+const form = useForm({
+    email: "",
+    password: "",
+});
+const submit = () => {
+    form.post("/admin/login");
 };
 </script>
 

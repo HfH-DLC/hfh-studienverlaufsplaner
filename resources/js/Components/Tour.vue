@@ -162,6 +162,7 @@ const previousStep = () => {
     changeStep(currentIndex.value - 1);
 };
 const changeStep = (newIndex: number) => {
+    console.log("changeStep", newIndex, props.steps.length);
     if (newIndex == props.steps.length) {
         complete();
     } else {

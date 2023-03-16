@@ -1,3 +1,5 @@
+import OptionalFocusModulesLabel from "@/Components/Todos/Schedule/OptionalFocusModulesLabel.vue";
+import RequiredFocusModulesLabel from "@/Components/Todos/Schedule/RequiredFocusModulesLabel.vue";
 import {
     Todo,
     Placement,
@@ -7,7 +9,7 @@ import {
     FocusSelection,
     SchedulePlacement,
 } from "@/types/index.js";
-import { Ref } from "vue";
+import { markRaw, Ref } from "vue";
 import { bestPath } from "../../../tree";
 
 function intersection(a: Set<any>, b: Set<any>) {
@@ -31,7 +33,7 @@ export default class FocusModulesTodo implements Todo {
                 const focus = cur.focus;
                 if (focus.requiredModules.length > 0) {
                     const entryRequired = {
-                        component: "RequiredFocusModulesLabel",
+                        component: markRaw(RequiredFocusModulesLabel),
                         labelProps: {
                             focusName: focus.name,
                             modules: focus.requiredModules,
@@ -97,7 +99,7 @@ export default class FocusModulesTodo implements Todo {
                 const ids = path[focus.id] || [];
 
                 const entryOptional: ChecklistEntryData = {
-                    component: "OptionalFocusModulesLabel",
+                    component: markRaw(OptionalFocusModulesLabel),
                     labelProps: {
                         focusName: focus.name,
                         modules: focus.optionalModules,

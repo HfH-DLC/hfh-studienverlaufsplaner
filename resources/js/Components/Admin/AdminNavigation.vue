@@ -18,25 +18,20 @@
     </nav>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import { router } from "@inertiajs/vue3";
 import { Link } from "@/types";
 import { PropType } from "vue";
 import NavLink from "../NavLink.vue";
-export default {
-    components: {
-        NavLink,
+
+const props = defineProps({
+    links: {
+        type: Array as PropType<Array<Link>>,
+        default: [],
     },
-    props: {
-        links: {
-            type: Array as PropType<Array<Link>>,
-            default: [],
-        },
-    },
-    methods: {
-        logout() {
-            this.$inertia.post("/admin/logout");
-        },
-    },
+});
+const logout = () => {
+    router.post("/admin/logout");
 };
 </script>
 

@@ -1,3 +1,4 @@
+import PrerequisitesRuleLabel from "@/Components/Rules/Schedule/PrerequisitesRuleLabel.vue";
 import {
     ErrorMessage,
     Event,
@@ -6,7 +7,7 @@ import {
     SchedulePlacement,
     SelectionEventInfo,
 } from "@/types";
-import { Ref } from "vue";
+import { markRaw, Ref } from "vue";
 import { isPreviousSemester, isSameDate } from "../../../helpers";
 export default class PrerequisitesRule {
     validatePlacements(
@@ -44,7 +45,7 @@ export default class PrerequisitesRule {
                     errors.set(placement.id, errorMessages);
                 }
                 errorMessages.push({
-                    component: "PrerequisitesRuleLabel",
+                    component: markRaw(PrerequisitesRuleLabel),
                     labelProps: {
                         missingPrerequisites,
                         module: placement.module,
@@ -74,7 +75,7 @@ export default class PrerequisitesRule {
         );
         if (!prerequisitesMet) {
             errors.push({
-                component: "PrerequisitesRuleLabel",
+                component: markRaw(PrerequisitesRuleLabel),
                 labelProps: {
                     missingPrerequisites: module.prerequisites,
                     module,
