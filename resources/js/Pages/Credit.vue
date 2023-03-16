@@ -126,6 +126,7 @@
             :startOnMount="!tourCompleted"
             @started="store.startTour"
             @completed="store.completeTour"
+            @step-changed="onTourStepChanged"
         />
     </div>
 </template>
@@ -244,6 +245,10 @@ const getFocusName = (focusSelectionId: number) => {
     return focusSelections.value.find(
         (focusSelection) => focusSelection.id == focusSelectionId
     )?.focus.name;
+};
+
+const onTourStepChanged = (index: number) => {
+    store.tourCurrentStepIndex = index;
 };
 </script>
 
