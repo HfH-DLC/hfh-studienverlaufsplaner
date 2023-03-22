@@ -1,5 +1,5 @@
 <template>
-    <AppHead :planerName="planerName" title="Übersicht" />
+    <AppHead :planerName="planerName" title="Angebot" />
     <header>
         <PageHeader
             :planer-name="planerName"
@@ -8,13 +8,23 @@
             :module-directory-url="moduleDirectoryUrl"
         ></PageHeader>
     </header>
-    <main class="p-4 max-w-container mx-auto hfh-content">
-        <h1 class="mb-0">
-            Angebot {{ currentSchoolYear }}/{{ currentSchoolYear + 1 }}
-        </h1>
-        <p class="mt-0">(Änderungen vorbehalten)</p>
-        <HfhFilterGroup @reset="onFilterReset" orientation="vertical">
-            <div>
+    <main class="p-4 pb-16 max-w-container mx-auto">
+        <div class="hfh-content">
+            <h1 class="mb-0">Angebot</h1>
+            <p class="mt-0">
+                (Stand {{ currentSchoolYear }}/{{ currentSchoolYear + 1 }})
+            </p>
+        </div>
+
+        <div class="lg:flex lg:gap-x-16">
+            <HfhFilterGroup @reset="onFilterReset">
+                <HfhCheckbox
+                    id="filter-location"
+                    legend="Standort"
+                    :options="locationOptions"
+                    orientation="vertical"
+                    v-model="locationFilter"
+                ></HfhCheckbox>
                 <HfhCheckbox
                     id="filter-semester"
                     legend="Semester"
@@ -36,15 +46,7 @@
                     v-model="timeFilter"
                     orientation="vertical"
                 ></HfhCheckbox>
-            </div>
-            <div>
-                <HfhCheckbox
-                    id="filter-location"
-                    legend="Standort"
-                    :options="locationOptions"
-                    orientation="vertical"
-                    v-model="locationFilter"
-                ></HfhCheckbox>
+
                 <HfhCheckbox
                     id="filter-category"
                     legend="Bereich"
@@ -52,61 +54,102 @@
                     v-model="categoryFilter"
                     orientation="vertical"
                 ></HfhCheckbox>
-            </div>
-        </HfhFilterGroup>
-        <template
-            v-if="nestedDates"
-            v-for="semester in nestedDates.semesters"
-            :key="semester.value"
-        >
-            <h2>{{ getSemesterLabel(semester.value) }}</h2>
+            </HfhFilterGroup>
+            <div class="flex-1">
+                <h2 class="mb-2 hfh-sr-only">Resultate</h2>
+                <div aria-live="polite">
+                    <p v-if="filteredEvents.length === 0">
+                        Mit ihren aktuellen Filtereinstellungen wurden keine
+                        Veranstaltungen gefunden.
+                    </p>
+                    <p v-if="filteredEvents.length > 0">
+                        <span class="font-bold"
+                            >{{ filteredEvents.length }}
+                        </span>
+                        Veranstaltungen
+                    </p>
+                </div>
+                <template
+                    v-if="nestedDates"
+                    v-for="semester in nestedDates.semesters"
+                    :key="semester.value"
+                >
+                    <div class="mt-4 grid gap-y-4">
+                        <template v-for="day in semester.days">
+                            <template v-for="time in semester.times">
+                                <div>
+                                    <OverviewItem
+                                        :modules="
+                                            getModulesByDate(
+                                                semester.value,
+                                                day,
+                                                time
+                                            ).map(
+                                                (module) =>
+                                                    `${module.id} ${module.name}`
+                                            )
+                                        "
+                                        :semester="
+                                            getSemesterLabel(semester.value)
+                                        "
+                                        :day-time="`${day}${time.toLocaleLowerCase()}`"
+                                    ></OverviewItem>
+                                </div>
+                            </template>
+                        </template>
+                    </div>
 
-            <template v-for="day in semester.days">
-                <template v-for="time in semester.times">
-                    <template
-                        v-if="
-                            getModulesByDate(semester.value, day, time).length >
-                            0
-                        "
-                    >
-                        <h3>{{ day }} - {{ time }}</h3>
-                        <ul>
-                            <li
-                                v-for="(module, index) in getModulesByDate(
-                                    semester.value,
-                                    day,
-                                    time
-                                )"
-                                :key="index"
+                    <!-- <h3>{{ getSemesterLabel(semester.value) }}</h3>
+
+                    <template v-for="day in semester.days">
+                        <template v-for="time in semester.times">
+                            <template
+                                v-if="
+                                    getModulesByDate(semester.value, day, time)
+                                        .length > 0
+                                "
                             >
-                                {{ module.id }} {{ module.name }}
-                            </li>
-                        </ul>
-                    </template>
+                                <h4>{{ day }}{{ time.toLocaleLowerCase() }}</h4>
+                                <ul>
+                                    <li
+                                        v-for="(
+                                            module, index
+                                        ) in getModulesByDate(
+                                            semester.value,
+                                            day,
+                                            time
+                                        )"
+                                        :key="index"
+                                    >
+                                        {{ module.id }} {{ module.name }}
+                                    </li>
+                                </ul>
+                            </template>
+                        </template>
+                    </template> -->
                 </template>
-            </template>
-        </template>
-        <p v-else class="text-center mt-8">
-            Für Ihre aktuellen Filtereinstellungen wurden keine Module gefunden.
-        </p>
+            </div>
+        </div>
     </main>
 </template>
 
 <script setup lang="ts">
 import AppHead from "@/Components/AppHead.vue";
+import OverviewItem from "@/Components/OverviewItem.vue";
+import PageHeader from "@/Components/PageHeader.vue";
 import { getNestedDates, orderDay, orderSemester, orderTime } from "@/helpers";
 import { Category, Event, EventDate, Location, Module } from "@/types";
 import {
     HfhFilterGroup,
     HfhHeaderBar,
     HfhLogo,
-    HfhSelect,
     HfhCheckbox,
 } from "@hfh-dlc/hfh-styleguide";
 import type {
     CheckboxOption,
     SelectOption,
 } from "@hfh-dlc/hfh-styleguide/types";
+import { Link } from "@inertiajs/vue3";
 import { computed, ref, Ref } from "vue";
 const props = defineProps({
     planerResource: {
@@ -120,6 +163,7 @@ const props = defineProps({
 });
 
 const planerName = props.planerResource.data.name;
+const planerSlug = props.planerResource.data.slug;
 const moduleDirectoryUrl = props.planerResource.data.meta.moduleDirectoryUrl;
 const brochureUrl = props.planerResource.data.meta.brochureUrl;
 
@@ -325,11 +369,24 @@ const onFilterReset = () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 h1 {
     font-size: 2.25rem;
 }
 h2 {
     font-size: 1.5rem;
 }
+:deep() .hfh-filter-group .hfh-filter-group__inner {
+    display: block;
+    > .hfh-label {
+        margin-bottom: 1rem;
+    }
+    .hfh-checkbox-label {
+        white-space: nowrap;
+    }
+}
+
+// ul > li {
+//     margin-bottom: 0.125rem;
+// }
 </style>
