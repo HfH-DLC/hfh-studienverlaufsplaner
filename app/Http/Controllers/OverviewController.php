@@ -13,7 +13,6 @@ class OverviewController extends Controller
 {
     function show(Planer $planer)
     {
-        $planer->load('categories.modules.events');
-        return Inertia::render('Overview', ['planerResource' => new PlanerResource($planer),      'locationsResource' => LocationResource::collection(Location::all())]);
+        return Inertia::render('Overview', ['planerResource' => new PlanerResource($planer), 'locationsResource' => LocationResource::collection(Location::all())]);
     }
 }
