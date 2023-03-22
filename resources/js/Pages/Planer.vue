@@ -1,53 +1,11 @@
 <template>
-    <AppHead :planerName="name" />
-    <HfhHeaderBar>
-        <template v-slot:right>
-            <div class="px-4 py-3 leading-4">
-                <nav>
-                    <ul class="flex gap-x-4">
-                        <li v-if="moduleDirectoryUrl">
-                            <a
-                                class="hover:text-thunderbird-red"
-                                :href="moduleDirectoryUrl"
-                                rel="noopener noreferer"
-                                target="_blank"
-                                >Modulverzeichnis</a
-                            >
-                        </li>
-                        <li v-if="brochureUrl">
-                            <a
-                                class="hover:text-thunderbird-red"
-                                :href="brochureUrl"
-                                rel="noopener noreferer"
-                                target="_blank"
-                                >Studienbroschüre</a
-                            >
-                        </li>
-                        <li>
-                            <a
-                                class="hover:text-thunderbird-red"
-                                href="https://hfh.ch"
-                                rel="noopener noreferer"
-                                target="_blank"
-                                >hfh.ch</a
-                            >
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </template>
-    </HfhHeaderBar>
-    <div class="flex justify-between px-4 pt-4 pb-4 max-w-container mx-auto">
-        <div class="flex gap-x-8 items-center">
-            <HfhLogo />
-            <div>
-                <div class="text-2xl">
-                    Studienverlaufsplaner
-                    <span v-if="name">{{ name }}</span>
-                </div>
-            </div>
-        </div>
-    </div>
+    <AppHead :planer-name="name" />
+    <PageHeader
+        :planer-name="name"
+        :planer-slug="slug"
+        :brochure-url="brochureUrl"
+        :module-directory-url="moduleDirectoryUrl"
+    ></PageHeader>
     <div class="p-4 max-w-container mx-auto content">
         <h1 class="mt-4">Willkommen!</h1>
         <p>
@@ -140,6 +98,8 @@ import {
 } from "@hfh-dlc/hfh-styleguide";
 import { PropType } from "vue";
 import AppHead from "@/Components/AppHead.vue";
+import { Link } from "@inertiajs/vue3";
+import PageHeader from "@/Components/PageHeader.vue";
 
 export default {
     components: {
@@ -149,6 +109,8 @@ export default {
         HfhInput,
         HfhLogo,
         HfhSelect,
+        Link,
+        PageHeader,
     },
     props: {
         slug: {

@@ -1,28 +1,6 @@
 <template>
     <AppHead />
-    <header>
-        <HfhHeaderBar>
-            <template v-slot:right>
-                <div class="px-4 py-3 leading-4">
-                    <a
-                        class="hover:text-thunderbird-red"
-                        href="https://hfh.ch"
-                        rel="noopener noreferer"
-                        target="_blank"
-                        >hfh.ch</a
-                    >
-                </div>
-            </template>
-        </HfhHeaderBar>
-        <div
-            class="flex justify-between px-4 pt-4 pb-4 max-w-container mx-auto"
-        >
-            <div class="flex gap-x-8 items-center">
-                <HfhLogo />
-                <div class="text-2xl">Studienverlaufsplaner</div>
-            </div>
-        </div>
-    </header>
+    <PageHeader></PageHeader>
     <main class="p-4 max-w-container mx-auto">
         <h1>Willkommen!</h1>
         <p>Bitte wählen Sie einen Studiengang.</p>
@@ -40,6 +18,7 @@
 
 <script lang="ts">
 import AppHead from "@/Components/AppHead.vue";
+import PageHeader from "@/Components/PageHeader.vue";
 import {
     HfhButton,
     HfhHeaderBar,
@@ -59,6 +38,7 @@ export default {
         HfhLogo,
         HfhSelect,
         HfhTeaser,
+        PageHeader,
     },
     props: {
         planersResource: {

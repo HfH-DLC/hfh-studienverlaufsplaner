@@ -1,31 +1,11 @@
 <template>
     <header>
-        <HfhHeaderBar>
-            <template v-slot:right>
-                <div class="px-4 py-3 leading-4">
-                    <a
-                        class="hover:text-thunderbird-red"
-                        href="https://hfh.ch"
-                        rel="noopener noreferer"
-                        target="_blank"
-                        >hfh.ch</a
-                    >
-                </div>
-            </template>
-        </HfhHeaderBar>
-        <div class="flex justify-between h-full px-4 pt-4 pb-4">
-            <div class="flex gap-x-8 items-center">
-                <HfhLogo />
-                <div>
-                    <h1 class="text-2xl">
-                        Studienverlaufsplaner
-                        <span v-if="$page.props.planerName">{{
-                            $page.props.planerName
-                        }}</span>
-                    </h1>
-                </div>
-            </div>
-        </div>
+        <PageHeader
+            :planer-name="planerName"
+            :planer-slug="planerSlug"
+            :brochure-url="brochureUrl"
+            :module-directory-url="moduleDirectoryUrl"
+        ></PageHeader>
     </header>
     <main class="mt-8">
         <HfhInfoField class="max-w-content mx-4 md:mx-auto"
@@ -38,7 +18,20 @@
 </template>
 
 <script setup lang="ts">
-import { HfhHeaderBar, HfhInfoField, HfhLogo } from "@hfh-dlc/hfh-styleguide";
+import { usePage } from "@inertiajs/vue3";
+import type { PageProps } from "@inertiajs/core";
+import { HfhInfoField } from "@hfh-dlc/hfh-styleguide";
+import PageHeader from "./PageHeader.vue";
+
+interface MainPage extends PageProps {
+    planerName: string;
+    planerSlug: string;
+    brochureUrl: string;
+    moduleDirectoryUrl: string;
+}
+
+const { planerName, planerSlug, brochureUrl, moduleDirectoryUrl } =
+    usePage<MainPage>().props;
 </script>
 
 <style lang="scss" scoped></style>

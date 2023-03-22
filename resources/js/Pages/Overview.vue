@@ -1,56 +1,12 @@
 <template>
     <AppHead :planerName="planerName" title="Übersicht" />
     <header>
-        <HfhHeaderBar>
-            <template v-slot:right>
-                <div class="px-4 py-3 leading-4">
-                    <nav>
-                        <ul class="flex gap-x-4">
-                            <li v-if="moduleDirectoryUrl">
-                                <a
-                                    class="hover:text-thunderbird-red"
-                                    :href="moduleDirectoryUrl"
-                                    rel="noopener noreferer"
-                                    target="_blank"
-                                    >Modulverzeichnis</a
-                                >
-                            </li>
-                            <li v-if="brochureUrl">
-                                <a
-                                    class="hover:text-thunderbird-red"
-                                    :href="brochureUrl"
-                                    rel="noopener noreferer"
-                                    target="_blank"
-                                    >Studienbroschüre</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    class="hover:text-thunderbird-red"
-                                    href="https://hfh.ch"
-                                    rel="noopener noreferer"
-                                    target="_blank"
-                                    >hfh.ch</a
-                                >
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </template>
-        </HfhHeaderBar>
-        <div
-            class="flex justify-between px-4 pt-4 pb-4 max-w-container mx-auto"
-        >
-            <div class="flex gap-x-8 items-center">
-                <HfhLogo />
-                <div>
-                    <div class="text-2xl">
-                        Studienverlaufsplaner
-                        <span v-if="planerName">{{ planerName }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <PageHeader
+            :planer-name="planerName"
+            :planer-slug="planerSlug"
+            :brochure-url="brochureUrl"
+            :module-directory-url="moduleDirectoryUrl"
+        ></PageHeader>
     </header>
     <main class="p-4 max-w-container mx-auto hfh-content">
         <h1 class="mb-0">
