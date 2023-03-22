@@ -14,11 +14,15 @@ class PlanerResource extends JsonResource
      */
     public function toArray($request)
     {
+        $categories = $this->categories()->with(['modules', 'modules.events' => function ($q) {
+            $q->where('planer', $this->slug);
+        }])->get();
+
         return [
             'name' => $this->name,
             'slug' => $this->slug,
             'focusSelectionEnabled' => $this->focus_selection_enabled,
-            'categories' => CategoryResource::collection($this->categories),
+            'categories' => CategoryResource::collection($categories),
             'requiredECTS' => $this->required_ects,
             'rules' => $this->rules,
             'meta' => $this->meta
