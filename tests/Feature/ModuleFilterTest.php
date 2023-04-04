@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
-class OverviewTest extends TestCase
+class ModuleFilterTest extends TestCase
 {
     use RefreshDatabase;
     /**
@@ -16,11 +16,11 @@ class OverviewTest extends TestCase
     public function can_show_overview_page()
     {
         $planer = Planer::factory()->create();
-        $url = "/$planer->slug/angebot";
+        $url = "/$planer->slug/modulfilter";
 
         $response = $this->get($url);
 
         $response->assertSuccessful();
-        $response->assertInertia(fn (AssertableInertia $page) => $page->component("Overview"));
+        $response->assertInertia(fn (AssertableInertia $page) => $page->component("ModuleFilter"));
     }
 }

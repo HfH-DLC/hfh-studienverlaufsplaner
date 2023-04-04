@@ -1,5 +1,5 @@
 <template>
-    <AppHead :planerName="planerName" title="Angebot" />
+    <AppHead :planerName="planerName" title="Modulfilter" />
     <header>
         <PageHeader
             :planer-name="planerName"
@@ -10,7 +10,7 @@
     </header>
     <main class="p-4 pb-16 max-w-container mx-auto">
         <div class="hfh-content">
-            <h1 class="mb-0">Angebot</h1>
+            <h1 class="mb-0">Modulfilter</h1>
             <p class="mt-0">
                 (Stand {{ currentSchoolYear }}/{{ currentSchoolYear + 1 }})
             </p>
@@ -77,56 +77,24 @@
                     <div class="mt-4 grid gap-y-4">
                         <template v-for="day in semester.days">
                             <template v-for="time in semester.times">
-                                <div>
-                                    <OverviewItem
-                                        :modules="
-                                            getModulesByDate(
-                                                semester.value,
-                                                day,
-                                                time
-                                            ).map(
-                                                (module) =>
-                                                    `${module.id} ${module.name}`
-                                            )
-                                        "
-                                        :semester="
-                                            getSemesterLabel(semester.value)
-                                        "
-                                        :day-time="`${day}${time.toLocaleLowerCase()}`"
-                                    ></OverviewItem>
-                                </div>
-                            </template>
-                        </template>
-                    </div>
-
-                    <!-- <h3>{{ getSemesterLabel(semester.value) }}</h3>
-
-                    <template v-for="day in semester.days">
-                        <template v-for="time in semester.times">
-                            <template
-                                v-if="
-                                    getModulesByDate(semester.value, day, time)
-                                        .length > 0
-                                "
-                            >
-                                <h4>{{ day }}{{ time.toLocaleLowerCase() }}</h4>
-                                <ul>
-                                    <li
-                                        v-for="(
-                                            module, index
-                                        ) in getModulesByDate(
+                                <ModuleFilterItem
+                                    :modules="
+                                        getModulesByDate(
                                             semester.value,
                                             day,
                                             time
-                                        )"
-                                        :key="index"
-                                    >
-                                        {{ module.id }} {{ module.name }}
-                                    </li>
-                                </ul>
+                                        ).map(
+                                            (module) =>
+                                                `${module.id} ${module.name}`
+                                        )
+                                    "
+                                    :semester="getSemesterLabel(semester.value)"
+                                    :day="day"
+                                    :time="time"
+                                ></ModuleFilterItem>
                             </template>
                         </template>
-                    </template> -->
+                    </div>
                 </template>
             </div>
         </div>
@@ -135,21 +103,15 @@
 
 <script setup lang="ts">
 import AppHead from "@/Components/AppHead.vue";
-import OverviewItem from "@/Components/OverviewItem.vue";
+import ModuleFilterItem from "@/Components/ModuleFilterItem.vue";
 import PageHeader from "@/Components/PageHeader.vue";
 import { getNestedDates, orderDay, orderSemester, orderTime } from "@/helpers";
 import { Category, Event, EventDate, Location, Module } from "@/types";
-import {
-    HfhFilterGroup,
-    HfhHeaderBar,
-    HfhLogo,
-    HfhCheckbox,
-} from "@hfh-dlc/hfh-styleguide";
+import { HfhFilterGroup, HfhCheckbox } from "@hfh-dlc/hfh-styleguide";
 import type {
     CheckboxOption,
     SelectOption,
 } from "@hfh-dlc/hfh-styleguide/types";
-import { Link } from "@inertiajs/vue3";
 import { computed, ref, Ref } from "vue";
 const props = defineProps({
     planerResource: {

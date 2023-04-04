@@ -1,12 +1,12 @@
 <template>
-    <div>
-        <h3 class="flex gap-x-4 bg-fantasy-pastel px-4 py-2">
+    <div v-if="modules.length > 0" class="border-2 border-fantasy-plain">
+        <h3 class="flex gap-x-4 bg-fantasy-light text-black px-4 py-2">
             <div>
                 {{ semester }}
             </div>
-            <div>{{ dayTime }}</div>
+            <div>{{ `${day}${time.toLocaleLowerCase()}` }}</div>
         </h3>
-        <div class="border-2 border-fantasy-pastel">
+        <div class="border-t-2 border-fantasy-light border-t-fantasy-plain">
             <ul>
                 <li
                     v-for="(module, index) in modules"
@@ -29,7 +29,11 @@ const props = defineProps({
         type: String,
         required: true,
     },
-    dayTime: {
+    day: {
+        type: String,
+        required: true,
+    },
+    time: {
         type: String,
         required: true,
     },

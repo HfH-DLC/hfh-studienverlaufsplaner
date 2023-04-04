@@ -15,6 +15,7 @@ module.exports = {
             colors: {
                 "thunderbird-red": "var(--c-thunderbird-red)",
                 "thunderbird-red-light": "var(--c-thunderbird-red-light)",
+                "fantasy-dark": "var(--c-fantasy-dark)",
                 "fantasy-pastel": "var(--c-fantasy-pastel)",
                 "fantasy-plain": "var(--c-fantasy-plain)",
                 "fantasy-light": "var(--c-fantasy-light)",

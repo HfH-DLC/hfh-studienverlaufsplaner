@@ -4,13 +4,13 @@
             <div class="px-4 py-3 leading-4">
                 <nav>
                     <ul class="flex gap-x-4">
-                        <li v-if="planerSlug">
+                        <li v-if="moduleFilterUrl">
                             <a
                                 class="hover:text-thunderbird-red"
                                 :href="moduleFilterUrl"
                                 rel="noopener noreferer"
                                 target="_blank"
-                                >Modulefilter</a
+                                >Modulfilter</a
                             >
                         </li>
                         <li v-if="moduleDirectoryUrl">
@@ -84,7 +84,7 @@ const props = defineProps({
 
 const moduleFilterUrl = computed(() => {
     if (props.planerSlug) {
-        return `/${props.planerSlug}/angebot`;
+        return `/${props.planerSlug}/modulfilter`;
     }
     return;
 });

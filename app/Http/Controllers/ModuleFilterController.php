@@ -9,10 +9,10 @@ use App\Models\Planer;
 
 use Inertia\Inertia;
 
-class OverviewController extends Controller
+class ModuleFilterController extends Controller
 {
     function show(Planer $planer)
     {
-        return Inertia::render('Overview', ['planerResource' => new PlanerResource($planer), 'locationsResource' => LocationResource::collection(Location::all())]);
+        return Inertia::render('ModuleFilter', ['planerResource' => new PlanerResource($planer), 'locationsResource' => LocationResource::collection(Location::all())]);
     }
 }
