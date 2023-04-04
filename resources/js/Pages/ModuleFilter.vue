@@ -19,6 +19,7 @@
         <div class="lg:flex lg:gap-x-16">
             <HfhFilterGroup @reset="onFilterReset">
                 <HfhCheckbox
+                    v-if="locationOptions.length > 1"
                     id="filter-location"
                     legend="Standort"
                     :options="locationOptions"
