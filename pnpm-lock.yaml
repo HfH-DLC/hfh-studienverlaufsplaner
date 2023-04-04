@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@headlessui/vue': ^1.7.10
   '@heroicons/vue': ^2.0.15
-  '@hfh-dlc/hfh-styleguide': ^1.1.13
+  '@hfh-dlc/hfh-styleguide': ^1.1.14
   '@inertiajs/vue3': ^1.0.0
   '@popperjs/core': ^2.11.6
   '@types/lodash.throttle': ^4.1.7
@@ -27,7 +27,7 @@ specifiers:
 dependencies:
   '@headlessui/vue': 1.7.12_vue@3.2.47
   '@heroicons/vue': 2.0.16_vue@3.2.47
-  '@hfh-dlc/hfh-styleguide': 1.1.13_vue@3.2.47
+  '@hfh-dlc/hfh-styleguide': 1.1.14_vue@3.2.47
   '@popperjs/core': 2.11.6
   '@types/lodash.throttle': 4.1.7
   lodash.throttle: 4.1.1
@@ -290,8 +290,8 @@ packages:
       vue: 3.2.47
     dev: false
 
-  /@hfh-dlc/hfh-styleguide/1.1.13_vue@3.2.47:
-    resolution: {integrity: sha512-hnk+CBkcmh/DT87zine56w5TwMP+xmJWGiYNZdR0ssls77Oh7gEsodkdZNSVuYiJDGW13L9otw4CkKYqhCPk9A==, tarball: download/@hfh-dlc/hfh-styleguide/1.1.13/42a248b9f753f9e0daae5b182c6e3dff23f08198}
+  /@hfh-dlc/hfh-styleguide/1.1.14_vue@3.2.47:
+    resolution: {integrity: sha512-8VyVre9kUot+zY1HMXpXSj8XFnBu0D8Kf0Ku4Xf8Tr44qeKywDn9yato+Vfz13XItcfrkGrhHU6JsLoBjoIsgw==, tarball: download/@hfh-dlc/hfh-styleguide/1.1.14/239112417d3a82488ba8fd9c9ba51bae15830531}
     peerDependencies:
       vue: ^3.0.4
     dependencies:
