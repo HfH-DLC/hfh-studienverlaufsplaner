@@ -347,8 +347,4 @@ h2 {
         white-space: nowrap;
     }
 }
-
-// ul > li {
-//     margin-bottom: 0.125rem;
-// }
 </style>

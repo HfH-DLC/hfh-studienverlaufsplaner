@@ -253,7 +253,7 @@ const onTourStepChanged = (index: number) => {
 </script>
 
 <style>
-:root {
+html:root {
     --w-container: 100%;
 }
 </style>

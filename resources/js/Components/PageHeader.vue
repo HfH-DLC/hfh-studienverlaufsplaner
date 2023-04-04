@@ -1,7 +1,7 @@
 <template>
     <HfhHeaderBar class="print:hidden">
         <template v-slot:right>
-            <div class="px-4 py-3 leading-4">
+            <div class="pl-4 py-3 leading-4">
                 <nav>
                     <ul class="flex gap-x-4">
                         <li v-if="moduleFilterUrl">
