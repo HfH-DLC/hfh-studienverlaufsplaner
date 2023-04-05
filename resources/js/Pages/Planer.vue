@@ -21,8 +21,7 @@
                 rel="noopener noreferrer"
                 :href="brochureUrl"
                 >Studienbroschüre</a
-            >
-            und das
+            >, das
             <a
                 class="font-bold text-thunderbird-red hover:underline focus:underline;"
                 target="_blank"
@@ -30,6 +29,15 @@
                 :href="moduleDirectoryUrl"
             >
                 Modulverzeichnis</a
+            >
+            und den
+            <a
+                class="font-bold text-thunderbird-red hover:underline focus:underline;"
+                target="_blank"
+                rel="noopener noreferrer"
+                :href="`/${slug}/modulfilter`"
+            >
+                Modulfilter</a
             >.
         </p>
 
