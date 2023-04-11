@@ -12,7 +12,7 @@
         <div class="hfh-content">
             <h1 class="mb-0">Modulfilter</h1>
             <p class="mt-0">
-                (Stand {{ currentSchoolYear }}/{{ currentSchoolYear + 1 }})
+                (Stand {{ props.year }}/{{ currentSchoolYear + 1 }})
             </p>
         </div>
 
@@ -123,12 +123,17 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    year: {
+        type: String,
+        required: true,
+    },
 });
 
 const planerName = props.planerResource.data.name;
 const planerSlug = props.planerResource.data.slug;
 const moduleDirectoryUrl = props.planerResource.data.meta.moduleDirectoryUrl;
 const brochureUrl = props.planerResource.data.meta.brochureUrl;
+const currentSchoolYear = parseInt(props.year);
 
 const modules: Array<ModuleWithCategory> = [
     ...props.planerResource.data.categories.reduce(
@@ -254,17 +259,8 @@ const filteredModules = computed(() => {
     });
 });
 
-const currentSchoolYear = computed(() => {
-    const now = new Date();
-    const schoolYearEndMonth = 4;
-    if (now.getMonth() > schoolYearEndMonth) {
-        return now.getFullYear();
-    }
-    return now.getFullYear() - 1;
-});
-
 const isInCurrentSchoolYear = (date: EventDate): boolean => {
-    return date.year == currentSchoolYear.value;
+    return date.year == currentSchoolYear;
 };
 
 const filteredEvents = computed(() =>
@@ -302,7 +298,7 @@ const filteredEvents = computed(() =>
 
 const nestedDates = computed(() =>
     getNestedDates(filteredEvents.value).years.find(
-        (year) => year.value === currentSchoolYear.value
+        (year) => year.value === currentSchoolYear
     )
 );
 
@@ -310,7 +306,7 @@ const getModulesByDate = (semester: string, day: string, time: string) => {
     const result = filteredModules.value.filter((module) => {
         return module.events.some(
             (event) =>
-                event.year == currentSchoolYear.value &&
+                event.year == currentSchoolYear &&
                 event.semester == semester &&
                 event.day == day &&
                 event.time == time &&
