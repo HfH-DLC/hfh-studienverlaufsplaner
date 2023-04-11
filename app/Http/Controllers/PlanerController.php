@@ -11,10 +11,7 @@ class PlanerController extends Controller
 {
     public function show(Planer $planer)
     {
-        $years = Import::orderBy('year', 'asc')->groupBy('year')->pluck('year')->toArray();
-        $minYear = min($years);
-        $maxYear = max($years);
-        $allowedYears = range($minYear, $maxYear);
+        $allowedYears = range(Import::getOldestImportYear(), Import::getNewestImportedYear());
 
         $props =  array(
             'slug' => $planer->slug,
