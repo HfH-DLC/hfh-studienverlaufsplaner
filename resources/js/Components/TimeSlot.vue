@@ -64,7 +64,10 @@
             </template>
         </div>
         <div
-            v-else-if="availableModulesGroupedByLocations.size > 0"
+            v-else-if="
+                !store.selectedModule &&
+                availableModulesGroupedByLocations.size > 0
+            "
             class="flex justify-center items-center h-full"
         >
             <button
