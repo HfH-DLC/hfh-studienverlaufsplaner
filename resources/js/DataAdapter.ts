@@ -1,5 +1,11 @@
 import axios from "axios";
-import { FocusCredit, FocusSelection, PlacementParams } from "./types";
+import {
+    FocusCredit,
+    FocusSelection,
+    Location,
+    PlacementParams,
+} from "./types";
+import { Placement } from "./types";
 
 export default class DataAdapter {
     private planerSlug: string;
@@ -11,23 +17,33 @@ export default class DataAdapter {
     }
 
     async saveSchedule(
-        placements: Array<PlacementParams>,
+        placements: Array<Placement>,
         focusSelections: Array<FocusSelection>,
         tourCompleted: boolean,
         valid: boolean,
-        locations: Array<string>
+        locations: Array<Location>
     ) {
         const response = await axios.put(
             `/${this.planerSlug}/${this.planSlug}/zeitplan`,
             {
-                placements,
+                placements: placements.map((placement): PlacementParams => {
+                    return {
+                        moduleId: placement.moduleId,
+                        locationId: placement.location.id,
+                        year: placement.year,
+                        semester: placement.semester,
+                        day: placement.day,
+                        time: placement.time,
+                        timeWindow: placement.timeWindow,
+                    };
+                }),
                 focusSelections: focusSelections.map((params) => ({
                     position: params.position,
                     focusId: params.focus.id,
                 })),
                 tourCompleted,
                 valid,
-                locations,
+                locations: locations.map((location) => location.id),
             }
         );
         return response.data.data;

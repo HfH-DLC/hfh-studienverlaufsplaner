@@ -263,7 +263,7 @@ class JSONImport
     private function createEvent($moduleID, $year, $semester, $timeWindow, $day, $time, $location, $planer)
     {
         return Event::firstOrCreate([
-            'module_id' => $moduleID, 'year' => $year, 'semester' => $semester, 'time_window' => $timeWindow, 'day' => $day, 'time' => $time, 'location' => $location, 'planer' => $planer
+            'module_id' => $moduleID, 'year' => $year, 'semester' => $semester, 'time_window' => $timeWindow, 'day' => $day, 'time' => $time, 'location_id' => $location, 'planer' => $planer
         ]);
     }
 

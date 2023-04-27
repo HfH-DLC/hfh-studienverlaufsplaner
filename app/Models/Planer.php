@@ -42,12 +42,37 @@ class Planer extends Model
     }
 
 
-    public function getModules($query)
+    public function getModules($query = NULL)
     {
         $modules = collect();
-        foreach ($this->categories()->with(['modules' => $query])->get() as $category) {
+        $withParam = ['modules'];
+        if ($query !== NULL) {
+            $withParam = ['modules' => $query];
+        }
+        foreach ($this->categories()->with($withParam)->get() as $category) {
             $modules = $modules->merge($category->modules);
         }
         return $modules;
+    }
+
+    public function getEvents()
+    {
+        $modules = $this->getModules();
+
+        $events = collect();
+        foreach ($modules->all() as $module) {
+            $events = $events->merge($module->events);
+        }
+        return $events;
+    }
+
+    public function getLocations()
+    {
+        $events = $this->getEvents();
+        $locations = collect();
+        foreach ($events->all() as $event) {
+            $locations->add($event->location);
+        }
+        return $locations->unique('id');
     }
 }

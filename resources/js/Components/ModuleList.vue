@@ -83,13 +83,13 @@ const filteredCategories = computed(() => {
             modules: category.modules
                 .filter((module) =>
                     module.events.some((event) =>
-                        store.checkedLocations.includes(event.location)
+                        store.checkedLocations.includes(event.location.id)
                     )
                 )
                 .map((module) => ({
                     ...module,
                     events: module.events.filter((event) =>
-                        store.checkedLocations.includes(event.location)
+                        store.checkedLocations.includes(event.location.id)
                     ),
                 })),
         }))

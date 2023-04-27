@@ -137,7 +137,7 @@ class PlanController extends Controller
                     $placement->time_window = $placement_data['timeWindow'];
                     $placement->day = $placement_data['day'];
                     $placement->time = $placement_data['time'];
-                    $placement->location = $placement_data['location'];
+                    $placement->location_id = $placement_data['locationId'];
                     $placement->module()->associate($placement_data['moduleId']);
                     $plan->placements()->save($placement);
                 });

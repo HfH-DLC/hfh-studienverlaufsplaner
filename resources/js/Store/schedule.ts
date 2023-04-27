@@ -128,9 +128,7 @@ export const useScheduleStore = defineStore("schedule", {
                     this.focusSelections,
                     this.tourCompleted,
                     this.valid,
-                    this.locations
-                        .filter((location) => location.checked)
-                        .map((location) => location.id)
+                    this.locations.filter((location) => location.checked)
                 );
                 this.saveStatus = SaveStatus.Saved;
                 return true;
@@ -369,7 +367,7 @@ export const useScheduleStore = defineStore("schedule", {
                                     day,
                                     time,
                                     timeWindow,
-                                }) && event.location == location
+                                }) && event.location.id == location
                         );
                     });
                     if (matchingModules.length > 0) {
@@ -452,7 +450,7 @@ export const useScheduleStore = defineStore("schedule", {
                     if (
                         selectionEventInfo &&
                         selectionEventInfo.dateAllowed &&
-                        this.checkedLocations.includes(cur.location)
+                        this.checkedLocations.includes(cur.location.id)
                     ) {
                         acc.push({
                             ...cur,
@@ -484,9 +482,11 @@ export const useScheduleStore = defineStore("schedule", {
         },
         selectableLocations(): Array<Location> {
             return this.locations.filter((location) =>
-                new Set(this.events.map((event) => event.location)).has(
-                    location.id
-                )
+                new Set(
+                    this.events.map((event) => {
+                        return event.location.id;
+                    })
+                ).has(location.id)
             );
         },
         checkedLocations(): Array<string> {
@@ -507,7 +507,7 @@ export const useScheduleStore = defineStore("schedule", {
                     if (module) {
                         return !module.events.find((event) => {
                             return this.checkedLocations.includes(
-                                event.location
+                                event.location.id
                             );
                         });
                     }

@@ -48,7 +48,7 @@ export interface EventDate {
 
 export interface Event extends EventDate {
     id: number;
-    location: string;
+    location: Location;
 }
 
 export enum FlashType {
@@ -119,7 +119,9 @@ export interface Placement extends Event {
     moduleId: string;
 }
 
-export interface PlacementParams extends Omit<Placement, "id"> {}
+export interface PlacementParams extends Omit<Placement, "id" | "location"> {
+    locationId: string;
+}
 
 export interface RuleData {
     name: string;

@@ -23,7 +23,7 @@
                         </div>
                         <div v-if="showLocation">
                             Standort:
-                            {{ locationById(placement.location).name }}
+                            {{ placement.location.name }}
                         </div>
                     </div>
                 </div>
@@ -56,8 +56,7 @@
                             class="text-red-600 w-5 h-5 shrink-0"
                         />
                         <span v-if="showLocation"
-                            >Standort:
-                            {{ locationById(event.location).name }}</span
+                            >Standort: {{ event.location.name }}</span
                         >
                     </span>
                 </button>
@@ -85,12 +84,10 @@
             >
                 <div
                     v-for="entry in availableModulesGroupedByLocations"
-                    :key="entry[0]"
+                    :key="entry[0].id"
                     class="mb-4"
                 >
-                    <h3 class="mb-2">
-                        Standort {{ locationById(entry[0])!.name }}
-                    </h3>
+                    <h3 class="mb-2">Standort {{ entry[0]!.name }}</h3>
                     <ul>
                         <li v-for="module in entry[1]" :key="module.id">
                             {{ module.id }} {{ module.name }}
@@ -116,6 +113,7 @@ import ContextMenu from "./ContextMenu.vue";
 import { PropType, ref, Ref, computed, watch } from "vue";
 import {
     Event,
+    Location,
     ScheduleModule,
     SchedulePlacement,
     SelectableEvent,
@@ -135,7 +133,7 @@ const props = defineProps({
         required: true,
     },
     availableModulesGroupedByLocations: {
-        type: Object as PropType<Map<string, Array<ScheduleModule>>>,
+        type: Object as PropType<Map<Location, Array<ScheduleModule>>>,
         required: true,
     },
 });
@@ -175,10 +173,10 @@ watch(
 );
 
 const placementMatchesEvent = (placement: SchedulePlacement, event: Event) => {
-    return isSameDate(placement, event) && placement.location == event.location;
-};
-const locationById = (id: string) => {
-    return store.locations.find((location) => location.id == id)!;
+    return (
+        isSameDate(placement, event) &&
+        placement.location.id == event.location.id
+    );
 };
 const openDialog = () => {
     isDialogVisible.value = true;
@@ -196,10 +194,9 @@ const invalidPlacement = computed(() => {
 });
 const filteredEvents = computed(() => {
     return props.events.filter((event) => {
-        const isActiveLocation = store.locations
-            .filter((location) => location.checked)
-            .map((location) => location.id)
-            .includes(event.location);
+        const isActiveLocation = store.locations.some(
+            (location) => location.checked && location.id === event.location.id
+        );
 
         const isCurrent = props.placement
             ? placementMatchesEvent(props.placement, event)
