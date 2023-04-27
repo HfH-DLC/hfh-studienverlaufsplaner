@@ -32,6 +32,14 @@ export interface CreditModule extends Module {
     requiredCredit: boolean;
 }
 
+export interface DayTime {
+    id: string;
+    day: string;
+    time: string;
+    default: boolean;
+    sortIndex: number;
+}
+
 export type ErrorMessage = {
     label?: string;
     component?: Component;

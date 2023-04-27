@@ -1,5 +1,6 @@
 import axios from "axios";
 import {
+    DayTime,
     FocusCredit,
     FocusSelection,
     Location,
@@ -57,6 +58,17 @@ export default class DataAdapter {
         const response = await axios.put(
             `/${this.planerSlug}/${this.planSlug}/anrechnung`,
             { focusCredits, tourCompleted, valid }
+        );
+        return response.data.data;
+    }
+
+    async saveSettings(dayTimes: Array<string>, locations: Array<string>) {
+        const response = await axios.put(
+            `/${this.planerSlug}/${this.planSlug}/einstellungen`,
+            {
+                dayTimes,
+                locations,
+            }
         );
         return response.data.data;
     }

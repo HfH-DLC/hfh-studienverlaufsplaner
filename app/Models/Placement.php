@@ -24,5 +24,10 @@ class Placement extends Model
         return $this->belongsTo(Location::class);
     }
 
+    public function dayTime()
+    {
+        return $this->belongsTo(DayTime::class);
+    }
+
     protected $casts = ['plan_id' => 'integer', 'year' => 'integer'];
 }

@@ -19,8 +19,8 @@ class EventResource extends JsonResource
             'year' => intval($this->year),
             'semester' => $this->semester,
             'timeWindow' => $this->time_window,
-            'day' => $this->day,
-            'time' => $this->time,
+            'day' => $this->dayTime->day,
+            'time' => $this->dayTime->time,
             'location' => $this->location,
         ];
     }

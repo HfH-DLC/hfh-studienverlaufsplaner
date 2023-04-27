@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Category;
+use App\Models\DayTime;
 use App\Models\Event;
 use App\Models\Focus;
 use App\Models\Import;
@@ -20,7 +21,6 @@ class JSONImport
     private $file;
     private $modulesCache = [];
     private $year;
-    private $times = [];
     private $timeWindows = [];
 
     public function __construct($file)
@@ -35,7 +35,8 @@ class JSONImport
             $json = file_get_contents($this->file);
             $data = json_decode($json);
             $this->year = $data->year;
-            $this->getTimes($data);
+            $this->importDayTimes($data);
+            $this->getTimeWindows($data);
             $this->importModules($data);
             $this->importPlaners($data);
             $this->importEvents($data);
@@ -44,15 +45,22 @@ class JSONImport
         });
     }
 
-    private function getTimes($data)
+    private function importDayTimes($data)
     {
-        foreach ($data->times as $row) {
-            $id = $row->id;
-            $day = $row->day;
-            $time = $row->time;
-            $this->times[$id] = ['day' => $day, 'time' => $time];
+        foreach ($data->dayTimes as $row) {
+            $default = false;
+            if (isset($row->default)) {
+                $default = $row->default;
+            }
+            var_dump($row->day);
+            $dayTime = DayTime::firstOrCreate(['id' => $row->id, 'day' => $row->day, 'time' => $row->time, 'sort_index' => $row->sortIndex]);
+            $dayTime->default = $default;
+            $dayTime->save();
         }
+    }
 
+    private function getTimeWindows($data)
+    {
         foreach ($data->timeWindows as $row) {
             $id = $row->id;
             $name = $row->name;
@@ -237,19 +245,17 @@ class JSONImport
             $timeWindow = $this->timeWindows[$eventData->timeWindow]['name'];
 
             $locations = $eventData->locations;
-            $timeLetters = $eventData->times;
+            $dayTimes = $eventData->dayTimes;
 
             $moduleID = $eventData->module;
 
             foreach ($planers as $planer) {
                 foreach ($locations as $location) {
                     foreach ($semesters as $semester) {
-                        foreach ($timeLetters as $timeLetter) {
-                            $day = $this->times[$timeLetter]['day'];
-                            $time = $this->times[$timeLetter]['time'];
+                        foreach ($dayTimes as $dayTime) {
                             for ($i = 0; $i < self::NUMBER_OF_YEARS; $i++) {
                                 $year = $this->year + $i;
-                                $event =  $this->createEvent($moduleID, $year, $semester, $timeWindow, $day, $time, $location, $planer);
+                                $event =  $this->createEvent($moduleID, $year, $semester, $timeWindow, $dayTime, $location, $planer);
                                 $eventIds[] = $event->id;
                             }
                         }
@@ -260,10 +266,10 @@ class JSONImport
         Event::where('year', '>=', $this->year)->whereNotIn('id', $eventIds)->delete();
     }
 
-    private function createEvent($moduleID, $year, $semester, $timeWindow, $day, $time, $location, $planer)
+    private function createEvent($moduleID, $year, $semester, $timeWindow, $dayTime, $location, $planer)
     {
         return Event::firstOrCreate([
-            'module_id' => $moduleID, 'year' => $year, 'semester' => $semester, 'time_window' => $timeWindow, 'day' => $day, 'time' => $time, 'location_id' => $location, 'planer' => $planer
+            'module_id' => $moduleID, 'year' => $year, 'semester' => $semester, 'time_window' => $timeWindow, 'day_time_id' => $dayTime, 'location_id' => $location, 'planer' => $planer
         ]);
     }
 

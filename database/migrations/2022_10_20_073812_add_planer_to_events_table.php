@@ -34,7 +34,6 @@ return new class extends Migration
             $table->dropUnique('event_unique');
             $table->dropColumn('planer');
             $table->unique(['module_id', 'year', 'semester', 'time_window', 'day', 'time', 'location'], 'events_date_location_module_unique');
-            $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade');
         });
     }
 };

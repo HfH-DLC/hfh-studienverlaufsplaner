@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\FocusSelection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PlanResource extends JsonResource
@@ -25,6 +24,7 @@ class PlanResource extends JsonResource
             'scheduleValid' => $this->schedule_valid,
             'focusSelections' => FocusSelectionResource::collection($this->focusSelections),
             'locations' => LocationResource::collection($this->locations),
+            'dayTimes' => DayTimeResource::collection($this->dayTimes),
             'readOnly' => $this->read_only
         ];
     }

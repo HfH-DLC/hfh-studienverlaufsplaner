@@ -13,11 +13,13 @@ use App\Http\Resources\PlanResource;
 use App\Http\Resources\RuleResource;
 use App\Http\Resources\TodoResource;
 use App\Mail\PlanCreated;
+use App\Models\DayTime;
 use App\Models\FocusSelection;
 use App\Models\Location;
 use App\Models\Placement;
 use App\Models\Plan;
 use App\Models\Planer;
+use DateTime;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -115,6 +117,9 @@ class PlanController extends Controller
         DB::transaction(function () use ($plan, $planer) {
             $planer->plans()->save($plan);
             $plan->save();
+            $plan->dayTimes()->saveMany(array_filter($planer->getDayTimes(), function ($dayTime) {
+                return $dayTime->default;
+            }));
         });
 
         Mail::to($validated['email'])
@@ -131,12 +136,12 @@ class PlanController extends Controller
                 $placements_data = collect($placements_data);
                 $plan->placements()->delete();
                 $placements_data->each(function ($placement_data) use ($plan) {
+                    $dayTime = DayTime::where('day', $placement_data['day'])->where('time', $placement_data['time'])->first();
                     $placement = new Placement();
                     $placement->year = $placement_data['year'];
                     $placement->semester = $placement_data['semester'];
                     $placement->time_window = $placement_data['timeWindow'];
-                    $placement->day = $placement_data['day'];
-                    $placement->time = $placement_data['time'];
+                    $placement->day_time_id = $dayTime->id;
                     $placement->location_id = $placement_data['locationId'];
                     $placement->module()->associate($placement_data['moduleId']);
                     $plan->placements()->save($placement);

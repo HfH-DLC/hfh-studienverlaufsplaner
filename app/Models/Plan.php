@@ -23,6 +23,11 @@ class Plan extends Model
         return $this->hasMany(Placement::class);
     }
 
+    public function dayTimes()
+    {
+        return $this->belongsToMany(DayTime::class);
+    }
+
     public function focusSelections()
     {
         return $this->hasMany(FocusSelection::class);
@@ -89,6 +94,8 @@ class Plan extends Model
         return function ($query) use ($years) {
             $query->where('planer', $this->planer->slug);
             $query->whereIn('year', $years);
+            $query->whereIn('location_id', $this->locations->pluck('id'));
+            $query->whereIn('day_time_id', $this->dayTimes->pluck('id'));
         };
     }
 

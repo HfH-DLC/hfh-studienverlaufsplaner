@@ -75,4 +75,16 @@ class Planer extends Model
         }
         return $locations->unique('id');
     }
+
+    public function getDayTimes()
+    {
+        $events = $this->getEvents();
+        $dayTimes = [];
+        foreach ($events->all() as $event) {
+            if (!in_array($event->dayTime, $dayTimes)) {
+                array_push($dayTimes, $event->dayTime);
+            }
+        }
+        return $dayTimes;
+    }
 }

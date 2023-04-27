@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::table('events', function (Blueprint $table) {
             $table->dropUnique('event_unique');
-            $table->renameColumn('location', 'location_id');
-            $table->unique(['module_id', 'year', 'semester', 'time_window', 'day', 'time', 'location_id'], 'event_unique');
+            $table->string('day_time_id');
+            $table->string('day')->default('')->change();
+            $table->string('time')->default('')->change();
+            $table->unique(['module_id', 'year', 'semester', 'time_window', 'day_time_id', 'location_id', 'planer'], 'event_unique');
         });
     }
 
@@ -25,8 +27,10 @@ return new class extends Migration
     {
         Schema::table('events', function (Blueprint $table) {
             $table->dropUnique('event_unique');
-            $table->renameColumn('location_id', 'location');
-            $table->unique(['module_id', 'year', 'semester', 'time_window', 'day', 'time', 'location'], 'event_unique');
+            $table->dropColumn('day_time_id');
+            $table->string('day')->default(null)->change();
+            $table->string('time')->default(null)->change();
+            $table->unique(['module_id', 'year', 'semester', 'time_window', 'day', 'time', 'location_id', 'planer'], 'event_unique');
         });
     }
 };
