@@ -1,6 +1,6 @@
 {
     "year": 2023,
-    "version": 13,
+    "version": 14,
     "modules": [
         {
             "id": "P1_01",
@@ -779,6 +779,14 @@
         {
             "module": "P1_02",
             "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "times": ["bz"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "P1_02",
+            "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 1,
             "times": ["g"],
@@ -798,6 +806,14 @@
             "semesters": ["HS", "FS"],
             "timeWindow": 1,
             "times": ["d", "h"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "P3_01",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "times": ["dz"],
             "locations": ["ZH"]
         },
         {
@@ -1117,7 +1133,7 @@
             "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 1,
-            "times": ["d"],
+            "times": ["dz"],
             "locations": ["ZH"]
         },
         {
@@ -1342,6 +1358,11 @@
             "time": "Nachmittag"
         },
         {
+            "id": "bz",
+            "day": "Montag",
+            "time": "Abend"
+        },
+        {
             "id": "c",
             "day": "Dienstag",
             "time": "Morgen"
@@ -1350,6 +1371,11 @@
             "id": "d",
             "day": "Dienstag",
             "time": "Nachmittag"
+        },
+        {
+            "id": "dz",
+            "day": "Dienstag",
+            "time": "Abend"
         },
         {
             "id": "e",
@@ -1362,6 +1388,11 @@
             "time": "Nachmittag"
         },
         {
+            "id": "fz",
+            "day": "Donnerstag",
+            "time": "Abend"
+        },
+        {
             "id": "g",
             "day": "Freitag",
             "time": "Morgen"
@@ -1370,6 +1401,11 @@
             "id": "h",
             "day": "Freitag",
             "time": "Nachmittag"
+        },
+        {
+            "id": "hz",
+            "day": "Freitag",
+            "time": "Abend"
         }
     ],
     "timeWindows": [
