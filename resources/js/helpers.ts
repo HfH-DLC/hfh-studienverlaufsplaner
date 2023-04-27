@@ -1,13 +1,30 @@
-import { EventDate, Module } from "./types";
+import { EventDate } from "./types";
 
-export const isSameDate = (a: EventDate, b: EventDate) => {
-    return (
+export const isSameDate = (
+    a: {
+        year: number;
+        semester: string;
+        day: string;
+        time: string;
+        timeWindow?: string;
+    },
+    b: {
+        year: number;
+        semester: string;
+        day: string;
+        time: string;
+        timeWindow?: string;
+    }
+) => {
+    let result =
         a.year === b.year &&
         a.semester === b.semester &&
-        a.timeWindow === b.timeWindow &&
         a.day === b.day &&
-        a.time === b.time
-    );
+        a.time === b.time;
+    if (a.timeWindow && b.timeWindow) {
+        result = result && a.timeWindow === b.timeWindow;
+    }
+    return result;
 };
 
 export const isPreviousSemester = (before: EventDate, after: EventDate) => {
@@ -35,7 +52,7 @@ export const orderTimeWindow = (a: string, b: string) =>
 const days = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"];
 export const orderDay = (a: string, b: string) => orderBy(days, a, b);
 
-const times = ["Vormittag", "Nachmittag"];
+const times = ["Vormittag", "Nachmittag", "Abend"];
 export const orderTime = (a: string, b: string) => orderBy(times, a, b);
 
 const orderBy = (order: string[], a: string, b: string) =>

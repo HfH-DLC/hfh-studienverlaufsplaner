@@ -3,17 +3,7 @@ import { defineStore } from "pinia";
 import DataAdapter from "../DataAdapter";
 import { getRule } from "../Models/Rules/Schedule/RuleFactory";
 import { getTodo } from "../Models/Todos/Schedule/TodoFactory";
-import {
-    getCalendarYear,
-    getNestedDates,
-    isSameDate,
-    joinStrings,
-    orderDay,
-    orderSemester,
-    orderTime,
-    orderTimeWindow,
-    pluralize,
-} from "../helpers";
+import { getNestedDates, isSameDate, joinStrings, pluralize } from "../helpers";
 import {
     Category,
     ChecklistEntryData,
@@ -363,17 +353,11 @@ export const useScheduleStore = defineStore("schedule", {
         modulesByDateGroupedByLocations(): (
             year: number,
             semester: string,
-            timeWindow: string,
             day: string,
-            time: string
+            time: string,
+            timeWindow?: string
         ) => Map<string, Array<ScheduleModule>> {
-            return (
-                year: number,
-                semester: string,
-                timeWindow: string,
-                day: string,
-                time: string
-            ) => {
+            return (year, semester, day, time, timeWindow?) => {
                 const result = new Map();
                 this.checkedLocations.forEach((location) => {
                     const matchingModules = this.modules.filter((module) => {
@@ -382,9 +366,9 @@ export const useScheduleStore = defineStore("schedule", {
                                 isSameDate(event, {
                                     year,
                                     semester,
-                                    timeWindow,
                                     day,
                                     time,
+                                    timeWindow,
                                 }) && event.location == location
                         );
                     });
@@ -415,19 +399,19 @@ export const useScheduleStore = defineStore("schedule", {
             return (
                 year: number,
                 semester: string,
-                timeWindow: string,
                 day: string,
-                time: string
+                time: string,
+                timeWindow?: string
             ) =>
-                this.placements.find((placement) => {
-                    return (
-                        placement.year == year &&
-                        placement.semester == semester &&
-                        placement.timeWindow == timeWindow &&
-                        placement.day == day &&
-                        placement.time == time
-                    );
-                });
+                this.placements.find((placement) =>
+                    isSameDate(placement, {
+                        year,
+                        semester,
+                        day,
+                        time,
+                        timeWindow,
+                    })
+                );
         },
         placementErrorMessages(): Array<ErrorMessage> {
             const result: Array<ErrorMessage> = [];
@@ -480,25 +464,23 @@ export const useScheduleStore = defineStore("schedule", {
                 []
             );
         },
-        selectableEventsByDate(): (
-            year: number,
-            semester: string,
-            timeWindow: string,
-            day: string,
-            time: string
-        ) => Array<SelectableEvent> {
-            return (year, semester, timeWindow, day, time) => {
-                const result = this.selectableEvents.filter((event) => {
-                    return (
-                        event.year == year &&
-                        event.semester == semester &&
-                        event.timeWindow == timeWindow &&
-                        event.day == day &&
-                        event.time == time
-                    );
-                });
-                return result;
-            };
+        selectableEventsByDate() {
+            return (
+                year: number,
+                semester: string,
+                day: string,
+                time: string,
+                timeWindow?: string
+            ): Array<SelectableEvent> =>
+                this.selectableEvents.filter((event) =>
+                    isSameDate(event, {
+                        year,
+                        semester,
+                        day,
+                        time,
+                        timeWindow,
+                    })
+                );
         },
         selectableLocations(): Array<Location> {
             return this.locations.filter((location) =>
