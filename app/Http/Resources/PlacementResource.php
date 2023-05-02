@@ -22,7 +22,7 @@ class PlacementResource extends JsonResource
             'timeWindow' => $this->time_window,
             'day' => $this->dayTime->day,
             'time' => $this->dayTime->time,
-            'location' => $this->location,
+            'location' => new LocationResource($this->location),
         ];
     }
 }
