@@ -186,9 +186,6 @@ const props = defineProps({
     },
 });
 
-const hashModuleId = ref();
-const hashCategoryId = ref();
-
 const store = useScheduleStore();
 store.init({
     categories: props.categoriesResource.data,
