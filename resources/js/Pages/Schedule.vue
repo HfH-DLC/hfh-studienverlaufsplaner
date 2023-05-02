@@ -54,16 +54,8 @@
                                 :selectedModule="selectedOrTourModule"
                             />
                             <div v-show="!selectedOrTourModule">
-                                <h2 class="hfh-sr-only">Standort-Auswahl</h2>
-                                <LocationSelect
-                                    v-if="store.selectableLocations.length > 1"
-                                    class="mb-4"
-                                />
                                 <h2 class="hfh-sr-only">Modul-Liste</h2>
-                                <ModuleList
-                                    :hashModuleId="hashModuleId"
-                                    :hashCategoryId="hashCategoryId"
-                                />
+                                <ModuleList />
                             </div>
                         </StickyColumn>
                         <StickyColumn
@@ -129,7 +121,6 @@ import PlanHeader from "../Components/PlanHeader.vue";
 import Flash from "../Components/Flash.vue";
 import StickyColumn from "../Components/StickyColumn.vue";
 import Checklist from "../Components/Checklist.vue";
-import LocationSelect from "../Components/LocationSelect.vue";
 import MainLayout from "../Layouts/MainLayout.vue";
 import { HfhLink } from "@hfh-dlc/hfh-styleguide";
 import { Link } from "@inertiajs/vue3";
