@@ -114,6 +114,7 @@ export interface ModuleIdsByFocusSelection {
 
 export interface Plan {
     creditTourCompleted: boolean;
+    dayTimes: Array<DayTime>;
     focusSelections: Array<FocusSelection>;
     locations: Array<Location>;
     placements: Array<Placement>;
@@ -171,7 +172,6 @@ export interface ScheduleInitParams {
     rules: Array<RuleData>;
     todos: Array<TodoData>;
     foci: Array<Focus>;
-    locations: Array<Location>;
     requiredECTS: number;
     tour: TourData;
 }

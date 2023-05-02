@@ -31,7 +31,7 @@
                             v-for="timeWindow in semester.timeWindows"
                             :key="timeWindow"
                         >
-                            <div class="flex items-center">
+                            <div class="flex items-center justify-center">
                                 <span>{{ timeWindow }}</span>
                                 <button
                                     class="p-2 flex items-center gap-1 hover:text-thunderbird-red"
@@ -68,7 +68,8 @@
                                     scope="row"
                                     class="px-4 py-2 text-base text-left bg-gray-50 text-gray-600 w-px font-normal"
                                 >
-                                    {{ day }}: {{ time }}
+                                    <div>{{ day }}:</div>
+                                    <div>{{ time }}</div>
                                 </th>
                                 <td
                                     v-for="timeWindow in semester.timeWindows"
@@ -149,24 +150,18 @@ const dialogInfo = ref() as Ref<{ title: string; content: string } | undefined>;
 const store = useScheduleStore();
 
 const showLocations = computed(() => {
-    const checkedLocations = new Set(
-        store.locations
-            .filter((location) => location.checked)
-            .map((location) => location.id)
-    );
-    if (checkedLocations.size > 1) {
+    if (store.locationIds.length > 1) {
         return true;
     }
-    const placedLocations = store.placements.reduce((acc, cur) => {
-        acc.add(cur.location);
-        return acc;
-    }, new Set<string>());
+    const placedLocations = new Set(
+        store.placements.map((placement) => placement.location)
+    );
     if (placedLocations.size > 1) {
         return true;
     }
     if (
         [...placedLocations].filter((location) =>
-            checkedLocations.has(location)
+            store.locationIds.includes(location.id)
         ).length < placedLocations.size
     ) {
         return true;

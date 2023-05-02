@@ -26,9 +26,11 @@ import {
     SelectableEvent,
     Todo,
     TourData,
+    DayTime,
 } from "@/types";
 import { useEmitter } from "@/composables/useEmitter";
 import { toRefs } from "vue";
+import SettingsRule from "@/Models/Rules/Schedule/SettingsRule";
 
 let dataAdapter: DataAdapter;
 const emitter = useEmitter();
@@ -52,6 +54,7 @@ export const useScheduleStore = defineStore("schedule", {
         focusSelections: [] as Array<FocusSelection>,
         initialized: false,
         locations: [] as Array<Location>,
+        dayTimes: [] as Array<DayTime>,
         moduleInfos: new Map<string, Array<ErrorMessage>>(),
         requiredECTS: null as number | null,
         rawCategories: [] as Array<Category>,
@@ -77,7 +80,6 @@ export const useScheduleStore = defineStore("schedule", {
             rules,
             todos,
             foci,
-            locations,
             requiredECTS,
             tour,
         }: ScheduleInitParams) {
@@ -88,15 +90,8 @@ export const useScheduleStore = defineStore("schedule", {
             this.rawCategories = categories;
             this.foci = foci;
             this.focusSelections = plan.focusSelections;
-            this.locations = locations.map((location) => {
-                let checked = location.default;
-                if (plan.locations.length > 0) {
-                    checked = plan.locations.some(
-                        (planLocation) => location.id == planLocation.id
-                    );
-                }
-                return { ...location, checked };
-            });
+            this.locations = plan.locations;
+            this.dayTimes = plan.dayTimes;
             this.rawPlacements = plan.placements;
             this.todos = todos.reduce((array: Array<Todo>, todoData) => {
                 try {
@@ -114,6 +109,7 @@ export const useScheduleStore = defineStore("schedule", {
                 }
                 return array;
             }, []);
+            this.rules.push(new SettingsRule()); //todo remove
             this.startYear = plan.startYear;
             this.tour = tour;
             this.tourCompleted = plan.scheduleTourCompleted;
@@ -275,10 +271,6 @@ export const useScheduleStore = defineStore("schedule", {
             this.tourCompleted = true;
             this.save();
         },
-        setLocationChecked(index: number, checked: boolean) {
-            this.locations[index].checked = checked;
-            this.save();
-        },
     },
     getters: {
         categories(): Array<ScheduleCategory> {
@@ -356,17 +348,23 @@ export const useScheduleStore = defineStore("schedule", {
         ) => Map<string, Array<ScheduleModule>> {
             return (year, semester, day, time, timeWindow?) => {
                 const result = new Map();
-                this.checkedLocations.forEach((location) => {
+                this.locations.forEach((location) => {
                     const matchingModules = this.modules.filter((module) => {
                         return module.events.some(
                             (event) =>
+                                event.location.id == location.id &&
+                                this.dayTimes.some(
+                                    (dayTime) =>
+                                        event.day === dayTime.day &&
+                                        event.time === dayTime.time
+                                ) &&
                                 isSameDate(event, {
                                     year,
                                     semester,
                                     day,
                                     time,
                                     timeWindow,
-                                }) && event.location.id == location
+                                })
                         );
                     });
                     if (matchingModules.length > 0) {
@@ -429,6 +427,9 @@ export const useScheduleStore = defineStore("schedule", {
             ];
             return getNestedDates(dates);
         },
+        locationIds(): Array<string> {
+            return this.locations.map((location) => location.id);
+        },
         events(): Array<Event> {
             return this.modules.reduce(
                 (acc: Array<Event>, cur: ScheduleModule) => {
@@ -449,7 +450,7 @@ export const useScheduleStore = defineStore("schedule", {
                     if (
                         selectionEventInfo &&
                         selectionEventInfo.dateAllowed &&
-                        this.checkedLocations.includes(cur.location.id)
+                        this.locationIds.includes(cur.location.id)
                     ) {
                         acc.push({
                             ...cur,
@@ -488,11 +489,6 @@ export const useScheduleStore = defineStore("schedule", {
                 ).has(location.id)
             );
         },
-        checkedLocations(): Array<string> {
-            return this.locations
-                .filter((location) => location.checked)
-                .map((location) => location.id);
-        },
         infos(): Array<string> {
             let infos: Array<string> = [];
             this.focusSelections.forEach((focusSelection) => {
@@ -505,12 +501,10 @@ export const useScheduleStore = defineStore("schedule", {
                     const module = this.moduleById(id);
                     if (module) {
                         return !module.events.find((event) => {
-                            return this.checkedLocations.includes(
-                                event.location.id
-                            );
+                            return this.locations.includes(event.location);
                         });
                     }
-                    return false;
+                    return true;
                 });
                 if (notAvailableModuleIds.length > 0) {
                     const moduleString = pluralize(
@@ -519,24 +513,14 @@ export const useScheduleStore = defineStore("schedule", {
                         "sind die Module"
                     );
                     const locationString = pluralize(
-                        this.checkedLocations.length,
+                        this.locations.length,
                         "am Standort",
                         "an den Standorten"
                     );
 
-                    const locationNames: Array<string> =
-                        this.checkedLocations.reduce(
-                            (acc: Array<string>, cur: string) => {
-                                const location = this.locations.find(
-                                    (location) => location.id == cur
-                                );
-                                if (location) {
-                                    acc.push(location.name);
-                                }
-                                return acc;
-                            },
-                            []
-                        );
+                    const locationNames: Array<string> = this.locations.map(
+                        (location) => location.name
+                    );
 
                     infos.push(
                         `Für den SSP "${

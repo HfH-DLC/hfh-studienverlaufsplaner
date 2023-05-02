@@ -159,7 +159,9 @@ const locationOptions: Ref<Array<CheckboxOption>> = computed(() => {
     const locations = props.locationsResource.data as Array<Location>;
     return locations
         .filter((location) =>
-            getEvents(modules).some((event) => event.location === location.id)
+            getEvents(modules).some(
+                (event) => event.location.id === location.id
+            )
         )
         .map(
             (location): CheckboxOption => ({
@@ -288,7 +290,7 @@ const filteredEvents = computed(() =>
         }
         if (
             locationFilter.value.length > 0 &&
-            !locationFilter.value.includes(event.location)
+            !locationFilter.value.includes(event.location.id)
         ) {
             return false;
         }
@@ -311,7 +313,7 @@ const getModulesByDate = (semester: string, day: string, time: string) => {
                 event.day == day &&
                 event.time == time &&
                 (locationFilter.value.length == 0 ||
-                    locationFilter.value.includes(event.location))
+                    locationFilter.value.includes(event.location.id))
         );
     });
     return result;

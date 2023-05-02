@@ -69,11 +69,13 @@ class Planer extends Model
     public function getLocations()
     {
         $events = $this->getEvents();
-        $locations = collect();
+        $locations = [];
         foreach ($events->all() as $event) {
-            $locations->add($event->location);
+            if (!in_array($event->location, $locations)) {
+                array_push($locations, $event->location);
+            }
         }
-        return $locations->unique('id');
+        return $locations;
     }
 
     public function getDayTimes()

@@ -35,6 +35,7 @@ import {
     computed,
 } from "vue";
 import { useEmitter } from "@/composables/useEmitter";
+import { Event, ScheduleModule } from "@/types";
 
 const store = useScheduleStore();
 
@@ -80,18 +81,27 @@ const filteredCategories = computed(() => {
     return store.categories
         .map((category) => ({
             ...category,
-            modules: category.modules
-                .filter((module) =>
-                    module.events.some((event) =>
-                        store.checkedLocations.includes(event.location.id)
-                    )
-                )
-                .map((module) => ({
-                    ...module,
-                    events: module.events.filter((event) =>
-                        store.checkedLocations.includes(event.location.id)
-                    ),
-                })),
+            modules: category.modules.reduce(
+                (acc: Array<ScheduleModule>, cur: ScheduleModule) => {
+                    const events = cur.events.filter(
+                        (event) =>
+                            store.locationIds.includes(event.location.id) &&
+                            store.dayTimes.some(
+                                (dayTime) =>
+                                    dayTime.day === event.day &&
+                                    dayTime.time === event.time
+                            )
+                    );
+                    if (events.length > 0) {
+                        acc.push({
+                            ...cur,
+                            events,
+                        });
+                    }
+                    return acc;
+                },
+                []
+            ),
         }))
         .filter((category) => category.modules.length > 0);
 });

@@ -84,10 +84,12 @@
             >
                 <div
                     v-for="entry in availableModulesGroupedByLocations"
-                    :key="entry[0].id"
+                    :key="entry[0]"
                     class="mb-4"
                 >
-                    <h3 class="mb-2">Standort {{ entry[0]!.name }}</h3>
+                    <h3 class="mb-2">
+                        Standort {{ getLocationName(entry[0]) }}
+                    </h3>
                     <ul>
                         <li v-for="module in entry[1]" :key="module.id">
                             {{ module.id }} {{ module.name }}
@@ -133,7 +135,7 @@ const props = defineProps({
         required: true,
     },
     availableModulesGroupedByLocations: {
-        type: Object as PropType<Map<Location, Array<ScheduleModule>>>,
+        type: Object as PropType<Map<string, Array<ScheduleModule>>>,
         required: true,
     },
 });
@@ -194,8 +196,8 @@ const invalidPlacement = computed(() => {
 });
 const filteredEvents = computed(() => {
     return props.events.filter((event) => {
-        const isActiveLocation = store.locations.some(
-            (location) => location.checked && location.id === event.location.id
+        const isActiveLocation = store.locationIds.some(
+            (id) => id === event.location.id
         );
 
         const isCurrent = props.placement
@@ -204,6 +206,11 @@ const filteredEvents = computed(() => {
         return isActiveLocation && !isCurrent;
     });
 });
+
+const getLocationName = (id: string) => {
+    const location = store.locations.find((location) => location.id === id);
+    return location ? location.name : "";
+};
 </script>
 
 <style lang="scss" scoped>
