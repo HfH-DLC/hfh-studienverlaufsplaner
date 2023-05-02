@@ -40,7 +40,6 @@ class PlanController extends Controller
         $rulesResource = RuleResource::collection($planer->rules()->where('type', 'Schedule')->get());
         $todosResource = TodoResource::collection($planer->todos()->where('type', 'Schedule')->get());
         $fociResource = FocusResource::collection($planer->foci()->get());
-        $locationsResource = LocationResource::collection(Location::all());
         $tour = $tour = isset($planer->tour["schedule"]) ? $planer->tour["schedule"] : null;
 
         $props = [
@@ -52,7 +51,6 @@ class PlanController extends Controller
             'fociResource' => $fociResource,
             'rulesResource' => $rulesResource,
             'todosResource' => $todosResource,
-            'locationsResource' => $locationsResource,
             'requiredECTS' => $planer->required_ects,
             'tourData' => $tour,
         ];

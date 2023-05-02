@@ -168,10 +168,6 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    locationsResource: {
-        type: Object,
-        required: true,
-    },
     tourData: {
         type: Object as PropType<TourData>,
         required: true,
@@ -194,7 +190,6 @@ store.init({
     rules: props.rulesResource.data,
     todos: props.todosResource.data,
     foci: props.fociResource.data,
-    locations: props.locationsResource.data,
     requiredECTS: props.requiredECTS,
     tour: props.tourData,
 });
