@@ -21,8 +21,7 @@ export default class DataAdapter {
         placements: Array<Placement>,
         focusSelections: Array<FocusSelection>,
         tourCompleted: boolean,
-        valid: boolean,
-        locations: Array<Location>
+        valid: boolean
     ) {
         const response = await axios.put(
             `/${this.planerSlug}/${this.planSlug}/zeitplan`,
@@ -44,7 +43,6 @@ export default class DataAdapter {
                 })),
                 tourCompleted,
                 valid,
-                locations: locations.map((location) => location.id),
             }
         );
         return response.data.data;

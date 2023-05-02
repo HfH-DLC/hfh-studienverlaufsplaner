@@ -127,8 +127,7 @@ export const useScheduleStore = defineStore("schedule", {
                     this.rawPlacements,
                     this.focusSelections,
                     this.tourCompleted,
-                    this.valid,
-                    this.locations.filter((location) => location.checked)
+                    this.valid
                 );
                 this.saveStatus = SaveStatus.Saved;
                 return true;

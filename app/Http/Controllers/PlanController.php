@@ -118,6 +118,9 @@ class PlanController extends Controller
             $plan->dayTimes()->saveMany(array_filter($planer->getDayTimes(), function ($dayTime) {
                 return $dayTime->default;
             }));
+            $plan->locations()->saveMany(array_filter($planer->getLocations(), function ($location) {
+                return $location->default;
+            }));
         });
 
         Mail::to($validated['email'])
@@ -165,9 +168,6 @@ class PlanController extends Controller
                     }
                     $focusSelection->save();
                 }
-            }
-            if (Arr::exists($validated, 'locations')) {
-                $plan->locations()->sync($validated['locations']);
             }
             $plan->schedule_tour_completed = $validated['tourCompleted'];
             $plan->schedule_valid = $validated['valid'];
