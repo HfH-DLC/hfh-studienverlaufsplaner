@@ -27,6 +27,7 @@ import {
     Todo,
     TourData,
     DayTime,
+    EventDateWithOptionalTimeWindow,
 } from "@/types";
 import { useEmitter } from "@/composables/useEmitter";
 import { toRefs } from "vue";
@@ -194,8 +195,7 @@ export const useScheduleStore = defineStore("schedule", {
                 year: event.year,
                 semester: event.semester,
                 timeWindow: event.timeWindow,
-                day: event.day,
-                time: event.time,
+                dayTime: event.dayTime,
                 location: event.location,
             });
             this.deselectModule();
@@ -340,35 +340,23 @@ export const useScheduleStore = defineStore("schedule", {
                 this.modules.find((module: ScheduleModule) => module.id == id)!;
         },
         modulesByDateGroupedByLocations(): (
-            year: number,
-            semester: string,
-            day: string,
-            time: string,
-            timeWindow?: string
+            date: EventDateWithOptionalTimeWindow
         ) => Map<string, Array<ScheduleModule>> {
-            return (year, semester, day, time, timeWindow?) => {
+            return (date: EventDateWithOptionalTimeWindow) => {
                 const result = new Map();
-                this.locations.forEach((location) => {
+                this.locationIds.forEach((locationId) => {
                     const matchingModules = this.modules.filter((module) => {
                         return module.events.some(
                             (event) =>
-                                event.location.id == location.id &&
+                                event.location.id == locationId &&
                                 this.dayTimes.some(
-                                    (dayTime) =>
-                                        event.day === dayTime.day &&
-                                        event.time === dayTime.time
+                                    (dayTime) => event.dayTime.id === dayTime.id
                                 ) &&
-                                isSameDate(event, {
-                                    year,
-                                    semester,
-                                    day,
-                                    time,
-                                    timeWindow,
-                                })
+                                isSameDate(event, date)
                         );
                     });
                     if (matchingModules.length > 0) {
-                        result.set(location, matchingModules);
+                        result.set(locationId, matchingModules);
                     }
                 });
                 return result;
@@ -391,21 +379,9 @@ export const useScheduleStore = defineStore("schedule", {
                 this.placements.find((placements) => placements.id == id);
         },
         placementByDate() {
-            return (
-                year: number,
-                semester: string,
-                day: string,
-                time: string,
-                timeWindow?: string
-            ) =>
+            return (date: EventDateWithOptionalTimeWindow) =>
                 this.placements.find((placement) =>
-                    isSameDate(placement, {
-                        year,
-                        semester,
-                        day,
-                        time,
-                        timeWindow,
-                    })
+                    isSameDate(placement, date)
                 );
         },
         placementErrorMessages(): Array<ErrorMessage> {
@@ -463,31 +439,10 @@ export const useScheduleStore = defineStore("schedule", {
             );
         },
         selectableEventsByDate() {
-            return (
-                year: number,
-                semester: string,
-                day: string,
-                time: string,
-                timeWindow?: string
-            ): Array<SelectableEvent> =>
+            return (date: EventDate): Array<SelectableEvent> =>
                 this.selectableEvents.filter((event) =>
-                    isSameDate(event, {
-                        year,
-                        semester,
-                        day,
-                        time,
-                        timeWindow,
-                    })
+                    isSameDate(event, date)
                 );
-        },
-        selectableLocations(): Array<Location> {
-            return this.locations.filter((location) =>
-                new Set(
-                    this.events.map((event) => {
-                        return event.location.id;
-                    })
-                ).has(location.id)
-            );
         },
         infos(): Array<string> {
             let infos: Array<string> = [];
@@ -501,7 +456,7 @@ export const useScheduleStore = defineStore("schedule", {
                     const module = this.moduleById(id);
                     if (module) {
                         return !module.events.find((event) => {
-                            return this.locations.includes(event.location);
+                            return this.locationIds.includes(event.location.id);
                         });
                     }
                     return true;
@@ -513,7 +468,7 @@ export const useScheduleStore = defineStore("schedule", {
                         "sind die Module"
                     );
                     const locationString = pluralize(
-                        this.locations.length,
+                        this.locationIds.length,
                         "am Standort",
                         "an den Standorten"
                     );

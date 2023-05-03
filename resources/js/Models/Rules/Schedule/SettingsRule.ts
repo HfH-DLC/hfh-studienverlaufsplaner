@@ -21,9 +21,7 @@ export default class SettingsRule implements Rule {
             }
             if (
                 !dayTimes.value.some(
-                    (dayTime) =>
-                        dayTime.day === placement.day &&
-                        dayTime.time === placement.time
+                    (dayTime) => dayTime.id === placement.dayTime.id
                 )
             ) {
                 this.addErrorMessage(errors, placement.id, {

@@ -1,33 +1,23 @@
-import { EventDate } from "./types";
+import { EventDate, EventDateWithOptionalTimeWindow } from "./types";
 
 export const isSameDate = (
-    a: {
-        year: number;
-        semester: string;
-        day: string;
-        time: string;
-        timeWindow?: string;
-    },
-    b: {
-        year: number;
-        semester: string;
-        day: string;
-        time: string;
-        timeWindow?: string;
-    }
+    a: EventDateWithOptionalTimeWindow,
+    b: EventDateWithOptionalTimeWindow
 ) => {
     let result =
         a.year === b.year &&
         a.semester === b.semester &&
-        a.day === b.day &&
-        a.time === b.time;
+        a.dayTime.id === b.dayTime.id;
     if (a.timeWindow && b.timeWindow) {
         result = result && a.timeWindow === b.timeWindow;
     }
     return result;
 };
 
-export const isPreviousSemester = (before: EventDate, after: EventDate) => {
+export const isPreviousSemester = (
+    before: EventDateWithOptionalTimeWindow,
+    after: EventDateWithOptionalTimeWindow
+) => {
     if (before.year > after.year) {
         return false;
     }
@@ -85,16 +75,14 @@ export const getNestedDates = (dates: Array<EventDate>) => {
                                     semesterDates.map((date) => date.timeWindow)
                                 ),
                             ].sort(orderTimeWindow),
-                            days: [
-                                ...new Set(
-                                    semesterDates.map((date) => date.day)
-                                ),
-                            ].sort(orderDay),
-                            times: [
-                                ...new Set(
-                                    semesterDates.map((date) => date.time)
-                                ),
-                            ].sort(orderTime),
+                            dayTimes: semesterDates
+                                .map((date) => date.dayTime)
+                                .filter(
+                                    (a, index, self) =>
+                                        index ===
+                                        self.findIndex((b) => a.id === b.id)
+                                )
+                                .sort((a, b) => a.sortIndex - b.sortIndex),
                         };
                     });
                 return {

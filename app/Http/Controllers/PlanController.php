@@ -137,7 +137,7 @@ class PlanController extends Controller
                 $placements_data = collect($placements_data);
                 $plan->placements()->delete();
                 $placements_data->each(function ($placement_data) use ($plan) {
-                    $dayTime = DayTime::where('day', $placement_data['day'])->where('time', $placement_data['time'])->first();
+                    $dayTime = DayTime::find($placement_data['dayTimeId']);
                     $placement = new Placement();
                     $placement->year = $placement_data['year'];
                     $placement->semester = $placement_data['semester'];

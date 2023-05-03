@@ -5,8 +5,8 @@
             {{ placement.module.id }} {{ placement.module.name }}
         </button>
         ist am Datum {{ placement.semester }} {{ placement.year }},
-        {{ placement.timeWindow }}, {{ placement.day }}
-        {{ placement.time }} nicht verfügbar.
+        {{ placement.timeWindow }}, {{ placement.dayTime.day }}
+        {{ placement.dayTime.time }} nicht verfügbar.
     </div>
 </template>
 

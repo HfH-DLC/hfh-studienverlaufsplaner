@@ -87,9 +87,7 @@ const filteredCategories = computed(() => {
                         (event) =>
                             store.locationIds.includes(event.location.id) &&
                             store.dayTimes.some(
-                                (dayTime) =>
-                                    dayTime.day === event.day &&
-                                    dayTime.time === event.time
+                                (dayTime) => dayTime.id === event.dayTime.id
                             )
                     );
                     if (events.length > 0) {

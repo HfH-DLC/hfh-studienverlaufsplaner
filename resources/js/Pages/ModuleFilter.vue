@@ -35,19 +35,11 @@
                 ></HfhCheckbox>
                 <HfhCheckbox
                     id="filter-day"
-                    legend="Tag"
-                    :options="dateOptions.dayOptions"
-                    v-model="dayFilter"
+                    legend="Zeitpunkt"
+                    :options="dateOptions.dayTimeOptions"
+                    v-model="dayTimeFilter"
                     orientation="vertical"
                 ></HfhCheckbox>
-                <HfhCheckbox
-                    id="filter-time"
-                    legend="Halbtag"
-                    :options="dateOptions.timeOptions"
-                    v-model="timeFilter"
-                    orientation="vertical"
-                ></HfhCheckbox>
-
                 <HfhCheckbox
                     id="filter-category"
                     legend="Bereich"
@@ -76,24 +68,20 @@
                     :key="semester.value"
                 >
                     <div class="mt-4 grid gap-y-4">
-                        <template v-for="day in semester.days">
-                            <template v-for="time in semester.times">
-                                <ModuleFilterItem
-                                    :modules="
-                                        getModulesByDate(
-                                            semester.value,
-                                            day,
-                                            time
-                                        ).map(
-                                            (module) =>
-                                                `${module.id} ${module.name}`
-                                        )
-                                    "
-                                    :semester="getSemesterLabel(semester.value)"
-                                    :day="day"
-                                    :time="time"
-                                ></ModuleFilterItem>
-                            </template>
+                        <template v-for="dayTime in semester.dayTimes">
+                            <ModuleFilterItem
+                                :modules="
+                                    getModulesByDate(
+                                        semester.value,
+                                        dayTime
+                                    ).map(
+                                        (module) =>
+                                            `${module.id} ${module.name}`
+                                    )
+                                "
+                                :semester="getSemesterLabel(semester.value)"
+                                :dayTime="dayTime"
+                            ></ModuleFilterItem>
                         </template>
                     </div>
                 </template>
@@ -106,8 +94,8 @@
 import AppHead from "@/Components/AppHead.vue";
 import ModuleFilterItem from "@/Components/ModuleFilterItem.vue";
 import PageHeader from "@/Components/PageHeader.vue";
-import { getNestedDates, orderDay, orderSemester, orderTime } from "@/helpers";
-import { Category, Event, EventDate, Location, Module } from "@/types";
+import { getNestedDates, orderSemester } from "@/helpers";
+import { Category, DayTime, Event, EventDate, Location, Module } from "@/types";
 import { HfhFilterGroup, HfhCheckbox } from "@hfh-dlc/hfh-styleguide";
 import type {
     CheckboxOption,
@@ -116,6 +104,14 @@ import type {
 import { computed, ref, Ref } from "vue";
 const props = defineProps({
     planerResource: {
+        type: Object,
+        required: true,
+    },
+    dayTimeResource: {
+        type: Object,
+        required: true,
+    },
+    eventsResource: {
         type: Object,
         required: true,
     },
@@ -197,14 +193,10 @@ const getSemesterLabel = (semesterAbbreviation: string): string => {
 };
 
 const dateOptions = computed(() => {
-    const semesters = new Set<string>();
-    const days = new Set<string>();
-    const times = new Set<string>();
-    for (const event of getEvents(modules)) {
-        semesters.add(event.semester);
-        days.add(event.day);
-        times.add(event.time);
-    }
+    const semesters = new Set<string>(
+        props.eventsResource.data.map((event: Event) => event.semester)
+    );
+
     const semesterOptions: Array<SelectOption> = [...semesters]
         .sort(orderSemester)
         .map((semester) => ({
@@ -212,31 +204,24 @@ const dateOptions = computed(() => {
             value: semester,
             name: semester,
         }));
-    const dayOptions: Array<CheckboxOption> = [...days]
-        .sort(orderDay)
-        .map((day) => ({
-            name: day,
-            label: day,
-            value: day,
-        }));
-    const timeOptions: Array<SelectOption> = [...times]
-        .sort(orderTime)
-        .map((time) => ({
-            name: time,
-            label: time,
-            value: time,
+    const dayTimeOptions: Array<CheckboxOption> = [
+        ...props.dayTimeResource.data,
+    ]
+        .sort((a, b) => a.sortIndex - b.sortIndex)
+        .map((dayTime) => ({
+            name: dayTime.id,
+            label: dayTime.day + dayTime.time.toLocaleLowerCase(),
+            value: dayTime.id,
         }));
 
     return {
         semesterOptions,
-        dayOptions,
-        timeOptions,
+        dayTimeOptions,
     };
 });
 
 const semesterFilter: Ref<string[]> = ref([]);
-const dayFilter: Ref<string[]> = ref([]);
-const timeFilter: Ref<string[]> = ref([]);
+const dayTimeFilter: Ref<string[]> = ref([]);
 const categoryFilter: Ref<string[]> = ref([]);
 const locationFilter: Ref<string[]> = ref(
     locationOptions.value
@@ -277,14 +262,8 @@ const filteredEvents = computed(() =>
             return false;
         }
         if (
-            dayFilter.value.length > 0 &&
-            !dayFilter.value.includes(event.day)
-        ) {
-            return false;
-        }
-        if (
-            timeFilter.value.length > 0 &&
-            !timeFilter.value.includes(event.time)
+            dayTimeFilter.value.length > 0 &&
+            !dayTimeFilter.value.includes(event.dayTime.id)
         ) {
             return false;
         }
@@ -304,14 +283,13 @@ const nestedDates = computed(() =>
     )
 );
 
-const getModulesByDate = (semester: string, day: string, time: string) => {
+const getModulesByDate = (semester: string, dayTime: DayTime) => {
     const result = filteredModules.value.filter((module) => {
         return module.events.some(
             (event) =>
                 event.year == currentSchoolYear &&
                 event.semester == semester &&
-                event.day == day &&
-                event.time == time &&
+                event.dayTime.id == dayTime.id &&
                 (locationFilter.value.length == 0 ||
                     locationFilter.value.includes(event.location.id))
         );
@@ -321,8 +299,7 @@ const getModulesByDate = (semester: string, day: string, time: string) => {
 
 const onFilterReset = () => {
     semesterFilter.value = [];
-    dayFilter.value = [];
-    timeFilter.value = [];
+    dayTimeFilter.value = [];
     categoryFilter.value = [];
     locationFilter.value = defaultLocation.value
         ? [defaultLocation.value.id]

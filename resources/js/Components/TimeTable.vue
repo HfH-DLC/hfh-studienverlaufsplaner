@@ -51,63 +51,60 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-300">
-                    <template v-for="day in semester.days" :key="day">
-                        <template v-for="time in semester.times" :key="time">
-                            <tr
-                                v-if="
-                                    showTimetableRow(
-                                        year.value,
-                                        semester.value,
-                                        day,
-                                        time
-                                    )
-                                "
-                                class="divide-x divide-gray-300"
+                    <template
+                        v-for="dayTime in semester.dayTimes"
+                        :key="dayTime"
+                    >
+                        <tr
+                            v-if="
+                                showTimetableRow(
+                                    year.value,
+                                    semester.value,
+                                    dayTime
+                                )
+                            "
+                            class="divide-x divide-gray-300"
+                        >
+                            <th
+                                scope="row"
+                                class="px-4 py-2 text-base text-left bg-gray-50 text-gray-600 w-px font-normal"
                             >
-                                <th
-                                    scope="row"
-                                    class="px-4 py-2 text-base text-left bg-gray-50 text-gray-600 w-px font-normal"
-                                >
-                                    <div>{{ day }}:</div>
-                                    <div>{{ time }}</div>
-                                </th>
-                                <td
-                                    v-for="timeWindow in semester.timeWindows"
-                                    :key="timeWindow"
-                                >
-                                    <TimeSlot
-                                        :showLocation="showLocations"
-                                        :events="
-                                            store.selectableEventsByDate(
-                                                year.value,
-                                                semester.value,
-                                                day,
-                                                time,
-                                                timeWindow
-                                            )
-                                        "
-                                        :placement="
-                                            store.placementByDate(
-                                                year.value,
-                                                semester.value,
-                                                day,
-                                                time,
-                                                timeWindow
-                                            )
-                                        "
-                                        :availableModulesGroupedByLocations="
-                                            store.modulesByDateGroupedByLocations(
-                                                year.value,
-                                                semester.value,
-                                                day,
-                                                time,
-                                                timeWindow
-                                            )
-                                        "
-                                    />
-                                </td>
-                            </tr>
-                        </template>
+                                <div>{{ dayTime.day }}:</div>
+                                <div>{{ dayTime.time }}</div>
+                            </th>
+                            <td
+                                v-for="timeWindow in semester.timeWindows"
+                                :key="timeWindow"
+                            >
+                                <TimeSlot
+                                    :showLocation="showLocations"
+                                    :events="
+                                        store.selectableEventsByDate({
+                                            year: year.value,
+                                            semester: semester.value,
+                                            dayTime,
+                                            timeWindow,
+                                        })
+                                    "
+                                    :placement="
+                                        store.placementByDate({
+                                            year: year.value,
+                                            semester: semester.value,
+                                            dayTime,
+                                            timeWindow,
+                                        })
+                                    "
+                                    :availableModulesGroupedByLocations="
+                                        store.modulesByDateGroupedByLocations({
+                                            year: year.value,
+                                            semester: semester.value,
+                                            dayTime,
+                                            timeWindow,
+                                        })
+                                    "
+                                />
+                            </td>
+                        </tr>
                     </template>
                 </tbody>
             </table>
@@ -118,6 +115,7 @@
         :open="isDialogVisible"
         :title="dialogInfo.title"
         @closed="onDialogClosed"
+        class="hfh-content"
     >
         <div v-html="dialogInfo.content"></div>
     </HfhDialog>
@@ -129,6 +127,7 @@ import TimeSlot from "./TimeSlot.vue";
 import { useScheduleStore } from "../Store/schedule";
 import { InformationCircleIcon } from "@heroicons/vue/24/outline";
 import HfhDialog from "./HfhDialog.vue";
+import { DayTime } from "@/types";
 
 const isDialogVisible = ref(false);
 const timeWindowContentList = [
@@ -190,16 +189,15 @@ const getSemesterString = (count: number, semester: string, year: number) => {
 const showTimetableRow = (
     year: number,
     semester: string,
-    day: string,
-    time: string
+    dayTime: DayTime
 ): boolean => {
-    const placement = store.placementByDate(year, semester, day, time);
+    const placement = store.placementByDate({ year, semester, dayTime });
     if (placement) {
         return true;
     }
     return (
-        store.modulesByDateGroupedByLocations(year, semester, day, time).size >
-        0
+        store.modulesByDateGroupedByLocations({ year, semester, dayTime })
+            .size > 0
     );
 };
 

@@ -32,8 +32,7 @@ export default class DataAdapter {
                         locationId: placement.location.id,
                         year: placement.year,
                         semester: placement.semester,
-                        day: placement.day,
-                        time: placement.time,
+                        dayTimeId: placement.dayTime.id,
                         timeWindow: placement.timeWindow,
                     };
                 }),

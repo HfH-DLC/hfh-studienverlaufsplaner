@@ -49,9 +49,13 @@ export type ErrorMessage = {
 export interface EventDate {
     year: number;
     semester: string;
+    dayTime: DayTime;
     timeWindow: string;
-    day: string;
-    time: string;
+}
+
+export interface EventDateWithOptionalTimeWindow
+    extends Omit<EventDate, "timeWindow"> {
+    timeWindow?: string;
 }
 
 export interface Event extends EventDate {
@@ -128,8 +132,10 @@ export interface Placement extends Event {
     moduleId: string;
 }
 
-export interface PlacementParams extends Omit<Placement, "id" | "location"> {
+export interface PlacementParams
+    extends Omit<Placement, "id" | "location" | "dayTime"> {
     locationId: string;
+    dayTimeId: string;
 }
 
 export interface RuleData {
