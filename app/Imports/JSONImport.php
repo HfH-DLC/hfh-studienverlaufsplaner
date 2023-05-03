@@ -47,13 +47,13 @@ class JSONImport
 
     private function importDayTimes($data)
     {
+        DayTime::query()->delete();
         foreach ($data->dayTimes as $row) {
             $default = false;
             if (isset($row->default)) {
                 $default = $row->default;
             }
-            var_dump($row->day);
-            $dayTime = DayTime::firstOrCreate(['id' => $row->id, 'day' => $row->day, 'time' => $row->time, 'sort_index' => $row->sortIndex]);
+            $dayTime = DayTime::create(['id' => $row->id, 'day' => $row->day, 'time' => $row->time, 'sort_index' => $row->sortIndex]);
             $dayTime->default = $default;
             $dayTime->save();
         }
