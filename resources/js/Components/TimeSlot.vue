@@ -81,6 +81,7 @@
                 :open="isDialogVisible"
                 title="Verfügbare Module"
                 @closed="onDialogClosed"
+                class="hfh-content"
             >
                 <div
                     v-for="entry in availableModulesGroupedByLocations"
