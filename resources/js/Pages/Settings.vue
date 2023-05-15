@@ -14,29 +14,22 @@
             />
         </header>
         <div>
-            <main class="flex-1 flex flex-col px-4">
+            <main class="flex-1 flex flex-col p-4">
                 <Flash class="fixed top-4 left-1/2 -translate-x-1/2" />
                 <div>
-                    <h2 class="hfh-h2">Einstellungen</h2>
-                    <h3 class="hfh-h3">Zeitpunkte</h3>
-                    <p class="mb-4">Wann möchtest du Module besuchen?</p>
                     <div class="grid grid-cols-4 mb-8">
                         <HfhCheckbox
                             :id="`filter-day-time`"
-                            legend="Zeitpunkt"
+                            legend="Wann möchten Sie Module besuchen?"
                             :options="dayTimeOptions"
                             v-model="dayTimeFilter"
                             orientation="vertical"
                             @update:model-value="save"
                         ></HfhCheckbox>
                     </div>
-                    <h3 class="hfh-h3">Standorte</h3>
-                    <p class="mb-4">
-                        An welchen Standorten möchtest du Module besuchen?
-                    </p>
                     <HfhCheckbox
                         id="filter-location"
-                        legend="Standort"
+                        legend="Wo möchten Sie Module besuchen?"
                         :options="locationOptions"
                         v-model="locationFilter"
                         orientation="vertical"
