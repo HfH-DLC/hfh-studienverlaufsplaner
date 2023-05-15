@@ -100,7 +100,6 @@ export interface Location {
     id: string;
     name: string;
     default: boolean;
-    checked: boolean;
 }
 
 export interface Module {
