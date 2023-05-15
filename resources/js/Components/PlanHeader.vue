@@ -12,6 +12,16 @@
                 <ul class="flex gap-x-4" v-if="showNavigation">
                     <li>
                         <Link
+                            :href="`/${planerSlug}/${planSlug}/einstellungen`"
+                            class="font-normal hover:text-thunderbird-red"
+                            :class="{
+                                active: $page.component === 'Settings',
+                            }"
+                            >Einstellungen</Link
+                        >
+                    </li>
+                    <li>
+                        <Link
                             :href="`/${planerSlug}/${planSlug}/zeitplan`"
                             class="font-normal hover:text-thunderbird-red"
                             :class="{
