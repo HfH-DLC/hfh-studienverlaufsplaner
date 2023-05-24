@@ -44,12 +44,12 @@
 <script setup lang="ts">
 import { DayTime, Location, SaveStatus } from "@/types";
 import { ComputedRef, Ref, computed, ref } from "vue";
-import { CheckboxOption } from "@hfh-dlc/hfh-styleguide/types/types";
 import { HfhCheckbox } from "@hfh-dlc/hfh-styleguide";
 import AppHead from "@/Components/AppHead.vue";
 import PlanHeader from "@/Components/PlanHeader.vue";
 import Flash from "@/Components/Flash.vue";
 import DataAdapter from "@/DataAdapter";
+import type { CheckboxOption } from "@hfh-dlc/hfh-styleguide/types";
 const props = defineProps({
     planerSlug: {
         type: String,
