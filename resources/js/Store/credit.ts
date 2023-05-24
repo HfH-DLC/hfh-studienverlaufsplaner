@@ -6,7 +6,7 @@ import {
     ErrorMessage,
     FocusSelection,
     FlashType,
-    ModuleIdsByFocusSelection,
+    FocusCredit,
     SaveStatus,
     Todo,
     TodoData,
@@ -128,7 +128,7 @@ export const useCreditStore = defineStore("credit", {
         },
     },
     getters: {
-        creditedModulesByFocusSelection(): Array<ModuleIdsByFocusSelection> {
+        creditedModulesByFocusSelection(): Array<FocusCredit> {
             return this.focusSelections.reduce((acc, cur) => {
                 const modulesByFocusSelection = {
                     focusSelectionId: cur.id,
@@ -138,7 +138,7 @@ export const useCreditStore = defineStore("credit", {
                 };
                 acc.push(modulesByFocusSelection);
                 return acc;
-            }, [] as Array<ModuleIdsByFocusSelection>);
+            }, [] as Array<FocusCredit>);
         },
     },
 });

@@ -3,7 +3,7 @@ import {
     Focus,
     FocusSelection,
     Module,
-    ModuleIdsByFocusSelection,
+    FocusCredit,
     Todo,
 } from "@/types";
 import { numToWord } from "num-words-de";
@@ -15,13 +15,13 @@ export default class FocusModulesTodo implements Todo {
         creditedModulesByFocusSelection,
     }: {
         focusSelections: Ref<Array<FocusSelection>>;
-        creditedModulesByFocusSelection: Ref<Array<ModuleIdsByFocusSelection>>;
+        creditedModulesByFocusSelection: Ref<Array<FocusCredit>>;
     }): Array<ChecklistEntryData> {
         return focusSelections.value.reduce(
             (acc: Array<ChecklistEntryData>, cur: FocusSelection) => {
                 const modulesByFocusSelection =
                     creditedModulesByFocusSelection.value.find(
-                        (modulesByFocusSelection: ModuleIdsByFocusSelection) =>
+                        (modulesByFocusSelection: FocusCredit) =>
                             modulesByFocusSelection.focusSelectionId == cur.id
                     );
                 const creditedModuleIds = modulesByFocusSelection

@@ -83,8 +83,6 @@ export interface Focus {
     optionalModules: Array<Module>;
 }
 
-export interface FocusCredit {}
-
 export interface FocusSelection {
     id: number;
     position: number;
@@ -110,7 +108,7 @@ export interface Module {
     prerequisites: Array<Module>;
 }
 
-export interface ModuleIdsByFocusSelection {
+export interface FocusCredit {
     focusSelectionId: number;
     moduleIds: Array<string>;
 }
