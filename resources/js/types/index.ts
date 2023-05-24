@@ -1,3 +1,5 @@
+import DataAdapter from "@/DataAdapter";
+import Validator from "@/Validator";
 import { EmitterEvents } from "@/composables/useEmitter";
 import { Placement as PopperPlacement } from "@popperjs/core";
 import { Component } from "vue";
@@ -169,11 +171,10 @@ export interface ScheduleCategory extends Category {
 }
 
 export interface ScheduleInitParams {
-    planerSlug: string;
+    dataAdapter: DataAdapter;
+    validator: Validator;
     plan: Plan;
     categories: Array<Category>;
-    rules: Array<RuleData>;
-    todos: Array<TodoData>;
     foci: Array<Focus>;
     requiredECTS: number;
     tour: TourData;

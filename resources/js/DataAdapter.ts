@@ -1,11 +1,5 @@
 import axios from "axios";
-import {
-    DayTime,
-    FocusCredit,
-    FocusSelection,
-    Location,
-    PlacementParams,
-} from "./types";
+import { FocusCredit, FocusSelection, PlacementParams } from "./types";
 import { Placement } from "./types";
 
 export default class DataAdapter {
@@ -17,34 +11,34 @@ export default class DataAdapter {
         this.planSlug = planSlug;
     }
 
+    getEndpointUrl(pageSlug: string) {
+        return `/${this.planerSlug}/${this.planSlug}/${pageSlug}`;
+    }
+
     async saveSchedule(
         placements: Array<Placement>,
         focusSelections: Array<FocusSelection>,
         tourCompleted: boolean,
         valid: boolean
     ) {
-        const response = await axios.put(
-            `/${this.planerSlug}/${this.planSlug}/zeitplan`,
-            {
-                placements: placements.map((placement): PlacementParams => {
-                    return {
-                        moduleId: placement.moduleId,
-                        locationId: placement.location.id,
-                        year: placement.year,
-                        semester: placement.semester,
-                        dayTimeId: placement.dayTime.id,
-                        timeWindow: placement.timeWindow,
-                    };
-                }),
-                focusSelections: focusSelections.map((params) => ({
-                    position: params.position,
-                    focusId: params.focus.id,
-                })),
-                tourCompleted,
-                valid,
-            }
-        );
-        return response.data.data;
+        await axios.put(this.getEndpointUrl("zeitplan"), {
+            placements: placements.map((placement): PlacementParams => {
+                return {
+                    moduleId: placement.moduleId,
+                    locationId: placement.location.id,
+                    year: placement.year,
+                    semester: placement.semester,
+                    dayTimeId: placement.dayTime.id,
+                    timeWindow: placement.timeWindow,
+                };
+            }),
+            focusSelections: focusSelections.map((params) => ({
+                position: params.position,
+                focusId: params.focus.id,
+            })),
+            tourCompleted,
+            valid,
+        });
     }
 
     async saveCredit(
@@ -52,21 +46,17 @@ export default class DataAdapter {
         tourCompleted: boolean,
         valid: boolean
     ) {
-        const response = await axios.put(
-            `/${this.planerSlug}/${this.planSlug}/anrechnung`,
-            { focusCredits, tourCompleted, valid }
-        );
-        return response.data.data;
+        await axios.put(this.getEndpointUrl("anrechnung"), {
+            focusCredits,
+            tourCompleted,
+            valid,
+        });
     }
 
     async saveSettings(dayTimes: Array<string>, locations: Array<string>) {
-        const response = await axios.put(
-            `/${this.planerSlug}/${this.planSlug}/einstellungen`,
-            {
-                dayTimes,
-                locations,
-            }
-        );
-        return response.data.data;
+        await axios.put(this.getEndpointUrl("einstellungen"), {
+            dayTimes,
+            locations,
+        });
     }
 }

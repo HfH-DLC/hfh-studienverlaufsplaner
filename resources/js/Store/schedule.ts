@@ -1,8 +1,7 @@
 import { defineStore } from "pinia";
-
+import { toRefs } from "vue";
 import DataAdapter from "../DataAdapter";
-import { getRule } from "../Models/Rules/Schedule/RuleFactory";
-import { getTodo } from "../Models/Todos/Schedule/TodoFactory";
+import Validator from "../Validator";
 import { getNestedDates, isSameDate, joinStrings, pluralize } from "../helpers";
 import {
     Category,
@@ -30,10 +29,9 @@ import {
     EventDateWithOptionalTimeWindow,
 } from "@/types";
 import { useEmitter } from "@/composables/useEmitter";
-import { toRefs } from "vue";
-import SettingsRule from "@/Models/Rules/Schedule/SettingsRule";
 
 let dataAdapter: DataAdapter;
+let validator: Validator;
 const emitter = useEmitter();
 
 function getLocalId(array: Array<{ id: number }>): number {
@@ -49,71 +47,48 @@ function getLocalId(array: Array<{ id: number }>): number {
     return currentMaxId + 1;
 }
 
+const initialState = {
+    foci: [] as Array<Focus>,
+    focusSelections: [] as Array<FocusSelection>,
+    initialized: false,
+    locations: [] as Array<Location>,
+    dayTimes: [] as Array<DayTime>,
+    moduleInfos: new Map<string, Array<ErrorMessage>>(),
+    requiredECTS: null as number | null,
+    rawCategories: [] as Array<Category>,
+    rawPlacements: [] as Array<Placement>,
+    placementErrors: new Map<number, Array<ErrorMessage>>(),
+    readOnly: false,
+    rules: [] as Array<Rule>,
+    saveStatus: SaveStatus.Saved,
+    selectionStatus: {} as Selection,
+    startYear: null as number | null,
+    todoEntries: [] as Array<ChecklistEntryData>,
+    todos: [] as Array<Todo>,
+    tour: null as TourData | null,
+    tourActive: false,
+    tourCompleted: false,
+    tourCurrentStepIndex: 0,
+};
+
 export const useScheduleStore = defineStore("schedule", {
-    state: () => ({
-        foci: [] as Array<Focus>,
-        focusSelections: [] as Array<FocusSelection>,
-        initialized: false,
-        locations: [] as Array<Location>,
-        dayTimes: [] as Array<DayTime>,
-        moduleInfos: new Map<string, Array<ErrorMessage>>(),
-        requiredECTS: null as number | null,
-        rawCategories: [] as Array<Category>,
-        rawPlacements: [] as Array<Placement>,
-        placementErrors: new Map<number, Array<ErrorMessage>>(),
-        readOnly: false,
-        rules: [] as Array<Rule>,
-        saveStatus: SaveStatus.Saved,
-        selectionStatus: {} as Selection,
-        startYear: null as number | null,
-        todoEntries: [] as Array<ChecklistEntryData>,
-        todos: [] as Array<Todo>,
-        tour: null as TourData | null,
-        tourActive: false,
-        tourCompleted: false,
-        tourCurrentStepIndex: 0,
-    }),
+    state: () => initialState,
     actions: {
-        init({
-            planerSlug,
-            plan,
-            categories,
-            rules,
-            todos,
-            foci,
-            requiredECTS,
-            tour,
-        }: ScheduleInitParams) {
-            dataAdapter = new DataAdapter(planerSlug, plan.slug);
+        init(params: ScheduleInitParams) {
+            dataAdapter = params.dataAdapter;
+            validator = params.validator;
             this.$reset();
-            this.readOnly = plan.readOnly;
-            this.requiredECTS = requiredECTS;
-            this.rawCategories = categories;
-            this.foci = foci;
-            this.focusSelections = plan.focusSelections;
-            this.locations = plan.locations;
-            this.dayTimes = plan.dayTimes;
-            this.rawPlacements = plan.placements;
-            this.todos = todos.reduce((array: Array<Todo>, todoData) => {
-                try {
-                    array.push(getTodo(todoData));
-                } catch (error) {
-                    console.error(error);
-                }
-                return array;
-            }, []);
-            this.rules = rules.reduce((array: Array<Rule>, rule) => {
-                try {
-                    array.push(getRule(rule));
-                } catch (error) {
-                    console.error(error);
-                }
-                return array;
-            }, []);
-            this.rules.push(new SettingsRule()); //todo remove
-            this.startYear = plan.startYear;
-            this.tour = tour;
-            this.tourCompleted = plan.scheduleTourCompleted;
+            this.readOnly = params.plan.readOnly;
+            this.requiredECTS = params.requiredECTS;
+            this.rawCategories = params.categories;
+            this.foci = params.foci;
+            this.focusSelections = params.plan.focusSelections;
+            this.locations = params.plan.locations;
+            this.dayTimes = params.plan.dayTimes;
+            this.rawPlacements = params.plan.placements;
+            this.startYear = params.plan.startYear;
+            this.tour = params.tour;
+            this.tourCompleted = params.plan.scheduleTourCompleted;
             this.validate();
             this.initialized = true;
         },
@@ -144,28 +119,10 @@ export const useScheduleStore = defineStore("schedule", {
         selectModule(moduleId: string) {
             const module = this.moduleById(moduleId);
             if (module) {
-                const selectionEventInfos: Map<number, SelectionEventInfo> =
-                    module.events.reduce(
-                        (acc: Map<number, SelectionEventInfo>, cur: Event) => {
-                            acc.set(cur.id, {
-                                valid: true,
-                                dateAllowed: true,
-                            });
-                            return acc;
-                        },
-                        new Map()
-                    );
-                this.rules.forEach((rule) => {
-                    rule.validateSelection(
-                        module,
-                        toRefs(this),
-                        selectionEventInfos
-                    );
-                });
-                this.selectionStatus = {
-                    moduleId,
-                    selectionEventInfos,
-                };
+                this.selectionStatus = validator.validateSelection(
+                    module,
+                    toRefs(this)
+                );
             } else {
                 console.log(
                     `selectModule: Module with id ${moduleId} not found.`
@@ -187,7 +144,7 @@ export const useScheduleStore = defineStore("schedule", {
                     placement.moduleId == this.selectionStatus.moduleId
             );
             if (existingPlacement) {
-                this.removePlacement(existingPlacement);
+                this.removePlacement(existingPlacement.id);
             }
             this.addPlacement({
                 id: getLocalId(this.placements),
@@ -205,13 +162,13 @@ export const useScheduleStore = defineStore("schedule", {
         addPlacement(placement: Placement) {
             this.rawPlacements.push(placement);
         },
-        removePlacement(placement: Placement) {
+        removePlacement(placementId: number) {
             this.rawPlacements = this.rawPlacements.filter(
-                (p) => p.id !== placement.id
+                (p) => p.id !== placementId
             );
         },
         removeModule(placement: Placement) {
-            this.removePlacement(placement);
+            this.removePlacement(placement.id);
             this.deselectModule();
             this.validate();
             this.save();
@@ -229,42 +186,13 @@ export const useScheduleStore = defineStore("schedule", {
             this.save();
         },
         validate(): void {
-            this.validateTodos();
-            this.validateModules();
-            this.validatePlacements();
-        },
-        validateTodos(): void {
-            this.todoEntries = this.todos.reduce(
-                (acc: Array<ChecklistEntryData>, cur) => {
-                    acc.push(...cur.getEntries(toRefs(this)));
-                    return acc;
-                },
-                []
-            );
-        },
-        validateModules(): void {
-            this.moduleInfos = new Map();
-            this.modules.forEach((module) => {
-                this.moduleInfos.set(module.id, []);
-                this.rules.forEach((rule) => {
-                    let errorMessages = this.moduleInfos.get(module.id);
-                    if (!errorMessages) {
-                        errorMessages = [];
-                        this.moduleInfos.set(module.id, errorMessages);
-                    }
-                    rule.validateModule(module, toRefs(this), errorMessages);
-                });
-            });
-        },
-        validatePlacements(): void {
-            this.placementErrors = new Map();
-            this.rules.forEach((rule) => {
-                rule.validatePlacements(toRefs(this), this.placementErrors);
-            });
+            const validationResult = validator.validate(toRefs(this));
+            this.todoEntries = validationResult.todoEntries;
+            this.moduleInfos = validationResult.moduleInfos;
+            this.placementErrors = validationResult.placementErrors;
         },
         startTour() {
             this.tourActive = true;
-            this.save();
         },
         completeTour() {
             this.tourActive = false;

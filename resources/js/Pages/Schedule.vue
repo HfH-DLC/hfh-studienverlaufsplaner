@@ -128,6 +128,8 @@ import { FlashType, TourData } from "@/types";
 import AppHead from "@/Components/AppHead.vue";
 import { PropType } from "vue";
 import { useEmitter } from "@/composables/useEmitter";
+import DataAdapter from "@/DataAdapter";
+import Validator from "@/Validator";
 
 defineOptions({ layout: MainLayout });
 
@@ -184,11 +186,16 @@ const props = defineProps({
 
 const store = useScheduleStore();
 store.init({
+    dataAdapter: new DataAdapter(
+        props.planerSlug,
+        props.planResource.data.slug
+    ),
+    validator: new Validator(
+        props.todosResource.data,
+        props.rulesResource.data
+    ),
     categories: props.categoriesResource.data,
     plan: props.planResource.data,
-    planerSlug: props.planerSlug,
-    rules: props.rulesResource.data,
-    todos: props.todosResource.data,
     foci: props.fociResource.data,
     requiredECTS: props.requiredECTS,
     tour: props.tourData,
