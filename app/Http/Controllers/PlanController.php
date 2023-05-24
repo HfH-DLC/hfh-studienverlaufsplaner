@@ -8,18 +8,16 @@ use App\Http\Requests\UpdateScheduleRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CreditableModuleResource;
 use App\Http\Resources\FocusResource;
-use App\Http\Resources\LocationResource;
+use App\Http\Resources\PlanerResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\RuleResource;
 use App\Http\Resources\TodoResource;
 use App\Mail\PlanCreated;
 use App\Models\DayTime;
 use App\Models\FocusSelection;
-use App\Models\Location;
 use App\Models\Placement;
 use App\Models\Plan;
 use App\Models\Planer;
-use DateTime;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -35,12 +33,29 @@ class PlanController extends Controller
 
     public function showSchedule(Planer $planer, Plan $plan)
     {
-        $planResource = new PlanResource($plan->load('placements'));
+        $plan->load(
+            'locations',
+            'dayTimes',
+            'placements',
+            'placements.dayTime',
+            'placements.location',
+            'focusSelections',
+            'focusSelections.focus',
+            'focusSelections.focus.requiredModules',
+            'focusSelections.focus.requiredModules.events',
+            'focusSelections.focus.requiredModules.events.location',
+            'focusSelections.focus.requiredModules.events.dayTime',
+            'focusSelections.focus.optionalModules.events',
+            'focusSelections.focus.optionalModules.events',
+            'focusSelections.focus.optionalModules.events.location',
+            'focusSelections.focus.optionalModules.events.dayTime'
+        );
+        $planResource = new PlanResource($plan);
         $categoriesResource = CategoryResource::collection($plan->getCategoriesWithAllModules());
-        $rulesResource = RuleResource::collection($planer->rules()->where('type', 'Schedule')->get());
-        $todosResource = TodoResource::collection($planer->todos()->where('type', 'Schedule')->get());
-        $fociResource = FocusResource::collection($planer->foci()->get());
-        $tour = $tour = isset($planer->tour["schedule"]) ? $planer->tour["schedule"] : null;
+        $rulesResource = RuleResource::collection($planer->getScheduleRules());
+        $todosResource = TodoResource::collection($planer->getScheduleTodos());
+        $fociResource = FocusResource::collection($planer->getFoci());
+        $tour = $planer->getScheduleTour();
 
         $props = [
             'planerName' => $planer->name,
@@ -86,7 +101,7 @@ class PlanController extends Controller
             'planerSlug' => $planer->slug,
             'planResource' => $planResource,
             'creditableModulesResource' => CreditableModuleResource::collection($modules),
-            'todosResource' => TodoResource::collection($planer->todos()->where('type', 'credit')->get()),
+            'todosResource' => TodoResource::collection($planer->getCreditTodos()),
             'tourData' => $tour,
         ];
 

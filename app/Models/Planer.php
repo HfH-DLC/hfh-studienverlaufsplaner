@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Planer extends Model
 {
@@ -44,49 +45,128 @@ class Planer extends Model
 
     public function getModules($query = NULL)
     {
-        $modules = collect();
-        $withParam = ['modules'];
-        if ($query !== NULL) {
-            $withParam = ['modules' => $query];
+        $key = $this->getCacheKey("modules");
+        if (!Cache::has($key)) {
+            $modules = collect();
+            $withParam = ['modules'];
+            if ($query !== NULL) {
+                $withParam = ['modules' => $query];
+            }
+            foreach ($this->categories()->with($withParam)->get() as $category) {
+                $modules = $modules->merge($category->modules);
+            }
+            Cache::put($key, $modules);
+            return $modules;
         }
-        foreach ($this->categories()->with($withParam)->get() as $category) {
-            $modules = $modules->merge($category->modules);
-        }
-        return $modules;
+        return Cache::get($key);
     }
 
     public function getEvents()
     {
-        $modules = $this->getModules();
-
-        $events = collect();
-        foreach ($modules->all() as $module) {
-            $events = $events->merge($module->events);
+        $key = $this->getCacheKey("events");
+        if (!Cache::has($key)) {
+            $modules = $this->getModules();
+            $events = collect();
+            foreach ($modules->all() as $module) {
+                $events = $events->merge($module->events);
+            }
+            Cache::put($key, $events);
+            return $events;
         }
-        return $events;
+        return Cache::get($key);
     }
 
     public function getLocations()
     {
-        $events = $this->getEvents();
-        $locations = [];
-        foreach ($events->all() as $event) {
-            if (!in_array($event->location, $locations)) {
-                array_push($locations, $event->location);
+        $key = $this->getCacheKey("locations");
+        if (!Cache::has($key)) {
+            $events = $this->getEvents();
+            $locations = [];
+            foreach ($events->all() as $event) {
+                if (!in_array($event->location, $locations)) {
+                    array_push($locations, $event->location);
+                }
             }
+            Cache::put($key, $locations);
+            return $locations;
         }
-        return $locations;
+        return Cache::get($key);
     }
 
     public function getDayTimes()
     {
-        $events = $this->getEvents();
-        $dayTimes = [];
-        foreach ($events->all() as $event) {
-            if (!in_array($event->dayTime, $dayTimes)) {
-                array_push($dayTimes, $event->dayTime);
+        $key = $this->getCacheKey("dayTimes");
+        if (!Cache::has($key)) {
+            $events = $this->getEvents();
+            $dayTimes = [];
+            foreach ($events->all() as $event) {
+                if (!in_array($event->dayTime, $dayTimes)) {
+                    array_push($dayTimes, $event->dayTime);
+                }
             }
+            Cache::put($key, $dayTimes);
+            return $dayTimes;
         }
-        return $dayTimes;
+        return Cache::get($key);
+    }
+
+    public function getScheduleRules()
+    {
+        $key = $this->getCacheKey("ScheduleRules");
+        if (!Cache::has($key)) {
+            $rules = $this->rules()->where('type', 'Schedule')->get();
+            Cache::put($key, $rules);
+            return $rules;
+        }
+        return Cache::get($key);
+    }
+
+    public function getScheduleTodos()
+    {
+        $key = $this->getCacheKey("ScheduleTodos");
+        if (!Cache::has($key)) {
+            $todos = $this->todos()->where('type', 'Schedule')->get();
+            Cache::put($key, $todos);
+            return $todos;
+        }
+        return Cache::get($key);
+    }
+
+    public function getCreditTodos()
+    {
+        $key = $this->getCacheKey("CreditTodos");
+        if (!Cache::has($key)) {
+            $todos = $this->todos()->where('type', 'Credit')->get();
+            Cache::put($key, $todos);
+            return $todos;
+        }
+        return Cache::get($key);
+    }
+
+    public function getFoci()
+    {
+        $key = $this->getCacheKey("Foci");
+        if (!Cache::has($key)) {
+            $foci = $this->foci()->with('requiredModules', 'optionalModules')->get();
+            Cache::put($key, $foci);
+            return $foci;
+        }
+        return Cache::get($key);
+    }
+
+    public function getScheduleTour()
+    {
+        $key = $this->getCacheKey("ScheduleTour");
+        if (!Cache::has($key)) {
+            $tour = isset($this->tour["schedule"]) ? $this->tour["schedule"] : null;
+            Cache::put($key, $tour);
+            return $tour;
+        }
+        return Cache::get($key);
+    }
+
+    private function getCacheKey($name)
+    {
+        return "planer/" . $this->slug . "/" . $name;
     }
 }

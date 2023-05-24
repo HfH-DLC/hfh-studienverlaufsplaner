@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Hashids\Hashids;
+use Illuminate\Support\Facades\Cache;
 
 class Plan extends Model
 {
@@ -49,39 +50,52 @@ class Plan extends Model
 
     public function getCreditableModules()
     {
-        $placedModuleIds = $this->placements()->pluck('module_id')->all();
-        $query = function ($query) use ($placedModuleIds) {
-            $query->where('creditable', true);
-            $query->whereIn('id', $placedModuleIds);
-        };
-        $modules = $this->planer->getModules($query);
-        $modules = $modules->map(function ($module) {
-            $focusSelectionId = $this->focusSelections()->whereHas('focus.requiredModules', function ($query) use ($module) {
-                $query->where('id', $module->id);
-            })->pluck('id')->first();
-            if (!$focusSelectionId) {
-                $focusSelectionId = $this->focusSelections()->whereHas('creditedModules', function ($query) use ($module) {
+        $key = $this->getCacheKey("creditableModules");
+        if (!Cache::has($key)) {
+            $placedModuleIds = $this->placements()->pluck('module_id')->all();
+            $query = function ($query) use ($placedModuleIds) {
+                $query->where('creditable', true);
+                $query->whereIn('id', $placedModuleIds);
+            };
+            $modules = $this->planer->getModules($query);
+            $modules = $modules->map(function ($module) {
+                $focusSelectionId = $this->focusSelections()->whereHas('focus.requiredModules', function ($query) use ($module) {
                     $query->where('id', $module->id);
                 })->pluck('id')->first();
-            } else {
-                $module->required_credit = true;
-            }
-            $module->credited_against = $focusSelectionId;
-            return $module;
-        });
-        return $modules;
+                if (!$focusSelectionId) {
+                    $focusSelectionId = $this->focusSelections()->whereHas('creditedModules', function ($query) use ($module) {
+                        $query->where('id', $module->id);
+                    })->pluck('id')->first();
+                } else {
+                    $module->required_credit = true;
+                }
+                $module->credited_against = $focusSelectionId;
+                return $module;
+            });
+            Cache::put($key, $modules);
+            return $modules;
+        }
+        return Cache::get($key);
     }
 
     public function getCategoriesWithAllModules()
     {
-        $filter = $this->getFilter();
-        return $this->planer->categories()->with([
-            'modules' => function ($query) use ($filter) {
-                $query->whereHas('events', $filter);
-            },
-            'modules.events' => $filter,
-            'modules.prerequisites'
-        ])->get()->sortBy('position');
+        $key = $this->getCacheKey("categoriesWithAllModules");
+        if (!Cache::has($key)) {
+            $filter = $this->getFilter();
+            $categories = $this->planer->categories()->with([
+                'modules' => function ($query) use ($filter) {
+                    $query->whereHas('events', $filter);
+                },
+                'modules.events' => $filter,
+                'modules.events.location',
+                'modules.events.dayTime',
+                'modules.prerequisites',
+            ])->get()->sortBy('position');
+            Cache::put($key, $categories);
+            return $categories;
+        }
+        return Cache::get($key);
     }
 
     private function getFilter()
@@ -110,5 +124,10 @@ class Plan extends Model
             $plan->slug = $slug;
             $plan->save();
         });
+    }
+
+    private function getCacheKey($name)
+    {
+        return "plan/" . $this->id . "/" . $name;
     }
 }

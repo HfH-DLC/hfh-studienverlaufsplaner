@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\JSONImport;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -58,6 +59,7 @@ class AdminController extends Controller
         DB::transaction(function () use ($file) {
             $import = new JSONImport($file);
             $import->run();
+            Cache::flush();
         });
         return Redirect::route('admin-data');
     }
