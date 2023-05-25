@@ -37,8 +37,12 @@ class SettingsController extends Controller
     {
         $validated = $request->validated();
         DB::transaction(function () use ($plan, $validated) {
-            $plan->dayTimes()->sync($validated["dayTimes"]);
-            $plan->locations()->sync($validated["locations"]);
+            if (array_key_exists('dayTimes', $validated)) {
+                $plan->dayTimes()->sync($validated["dayTimes"]);
+            }
+            if (array_key_exists('locations', $validated)) {
+                $plan->locations()->sync($validated["locations"]);
+            }
         });
     }
 }
