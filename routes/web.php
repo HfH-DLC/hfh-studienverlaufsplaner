@@ -32,7 +32,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::post('/data', [AdminController::class, 'import']);
 });
 
-Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
+Route::prefix('/{planer:id}')->scopeBindings()->group(function () {
     Route::get('/', [PlanerController::class, 'show'])->name('planer');
     Route::get('/modulfilter', [ModuleFilterController::class, 'show'])->name('modulefilter');
     Route::post('/plans', [PlanController::class, 'store']);
