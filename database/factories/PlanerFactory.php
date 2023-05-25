@@ -17,11 +17,9 @@ class PlanerFactory extends Factory
      */
     public function definition()
     {
-        $days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
-
         return [
+            'id' => 'fake',
             'name' => 'Master Fake',
-            'slug' => 'fake',
             'required_ects' => 100,
             'focus_selection_enabled' => false,
             'tour' => '{}',

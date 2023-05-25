@@ -21,11 +21,11 @@ class PlanerTest extends TestCase
     {
         $import = Import::factory()->create();
         $planer = Planer::factory()->create();
-        $url = "/$planer->slug";
+        $url = "/$planer->id";
         $response = $this->get($url);
         $response->assertSuccessful();
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Planer')
-            ->where('slug', $planer->slug));
+            ->where('slug', $planer->id));
     }
 }

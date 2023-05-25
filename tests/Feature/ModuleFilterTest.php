@@ -16,7 +16,7 @@ class ModuleFilterTest extends TestCase
     public function can_show_overview_page()
     {
         $planer = Planer::factory()->create();
-        $url = "/$planer->slug/modulfilter";
+        $url = "/$planer->id/modulfilter";
 
         $response = $this->get($url);
 
