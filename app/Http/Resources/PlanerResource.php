@@ -20,7 +20,7 @@ class PlanerResource extends JsonResource
 
         return [
             'name' => $this->name,
-            'slug' => $this->slug,
+            'slug' => $this->id,
             'focusSelectionEnabled' => $this->focus_selection_enabled,
             'categories' => CategoryResource::collection($categories),
             'requiredECTS' => $this->required_ects,

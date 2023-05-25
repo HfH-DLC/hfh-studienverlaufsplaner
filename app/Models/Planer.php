@@ -10,6 +10,8 @@ class Planer extends Model
 {
     use HasFactory;
 
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $casts = [
         'required_ects' => 'integer',
         'focus_selection_enabled' => 'boolean',
@@ -167,6 +169,6 @@ class Planer extends Model
 
     private function getCacheKey($name)
     {
-        return "planer/" . $this->slug . "/" . $name;
+        return "planer/" . $this->id . "/" . $name;
     }
 }

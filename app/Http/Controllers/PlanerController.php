@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Import;
 use App\Models\Planer;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PlanerController extends Controller
@@ -14,7 +13,7 @@ class PlanerController extends Controller
         $allowedYears = range(Import::getOldestImportYear(), Import::getNewestImportedYear());
 
         $props =  array(
-            'slug' => $planer->slug,
+            'slug' => $planer->id,
             'name' => $planer->name,
             'allowedYears' => $allowedYears
         );

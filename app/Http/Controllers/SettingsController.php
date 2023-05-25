@@ -17,7 +17,7 @@ class SettingsController extends Controller
     {
         $props = [
             'planerName' => $planer->name,
-            'planerSlug' => $planer->slug,
+            'planerSlug' => $planer->id,
             'planResource' => new PlanResource($plan),
             'locationsResource' => LocationResource::collection($planer->getLocations()),
             'dayTimesResource' => DayTimeResource::collection($planer->getDayTimes())

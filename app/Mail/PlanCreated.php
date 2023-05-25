@@ -32,7 +32,7 @@ class PlanCreated extends Mailable
      */
     public function build()
     {
-        $planerSlug = $this->plan->planer->slug;
+        $planerSlug = $this->plan->planer->id;
         $slug = $this->plan->slug;
         $url = URL::to("/$planerSlug/$slug");
         return $this

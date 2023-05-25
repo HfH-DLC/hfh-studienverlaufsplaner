@@ -131,7 +131,7 @@ class JSONImport
                 $planer->name = $planerName;
             }
 
-            $planer->slug = $planerData->slug;
+            $planer->id = $planerData->slug;
             $planer->required_ects = $planerData->requiredECTS;
             $planer->focus_selection_enabled = $planerData->focusSelectionEnabled;
             $planer->tour = $planerData->tour;

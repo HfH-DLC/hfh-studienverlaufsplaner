@@ -8,7 +8,6 @@ use App\Http\Requests\UpdateScheduleRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CreditableModuleResource;
 use App\Http\Resources\FocusResource;
-use App\Http\Resources\PlanerResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\RuleResource;
 use App\Http\Resources\TodoResource;
@@ -59,7 +58,7 @@ class PlanController extends Controller
 
         $props = [
             'planerName' => $planer->name,
-            'planerSlug' => $planer->slug,
+            'planerSlug' => $planer->id,
             'planResource' => $planResource,
             'categoriesResource' => $categoriesResource,
             'focusSelectionEnabled' => $planer->focus_selection_enabled,
@@ -98,7 +97,7 @@ class PlanController extends Controller
 
         $props = [
             'planerName' => $planer->name,
-            'planerSlug' => $planer->slug,
+            'planerSlug' => $planer->id,
             'planResource' => $planResource,
             'creditableModulesResource' => CreditableModuleResource::collection($modules),
             'todosResource' => TodoResource::collection($planer->getCreditTodos()),
@@ -152,12 +151,11 @@ class PlanController extends Controller
                 $placements_data = collect($placements_data);
                 $plan->placements()->delete();
                 $placements_data->each(function ($placement_data) use ($plan) {
-                    $dayTime = DayTime::find($placement_data['dayTimeId']);
                     $placement = new Placement();
                     $placement->year = $placement_data['year'];
                     $placement->semester = $placement_data['semester'];
                     $placement->time_window = $placement_data['timeWindow'];
-                    $placement->day_time_id = $dayTime->id;
+                    $placement->day_time_id = $placement_data['dayTimeId'];
                     $placement->location_id = $placement_data['locationId'];
                     $placement->module()->associate($placement_data['moduleId']);
                     $plan->placements()->save($placement);
