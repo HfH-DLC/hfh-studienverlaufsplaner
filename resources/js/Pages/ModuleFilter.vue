@@ -95,7 +95,15 @@ import AppHead from "@/Components/AppHead.vue";
 import ModuleFilterItem from "@/Components/ModuleFilterItem.vue";
 import PageHeader from "@/Components/PageHeader.vue";
 import { getNestedDates, orderSemester } from "@/helpers";
-import { Category, DayTime, Event, EventDate, Location, Module } from "@/types";
+import {
+    Category,
+    DayTime,
+    Event,
+    EventDate,
+    Location,
+    Module,
+    Semester,
+} from "@/types";
 import { HfhFilterGroup, HfhCheckbox } from "@hfh-dlc/hfh-styleguide";
 import type {
     CheckboxOption,
@@ -283,7 +291,7 @@ const nestedDates = computed(() =>
     )
 );
 
-const getModulesByDate = (semester: string, dayTime: DayTime) => {
+const getModulesByDate = (semester: Semester, dayTime: DayTime) => {
     const result = filteredModules.value.filter((module) => {
         return module.events.some(
             (event) =>

@@ -1,4 +1,4 @@
-import { EventDate, EventDateWithOptionalTimeWindow } from "./types";
+import { EventDate, EventDateWithOptionalTimeWindow, Semester } from "./types";
 
 export const isSameDate = (
     a: EventDateWithOptionalTimeWindow,
@@ -27,12 +27,12 @@ export const isPreviousSemester = (
     return true;
 };
 
-const HS = "HS";
-const FS = "FS";
-const semesters = [HS, FS];
+const HS: Semester = "HS";
+const FS: Semester = "FS";
+const semesters: Array<Semester> = [HS, FS];
 export const orderSemester = (a: string, b: string) => orderBy(semesters, a, b);
 export const semesterCount = () => semesters.length;
-export const semesterPosition = (semester: string) =>
+export const semesterPosition = (semester: Semester) =>
     semesters.indexOf(semester);
 
 const timeWindows = ["A", "B"];
@@ -48,7 +48,7 @@ export const orderTime = (a: string, b: string) => orderBy(times, a, b);
 const orderBy = (order: string[], a: string, b: string) =>
     order.indexOf(a) - order.indexOf(b);
 
-export const getCalendarYear = (semester: string, schoolYear: number) => {
+export const getCalendarYear = (semester: Semester, schoolYear: number) => {
     return semester === HS ? schoolYear : schoolYear + 1;
 };
 

@@ -50,7 +50,7 @@ export type ErrorMessage = {
 
 export interface EventDate {
     year: number;
-    semester: string;
+    semester: Semester;
     dayTime: DayTime;
     timeWindow: string;
 }
@@ -205,6 +205,8 @@ export interface SelectionEventInfo {
 export interface SelectableEvent extends Event {
     valid: boolean;
 }
+
+export type Semester = "HS" | "FS";
 
 export interface TodoData {
     name: string;

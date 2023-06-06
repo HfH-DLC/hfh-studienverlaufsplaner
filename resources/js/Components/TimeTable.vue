@@ -127,7 +127,7 @@ import TimeSlot from "./TimeSlot.vue";
 import { useScheduleStore } from "../Store/schedule";
 import { InformationCircleIcon } from "@heroicons/vue/24/outline";
 import HfhDialog from "./HfhDialog.vue";
-import { DayTime } from "@/types";
+import { DayTime, Semester } from "@/types";
 
 const isDialogVisible = ref(false);
 const timeWindowContentList = [
@@ -177,18 +177,19 @@ const setTimeWindowInfo = (timeWindow: string) => {
 const onDialogClosed = () => {
     isDialogVisible.value = false;
 };
-const getSemesterString = (count: number, semester: string, year: number) => {
+const getSemesterString = (count: number, semester: Semester, year: number) => {
+    let semesterName;
     if (semester == "HS") {
-        semester = "Herbst";
+        semesterName = "Herbst";
     } else if (semester == "FS") {
-        semester = "Frühling";
+        semesterName = "Frühling";
     }
-    return `${count}. Semester (${semester} ${year})`;
+    return `${count}. Semester (${semesterName} ${year})`;
 };
 
 const showTimetableRow = (
     year: number,
-    semester: string,
+    semester: Semester,
     dayTime: DayTime
 ): boolean => {
     const placement = store.placementByDate({ year, semester, dayTime });
