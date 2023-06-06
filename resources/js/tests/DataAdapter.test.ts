@@ -2,6 +2,7 @@ import axios from "axios";
 import DataAdapter from "@/DataAdapter";
 import { describe, expect, it, beforeEach, vi, type Mocked } from "vitest";
 import { FocusCredit, FocusSelection, Placement } from "@/types";
+import { placementFactory } from "./factories/PlacementFactory";
 
 vi.mock("axios");
 const mockedAxios = axios as Mocked<typeof axios>;
@@ -21,32 +22,19 @@ describe("DataAdapter", () => {
     });
 
     it("should save schedule", async () => {
-        const placements: Array<Placement> = [
-            {
-                id: 0,
-                moduleId: "P1_01",
-                location: {
-                    id: "ZH",
-                    name: "Zürich",
-                    default: true,
-                },
-                year: 2021,
-                timeWindow: "TimeWindowA",
-                semester: "FS",
-                dayTime: {
-                    id: "a",
-                    day: "Montag",
-                    time: "Morgen",
-                    sortIndex: 0,
-                    default: true,
-                },
-            },
-        ];
+        const placements: Array<Placement> = placementFactory.buildList(5);
         const focusSelections: Array<FocusSelection> = [];
         const tourCompleted = true;
         const valid = true;
 
-        const data = {
+        await dataAdapter.saveSchedule(
+            placements,
+            focusSelections,
+            tourCompleted,
+            valid
+        );
+
+        const expectedData = {
             placements: placements.map((placement) => {
                 return {
                     moduleId: placement.moduleId,
@@ -64,17 +52,9 @@ describe("DataAdapter", () => {
             tourCompleted,
             valid,
         };
-
-        await dataAdapter.saveSchedule(
-            placements,
-            focusSelections,
-            tourCompleted,
-            valid
-        );
-
         expect(mockedAxios.put).toHaveBeenCalledWith(
             getExpectedEndpointUrl("zeitplan"),
-            data
+            expectedData
         );
     });
 
@@ -83,17 +63,16 @@ describe("DataAdapter", () => {
         const tourCompleted = true;
         const valid = true;
 
-        const data = {
+        await dataAdapter.saveCredit(focusCredits, tourCompleted, valid);
+
+        const expectedData = {
             focusCredits: [],
             tourCompleted,
             valid,
         };
-
-        await dataAdapter.saveCredit(focusCredits, tourCompleted, valid);
-
         expect(mockedAxios.put).toHaveBeenCalledWith(
             getExpectedEndpointUrl("anrechnung"),
-            data
+            expectedData
         );
     });
 
