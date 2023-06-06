@@ -5,42 +5,17 @@ import { nextTick } from "vue";
 import DateRulePlacementLabel from "@/Components/Rules/Schedule/DateRulePlacementLabel.vue";
 import { ScheduleModule, SchedulePlacement } from "@/types";
 import { useEmitter } from "@/composables/useEmitter";
+import { scheduleModuleFactory } from "./factories/ScheduleModuleFactory";
+import { placementFactory } from "./factories/PlacementFactory";
 
 test("DateRulePlacementLabel", async () => {
     const emitter = useEmitter();
     const spy = vi.spyOn(emitter, "emit");
-    const mockModule: ScheduleModule = {
-        id: "123",
-        name: "Test Module",
-        events: [],
-        prerequisites: [],
-        ects: 5,
-        infos: [],
-        misplaced: false,
-        selected: false,
-        placement: undefined,
-    };
-
+    const module: ScheduleModule = scheduleModuleFactory.build();
     const mockPlacement: SchedulePlacement = {
-        module: mockModule,
-        semester: "HS",
-        year: 2023,
-        timeWindow: "Pflichtmodule & Wahlpflichtmodule",
-        dayTime: {
-            id: "a",
-            day: "Montag",
-            time: "Morgen",
-            default: true,
-            sortIndex: 0,
-        },
+        ...placementFactory.build({ moduleId: module.id }),
+        module,
         errors: [],
-        moduleId: mockModule.id,
-        id: 1,
-        location: {
-            id: "ZH",
-            name: "Zürich",
-            default: true,
-        },
     };
 
     const wrapper = mount(DateRulePlacementLabel, {
@@ -53,5 +28,5 @@ test("DateRulePlacementLabel", async () => {
     await nextTick();
 
     expect(spy).toHaveBeenCalledOnce();
-    expect(spy).toHaveBeenLastCalledWith("focus-module", mockModule.id);
+    expect(spy).toHaveBeenLastCalledWith("focus-module", module.id);
 });
