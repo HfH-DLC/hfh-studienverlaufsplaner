@@ -21,11 +21,12 @@ export type ChecklistEntryData = {
     labelProps?: Record<any, any>;
 };
 export interface CreditInitParams {
+    dataAdapter: DataAdapter;
+    validator: Validator;
     planerSlug: string;
     plan: Plan;
     modules: Array<CreditModule>;
     focusSelections: Array<FocusSelection>;
-    todos: Array<TodoData>;
     tour: TourData;
 }
 

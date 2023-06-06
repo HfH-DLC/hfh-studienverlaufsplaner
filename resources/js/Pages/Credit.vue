@@ -15,11 +15,6 @@
         </header>
         <main class="flex-1 flex flex-col px-4 pb-4">
             <Flash class="fixed top-4 left-1/2 -translate-x-1/2" />
-            <ErrorList
-                class="mt-4 space-y-2"
-                :errors="errors"
-                aria-live="polite"
-            />
             <div class="flex mt-4 gap-x-8 print:block">
                 <template v-if="planResource.data.scheduleValid">
                     <h2 class="hfh-sr-only">
@@ -101,10 +96,7 @@
                         <h2 class="hfh-sr-only">Checkliste</h2>
                         <p
                             class="mb-8"
-                            v-if="
-                                errors.length == 0 &&
-                                !todoEntries.some((entry) => !entry.checked)
-                            "
+                            v-if="!todoEntries.some((entry) => !entry.checked)"
                         >
                             Ihre Planung erfüllt alle Anforderungen.
                         </p>
@@ -141,12 +133,14 @@ import { useEmitter } from "@/composables/useEmitter";
 
 import { useCreditStore } from "../Store/credit";
 import Checklist from "../Components/Checklist.vue";
-import ErrorList from "../Components/ErrorList.vue";
 import Flash from "../Components/Flash.vue";
 import PlanHeader from "../Components/PlanHeader.vue";
 import Tour from "../Components/Tour.vue";
 import MainLayout from "../Layouts/MainLayout.vue";
 import { FlashType, TourData } from "@/types";
+import DataAdapter from "@/DataAdapter";
+import Validator from "@/Validator";
+import { getTodos } from "@/Models/Todos/Credit/TodoFactory";
 
 defineOptions({
     layout: MainLayout,
@@ -214,16 +208,19 @@ onBeforeUnmount(() => {
 const store = useCreditStore();
 
 store.init({
+    dataAdapter: new DataAdapter(
+        props.planerSlug,
+        props.planResource.data.slug
+    ),
+    validator: new Validator(getTodos(props.todosResource.data), []),
     modules: props.creditableModulesResource.data,
     plan: props.planResource.data,
     planerSlug: props.planerSlug,
     focusSelections: props.planResource.data.focusSelections,
-    todos: props.todosResource.data,
     tour: props.tourData,
 });
 
 const {
-    errors,
     modules,
     focusSelections,
     todoEntries,
