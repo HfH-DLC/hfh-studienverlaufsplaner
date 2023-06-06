@@ -1,14 +1,12 @@
 import { expect, test, describe, beforeEach, vi, Mocked } from "vitest";
 import { setActivePinia, createPinia } from "pinia";
 import { useScheduleStore } from "@/Store/schedule";
-import {
-    Placement,
-    SaveStatus,
-    ScheduleInitParams,
-    ScheduleModule,
-} from "@/types";
+import { Placement, SaveStatus, ScheduleInitParams } from "@/types";
 import DataAdapter from "@/DataAdapter";
 import Validator from "@/Validator";
+import { placementFactory } from "../factories/PlacementFactory";
+import { dayTimeFactory } from "../factories/DayTimeFactory";
+import { locationFactory } from "../factories/LocationFactory";
 vi.mock("@/DataAdapter");
 
 function getInitializedStore(
@@ -59,13 +57,13 @@ describe("Schedule Store", () => {
             validator,
             plan: {
                 creditTourCompleted: false,
-                dayTimes: [],
+                dayTimes: dayTimeFactory.buildList(5),
                 focusSelections: [],
-                locations: [],
-                placements: [],
+                locations: locationFactory.buildList(5),
+                placements: placementFactory.buildList(5),
                 scheduleTourCompleted: false,
                 slug: "",
-                startYear: 0,
+                startYear: 1990,
                 readOnly: false,
             },
             categories: [],
@@ -137,52 +135,15 @@ describe("Schedule Store", () => {
 
     test("addPlacement", () => {
         const { store } = getInitializedStore();
-        const placement1: Placement = {
-            id: 0,
-            moduleId: "P1_01",
-            year: 2020,
-            semester: "FS",
-            dayTime: {
-                id: "b",
-                day: "Montag",
-                time: "Nachmittag",
-                default: true,
-                sortIndex: 0,
-            },
-            timeWindow: "Pflicht- und Wahlpflichtmodule",
-            location: {
-                id: "ZH",
-                name: "Zürich",
-                default: true,
-            },
-        };
-        const placement2: Placement = {
-            id: 1,
-            moduleId: "P1_02",
-            year: 2021,
-            semester: "HS",
-            dayTime: {
-                id: "c",
-                day: "Dienstag",
-                time: "Morgen",
-                default: true,
-                sortIndex: 0,
-            },
-            timeWindow: "Pflicht- und Wahlpflichtmodule",
-            location: {
-                id: "GR",
-                name: "Chur",
-                default: true,
-            },
-        };
+        const placements = placementFactory.buildList(5);
         expect(store.rawPlacements.length).toBe(0);
 
-        store.addPlacement(placement1);
-        store.addPlacement(placement2);
+        placements.forEach((placement) => store.addPlacement(placement));
 
-        expect(store.rawPlacements.length).toBe(2);
-        expect(store.rawPlacements[0]).toStrictEqual(placement1);
-        expect(store.rawPlacements[1]).toStrictEqual(placement2);
+        expect(store.rawPlacements.length).toBe(placements.length);
+        placements.forEach((placement, index) => {
+            expect(store.rawPlacements[index]).toStrictEqual(placement);
+        });
     });
 
     test("removePlacement", () => {
