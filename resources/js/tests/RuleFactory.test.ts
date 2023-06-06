@@ -2,7 +2,7 @@ import { getRules } from "@/Models/Rules/Schedule/RuleFactory";
 import { RuleData } from "@/types";
 import { describe, expect, it, vi } from "vitest";
 
-describe("RulesFactory", () => {
+describe("RuleFactory", () => {
     it("should get rules", () => {
         const rulesData: Array<RuleData> = [
             {
