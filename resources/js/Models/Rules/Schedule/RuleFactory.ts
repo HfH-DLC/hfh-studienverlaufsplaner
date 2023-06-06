@@ -1,18 +1,21 @@
 import { Rule, RuleData } from "@/types";
-import DateRule from "./DateRule";
 import ExcludeSemesterRule from "./ExcludeSemesterRule";
-import PrerequisitesRule from "./PrerequisitesRule";
 
-export const getRule = ({ name, params }: RuleData): Rule => {
-    switch (name) {
-        case "Date": {
-            return new DateRule();
+export const getRules = (rulesData: Array<RuleData>) => {
+    return rulesData.reduce((array: Array<Rule>, rule) => {
+        try {
+            array.push(getRule(rule));
+        } catch (error) {
+            console.error(error);
         }
+        return array;
+    }, []);
+};
+
+const getRule = ({ name, params }: RuleData): Rule => {
+    switch (name) {
         case "ExcludeSemester": {
             return new ExcludeSemesterRule(params);
-        }
-        case "Prerequisites": {
-            return new PrerequisitesRule();
         }
         default:
             throw "Unknown rule: " + name;
