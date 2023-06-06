@@ -1,46 +1,24 @@
 import {
     ChecklistEntryData,
     Event,
-    RuleData,
     SelectionEventInfo,
-    TodoData,
+    Rule,
+    Todo,
+    ScheduleModule,
+    ErrorMessage,
 } from "./types";
-import { Rule, Todo, ScheduleModule, ErrorMessage } from "./types";
-
-import { getTodo } from "./Models/Todos/Schedule/TodoFactory";
-import { getRule } from "./Models/Rules/Schedule/RuleFactory";
-import SettingsRule from "./Models/Rules/Schedule/SettingsRule";
+import { Ref } from "vue";
 
 export default class Validator {
     todos: Array<Todo>;
     rules: Array<Rule>;
 
-    constructor(todosData: Array<TodoData>, rulesData: Array<RuleData>) {
-        const todos = todosData.reduce(
-            (array: Array<Todo>, todoData: TodoData) => {
-                try {
-                    array.push(getTodo(todoData));
-                } catch (error) {
-                    console.error(error);
-                }
-                return array;
-            },
-            []
-        );
-        const rules = rulesData.reduce((array: Array<Rule>, rule) => {
-            try {
-                array.push(getRule(rule));
-            } catch (error) {
-                console.error(error);
-            }
-            return array;
-        }, []);
-        rules.push(new SettingsRule()); //todo would it make more sense to have all default rules like this?
+    constructor(todos: Array<Todo>, rules: Array<Rule>) {
         this.todos = todos;
         this.rules = rules;
     }
 
-    validate(data: Record<string, any>) {
+    validate(data: Record<string, Ref<any>>) {
         return {
             todoEntries: this.validateTodos(data),
             moduleInfos: this.validateModules(data),
@@ -58,7 +36,7 @@ export default class Validator {
         );
     }
     validateModules(
-        data: Record<string, any>
+        data: Record<string, Ref<any>>
     ): Map<string, Array<ErrorMessage>> {
         const moduleInfos = new Map();
         data.modules.value.forEach((module: ScheduleModule) => {
@@ -75,7 +53,7 @@ export default class Validator {
         return moduleInfos;
     }
     validatePlacements(
-        data: Record<string, any>
+        data: Record<string, Ref<any>>
     ): Map<number, Array<ErrorMessage>> {
         const placementErrors = new Map();
         this.rules.forEach((rule) => {
@@ -84,7 +62,13 @@ export default class Validator {
         return placementErrors;
     }
 
-    validateSelection(module: ScheduleModule, data: Record<string, any>) {
+    validateSelection(
+        module: ScheduleModule,
+        data: Record<string, Ref<any>>
+    ): {
+        moduleId: string;
+        selectionEventInfos: Map<number, SelectionEventInfo>;
+    } {
         const selectionEventInfos = module.events.reduce(
             (acc: Map<number, SelectionEventInfo>, cur: Event) => {
                 acc.set(cur.id, {

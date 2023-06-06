@@ -107,7 +107,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onBeforeUnmount, computed } from "vue";
+import { onBeforeUnmount, computed } from "vue";
 import { useScheduleStore } from "../Store/schedule";
 // Components
 import ErrorList from "../Components/ErrorList.vue";
@@ -130,6 +130,11 @@ import { PropType } from "vue";
 import { useEmitter } from "@/composables/useEmitter";
 import DataAdapter from "@/DataAdapter";
 import Validator from "@/Validator";
+import { getRules } from "@/Models/Rules/Schedule/RuleFactory";
+import { getTodos } from "@/Models/Todos/Schedule/TodoFactory";
+import SettingsRule from "@/Models/Rules/Schedule/SettingsRule";
+import DateRule from "@/Models/Rules/Schedule/DateRule";
+import PrerequisitesRule from "@/Models/Rules/Schedule/PrerequisitesRule";
 
 defineOptions({ layout: MainLayout });
 
@@ -184,16 +189,22 @@ const props = defineProps({
     },
 });
 
+const defaultRules = [
+    new SettingsRule(),
+    new PrerequisitesRule(),
+    new DateRule(),
+];
+
 const store = useScheduleStore();
 store.init({
     dataAdapter: new DataAdapter(
         props.planerSlug,
         props.planResource.data.slug
     ),
-    validator: new Validator(
-        props.todosResource.data,
-        props.rulesResource.data
-    ),
+    validator: new Validator(getTodos(props.todosResource.data), [
+        ...getRules(props.rulesResource.data),
+        ...defaultRules,
+    ]),
     categories: props.categoriesResource.data,
     plan: props.planResource.data,
     foci: props.fociResource.data,
