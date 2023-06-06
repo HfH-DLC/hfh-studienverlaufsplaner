@@ -64,15 +64,19 @@ export default class ExcludeSemesterRule {
         if (module.id !== this.moduleId) {
             return;
         }
+        if (module.placement) {
+            return;
+        }
         if (
-            !module.placement &&
-            module.events.every(
-                (event) =>
-                    this.isAllowedSemester(event, startYear.value) ||
-                    placements.value.find((placement: Placement) =>
+            module.events
+                .filter((event) =>
+                    this.isAllowedSemester(event, startYear.value)
+                )
+                .every((event) => {
+                    return placements.value.find((placement: Placement) =>
                         isSameDate(placement, event)
-                    )
-            )
+                    );
+                })
         ) {
             errors.push({
                 label: "Alle Termine in den erlaubten Semestern für dieses Modul sind bereits besetzt.",
