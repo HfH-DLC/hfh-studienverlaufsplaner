@@ -21,7 +21,8 @@
 
 6. Start the development server with `php artisan serve`.
 
-You can run any existing tests with `php artisan test`.
+To run the php tests, use `php artisan test`.
+To run the js tests, use `npm run test`.
 
 ## Production Setup
 
