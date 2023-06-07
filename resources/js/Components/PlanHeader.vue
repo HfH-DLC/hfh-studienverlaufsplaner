@@ -43,28 +43,18 @@
                 </ul>
             </nav>
             <SaveStatusIndicator :saveStatus="saveStatus" />
-            <button
-                v-if="showTour"
-                id="start-tour"
-                class="flex items-center gap-1 hover:text-thunderbird-red"
-                @click="startTour"
-            >
-                <QuestionMarkCircleIcon class="w-5 h-5" aria-hidden="true" />
-                Hilfe
-            </button>
+            <StartTourButton v-if="showTour" />
             <PrintButton />
         </div>
     </PageHeader>
 </template>
 
 <script lang="ts" setup>
-import { useEmitter } from "@/composables/useEmitter";
-import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
-import { HfhLogo, HfhHeaderBar } from "@hfh-dlc/hfh-styleguide";
 import { Link } from "@inertiajs/vue3";
 import PageHeader from "./PageHeader.vue";
 import PrintButton from "./PrintButton.vue";
 import SaveStatusIndicator from "./SaveStatusIndicator.vue";
+import StartTourButton from "./StartTourButton.vue";
 
 const props = defineProps({
     planerSlug: {
@@ -100,12 +90,6 @@ const props = defineProps({
         required: true,
     },
 });
-
-const emitter = useEmitter();
-
-const startTour = () => {
-    emitter.emit("start-tour");
-};
 </script>
 
 <style lang="scss" scoped>
