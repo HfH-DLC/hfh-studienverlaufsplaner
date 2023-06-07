@@ -27,7 +27,6 @@
 </template>
 
 <script lang="ts" setup>
-import { mapActions, mapState } from "pinia";
 import { useScheduleStore } from "../Store/schedule";
 import { HfhSelect } from "@hfh-dlc/hfh-styleguide";
 import { computed } from "vue";
