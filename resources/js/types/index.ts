@@ -31,7 +31,7 @@ export interface CreditInitParams {
 }
 
 export interface CreditModule extends Module {
-    creditedAgainst: number;
+    creditedAgainst: number | null;
     requiredCredit: boolean;
 }
 

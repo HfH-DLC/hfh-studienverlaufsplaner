@@ -238,7 +238,7 @@ const focusOptions = computed(() => {
     }));
 });
 
-const getFocusName = (focusSelectionId: number) => {
+const getFocusName = (focusSelectionId: number | null) => {
     return focusSelections.value.find(
         (focusSelection) => focusSelection.id == focusSelectionId
     )?.focus.name;
