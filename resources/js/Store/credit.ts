@@ -63,7 +63,6 @@ export const useCreditStore = defineStore("credit", {
         },
         startTour() {
             this.tourActive = true;
-            this.save();
         },
         completeTour() {
             this.tourActive = false;
