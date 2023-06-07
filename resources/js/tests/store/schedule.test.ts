@@ -107,7 +107,11 @@ describe("Schedule Store", () => {
                 throw new Error("TestError");
             }
         );
+        const consoleErrorMock = vi
+            .spyOn(console, "error")
+            .mockImplementation(() => {});
         const result = await store.save();
+        consoleErrorMock.mockRestore();
         expect(result).toBe(false);
         expect(store.saveStatus).toBe(SaveStatus.Error);
     });

@@ -138,7 +138,11 @@ describe("CreditStore", () => {
         dataAdapter.saveCredit = vi.fn().mockImplementation(() => {
             throw new Error("TestError");
         });
+        const consoleErrorMock = vi
+            .spyOn(console, "error")
+            .mockImplementation(() => {});
         const result = await store.save();
+        consoleErrorMock.mockRestore();
         expect(dataAdapter.saveCredit).toHaveBeenCalledOnce();
         expect(result).toBe(false);
         expect(store.saveStatus).toBe(SaveStatus.Error);
