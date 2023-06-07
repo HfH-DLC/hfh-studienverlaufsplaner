@@ -11,7 +11,7 @@ import { placementFactory } from "@/tests/factories/PlacementFactory";
 
 test("DateRulePlacementLabel", async () => {
     const emitter = useEmitter();
-    const spy = vi.spyOn(emitter, "emit");
+    const emitterEmitSpy = vi.spyOn(emitter, "emit");
     const module: ScheduleModule = scheduleModuleFactory.build();
     const mockPlacement: SchedulePlacement = {
         ...placementFactory.build({ moduleId: module.id }),
@@ -29,6 +29,6 @@ test("DateRulePlacementLabel", async () => {
     await user.click(wrapper.getByRole("button"));
     await nextTick();
 
-    expect(spy).toHaveBeenCalledOnce();
-    expect(spy).toHaveBeenLastCalledWith("focus-module", module.id);
+    expect(emitterEmitSpy).toHaveBeenCalledOnce();
+    expect(emitterEmitSpy).toHaveBeenLastCalledWith("focus-module", module.id);
 });
