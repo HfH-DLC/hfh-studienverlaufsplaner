@@ -1,6 +1,7 @@
 import { expect, test, vi } from "vitest";
 
-import { mount } from "@vue/test-utils";
+import { render } from "@testing-library/vue";
+import userEvent from "@testing-library/user-event";
 import { nextTick } from "vue";
 import DateRulePlacementLabel from "@/Components/Rules/Schedule/DateRulePlacementLabel.vue";
 import { ScheduleModule, SchedulePlacement } from "@/types";
@@ -17,14 +18,15 @@ test("DateRulePlacementLabel", async () => {
         module,
         errors: [],
     };
+    const user = userEvent.setup();
 
-    const wrapper = mount(DateRulePlacementLabel, {
+    const wrapper = render(DateRulePlacementLabel, {
         props: {
             placement: mockPlacement,
         },
     });
 
-    await wrapper.find("button").trigger("click");
+    await user.click(wrapper.getByRole("button"));
     await nextTick();
 
     expect(spy).toHaveBeenCalledOnce();
