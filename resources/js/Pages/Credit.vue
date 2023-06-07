@@ -213,11 +213,11 @@ store.init({
         props.planResource.data.slug
     ),
     validator: new Validator(getTodos(props.todosResource.data), []),
-    modules: props.creditableModulesResource.data,
-    plan: props.planResource.data,
-    planerSlug: props.planerSlug,
     focusSelections: props.planResource.data.focusSelections,
+    modules: props.creditableModulesResource.data,
     tour: props.tourData,
+    tourCompleted: props.planResource.data.creditTourCompleted,
+    readOnly: props.planResource.data.readOnly,
 });
 
 const {

@@ -23,11 +23,11 @@ export type ChecklistEntryData = {
 export interface CreditInitParams {
     dataAdapter: DataAdapter;
     validator: Validator;
-    planerSlug: string;
-    plan: Plan;
+    readOnly: boolean;
     modules: Array<CreditModule>;
     focusSelections: Array<FocusSelection>;
     tour: TourData;
+    tourCompleted: boolean;
 }
 
 export interface CreditModule extends Module {

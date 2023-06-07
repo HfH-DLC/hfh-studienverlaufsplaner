@@ -38,11 +38,11 @@ export const useCreditStore = defineStore("credit", {
             this.$reset();
             dataAdapter = params.dataAdapter;
             validator = params.validator;
-            this.readOnly = params.plan.readOnly;
+            this.readOnly = params.readOnly;
             this.focusSelections = params.focusSelections;
             this.modules = params.modules;
             this.tour = params.tour;
-            this.tourCompleted = params.plan.creditTourCompleted;
+            this.tourCompleted = params.tourCompleted;
             this.validate();
             this.initialized = true;
         },
