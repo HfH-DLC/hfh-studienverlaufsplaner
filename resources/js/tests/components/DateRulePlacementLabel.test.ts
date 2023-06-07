@@ -5,8 +5,8 @@ import { nextTick } from "vue";
 import DateRulePlacementLabel from "@/Components/Rules/Schedule/DateRulePlacementLabel.vue";
 import { ScheduleModule, SchedulePlacement } from "@/types";
 import { useEmitter } from "@/composables/useEmitter";
-import { scheduleModuleFactory } from "./factories/ScheduleModuleFactory";
-import { placementFactory } from "./factories/PlacementFactory";
+import { scheduleModuleFactory } from "@/tests/factories/ScheduleModuleFactory";
+import { placementFactory } from "@/tests/factories/PlacementFactory";
 
 test("DateRulePlacementLabel", async () => {
     const emitter = useEmitter();

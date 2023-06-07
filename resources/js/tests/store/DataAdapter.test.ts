@@ -2,7 +2,7 @@ import axios from "axios";
 import DataAdapter from "@/DataAdapter";
 import { describe, expect, it, beforeEach, vi, type Mocked } from "vitest";
 import { FocusCredit, FocusSelection, Placement } from "@/types";
-import { placementFactory } from "./factories/PlacementFactory";
+import { placementFactory } from "@/tests/factories/PlacementFactory";
 
 vi.mock("axios");
 const mockedAxios = axios as Mocked<typeof axios>;

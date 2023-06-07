@@ -3,7 +3,7 @@ import Validator from "@/Validator";
 import { Rule, ScheduleModule, Todo } from "@/types";
 import { ChecklistEntryData, ErrorMessage } from "@/types";
 import { Ref, ref } from "vue";
-import { scheduleModuleFactory } from "./factories/ScheduleModuleFactory";
+import { scheduleModuleFactory } from "@/tests/factories/ScheduleModuleFactory";
 
 describe("Validator", () => {
     it("should validate todos", () => {

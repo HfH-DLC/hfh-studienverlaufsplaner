@@ -2,10 +2,10 @@ import DateRule from "@/Models/Rules/Schedule/DateRule";
 import { ErrorMessage, SchedulePlacement } from "@/types";
 import { describe, it, expect } from "vitest";
 import { ref } from "vue";
-import { scheduleModuleFactory } from "./factories/ScheduleModuleFactory";
-import { eventFactory } from "./factories/EventFactory";
-import { placementFactory } from "./factories/PlacementFactory";
-import { dayTimeFactory } from "./factories/DayTimeFactory";
+import { scheduleModuleFactory } from "@/tests/factories/ScheduleModuleFactory";
+import { eventFactory } from "@/tests/factories/EventFactory";
+import { placementFactory } from "@/tests/factories/PlacementFactory";
+import { dayTimeFactory } from "@/tests/factories/DayTimeFactory";
 
 describe("DateRule", () => {
     describe("validatePlacements", () => {

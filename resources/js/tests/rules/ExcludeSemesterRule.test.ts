@@ -7,9 +7,9 @@ import {
 } from "@/types";
 import { describe, expect, it } from "vitest";
 import { ref } from "vue";
-import { scheduleModuleFactory } from "./factories/ScheduleModuleFactory";
-import { eventFactory } from "./factories/EventFactory";
-import { placementFactory } from "./factories/PlacementFactory";
+import { scheduleModuleFactory } from "@/tests/factories/ScheduleModuleFactory";
+import { eventFactory } from "@/tests/factories/EventFactory";
+import { placementFactory } from "@/tests/factories/PlacementFactory";
 
 describe("ExcludeSemesterRule", () => {
     describe("validatePlacement", () => {

@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import SettingsRule from "@/Models/Rules/Schedule/SettingsRule";
-import { placementFactory } from "./factories/PlacementFactory";
+import { placementFactory } from "@/tests/factories/PlacementFactory";
 import { ref } from "vue";
-import { scheduleModuleFactory } from "./factories/ScheduleModuleFactory";
-import { locationFactory } from "./factories/LocationFactory";
-import { dayTimeFactory } from "./factories/DayTimeFactory";
+import { scheduleModuleFactory } from "@/tests/factories/ScheduleModuleFactory";
+import { locationFactory } from "@/tests/factories/LocationFactory";
+import { dayTimeFactory } from "@/tests/factories/DayTimeFactory";
 
 describe("SettingsRule", () => {
     describe("validatePlacements", () => {

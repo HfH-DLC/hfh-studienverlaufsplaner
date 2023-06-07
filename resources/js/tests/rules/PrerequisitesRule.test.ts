@@ -2,8 +2,8 @@ import PrerequisitesRule from "@/Models/Rules/Schedule/PrerequisitesRule";
 import { describe, it, expect } from "vitest";
 import { ref } from "vue";
 import { SchedulePlacement } from "@/types";
-import { schedulePlacementFactory } from "./factories/SchedulePlacementFactory";
-import { scheduleModuleFactory } from "./factories/ScheduleModuleFactory";
+import { schedulePlacementFactory } from "@/tests/factories/SchedulePlacementFactory";
+import { scheduleModuleFactory } from "@/tests/factories/ScheduleModuleFactory";
 
 describe("PrerequisitesRule", () => {
     describe("validatePlacements", () => {
