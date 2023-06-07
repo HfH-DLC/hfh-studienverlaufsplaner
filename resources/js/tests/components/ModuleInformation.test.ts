@@ -10,6 +10,9 @@ import { scheduleModuleFactory } from "../factories/ScheduleModuleFactory";
 describe("ModuleInformation", () => {
     it("displays back button when a module is selected", async () => {
         const wrapper = render(ModuleInformation, {
+            global: {
+                plugins: [createTestingPinia()],
+            },
             props: {
                 selectedModule: scheduleModuleFactory.build(),
             },
@@ -19,6 +22,9 @@ describe("ModuleInformation", () => {
     });
     it("does not display a back button when no module is selected", async () => {
         const wrapper = render(ModuleInformation, {
+            global: {
+                plugins: [createTestingPinia()],
+            },
             props: {
                 selectedModule: null,
             },
