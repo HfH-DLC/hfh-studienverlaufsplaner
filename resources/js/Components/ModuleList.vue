@@ -35,7 +35,7 @@ import {
     computed,
 } from "vue";
 import { useEmitter } from "@/composables/useEmitter";
-import { Event, ScheduleModule } from "@/types";
+import { ScheduleModule } from "@/types";
 
 const store = useScheduleStore();
 
