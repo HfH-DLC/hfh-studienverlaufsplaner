@@ -3,7 +3,6 @@ import {
     getNestedDates,
     isPreviousSemester,
     isSameDate,
-    semesterCount,
     pluralize,
     joinStrings,
 } from "@/helpers";
