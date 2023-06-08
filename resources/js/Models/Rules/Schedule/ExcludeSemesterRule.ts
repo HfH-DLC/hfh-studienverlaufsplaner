@@ -111,7 +111,7 @@ export default class ExcludeSemesterRule {
     isAllowedSemester(date: EventDate, startYear: number) {
         const yearDiff = date.year - startYear;
         const position =
-            yearDiff * semesterCount() + semesterPosition(date.semester);
+            yearDiff * semesterCount + semesterPosition(date.semester);
         return !this.excludePositions.includes(position);
     }
 }
