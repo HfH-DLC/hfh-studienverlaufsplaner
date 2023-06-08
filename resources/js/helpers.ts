@@ -1,5 +1,9 @@
 import { EventDate, EventDateWithOptionalTimeWindow, Semester } from "./types";
 
+/**
+ * Compares two EventDateWithOptionalTimeWindow objects.
+ * Important: The timeWindow property is only considered in the comparison, if both objects have it.
+ */
 export const isSameDate = (
     a: EventDateWithOptionalTimeWindow,
     b: EventDateWithOptionalTimeWindow
@@ -30,8 +34,9 @@ export const isPreviousSemester = (
 const HS: Semester = "HS";
 const FS: Semester = "FS";
 const semesters: Array<Semester> = [HS, FS];
-export const orderSemester = (a: string, b: string) => orderBy(semesters, a, b);
-export const semesterCount = () => semesters.length;
+export const semesterCount = semesters.length;
+export const orderSemester = (a: Semester, b: Semester) =>
+    orderBy(semesters, a, b);
 export const semesterPosition = (semester: Semester) =>
     semesters.indexOf(semester);
 
@@ -98,6 +103,9 @@ export const pluralize = (count: number, singular: string, plural: string) => {
 };
 
 export const joinStrings = (strings: string[], connector: string) => {
+    if (strings.length == 0) {
+        return "";
+    }
     if (strings.length == 1) {
         return strings[0];
     }
