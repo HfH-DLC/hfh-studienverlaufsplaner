@@ -53,11 +53,8 @@ function getInitializedStore(params: Partial<CreditInitParams> | null = null) {
 
 describe("CreditStore", () => {
     beforeEach(() => {
-        setActivePinia(createPinia());
-    });
-
-    afterEach(() => {
         vi.clearAllMocks();
+        setActivePinia(createPinia());
     });
 
     test("init", () => {
