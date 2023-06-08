@@ -4,6 +4,7 @@
         class="z-20 rounded-md py-1 px-2 gap-2 w-fit flex justify-between items-center shadow-lg"
         :class="typeClasses"
         :role="typeRole"
+        data-testid="flash"
     >
         <span>{{ message }}</span>
         <button
@@ -11,6 +12,7 @@
             v-if="actionMessage && actionEvent"
             @click="onCallback"
             class="underline"
+            data-testid="flash.action"
         >
             {{ actionMessage }}
         </button>
