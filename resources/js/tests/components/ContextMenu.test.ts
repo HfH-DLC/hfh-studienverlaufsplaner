@@ -1,8 +1,7 @@
-import { expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import ContextMenu from "@/Components/ContextMenu.vue";
-import { describe } from "vitest";
 import { createTestingPinia } from "@pinia/testing";
 import { placementFactory } from "../factories/PlacementFactory";
 import { useScheduleStore } from "@/Store/schedule";
