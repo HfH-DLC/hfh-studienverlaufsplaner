@@ -13,12 +13,12 @@
 
 <script lang="ts" setup>
 import { useEmitter } from "@/composables/useEmitter";
-import { onMounted, ref, Ref } from "vue";
+import { onMounted, PropType, ref, Ref } from "vue";
 import Info from "./Info.vue";
 
 const props = defineProps({
     infos: {
-        type: Object,
+        type: Array as PropType<Array<string>>,
         required: true,
     },
 });
