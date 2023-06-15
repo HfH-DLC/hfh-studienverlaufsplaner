@@ -45,6 +45,7 @@ function getInitializedStore(
 describe("Schedule Store", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
+        vi.clearAllMocks();
     });
 
     test("init", () => {
@@ -112,6 +113,7 @@ describe("Schedule Store", () => {
             .mockImplementation(() => {});
         const result = await store.save();
         consoleErrorMock.mockRestore();
+        (dataAdapter as Mocked<DataAdapter>).saveSchedule.mockRestore();
         expect(result).toBe(false);
         expect(store.saveStatus).toBe(SaveStatus.Error);
     });
