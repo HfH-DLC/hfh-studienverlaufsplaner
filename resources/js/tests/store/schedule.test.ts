@@ -113,7 +113,7 @@ describe("Schedule Store", () => {
             .mockImplementation(() => {});
         const result = await store.save();
         consoleErrorMock.mockRestore();
-        (dataAdapter as Mocked<DataAdapter>).saveSchedule.mockRestore();
+        (dataAdapter as Mocked<DataAdapter>).saveSchedule.mockReset();
         expect(result).toBe(false);
         expect(store.saveStatus).toBe(SaveStatus.Error);
     });
