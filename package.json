@@ -5,7 +5,7 @@
         "dev": "vue-tsc && vite",
         "build": "vue-tsc && vite build",
         "test": "vitest",
-        "precommit": "vitest --run && php artisan test"
+        "pre-commit": "vitest --run && php artisan test"
     },
     "devDependencies": {
         "@inertiajs/vue3": "^1.0.0",
