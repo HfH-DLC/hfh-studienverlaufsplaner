@@ -21,21 +21,20 @@ export default class AtLeastOneOfModulesPerFocusTodo {
         focusSelections: Ref<Array<FocusSelection>>;
         modules: Ref<Array<CreditModule>>;
     }): Array<ChecklistEntryData> {
-        return focusSelections.value.reduce(
-            (acc: Array<ChecklistEntryData>, cur: FocusSelection) => {
-                acc.push({
-                    component: markRaw(AtLeastOneOfModulesPerFocusLabel),
-                    labelProps: {
-                        moduleIds: this.moduleIds,
-                        focusName: cur.focus.name,
-                    },
-                    checked: this.validate(cur, modules.value),
-                    progressLabel: this.getProgressLabel(cur, modules.value),
-                });
-                return acc;
-            },
-            []
-        );
+        return focusSelections.value.map((focusSelection: FocusSelection) => {
+            return {
+                component: markRaw(AtLeastOneOfModulesPerFocusLabel),
+                labelProps: {
+                    moduleIds: this.moduleIds,
+                    focusName: focusSelection.focus.name,
+                },
+                checked: this.validate(focusSelection, modules.value),
+                progressLabel: this.getProgressLabel(
+                    focusSelection,
+                    modules.value
+                ),
+            };
+        });
     }
 
     getLabel(focus: Focus): string {
