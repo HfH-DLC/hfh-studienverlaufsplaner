@@ -68,7 +68,7 @@ describe("ECTSPerFocusTodo", () => {
             expect(entries[0].progressLabel).toBe("15");
         });
 
-        it("should return an entry with checked = true if minECTS <= totalECTS <= maxECTS", () => {
+        it("should return an entry with checked = true if minECTS < totalECTS < maxECTS", () => {
             const params = {
                 minECTS: 5,
                 maxECTS: 20,
@@ -89,10 +89,10 @@ describe("ECTSPerFocusTodo", () => {
             expect(entries[0].progressLabel).toBe("15");
         });
 
-        it("should return an entry with checked = true if minECTS = totalECTS = maxECTS", () => {
+        it("should return an entry with checked = true if minECTS = totalECTS < maxECTS", () => {
             const params = {
                 minECTS: 5,
-                maxECTS: 5,
+                maxECTS: 15,
             };
             const todo = new ECTSPerFocusTodo(params);
             const focusSelections = [focusSelectionFactory.build({ id: 1 })];
@@ -106,6 +106,26 @@ describe("ECTSPerFocusTodo", () => {
             expect(entries.length).toBe(1);
             expect(entries[0].checked).toBe(true);
             expect(entries[0].progressLabel).toBe("5");
+        });
+
+        it("should return an entry with checked = true if minECTS < totalECTS = maxECTS", () => {
+            const params = {
+                minECTS: 5,
+                maxECTS: 15,
+            };
+            const todo = new ECTSPerFocusTodo(params);
+            const focusSelections = [focusSelectionFactory.build({ id: 1 })];
+            const modules: Array<CreditModule> = [
+                creditModuleFactory.build({ creditedAgainst: 1, ects: 5 }),
+                creditModuleFactory.build({ creditedAgainst: 1, ects: 10 }),
+            ];
+            const data = getData(focusSelections, modules);
+
+            const entries = todo.getEntries(data);
+
+            expect(entries.length).toBe(1);
+            expect(entries[0].checked).toBe(true);
+            expect(entries[0].progressLabel).toBe("15");
         });
     });
 });
