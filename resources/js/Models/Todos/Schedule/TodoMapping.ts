@@ -1,8 +1,9 @@
-import AtLeastOneFocusTodo from "./AtLeastOneFocusTodo";
-import ECTSPerCategoryTodo from "./ECTSPerCategoryTodo";
-import FocusModulesTodo from "./FocusModulesTodo";
-import RequiredModulesTodo from "./RequiredModulesTodo";
-import TotalECTSTodo from "./TotalECTSTodo";
+import AtLeastOneFocusTodo from "@/Models/Todos/Schedule/AtLeastOneFocusTodo";
+import ECTSPerCategoryTodo from "@/Models/Todos/Schedule/ECTSPerCategoryTodo";
+import FocusRequiredModulesTodo from "@/Models/Todos/Schedule/FocusRequiredModulesTodo";
+import FocusOptionalModulesTodo from "@/Models/Todos/Schedule/FocusOptionalModulesTodo";
+import RequiredModulesTodo from "@/Models/Todos/Schedule/RequiredModulesTodo";
+import TotalECTSTodo from "@/Models/Todos/Schedule/TotalECTSTodo";
 import { TodoMappingType } from "@/types";
 
 const TodoMapping: TodoMappingType = {
@@ -14,8 +15,12 @@ const TodoMapping: TodoMappingType = {
         Class: ECTSPerCategoryTodo,
         paramsRequired: false,
     },
-    FocusModulesTodo: {
-        Class: FocusModulesTodo,
+    FocusRequiredModulesTodo: {
+        Class: FocusRequiredModulesTodo,
+        paramsRequired: false,
+    },
+    FocusOptionalModulesTodo: {
+        Class: FocusOptionalModulesTodo,
         paramsRequired: false,
     },
     RequiredModulesTodo: {
