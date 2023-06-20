@@ -2,24 +2,20 @@ import { getRules } from "@/Models/Rules/Schedule/RuleFactory";
 import { RuleData } from "@/types";
 import { describe, expect, it, vi } from "vitest";
 
+import RuleMapping from "@/Models/Rules/Schedule/RuleMapping";
+
+const ruleCases = Object.entries(RuleMapping).map(([name, details]) => {
+    const params = details!.paramsRequired ? {} : undefined;
+    return { ruleData: { name, params }, Class: details!.Class };
+});
+
 describe("RuleFactory", () => {
     it("should get rules", () => {
-        const rulesData: Array<RuleData> = [
-            {
-                name: "ExcludeSemester",
-                params: {},
-            },
-            {
-                name: "ExcludeSemester",
-                params: {},
-            },
-        ];
-
-        const rules = getRules(rulesData);
-
-        expect(rules.length).toBe(2);
-        expect(rules[0].constructor.name).toBe("ExcludeSemesterRule");
-        expect(rules[1].constructor.name).toBe("ExcludeSemesterRule");
+        const rules = getRules(ruleCases.map((ruleCase) => ruleCase.ruleData));
+        expect(rules.length).toBe(ruleCases.length);
+        ruleCases.forEach((ruleCase, index) => {
+            expect(rules[index]).toBeInstanceOf(ruleCase.Class);
+        });
     });
 
     it("should log an error for unknown rules", () => {

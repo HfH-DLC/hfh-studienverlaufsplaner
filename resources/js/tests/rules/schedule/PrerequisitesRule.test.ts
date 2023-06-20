@@ -4,7 +4,7 @@ import { ref } from "vue";
 import { ErrorMessage, SchedulePlacement } from "@/types";
 import { schedulePlacementFactory } from "@/tests/factories/SchedulePlacementFactory";
 import { scheduleModuleFactory } from "@/tests/factories/ScheduleModuleFactory";
-import { eventFactory } from "../factories/EventFactory";
+import { eventFactory } from "@/tests/factories/EventFactory";
 
 describe("PrerequisitesRule", () => {
     describe("validatePlacements", () => {
