@@ -455,14 +455,6 @@
             ],
             "rules": [
                 {
-                    "name": "DateRule",
-                    "type": "schedule"
-                },
-                {
-                    "name": "PrerequisitesRule",
-                    "type": "schedule"
-                },
-                {
                     "name": "ExcludeSemesterRule",
                     "type": "schedule",
                     "params": {
@@ -663,15 +655,7 @@
             ],
             "rules": [
                 {
-                    "name": "Date",
-                    "type": "schedule"
-                },
-                {
-                    "name": "Prerequisites",
-                    "type": "schedule"
-                },
-                {
-                    "name": "ExcludeSemester",
+                    "name": "ExcludeSemesterRule",
                     "type": "schedule",
                     "params": {
                         "excludePositions": [0],
