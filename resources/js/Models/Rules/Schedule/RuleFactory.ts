@@ -1,5 +1,5 @@
 import { Rule, RuleData } from "@/types";
-import ExcludeSemesterRule from "./ExcludeSemesterRule";
+import RuleMapping from "./RuleMapping";
 
 export const getRules = (rulesData: Array<RuleData>) => {
     return rulesData.reduce((array: Array<Rule>, rule) => {
@@ -13,11 +13,14 @@ export const getRules = (rulesData: Array<RuleData>) => {
 };
 
 const getRule = ({ name, params }: RuleData): Rule => {
-    switch (name) {
-        case "ExcludeSemester": {
-            return new ExcludeSemesterRule(params);
+    const RuleDetails = RuleMapping[name];
+    if (RuleDetails) {
+        if (RuleDetails.paramsRequired) {
+            return new RuleDetails.Class(params);
+        } else {
+            return new RuleDetails.Class();
         }
-        default:
-            throw "Unknown rule: " + name;
+    } else {
+        throw "Unknown todo: " + name;
     }
 };

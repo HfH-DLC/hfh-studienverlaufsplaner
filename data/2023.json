@@ -455,15 +455,15 @@
             ],
             "rules": [
                 {
-                    "name": "Date",
+                    "name": "DateRule",
                     "type": "schedule"
                 },
                 {
-                    "name": "Prerequisites",
+                    "name": "PrerequisitesRule",
                     "type": "schedule"
                 },
                 {
-                    "name": "ExcludeSemester",
+                    "name": "ExcludeSemesterRule",
                     "type": "schedule",
                     "params": {
                         "excludePositions": [0],
