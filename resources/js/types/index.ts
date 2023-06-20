@@ -140,7 +140,7 @@ export interface PlacementParams
 
 export interface RuleData {
     name: string;
-    params: Record<string, any>;
+    params: Record<string, any> | undefined;
 }
 
 export interface Rule {
@@ -211,11 +211,17 @@ export type Semester = "HS" | "FS";
 
 export interface TodoData {
     name: string;
-    params: Record<any, any>;
+    params?: Record<any, any>;
 }
 
 export interface Todo {
     getEntries(data: Record<string, any>): Array<ChecklistEntryData>;
+}
+
+export interface TodoMappingType {
+    [key: string]:
+        | { Class: new (params?: any) => any; paramsRequired: boolean }
+        | undefined;
 }
 
 export interface TourData {
