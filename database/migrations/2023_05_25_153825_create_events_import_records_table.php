@@ -13,16 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('location_plan', function (Blueprint $table) {
+        Schema::create('events_import_records', function (Blueprint $table) {
+            $table->id();
             $table->timestamps();
-            $table->foreignId('plan_id')->constrained();
-            $table->string('location_id');
-            $table->unique(['plan_id', 'location_id']);
-        });
-
-
-        Schema::table('location_plan', function (Blueprint $table) {
-            $table->foreign('location_id')->references('id')->on('locations');
+            $table->year('year');
+            $table->integer('version');
         });
     }
 
@@ -33,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('location_plan');
+        Schema::dropIfExists('events_import_records');
     }
 };

@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('imports', function (Blueprint $table) {
+        Schema::create('config_import_records', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->year('year');
             $table->integer('version');
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('imports');
+        Schema::dropIfExists('config_import_records');
     }
 };

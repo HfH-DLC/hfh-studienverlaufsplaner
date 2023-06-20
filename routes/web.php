@@ -29,7 +29,8 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'show'])->name('admin');
     Route::post('/logout', [AdminController::class, 'logout']);
     Route::get('/data', [AdminController::class, 'showData'])->name('admin-data');
-    Route::post('/data', [AdminController::class, 'import']);
+    Route::post('/import/config', [AdminController::class, 'importConfig']);
+    Route::post('/import/events', [AdminController::class, 'importEvents']);
 });
 
 Route::prefix('/{planer:id}')->scopeBindings()->group(function () {

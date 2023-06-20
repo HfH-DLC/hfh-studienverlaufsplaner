@@ -1,0 +1,599 @@
+{
+    "year": 2023,
+    "version": 1,
+    "events": [
+        {
+            "module": "P1_01",
+            "planers": ["hfe", "shp"],
+            "semesters": ["HS", "FS"],
+            "timeWindow": 1,
+            "dayTimes": ["b", "f"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "P1_01",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["g"],
+            "locations": ["GR"]
+        },
+        {
+            "module": "P1_02",
+            "planers": ["shp"],
+            "semesters": ["HS", "FS"],
+            "timeWindow": 1,
+            "dayTimes": ["a", "e"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "P1_02",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["bz"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "P1_02",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["g"],
+            "locations": ["GR"]
+        },
+        {
+            "module": "P1_03",
+            "planers": ["hfe"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["a"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "P3_01",
+            "planers": ["shp"],
+            "semesters": ["HS", "FS"],
+            "timeWindow": 1,
+            "dayTimes": ["d", "h"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "P3_01",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["dz"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "P3_01",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["e"],
+            "locations": ["GR"]
+        },
+        {
+            "module": "P4_01",
+            "planers": ["shp"],
+            "semesters": ["HS", "FS"],
+            "timeWindow": 1,
+            "dayTimes": ["c", "g"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "P4_01",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["e"],
+            "locations": ["GR"]
+        },
+        {
+            "module": "P4_02",
+            "planers": ["hfe"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["a"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "P4_06",
+            "planers": ["hfe"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["b"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "P4_07",
+            "planers": ["hfe"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["f"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "P4_08",
+            "planers": ["hfe"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["e"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "P4_09",
+            "planers": ["hfe"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["e"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_01.1",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["a", "e"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_01.1",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["b", "f"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_01.1",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["h"],
+            "locations": ["GR"]
+        },
+        {
+            "module": "WP2_01.2",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["b", "f"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_01.2",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["a", "e"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_01.2",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["h"],
+            "locations": ["GR"]
+        },
+        {
+            "module": "WP2_02.1",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["c", "g"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_02.1",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["d", "h"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_02.1",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["f"],
+            "locations": ["GR"]
+        },
+        {
+            "module": "WP2_02.2",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["d"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_02.2",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["c", "g"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_02.2",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["f"],
+            "locations": ["GR"]
+        },
+        {
+            "module": "WP2_03.1",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["b"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_03.1",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["f"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_03.2",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["b"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_04.1",
+            "planers": ["hfe", "shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["f"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_04.2",
+            "planers": ["hfe", "shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["f"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_05.1",
+            "planers": ["hfe", "shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["f"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_05.2",
+            "planers": ["hfe", "shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["f"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_06.1",
+            "planers": ["hfe", "shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["b"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_06.2",
+            "planers": ["hfe", "shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["b"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_07",
+            "planers": ["hfe", "shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["a"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_08",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["c"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_09",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["c"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_09",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["g"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_10",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["d", "h"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_10",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["d", "h"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP2_11",
+            "planers": ["hfe"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["f"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP3_02",
+            "planers": ["shp"],
+            "semesters": ["HS", "FS"],
+            "timeWindow": 1,
+            "dayTimes": ["c", "g"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP3_03",
+            "planers": ["shp"],
+            "semesters": ["HS", "FS"],
+            "timeWindow": 1,
+            "dayTimes": ["a", "e"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP3_04",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["h"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP3_04",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["dz"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP3_05",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["e"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP3_06",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["a"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP3_07",
+            "planers": ["hfe", "shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["a"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP4_03",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["c"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP4_04.1",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["f"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP4_04.2",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["f"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP4_05.1",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["e"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WP4_05.2",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["e"],
+            "locations": ["ZH"]
+        },
+
+        {
+            "module": "W3_07",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["d", "h"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "W3_07",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["d"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WXY_01",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["g", "h"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "WXY_02",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 1,
+            "dayTimes": ["g", "h"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "BP5_01.1.SHP",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 2,
+            "dayTimes": ["a", "c", "e", "g"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "BP5_01.1.SHP",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 2,
+            "dayTimes": ["b", "f"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "BP5_01.1.SHP",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 2,
+            "dayTimes": ["e"],
+            "locations": ["GR"]
+        },
+        {
+            "module": "BP5_01.2.SHP",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 2,
+            "dayTimes": ["b", "d", "f", "h"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "BP5_01.2.SHP",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 2,
+            "dayTimes": ["a", "c", "e", "g"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "BP5_01.2.SHP",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 2,
+            "dayTimes": ["f"],
+            "locations": ["GR"]
+        },
+        {
+            "module": "BP5_01.3.SHP",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 2,
+            "dayTimes": ["a", "e"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "BP5_01.3.SHP",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 2,
+            "dayTimes": ["b", "d", "f", "h"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "BP5_01.3.SHP",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 2,
+            "dayTimes": ["e"],
+            "locations": ["GR"]
+        },
+        {
+            "module": "BP5_01.1.HFE",
+            "planers": ["hfe"],
+            "semesters": ["HS"],
+            "timeWindow": 2,
+            "dayTimes": ["a"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "BP5_01.2.HFE",
+            "planers": ["hfe"],
+            "semesters": ["FS"],
+            "timeWindow": 2,
+            "dayTimes": ["b"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "BP5_01.3.HFE",
+            "planers": ["hfe"],
+            "semesters": ["FS"],
+            "timeWindow": 2,
+            "dayTimes": ["f"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "M5_03",
+            "planers": ["hfe", "shp"],
+            "semesters": ["HS", "FS"],
+            "timeWindow": 2,
+            "dayTimes": ["a", "e"],
+            "locations": ["ZH"]
+        },
+        {
+            "module": "M5_03",
+            "planers": ["shp"],
+            "semesters": ["HS", "FS"],
+            "timeWindow": 2,
+            "dayTimes": ["g"],
+            "locations": ["GR"]
+        }
+    ]
+}

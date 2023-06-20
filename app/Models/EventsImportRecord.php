@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Import extends Model
+class EventsImportRecord extends Model
 {
     use HasFactory;
 
@@ -21,6 +21,6 @@ class Import extends Model
 
     private static function getYears()
     {
-        return Import::orderBy('year', 'asc')->groupBy('year')->pluck('year');
+        return EventsImportRecord::orderBy('year', 'asc')->groupBy('year')->pluck('year');
     }
 }

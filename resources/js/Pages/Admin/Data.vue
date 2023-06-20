@@ -1,7 +1,8 @@
 <template>
     <div class="p-4">
-        <h1 class="text-xl">Daten</h1>
-        <form @submit.prevent="submit" class="mt-4">
+        <h1 class="text-xl">Import</h1>
+        <h2>Config</h2>
+        <form @submit.prevent="submitConfig" class="mt-4">
             <div class="mt-2">
                 <label for="file" class="block text-sm">Datei</label>
                 <input
@@ -9,7 +10,23 @@
                     accept="application/json"
                     name="file"
                     id="file"
-                    @change="setFile"
+                    @change="setConfigFile"
+                    required
+                />
+            </div>
+            <HfhButton type="submit" class="mt-4">Importieren</HfhButton>
+        </form>
+
+        <h2>Events</h2>
+        <form @submit.prevent="submitEvents" class="mt-4">
+            <div class="mt-2">
+                <label for="file" class="block text-sm">Datei</label>
+                <input
+                    type="file"
+                    accept="application/json"
+                    name="file"
+                    id="file"
+                    @change="setEventsFile"
                     required
                 />
             </div>
@@ -29,22 +46,42 @@ export default {
 import { useForm } from "@inertiajs/vue3";
 import { HfhButton } from "@hfh-dlc/hfh-styleguide";
 
-const form = useForm({
+const configForm = useForm({
     import: null,
 } as { import: File | null });
 
-const setFile = (event: Event) => {
+const eventsForm = useForm({
+    import: null,
+} as { import: File | null });
+
+const setConfigFile = (event: Event) => {
     const target = event.target as HTMLInputElement | null;
     const files = target?.files;
     if (files && files.length > 0) {
-        form.import = files[0];
+        configForm.import = files[0];
     } else {
-        form.import = null;
+        configForm.import = null;
     }
 };
-const submit = () => {
-    form.post(`/admin/data`, {
-        onSuccess: () => form.reset(),
+
+const setEventsFile = (event: Event) => {
+    const target = event.target as HTMLInputElement | null;
+    const files = target?.files;
+    if (files && files.length > 0) {
+        eventsForm.import = files[0];
+    } else {
+        eventsForm.import = null;
+    }
+};
+const submitConfig = () => {
+    configForm.post(`/admin/import/config`, {
+        onSuccess: () => configForm.reset(),
+    });
+};
+
+const submitEvents = () => {
+    eventsForm.post(`/admin/import/events`, {
+        onSuccess: () => eventsForm.reset(),
     });
 };
 </script>

@@ -3,10 +3,9 @@
 namespace App\Imports;
 
 use App\Models\Category;
+use App\Models\ConfigImportRecord;
 use App\Models\DayTime;
-use App\Models\Event;
 use App\Models\Focus;
-use App\Models\Import;
 use App\Models\Module;
 use App\Models\Planer;
 use App\Models\Rule;
@@ -14,14 +13,10 @@ use App\Models\Todo;
 use App\Models\Location;
 use Illuminate\Support\Facades\DB;
 
-class JSONImport
+class ConfigImport
 {
-    const NUMBER_OF_YEARS = 8;
-
     private $file;
     private $modulesCache = [];
-    private $year;
-    private $timeWindows = [];
 
     public function __construct($file)
     {
@@ -34,12 +29,9 @@ class JSONImport
         DB::transaction(function () {
             $json = file_get_contents($this->file);
             $data = json_decode($json);
-            $this->year = $data->year;
             $this->importDayTimes($data);
-            $this->getTimeWindows($data);
             $this->importModules($data);
             $this->importPlaners($data);
-            $this->importEvents($data);
             $this->importLocations($data);
             $this->saveImport($data);
         });
@@ -47,47 +39,40 @@ class JSONImport
 
     private function importDayTimes($data)
     {
-        DayTime::query()->delete();
+        $dayTimeIds = [];
         foreach ($data->dayTimes as $row) {
             $default = false;
             if (isset($row->default)) {
                 $default = $row->default;
             }
-            $dayTime = DayTime::create(['id' => $row->id, 'day' => $row->day, 'time' => $row->time, 'sort_index' => $row->sortIndex]);
+            $dayTime = DayTime::firstOrCreate(['id' => $row->id]);
+            $dayTime->day = $row->day;
+            $dayTime->time = $row->time;
+            $dayTime->sort_index = $row->sortIndex;
             $dayTime->default = $default;
             $dayTime->save();
+            $dayTimeIds[] = $dayTime->id;
         }
-    }
-
-    private function getTimeWindows($data)
-    {
-        foreach ($data->timeWindows as $row) {
-            $id = $row->id;
-            $name = $row->name;
-            $this->timeWindows[$id] = ['name' => $name];
-        }
+        DayTime::whereNotIn('id', $dayTimeIds)->delete();
     }
 
     private function importModules($data)
     {
+        $moduleIds = [];
         foreach ($data->modules as $moduleData) {
-            $this->upsertModule($moduleData);
+            $id = $this->insertModule($moduleData);
+            $moduleIds[] = $id;
         }
+        Module::whereNotIn('id', $moduleIds)->delete();
         foreach ($data->modules as $moduleData) {
             $this->setPrerequisites($moduleData);
         }
     }
 
-    private function upsertModule($moduleData)
+    private function insertModule($moduleData)
     {
-        $id = $moduleData->id;
-        $existingModule = Module::find($id);
-        if ($existingModule) {
-            $module = $existingModule;
-        } else {
-            $module = new Module();
-            $module->id = $id;
-        }
+
+        $module = Module::firstOrCreate(['id' => $moduleData->id]);
         $module->name = $moduleData->name;
         $module->ects = $moduleData->ects;
         $module->creditable = $moduleData->creditable;
@@ -95,7 +80,8 @@ class JSONImport
             $module->modifiers = $moduleData->modifiers;
         }
         $module->save();
-        $this->modulesCache[$id] = $module;
+        $this->modulesCache[$module->id] = $module;
+        return $module->id;
     }
 
     private function setPrerequisites($moduleData)
@@ -123,36 +109,31 @@ class JSONImport
 
     private function importPlaners($data)
     {
+        $planerIds = [];
         foreach ($data->planers as $planerData) {
-            $planerName = $planerData->name;
-            $planer = Planer::where('name', $planerName)->first();
-            if (!$planer) {
-                $planer = new Planer();
-                $planer->name = $planerName;
-            }
-
-            $planer->id = $planerData->slug;
+            $planer = Planer::firstOrCreate(['id' => $planerData->slug]);
+            $planer->name = $planerData->name;
             $planer->required_ects = $planerData->requiredECTS;
             $planer->focus_selection_enabled = $planerData->focusSelectionEnabled;
             $planer->tour = $planerData->tour;
             $planer->meta = $planerData->meta;
             $planer->save();
+            $planerIds[] = $planer->id;
 
             $this->importCategories($planerData, $planer);
             $this->importFoci($planerData, $planer);
             $this->importRules($planerData, $planer);
             $this->importTodos($planerData, $planer);
         }
+        Planer::whereNotIn('id', $planerIds)->delete();
     }
 
     private function importCategories($planerData, $planer)
     {
-        $planer->categories()->delete();
+        $categoryIds = [];
         foreach ($planerData->categories as $index => $categoryData) {
-
-            $category = new Category();
+            $category = Category::firstOrCreate(['position' => $index, 'planer_id' => $planer->id]);
             $category->name = $categoryData->name;
-            $category->position = $index;
             if (isset($categoryData->required)) {
                 $category->required = $categoryData->required;
             }
@@ -166,7 +147,9 @@ class JSONImport
             $planer->categories()->save($category);
             $category->modules()->sync($categoryData->modules);
             $category->save();
+            $categoryIds[] = $category->id;
         }
+        Category::where('planer_id', $planer->id)->whereNotIn('id', $categoryIds)->delete();
     }
 
     private function importFoci($planerData, $planer)
@@ -174,16 +157,11 @@ class JSONImport
         if (!isset($planerData->foci)) {
             return;
         }
+        $focusIds = [];
         foreach ($planerData->foci as $focusData) {
-            $focus = $planer->foci->where('id', $focusData->id)->first();
-            if (!$focus) {
-                $focus = new Focus();
-                $focus->id = $focusData->id;
-                $focus->name = $focusData->name;
-                $planer->foci()->save($focus);
-            } else {
-                $focus->name = $focusData->name;
-            }
+            $focus = Focus::firstOrCreate(['id' => $focusData->id]);
+            $focus->name = $focusData->name;
+            $planer->foci()->save($focus);
             $modules = [];
             foreach ($focusData->requiredModules as $module) {
                 $modules[$module] = ['required' => true];
@@ -198,14 +176,13 @@ class JSONImport
             }
             $focus->modules()->sync($modules);
             $focus->save();
+            $focusIds[] = $focus->id;
         }
+        Focus::whereNotIn('id', $focusIds)->delete();
     }
 
     private function importRules($planerData, $planer)
     {
-        if (!isset($planerData->rules)) {
-            return;
-        }
         $planer->rules()->delete();
         foreach ($planerData->rules as $ruleData) {
             $rule = new Rule();
@@ -220,9 +197,6 @@ class JSONImport
 
     private function importTodos($planerData, $planer)
     {
-        if (!isset($planerData->todos)) {
-            return;
-        }
         $planer->todos()->delete();
         foreach ($planerData->todos as $todoData) {
             $todo = new Todo();
@@ -235,62 +209,27 @@ class JSONImport
         }
     }
 
-    private function importEvents($data)
-    {
-        $eventIds = [];
-        foreach ($data->events as $eventData) {
-            $planers = $eventData->planers;
-
-            $semesters = $eventData->semesters;
-            $timeWindow = $this->timeWindows[$eventData->timeWindow]['name'];
-
-            $locations = $eventData->locations;
-            $dayTimes = $eventData->dayTimes;
-
-            $moduleID = $eventData->module;
-
-            foreach ($planers as $planer) {
-                foreach ($locations as $location) {
-                    foreach ($semesters as $semester) {
-                        foreach ($dayTimes as $dayTime) {
-                            for ($i = 0; $i < self::NUMBER_OF_YEARS; $i++) {
-                                $year = $this->year + $i;
-                                $event =  $this->createEvent($moduleID, $year, $semester, $timeWindow, $dayTime, $location, $planer);
-                                $eventIds[] = $event->id;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        Event::where('year', '>=', $this->year)->whereNotIn('id', $eventIds)->delete();
-    }
-
-    private function createEvent($moduleID, $year, $semester, $timeWindow, $dayTime, $location, $planer)
-    {
-        return Event::firstOrCreate([
-            'module_id' => $moduleID, 'year' => $year, 'semester' => $semester, 'time_window' => $timeWindow, 'day_time_id' => $dayTime, 'location_id' => $location, 'planer' => $planer
-        ]);
-    }
-
     private function importLocations($data)
     {
-        foreach ($data->locations as $location) {
+        $locationIds = [];
+        foreach ($data->locations as $locationData) {
             $default = false;
-            if (isset($location->default)) {
-                $default = $location->default;
+            if (isset($locationData->default)) {
+                $default = $locationData->default;
             }
-            $location = Location::firstOrCreate(['id' => $location->id, 'name' => $location->name]);
+            $location = Location::firstOrCreate(['id' => $locationData->id]);
+            $location->name = $locationData->name;
             $location->default = $default;
             $location->save();
+            $locationIds[] = $location->id;
         }
+        Location::whereNotIn('id', $locationIds)->delete();
     }
 
     private function saveImport($data)
     {
-        $import = new Import();
-        $import->year = $data->year;
-        $import->version = $data->version;
-        $import->save();
+        $importRecord = new ConfigImportRecord();
+        $importRecord->version = $data->version;
+        $importRecord->save();
     }
 }
