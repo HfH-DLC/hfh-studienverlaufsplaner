@@ -23,7 +23,7 @@ class CreateFociTable extends Migration
 
 
         Schema::table('foci', function (Blueprint $table) {
-            $table->foreign('planer_id')->references('id')->on('planers')->onDelete('cascade');
+            $table->foreign('planer_id')->references('id')->on('planers');
         });
     }
 

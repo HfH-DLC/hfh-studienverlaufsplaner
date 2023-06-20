@@ -22,8 +22,8 @@ class CreateFocusModuleTable extends Migration
         });
 
         Schema::table('focus_module', function (Blueprint $table) {
-            $table->foreign('focus_id', 'focus_module_focus_constraint')->references('id')->on('foci')->onDelete('cascade');
-            $table->foreign('module_id', 'focus_module_module_constraint')->references('id')->on('modules')->onDelete('cascade');
+            $table->foreign('focus_id', 'focus_module_focus_constraint')->references('id')->on('foci');
+            $table->foreign('module_id', 'focus_module_module_constraint')->references('id')->on('modules');
         });
     }
 

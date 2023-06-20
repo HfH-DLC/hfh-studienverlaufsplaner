@@ -23,7 +23,7 @@ return new class extends Migration
         });
 
         Schema::table('todos', function (Blueprint $table) {
-            $table->foreign('planer_id')->references('id')->on('planers')->onDelete('cascade');
+            $table->foreign('planer_id')->references('id')->on('planers');
         });
     }
 

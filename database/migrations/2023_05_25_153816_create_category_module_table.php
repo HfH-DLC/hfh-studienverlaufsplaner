@@ -15,12 +15,12 @@ class CreateCategoryModuleTable extends Migration
     {
         Schema::create('category_module', function (Blueprint $table) {
             $table->string('module_id');
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->constrained();
             $table->unique(['category_id', 'module_id']);
         });
 
         Schema::table('category_module', function (Blueprint $table) {
-            $table->foreign('module_id', 'category_module_module_constraint')->references('id')->on('modules')->onDelete('cascade');
+            $table->foreign('module_id', 'category_module_module_constraint')->references('id')->on('modules');
         });
     }
 

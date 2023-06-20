@@ -17,14 +17,14 @@ class CreateFocusSelectionTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('focus_id');
-            $table->foreignId('plan_id')->constrained()->onDelete('cascade');
+            $table->foreignId('plan_id')->constrained();
             $table->integer('position');
             $table->unique(['focus_id', 'plan_id']);
             $table->unique(['plan_id', 'position']);
         });
 
         Schema::table('focus_selections', function (Blueprint $table) {
-            $table->foreign('focus_id', 'focus_selections_focus_constraint')->references('id')->on('foci')->onDelete('cascade');
+            $table->foreign('focus_id', 'focus_selections_focus_constraint')->references('id')->on('foci');
         });
     }
 

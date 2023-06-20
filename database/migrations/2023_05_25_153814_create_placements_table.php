@@ -16,7 +16,7 @@ class CreatePlacementsTable extends Migration
         Schema::create('placements', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('plan_id')->constrained()->onDelete('cascade');
+            $table->foreignId('plan_id')->constrained();
             $table->string('module_id');
             $table->year('year');
             $table->string('semester', 2);
@@ -27,9 +27,9 @@ class CreatePlacementsTable extends Migration
         });
 
         Schema::table('placements', function (Blueprint $table) {
-            $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade');
-            $table->foreign('day_time_id')->references('id')->on('day_times')->onDelete('cascade');
-            $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');
+            $table->foreign('module_id')->references('id')->on('modules');
+            $table->foreign('day_time_id')->references('id')->on('day_times');
+            $table->foreign('location_id')->references('id')->on('locations');
         });
     }
 

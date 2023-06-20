@@ -24,7 +24,7 @@ class CreateRulesTable extends Migration
 
 
         Schema::table('rules', function (Blueprint $table) {
-            $table->foreign('planer_id')->references('id')->on('planers')->onDelete('cascade');
+            $table->foreign('planer_id')->references('id')->on('planers');
         });
     }
 

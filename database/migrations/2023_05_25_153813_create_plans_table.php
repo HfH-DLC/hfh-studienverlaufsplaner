@@ -29,7 +29,7 @@ class CreatePlansTable extends Migration
 
 
         Schema::table('plans', function (Blueprint $table) {
-            $table->foreign('planer_id')->references('id')->on('planers')->onDelete('cascade');
+            $table->foreign('planer_id')->references('id')->on('planers');
         });
     }
 
