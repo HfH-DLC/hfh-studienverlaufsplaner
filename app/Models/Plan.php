@@ -106,7 +106,7 @@ class Plan extends Model
             $years[] = $this->start_year + $i;
         }
         return function ($query) use ($years) {
-            $query->where('planer', $this->planer->id);
+            $query->where('planer_id', $this->planer->id);
             $query->whereIn('year', $years);
         };
     }
