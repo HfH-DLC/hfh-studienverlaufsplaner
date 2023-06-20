@@ -512,7 +512,11 @@
                     }
                 },
                 {
-                    "name": "FocusModulesTodo",
+                    "name": "FocusRequiredModulesTodo",
+                    "type": "credit"
+                },
+                {
+                    "name": "FocusOptionalModulesTodo",
                     "type": "credit"
                 }
             ],

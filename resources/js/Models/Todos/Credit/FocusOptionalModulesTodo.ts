@@ -9,7 +9,7 @@ import {
 import { numToWord } from "num-words-de";
 import { Ref } from "vue";
 import { joinStrings } from "../../../helpers";
-export default class FocusModulesTodo implements Todo {
+export default class FocusOptionalModulesTodo implements Todo {
     getEntries({
         focusSelections,
         creditedModulesByFocusSelection,
@@ -19,32 +19,14 @@ export default class FocusModulesTodo implements Todo {
     }): Array<ChecklistEntryData> {
         return focusSelections.value.reduce(
             (acc: Array<ChecklistEntryData>, cur: FocusSelection) => {
-                const modulesByFocusSelection =
-                    creditedModulesByFocusSelection.value.find(
-                        (modulesByFocusSelection: FocusCredit) =>
-                            modulesByFocusSelection.focusSelectionId == cur.id
-                    );
-                const creditedModuleIds = modulesByFocusSelection
-                    ? modulesByFocusSelection.moduleIds
-                    : [];
+                const creditedModuleIds = this.getCreditedModuleIds(
+                    cur,
+                    creditedModulesByFocusSelection.value
+                );
                 const focus = cur.focus;
-                if (focus.requiredModules.length > 0) {
-                    const entryOptional = {
-                        label: this.getLabel(focus, true),
-                        checked: this.validate(
-                            focus.requiredModules,
-                            creditedModuleIds
-                        ),
-                        progressLabel: this.getProgressLabel(
-                            focus.requiredModules,
-                            creditedModuleIds
-                        ),
-                    };
-                    acc.push(entryOptional);
-                }
                 if (focus.optionalModules.length > 0) {
                     const entryOptional = {
-                        label: this.getLabel(focus, false),
+                        label: this.getLabel(focus),
                         checked: this.validate(
                             focus.optionalModules,
                             creditedModuleIds,
@@ -64,26 +46,30 @@ export default class FocusModulesTodo implements Todo {
         );
     }
 
-    getLabel(focus: Focus, isRequired: boolean): string {
-        const modules = isRequired
-            ? focus.requiredModules
-            : focus.optionalModules;
+    getCreditedModuleIds(
+        focusSelection: FocusSelection,
+        creditedModulesByFocusSelection: Array<FocusCredit>
+    ): Array<string> {
+        const modulesByFocusSelection = creditedModulesByFocusSelection.find(
+            (modulesByFocusSelection: FocusCredit) =>
+                modulesByFocusSelection.focusSelectionId == focusSelection.id
+        );
+        return modulesByFocusSelection ? modulesByFocusSelection.moduleIds : [];
+    }
+
+    getLabel(focus: Focus): string {
+        const modules = focus.optionalModules;
         if (modules.length == 1) {
             const module = modules[0];
             return `Rechnen Sie das das Modul "${module.id}" an den SSP "${focus.name}" an.`;
         }
         const moduleNames = modules.map((module) => `${module.id}`);
-        if (isRequired) {
-            const moduleString = joinStrings(moduleNames, "und");
-            return `Rechnen Sie die Module ${moduleString} an den SSP "${focus.name}" an.`;
-        } else {
-            const number = focus.requiredNumberOfOptionalModules;
-            const moduleString = joinStrings(moduleNames, "oder");
-            return `Rechnen Sie ${numToWord(number, {
-                uppercase: false,
-                indefinite_eines: true,
-            })} der Module ${moduleString} an den SSP "${focus.name}" an.`;
-        }
+        const number = focus.requiredNumberOfOptionalModules;
+        const moduleString = joinStrings(moduleNames, "oder");
+        return `Rechnen Sie ${numToWord(number, {
+            uppercase: false,
+            indefinite_eines: true,
+        })} der Module ${moduleString} an den SSP "${focus.name}" an.`;
     }
 
     validate(

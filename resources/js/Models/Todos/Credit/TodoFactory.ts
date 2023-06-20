@@ -1,7 +1,8 @@
 import { Todo, TodoData } from "@/types";
 import AtLeastOneOfModulesPerFocusTodo from "./AtLeastOneOfModulesPerFocusTodo";
 import ECTSPerFocusTodo from "./ECTSPerFocusTodo";
-import FocusModulesTodo from "./FocusModulesTodo";
+import FocusRequiredModulesTodo from "./FocusRequiredModulesTodo";
+import FocusOptionalModulesTodo from "./FocusOptionalModulesTodo";
 
 export const getTodos = (todosData: Array<TodoData>) => {
     return todosData.reduce((array: Array<Todo>, todoData) => {
@@ -22,8 +23,11 @@ const getTodo = ({ name, params }: TodoData): Todo => {
         case "ECTSPerFocusTodo": {
             return new ECTSPerFocusTodo(params);
         }
-        case "FocusModulesTodo": {
-            return new FocusModulesTodo();
+        case "FocusReqiredModulesTodo": {
+            return new FocusRequiredModulesTodo();
+        }
+        case "FocusOptionalModulesTodo": {
+            return new FocusOptionalModulesTodo();
         }
         default:
             throw "Unknown todo: " + name;
