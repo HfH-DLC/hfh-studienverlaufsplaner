@@ -470,7 +470,11 @@
                     "type": "schedule"
                 },
                 {
-                    "name": "FocusModulesTodo",
+                    "name": "FocusRequiredModulesTodo",
+                    "type": "schedule"
+                },
+                {
+                    "name": "FocusOptionalModulesTodo",
                     "type": "schedule"
                 },
                 {
