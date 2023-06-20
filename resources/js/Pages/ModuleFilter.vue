@@ -201,7 +201,7 @@ const getSemesterLabel = (semesterAbbreviation: string): string => {
 };
 
 const dateOptions = computed(() => {
-    const semesters = new Set<string>(
+    const semesters = new Set<Semester>(
         props.eventsResource.data.map((event: Event) => event.semester)
     );
 
