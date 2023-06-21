@@ -44,5 +44,6 @@ class SettingsController extends Controller
                 $plan->locations()->sync($validated["locations"]);
             }
         });
+        return response()->noContent();
     }
 }
