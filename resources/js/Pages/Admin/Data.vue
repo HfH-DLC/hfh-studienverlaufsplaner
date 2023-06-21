@@ -1,8 +1,8 @@
 <template>
     <div class="p-4">
         <h1 class="text-xl">Import</h1>
-        <h2>Config</h2>
-        <form @submit.prevent="submitConfig" class="mt-4">
+        <h2 class="text-lg">Config</h2>
+        <form @submit.prevent="submitConfig">
             <div class="mt-2">
                 <label for="file" class="block text-sm">Datei</label>
                 <input
@@ -17,8 +17,8 @@
             <HfhButton type="submit" class="mt-4">Importieren</HfhButton>
         </form>
 
-        <h2>Events</h2>
-        <form @submit.prevent="submitEvents" class="mt-4">
+        <h2 class="mt-8 text-lg">Events</h2>
+        <form @submit.prevent="submitEvents">
             <div class="mt-2">
                 <label for="file" class="block text-sm">Datei</label>
                 <input
