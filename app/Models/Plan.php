@@ -39,6 +39,11 @@ class Plan extends Model
         return $this->belongsToMany(Location::class);
     }
 
+    public function priorLearnings()
+    {
+        return $this->hasMany(PriorLearning::class);
+    }
+
     public function setSlug($value)
     {
         if (empty($value)) {

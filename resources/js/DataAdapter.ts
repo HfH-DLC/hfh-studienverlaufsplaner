@@ -1,5 +1,10 @@
 import axios from "axios";
-import { FocusCredit, FocusSelection, PlacementParams } from "./types";
+import {
+    FocusCredit,
+    FocusSelection,
+    PlacementParams,
+    PriorLearning,
+} from "./types";
 import { Placement } from "./types";
 
 export default class DataAdapter {
@@ -57,6 +62,12 @@ export default class DataAdapter {
         await axios.put(this.getEndpointUrl("einstellungen"), {
             dayTimes,
             locations,
+        });
+    }
+
+    async savePriorLearnings(priorLearnings: Array<PriorLearning>) {
+        await axios.put(this.getEndpointUrl("vorleistungen"), {
+            priorLearnings,
         });
     }
 }

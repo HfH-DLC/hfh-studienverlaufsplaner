@@ -122,6 +122,7 @@ export interface Plan {
     focusSelections: Array<FocusSelection>;
     locations: Array<Location>;
     placements: Array<Placement>;
+    priorLearnings: Array<PriorLearning>;
     scheduleTourCompleted: boolean;
     slug: string;
     startYear: number;
@@ -136,6 +137,13 @@ export interface PlacementParams
     extends Omit<Placement, "id" | "location" | "dayTime"> {
     locationId: string;
     dayTimeId: string;
+}
+
+export interface PriorLearning {
+    id?: number;
+    name: string;
+    ects: number;
+    countsAsModuleId: string | undefined;
 }
 
 export interface RuleData {

@@ -3,6 +3,7 @@ import {
     ErrorMessage,
     Event,
     Module,
+    PriorLearning,
     ScheduleModule,
     SchedulePlacement,
     SelectionEventInfo,
@@ -11,7 +12,13 @@ import { markRaw, Ref } from "vue";
 import { isPreviousSemester, isSameDate } from "../../../helpers";
 export default class PrerequisitesRule {
     validatePlacements(
-        { placements }: { placements: Ref<Array<SchedulePlacement>> },
+        {
+            placements,
+            priorLearnings,
+        }: {
+            placements: Ref<Array<SchedulePlacement>>;
+            priorLearnings: Ref<Array<PriorLearning>>;
+        },
         errors: Map<number, Array<ErrorMessage>>
     ) {
         placements.value.forEach((placement: SchedulePlacement) => {
@@ -21,18 +28,24 @@ export default class PrerequisitesRule {
                 return;
             }
             prerequisites.forEach((prerequisite) => {
-                const meetsPrerequisite = placements.value
-                    .filter((prerequisitePlacement: SchedulePlacement) => {
-                        return (
-                            prerequisitePlacement.moduleId == prerequisite.id
-                        );
-                    })
-                    .some((prerequisitePlacement: SchedulePlacement) => {
-                        return isPreviousSemester(
-                            prerequisitePlacement,
-                            placement
-                        );
-                    });
+                const meetsPrerequisite =
+                    priorLearnings.value.some(
+                        (priorLearning) =>
+                            priorLearning.countsAsModuleId == prerequisite.id
+                    ) ||
+                    placements.value
+                        .filter((prerequisitePlacement: SchedulePlacement) => {
+                            return (
+                                prerequisitePlacement.moduleId ==
+                                prerequisite.id
+                            );
+                        })
+                        .some((prerequisitePlacement: SchedulePlacement) => {
+                            return isPreviousSemester(
+                                prerequisitePlacement,
+                                placement
+                            );
+                        });
                 if (!meetsPrerequisite) {
                     missingPrerequisites.push(prerequisite);
                 }
@@ -57,7 +70,13 @@ export default class PrerequisitesRule {
 
     validateModule(
         module: ScheduleModule,
-        { placements }: { placements: Ref<Array<SchedulePlacement>> },
+        {
+            placements,
+            priorLearnings,
+        }: {
+            placements: Ref<Array<SchedulePlacement>>;
+            priorLearnings: Ref<Array<PriorLearning>>;
+        },
         errors: Array<ErrorMessage>
     ): void {
         const prerequisites = module.prerequisites;
@@ -70,6 +89,7 @@ export default class PrerequisitesRule {
                 this.eventMeetsPrerequisites(
                     event,
                     placements.value,
+                    priorLearnings.value,
                     prerequisites
                 ) && this.timeSlotIsFree(module.id, event, placements.value)
         );
@@ -86,7 +106,13 @@ export default class PrerequisitesRule {
 
     validateSelection(
         module: ScheduleModule,
-        { placements }: { placements: Ref<Array<SchedulePlacement>> },
+        {
+            placements,
+            priorLearnings,
+        }: {
+            placements: Ref<Array<SchedulePlacement>>;
+            priorLearnings: Ref<Array<PriorLearning>>;
+        },
         selectionEventInfos: Map<number, SelectionEventInfo>
     ): void {
         const prerequisites = module.prerequisites;
@@ -98,6 +124,7 @@ export default class PrerequisitesRule {
                 !this.eventMeetsPrerequisites(
                     event,
                     placements.value,
+                    priorLearnings.value,
                     prerequisites
                 )
             ) {
@@ -117,16 +144,23 @@ export default class PrerequisitesRule {
     eventMeetsPrerequisites(
         event: Event,
         placements: Array<SchedulePlacement>,
+        priorLearnings: Array<PriorLearning>,
         prerequisites: Array<Module>
     ) {
         return prerequisites.every((prerequisite) => {
-            return placements
-                .filter((placement) => {
-                    return placement.moduleId == prerequisite.id;
-                })
-                .some((placement) => {
-                    return isPreviousSemester(placement, event);
-                });
+            return (
+                priorLearnings.some(
+                    (priorLearning) =>
+                        priorLearning.countsAsModuleId === prerequisite.id
+                ) ||
+                placements
+                    .filter((placement) => {
+                        return placement.moduleId == prerequisite.id;
+                    })
+                    .some((placement) => {
+                        return isPreviousSemester(placement, event);
+                    })
+            );
         });
     }
 

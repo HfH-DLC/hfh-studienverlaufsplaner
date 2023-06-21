@@ -1,13 +1,12 @@
 import OptionalFocusModulesLabel from "@/Components/Todos/Schedule/OptionalFocusModulesLabel.vue";
-import RequiredFocusModulesLabel from "@/Components/Todos/Schedule/RequiredFocusModulesLabel.vue";
 import {
     Todo,
     Placement,
     Focus,
-    Module,
     ChecklistEntryData,
     FocusSelection,
     SchedulePlacement,
+    PriorLearning,
 } from "@/types/index.js";
 import { markRaw, Ref } from "vue";
 import { bestPath } from "../../../tree";
@@ -20,23 +19,32 @@ export default class FocusOptionalModulesTodo implements Todo {
     getEntries({
         focusSelections,
         placements,
+        priorLearnings,
     }: {
         focusSelections: Ref<Array<FocusSelection>>;
         placements: Ref<Array<SchedulePlacement>>;
+        priorLearnings: Ref<Array<PriorLearning>>;
     }) {
         const foci = focusSelections.value.map(
             (focusSelection) => focusSelection.focus
         );
 
-        return this.validate(placements.value, foci);
+        return this.validate(placements.value, priorLearnings.value, foci);
     }
     validate(
         placements: Array<Placement>,
+        priorLearnings: Array<PriorLearning>,
         foci: Array<Focus>
     ): Array<ChecklistEntryData> {
-        let placedModuleIds = new Set(
-            placements.map((placement) => placement.moduleId)
-        );
+        let placedModuleIds = new Set([
+            ...placements.map((placement) => placement.moduleId),
+            ...priorLearnings.reduce((acc, cur) => {
+                if (cur.countsAsModuleId) {
+                    acc.push(cur.countsAsModuleId);
+                }
+                return acc;
+            }, [] as Array<string>),
+        ]);
 
         const optionalModuleIds = foci.reduce((acc, cur) => {
             cur.optionalModules

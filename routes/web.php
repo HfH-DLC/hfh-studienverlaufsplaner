@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ModuleFilterController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PlanerController;
+use App\Http\Controllers\PriorLearningController;
 use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,8 +41,10 @@ Route::prefix('/{planer:id}')->scopeBindings()->group(function () {
     Route::get('/{plan:slug}', [PlanController::class, 'show'])->name('plan');
     Route::get('/{plan:slug}/anrechnung', [PlanController::class, 'showCredit'])->name('plan-credit');
     Route::put('/{plan:slug}/anrechnung', [PlanController::class, 'updateCredit']);
-    Route::get('/{plan:slug}/einstellungen', [SettingsController::class, 'show'])->name('settings');
-    Route::put('/{plan:slug}/einstellungen', [SettingsController::class, 'update'])->name('settings');
+    Route::get('/{plan:slug}/einstellungen', [SettingsController::class, 'show'])->name('plan-settings');
+    Route::put('/{plan:slug}/einstellungen', [SettingsController::class, 'update']);
+    Route::get('/{plan:slug}/vorleistungen', [PriorLearningController::class, 'show'])->name('plan-prior-learning');
+    Route::put('/{plan:slug}/vorleistungen', [PriorLearningController::class, 'update']);
     Route::get('/{plan:slug}/zeitplan', [PlanController::class, 'showSchedule'])->name('plan-schedule');
     Route::put('/{plan:slug}/zeitplan', [PlanController::class, 'updateSchedule']);
 });

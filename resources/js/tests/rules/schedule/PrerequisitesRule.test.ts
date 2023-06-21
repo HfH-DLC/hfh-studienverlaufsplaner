@@ -5,6 +5,7 @@ import { ErrorMessage, SchedulePlacement } from "@/types";
 import { schedulePlacementFactory } from "@/tests/factories/SchedulePlacementFactory";
 import { scheduleModuleFactory } from "@/tests/factories/ScheduleModuleFactory";
 import { eventFactory } from "@/tests/factories/EventFactory";
+import { priorLearnignFactory } from "@/tests/factories/PriorLearningFactory";
 
 describe("PrerequisitesRule", () => {
     describe("validatePlacements", () => {
@@ -27,6 +28,7 @@ describe("PrerequisitesRule", () => {
 
             const data = {
                 placements: ref([placementWithPrerequisites]),
+                priorLearnings: ref([]),
             };
 
             rule.validatePlacements(data, errorMessages);
@@ -65,6 +67,7 @@ describe("PrerequisitesRule", () => {
                     placementWithPrerequisites,
                     prerequisite1Placement,
                 ]),
+                priorLearnings: ref([]),
             };
 
             rule.validatePlacements(data, errorMessages);
@@ -101,6 +104,7 @@ describe("PrerequisitesRule", () => {
                     placementWithPrerequisites,
                     prerequisitePlacement,
                 ]),
+                priorLearnings: ref([]),
             };
 
             rule.validatePlacements(data, errorMessages);
@@ -137,6 +141,7 @@ describe("PrerequisitesRule", () => {
                     placementWithPrerequisites,
                     prerequisitePlacement,
                 ]),
+                priorLearnings: ref([]),
             };
 
             rule.validatePlacements(data, errorMessages);
@@ -173,6 +178,7 @@ describe("PrerequisitesRule", () => {
                     placementWithPrerequisites,
                     prerequisitePlacement,
                 ]),
+                priorLearnings: ref([]),
             };
 
             rule.validatePlacements(data, errorMessages);
@@ -181,7 +187,7 @@ describe("PrerequisitesRule", () => {
                 errorMessages.get(placementWithPrerequisites.id)?.length
             ).toBe(1);
         });
-        it("should not return an error if a placement's prerequisites are met", () => {
+        it("should return no errors if a placement's prerequisites are met", () => {
             const rule = new PrerequisitesRule();
             const errorMessages = new Map();
             const prerequisite1 = scheduleModuleFactory.build();
@@ -219,6 +225,79 @@ describe("PrerequisitesRule", () => {
                     prerequisite1Placement,
                     prerequisite2Placement,
                 ]),
+                priorLearnings: ref([]),
+            };
+
+            rule.validatePlacements(data, errorMessages);
+
+            expect(errorMessages.size).toBe(0);
+        });
+        it("should return no errors if a placement's prerequisites are met partially by prior learnings", () => {
+            const rule = new PrerequisitesRule();
+            const errorMessages = new Map();
+            const prerequisite1 = scheduleModuleFactory.build();
+            const prerequisite2 = scheduleModuleFactory.build();
+            const prerequisite1Placement: SchedulePlacement =
+                schedulePlacementFactory.build({
+                    moduleId: prerequisite1.id,
+                    module: prerequisite1,
+                    year: 1990,
+                    semester: "FS",
+                });
+            prerequisite1.placement = prerequisite1Placement;
+            const moduleWithPrerequisites = scheduleModuleFactory.build({
+                prerequisites: [prerequisite1, prerequisite2],
+            });
+            const placementWithPrerequisites: SchedulePlacement =
+                schedulePlacementFactory.build({
+                    moduleId: moduleWithPrerequisites.id,
+                    module: moduleWithPrerequisites,
+                    year: 1991,
+                    semester: "FS",
+                });
+            moduleWithPrerequisites.placement = placementWithPrerequisites;
+            const data = {
+                placements: ref([
+                    placementWithPrerequisites,
+                    prerequisite1Placement,
+                ]),
+                priorLearnings: ref([
+                    priorLearnignFactory.build({
+                        countsAsModuleId: prerequisite2.id,
+                    }),
+                ]),
+            };
+
+            rule.validatePlacements(data, errorMessages);
+
+            expect(errorMessages.size).toBe(0);
+        });
+        it("should return no errors if a placement's prerequisites are met entirely by prior learnings", () => {
+            const rule = new PrerequisitesRule();
+            const errorMessages = new Map();
+            const prerequisite1 = scheduleModuleFactory.build();
+            const prerequisite2 = scheduleModuleFactory.build();
+            const moduleWithPrerequisites = scheduleModuleFactory.build({
+                prerequisites: [prerequisite1, prerequisite2],
+            });
+            const placementWithPrerequisites: SchedulePlacement =
+                schedulePlacementFactory.build({
+                    moduleId: moduleWithPrerequisites.id,
+                    module: moduleWithPrerequisites,
+                    year: 1991,
+                    semester: "FS",
+                });
+            moduleWithPrerequisites.placement = placementWithPrerequisites;
+            const data = {
+                placements: ref([placementWithPrerequisites]),
+                priorLearnings: ref([
+                    priorLearnignFactory.build({
+                        countsAsModuleId: prerequisite1.id,
+                    }),
+                    priorLearnignFactory.build({
+                        countsAsModuleId: prerequisite2.id,
+                    }),
+                ]),
             };
 
             rule.validatePlacements(data, errorMessages);
@@ -232,6 +311,7 @@ describe("PrerequisitesRule", () => {
                 schedulePlacementFactory.build();
             const data = {
                 placements: ref([placementWithoutPrerequisites]),
+                priorLearnings: ref([]),
             };
 
             rule.validatePlacements(data, errorMessages);
@@ -244,7 +324,7 @@ describe("PrerequisitesRule", () => {
         it("should return no errors if the module has no prerequisites", () => {
             const rule = new PrerequisitesRule();
             const errorMessages = new Array<ErrorMessage>();
-            const data = { placements: ref([]) };
+            const data = { placements: ref([]), priorLearnings: ref([]) };
             const module = scheduleModuleFactory.build({ prerequisites: [] });
 
             rule.validateModule(module, data, errorMessages);
@@ -255,7 +335,7 @@ describe("PrerequisitesRule", () => {
         it("should return an error if a module with prerequisites has no events", () => {
             const rule = new PrerequisitesRule();
             const errorMessages = new Array<ErrorMessage>();
-            const data = { placements: ref([]) };
+            const data = { placements: ref([]), priorLearnings: ref([]) };
             const prerequisite = scheduleModuleFactory.build();
             const moduleWithPrerequisites = scheduleModuleFactory.build({
                 prerequisites: [prerequisite],
@@ -266,7 +346,7 @@ describe("PrerequisitesRule", () => {
             expect(errorMessages.length).toBe(1);
         });
 
-        it("should return no error if some of a module's events meets the module's prerequisites", () => {
+        it("should return no error if some of a module's events meet the module's prerequisites", () => {
             const rule = new PrerequisitesRule();
             const errorMessages = new Array<ErrorMessage>();
 
@@ -279,7 +359,42 @@ describe("PrerequisitesRule", () => {
                     semester: "HS",
                 });
             prerequisite.placement = prerequisitePlacement;
-            const data = { placements: ref([prerequisitePlacement]) };
+            const data = {
+                placements: ref([prerequisitePlacement]),
+                priorLearnings: ref([]),
+            };
+            const moduleWithPrerequisites = scheduleModuleFactory.build({
+                prerequisites: [prerequisite],
+                events: [
+                    eventFactory.build({
+                        year: 1991,
+                        semester: "HS",
+                    }),
+                    eventFactory.build({
+                        year: 1993,
+                        semester: "FS",
+                    }),
+                ],
+            });
+
+            rule.validateModule(moduleWithPrerequisites, data, errorMessages);
+
+            expect(errorMessages.length).toBe(0);
+        });
+
+        it("should return no error if the prerequisite is met by prior learnings", () => {
+            const rule = new PrerequisitesRule();
+            const errorMessages = new Array<ErrorMessage>();
+
+            const prerequisite = scheduleModuleFactory.build();
+            const data = {
+                placements: ref([]),
+                priorLearnings: ref([
+                    priorLearnignFactory.build({
+                        countsAsModuleId: prerequisite.id,
+                    }),
+                ]),
+            };
             const moduleWithPrerequisites = scheduleModuleFactory.build({
                 prerequisites: [prerequisite],
                 events: [
@@ -312,7 +427,14 @@ describe("PrerequisitesRule", () => {
                     semester: "HS",
                 });
             prerequisite.placement = prerequisitePlacement;
-            const data = { placements: ref([prerequisitePlacement]) };
+            const data = {
+                placements: ref([prerequisitePlacement]),
+                priorLearnings: ref([
+                    priorLearnignFactory.build({
+                        countsAsModuleId: "someDifferentModuleId",
+                    }),
+                ]),
+            };
             const moduleWithPrerequisites = scheduleModuleFactory.build({
                 prerequisites: [prerequisite],
                 events: [
@@ -337,7 +459,10 @@ describe("PrerequisitesRule", () => {
         it("should return nothing if the module has no prerequisites", () => {
             const rule = new PrerequisitesRule();
             const infos = new Map();
-            const data = { placements: ref([]) };
+            const data = {
+                placements: ref([]),
+                priorLearnings: ref([]),
+            };
             const module = scheduleModuleFactory.build({ prerequisites: [] });
 
             rule.validateSelection(module, data, infos);
@@ -356,7 +481,40 @@ describe("PrerequisitesRule", () => {
                     semester: "HS",
                 });
             prerequisite.placement = prerequisitePlacement;
-            const data = { placements: ref([prerequisitePlacement]) };
+            const data = {
+                placements: ref([prerequisitePlacement]),
+                priorLearnings: ref([]),
+            };
+            const moduleWithPrerequisites = scheduleModuleFactory.build({
+                prerequisites: [prerequisite],
+                events: [
+                    eventFactory.build({
+                        year: 1992,
+                        semester: "FS",
+                    }),
+                    eventFactory.build({
+                        year: 1993,
+                        semester: "FS",
+                    }),
+                ],
+            });
+
+            rule.validateSelection(moduleWithPrerequisites, data, infos);
+
+            expect(infos.size).toBe(0);
+        });
+        it("should return nothing if the prerequisites are met by prior learnings", () => {
+            const rule = new PrerequisitesRule();
+            const infos = new Map();
+            const prerequisite = scheduleModuleFactory.build();
+            const data = {
+                placements: ref([]),
+                priorLearnings: ref([
+                    priorLearnignFactory.build({
+                        countsAsModuleId: prerequisite.id,
+                    }),
+                ]),
+            };
             const moduleWithPrerequisites = scheduleModuleFactory.build({
                 prerequisites: [prerequisite],
                 events: [
@@ -387,7 +545,14 @@ describe("PrerequisitesRule", () => {
                     semester: "HS",
                 });
             prerequisite.placement = prerequisitePlacement;
-            const data = { placements: ref([prerequisitePlacement]) };
+            const data = {
+                placements: ref([prerequisitePlacement]),
+                priorLearnings: ref([
+                    priorLearnignFactory.build({
+                        countsAsModuleId: "someDifferentModuleId",
+                    }),
+                ]),
+            };
             const moduleWithPrerequisites = scheduleModuleFactory.build({
                 prerequisites: [prerequisite],
                 events: [

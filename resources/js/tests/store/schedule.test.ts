@@ -7,6 +7,7 @@ import Validator from "@/Validator";
 import { placementFactory } from "../factories/PlacementFactory";
 import { dayTimeFactory } from "../factories/DayTimeFactory";
 import { locationFactory } from "../factories/LocationFactory";
+import { priorLearnignFactory } from "../factories/PriorLearningFactory";
 vi.mock("@/DataAdapter");
 
 function getInitializedStore(
@@ -23,6 +24,7 @@ function getInitializedStore(
             focusSelections: [],
             locations: [],
             placements: [],
+            priorLearnings: [],
             scheduleTourCompleted: false,
             slug: "test-plan",
             startYear: 0,
@@ -62,6 +64,7 @@ describe("Schedule Store", () => {
                 focusSelections: [],
                 locations: locationFactory.buildList(5),
                 placements: placementFactory.buildList(5),
+                priorLearnings: priorLearnignFactory.buildList(5),
                 scheduleTourCompleted: false,
                 slug: "",
                 startYear: 1990,
@@ -85,6 +88,7 @@ describe("Schedule Store", () => {
         expect(store.locations).toStrictEqual(params.plan.locations);
         expect(store.dayTimes).toStrictEqual(params.plan.dayTimes);
         expect(store.rawPlacements).toStrictEqual(params.plan.placements);
+        expect(store.priorLearnings).toStrictEqual(params.plan.priorLearnings);
         expect(store.startYear).toBe(params.plan.startYear);
         expect(store.tour).toStrictEqual(params.tour);
         expect(store.tourCompleted).toBe(params.plan.creditTourCompleted);

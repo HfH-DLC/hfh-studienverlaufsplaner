@@ -1,4 +1,5 @@
 import RequiredModulesTodo from "@/Models/Todos/Schedule/RequiredModulesTodo";
+import { priorLearnignFactory } from "@/tests/factories/PriorLearningFactory";
 import { scheduleCategoryFactory } from "@/tests/factories/ScheduleCategoryFactory";
 import { scheduleModuleFactory } from "@/tests/factories/ScheduleModuleFactory";
 import { schedulePlacementFactory } from "@/tests/factories/SchedulePlacementFactory";
@@ -21,6 +22,7 @@ describe("RequiredModulesTodo", () => {
                         required: false,
                     }),
                 ]),
+                priorLearnings: ref([]),
             };
 
             const entries = todo.getEntries(data);
@@ -37,6 +39,60 @@ describe("RequiredModulesTodo", () => {
                     scheduleCategoryFactory.build({
                         required: true,
                         modules: [placement1.module, placement2.module],
+                    }),
+                ]),
+                priorLearnings: ref([]),
+            };
+
+            const entries = todo.getEntries(data);
+
+            expect(entries.length).toBe(1);
+            expect(entries[0].checked).toBe(true);
+            expect(entries[0].progressLabel).toBe("2 / 2");
+        });
+
+        it("should return an entry with checked = true if all modules of a required category are either placed or in prior learnings", () => {
+            const todo = new RequiredModulesTodo();
+            const placement1 = schedulePlacementFactory.build();
+            const priorLearningModule = scheduleModuleFactory.build();
+            const data = {
+                categories: ref([
+                    scheduleCategoryFactory.build({
+                        required: true,
+                        modules: [placement1.module, priorLearningModule],
+                    }),
+                ]),
+                priorLearnings: ref([
+                    priorLearnignFactory.build({
+                        countsAsModuleId: priorLearningModule.id,
+                    }),
+                ]),
+            };
+
+            const entries = todo.getEntries(data);
+
+            expect(entries.length).toBe(1);
+            expect(entries[0].checked).toBe(true);
+            expect(entries[0].progressLabel).toBe("2 / 2");
+        });
+
+        it("should return an entry with checked = true if all modules of a required category are in prior learnings", () => {
+            const todo = new RequiredModulesTodo();
+            const module1 = scheduleModuleFactory.build();
+            const module2 = scheduleModuleFactory.build();
+            const data = {
+                categories: ref([
+                    scheduleCategoryFactory.build({
+                        required: true,
+                        modules: [module1, module2],
+                    }),
+                ]),
+                priorLearnings: ref([
+                    priorLearnignFactory.build({
+                        countsAsModuleId: module1.id,
+                    }),
+                    priorLearnignFactory.build({
+                        countsAsModuleId: module2.id,
                     }),
                 ]),
             };
@@ -59,6 +115,11 @@ describe("RequiredModulesTodo", () => {
                         modules: [placement.module, unplacedModule],
                     }),
                 ]),
+                priorLearnings: ref([
+                    priorLearnignFactory.build({
+                        countsAsModuleId: "someUnrelatedModuleId",
+                    }),
+                ]),
             };
 
             const entries = todo.getEntries(data);
@@ -77,6 +138,11 @@ describe("RequiredModulesTodo", () => {
                     scheduleCategoryFactory.build({
                         required: true,
                         modules: [unplacedModule1, unplacedModule2],
+                    }),
+                ]),
+                priorLearnings: ref([
+                    priorLearnignFactory.build({
+                        countsAsModuleId: "someUnrelatedModuleId",
                     }),
                 ]),
             };

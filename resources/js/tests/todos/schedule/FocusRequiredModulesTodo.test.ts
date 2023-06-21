@@ -1,6 +1,7 @@
 import FocusRequiredModulesTodo from "@/Models/Todos/Schedule/FocusRequiredModulesTodo";
 import { focusFactory } from "@/tests/factories/FocusFactory";
 import { focusSelectionFactory } from "@/tests/factories/FocusSelectionFactory";
+import { priorLearnignFactory } from "@/tests/factories/PriorLearningFactory";
 import { scheduleModuleFactory } from "@/tests/factories/ScheduleModuleFactory";
 import { schedulePlacementFactory } from "@/tests/factories/SchedulePlacementFactory";
 import { describe } from "vitest";
@@ -38,6 +39,7 @@ describe("FocusRequiredModulesTodo", () => {
                     focusSelection3,
                 ]),
                 placements: ref([]),
+                priorLearnings: ref([]),
             };
 
             const entries = todo.getEntries(data);
@@ -59,6 +61,70 @@ describe("FocusRequiredModulesTodo", () => {
             const data = {
                 focusSelections: ref([focusSelection]),
                 placements: ref([placement1, placement2]),
+                priorLearnings: ref([]),
+            };
+
+            const entries = todo.getEntries(data);
+
+            expect(entries.length).toBe(1);
+            expect(entries[0].checked).toBe(true);
+            expect(entries[0].progressLabel).toBe("2 / 2");
+        });
+
+        it("should return an entry with checked = true for a focusSelection where all required modules are in prior learnings", () => {
+            const todo = new FocusRequiredModulesTodo();
+            const module1 = scheduleModuleFactory.build();
+            const module2 = scheduleModuleFactory.build();
+            const focus = focusFactory.build({
+                requiredModules: [module1, module2],
+            });
+            const focusSelection = focusSelectionFactory.build({
+                focus: focus,
+            });
+
+            const data = {
+                focusSelections: ref([focusSelection]),
+                placements: ref([]),
+                priorLearnings: ref([
+                    priorLearnignFactory.build({
+                        countsAsModuleId: module1.id,
+                    }),
+                    priorLearnignFactory.build({
+                        countsAsModuleId: module2.id,
+                    }),
+                ]),
+            };
+
+            const entries = todo.getEntries(data);
+
+            expect(entries.length).toBe(1);
+            expect(entries[0].checked).toBe(true);
+            expect(entries[0].progressLabel).toBe("2 / 2");
+        });
+
+        it("should return an entry with checked = true for a focusSelection where all required modules are either  placed or in prior learnings", () => {
+            const todo = new FocusRequiredModulesTodo();
+            const placement1 = schedulePlacementFactory.build();
+            const module1 = placement1.module;
+            const module2 = scheduleModuleFactory.build();
+            const focus = focusFactory.build({
+                requiredModules: [module1, module2],
+            });
+            const focusSelection = focusSelectionFactory.build({
+                focus: focus,
+            });
+
+            const data = {
+                focusSelections: ref([focusSelection]),
+                placements: ref([]),
+                priorLearnings: ref([
+                    priorLearnignFactory.build({
+                        countsAsModuleId: module1.id,
+                    }),
+                    priorLearnignFactory.build({
+                        countsAsModuleId: module2.id,
+                    }),
+                ]),
             };
 
             const entries = todo.getEntries(data);
@@ -71,9 +137,11 @@ describe("FocusRequiredModulesTodo", () => {
         it("should return an entry with checked = false for a focusSelection where not all required modules are placed", () => {
             const todo = new FocusRequiredModulesTodo();
             const placement1 = schedulePlacementFactory.build();
-            const unplacedModule = scheduleModuleFactory.build();
+            const module1 = placement1.module;
+            const module2 = scheduleModuleFactory.build();
+            const module3 = scheduleModuleFactory.build();
             const focus = focusFactory.build({
-                requiredModules: [placement1.module, unplacedModule],
+                requiredModules: [module1, module2, module3],
             });
             const focusSelection = focusSelectionFactory.build({
                 focus: focus,
@@ -82,13 +150,18 @@ describe("FocusRequiredModulesTodo", () => {
             const data = {
                 focusSelections: ref([focusSelection]),
                 placements: ref([placement1]),
+                priorLearnings: ref([
+                    priorLearnignFactory.build({
+                        countsAsModuleId: module3.id,
+                    }),
+                ]),
             };
 
             const entries = todo.getEntries(data);
 
             expect(entries.length).toBe(1);
             expect(entries[0].checked).toBe(false);
-            expect(entries[0].progressLabel).toBe("1 / 2");
+            expect(entries[0].progressLabel).toBe("2 / 3");
         });
     });
 });

@@ -1,8 +1,9 @@
 import axios from "axios";
 import DataAdapter from "@/DataAdapter";
 import { describe, expect, it, beforeEach, vi, type Mocked } from "vitest";
-import { FocusCredit, FocusSelection, Placement } from "@/types";
+import { FocusCredit, FocusSelection, Placement, PriorLearning } from "@/types";
 import { placementFactory } from "@/tests/factories/PlacementFactory";
+import { priorLearnignFactory } from "../factories/PriorLearningFactory";
 
 vi.mock("axios");
 const mockedAxios = axios as Mocked<typeof axios>;
@@ -80,7 +81,7 @@ describe("DataAdapter", () => {
         const dayTimes: Array<string> = ["a", "f", "g"];
         const locations: Array<string> = ["ZH", "GR"];
 
-        const data = {
+        const expectedData = {
             dayTimes,
             locations,
         };
@@ -89,7 +90,24 @@ describe("DataAdapter", () => {
 
         expect(mockedAxios.put).toHaveBeenCalledWith(
             getExpectedEndpointUrl("einstellungen"),
-            data
+            expectedData
+        );
+    });
+
+    it("should save prior learning", async () => {
+        const priorLearnings: Array<PriorLearning> = [
+            priorLearnignFactory.build(),
+            priorLearnignFactory.build(),
+        ];
+        const expectedData = {
+            priorLearnings,
+        };
+
+        await dataAdapter.savePriorLearnings(priorLearnings);
+
+        expect(mockedAxios.put).toHaveBeenCalledWith(
+            getExpectedEndpointUrl("vorleistungen"),
+            expectedData
         );
     });
 });

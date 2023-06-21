@@ -21,12 +21,12 @@ import {
     ScheduleModule,
     SchedulePlacement,
     Selection,
-    SelectionEventInfo,
     SelectableEvent,
     Todo,
     TourData,
     DayTime,
     EventDateWithOptionalTimeWindow,
+    PriorLearning,
 } from "@/types";
 import { useEmitter } from "@/composables/useEmitter";
 
@@ -58,6 +58,7 @@ const initialState = {
     rawCategories: [] as Array<Category>,
     rawPlacements: [] as Array<Placement>,
     placementErrors: new Map<number, Array<ErrorMessage>>(),
+    priorLearnings: [] as Array<PriorLearning>,
     readOnly: false,
     rules: [] as Array<Rule>,
     saveStatus: SaveStatus.Saved,
@@ -79,6 +80,7 @@ export const useScheduleStore = defineStore("schedule", {
             validator = params.validator;
             this.$reset();
             this.readOnly = params.plan.readOnly;
+            this.priorLearnings = params.plan.priorLearnings;
             this.requiredECTS = params.requiredECTS;
             this.rawCategories = params.categories;
             this.foci = params.foci;
@@ -230,7 +232,13 @@ export const useScheduleStore = defineStore("schedule", {
                         };
                     });
                 const currentECTS = categoryModules.reduce((acc, cur) => {
-                    if (cur.placement) {
+                    if (
+                        cur.placement ||
+                        this.priorLearnings.some(
+                            (priorLearning) =>
+                                priorLearning.countsAsModuleId === cur.id
+                        )
+                    ) {
                         acc += cur.ects;
                     }
                     return acc;
@@ -247,12 +255,12 @@ export const useScheduleStore = defineStore("schedule", {
             });
         },
         ects(): number {
-            return this.placements
-                .map((placements) => placements.module)
-                .reduce(
-                    (total, module) => (module ? total + module.ects : total),
-                    0
-                );
+            return (
+                this.placements
+                    .map((placements) => placements.module)
+                    .reduce((acc, cur) => (cur ? acc + cur.ects : acc), 0) +
+                this.priorLearnings.reduce((acc, cur) => acc + cur.ects, 0)
+            );
         },
         modules(): Array<ScheduleModule> {
             return this.categories.reduce(

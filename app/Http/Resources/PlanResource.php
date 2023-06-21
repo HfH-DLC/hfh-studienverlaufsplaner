@@ -25,7 +25,8 @@ class PlanResource extends JsonResource
             'focusSelections' => FocusSelectionResource::collection($this->focusSelections),
             'locations' => LocationResource::collection($this->locations),
             'dayTimes' => DayTimeResource::collection($this->dayTimes),
-            'readOnly' => $this->read_only
+            'readOnly' => $this->read_only,
+            'priorLearnings' => PriorLearningResource::collection($this->priorLearnings)
         ];
     }
 }

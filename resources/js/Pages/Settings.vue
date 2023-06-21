@@ -50,6 +50,10 @@ import PlanHeader from "@/Components/PlanHeader.vue";
 import Flash from "@/Components/Flash.vue";
 import DataAdapter from "@/DataAdapter";
 import type { CheckboxOption } from "@hfh-dlc/hfh-styleguide/types";
+import MainLayout from "@/Layouts/MainLayout.vue";
+
+defineOptions({ layout: MainLayout });
+
 const props = defineProps({
     planerSlug: {
         type: String,
