@@ -1,7 +1,5 @@
 <template>
-    <Head :title="computedTitle">
-        <slot />
-    </Head>
+    <Head :title="computedTitle"> </Head>
 </template>
 
 <script lang="ts" setup>
