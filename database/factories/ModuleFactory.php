@@ -20,13 +20,4 @@ class ModuleFactory extends Factory
             'creditable' => false,
         ];
     }
-
-    public function withCategory($category)
-    {
-        return $this->state(function (array $attributes) use ($category) {
-            return [
-                'category_id' => $category,
-            ];
-        });
-    }
 }
