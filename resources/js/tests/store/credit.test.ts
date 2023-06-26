@@ -1,13 +1,4 @@
-import {
-    describe,
-    test,
-    expect,
-    beforeEach,
-    vi,
-    afterEach,
-    Mock,
-    it,
-} from "vitest";
+import { describe, test, expect, beforeEach, vi, Mock, it } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import DataAdapter from "@/DataAdapter";
 import { useCreditStore } from "@/Store/credit";
