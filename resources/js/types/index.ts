@@ -140,10 +140,21 @@ export interface PlacementParams
 }
 
 export interface PriorLearning {
-    id?: number;
+    id: number;
     name: string;
     ects: number;
-    countsAsModuleId: string | undefined;
+    ectsRaw?: number;
+    countsAsCategoryId?: number;
+    countsAsCategoryIdRaw?: number;
+    countsAsModuleId?: string;
+}
+
+export interface PriorLearningParams {
+    id?: number;
+    name: string;
+    ects?: number;
+    countsAsCategoryId?: number;
+    countsAsModuleId?: string;
 }
 
 export interface RuleData {

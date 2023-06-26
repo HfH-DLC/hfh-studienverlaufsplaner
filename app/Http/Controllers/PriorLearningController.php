@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdatePriorLearningsRequest;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\ModuleResource;
 use App\Http\Resources\PlanResource;
+use App\Http\Resources\PriorLearningResource;
 use App\Models\Plan;
 use App\Models\Planer;
-use App\Models\PriorLearning;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -19,6 +21,8 @@ class PriorLearningController extends Controller
             'planerSlug' => $planer->id,
             'focusSelectionEnabled' => $planer->focus_selection_enabled,
             'planResource' => new PlanResource($plan),
+            'modulesResource' => ModuleResource::collection($planer->getModules()),
+            'categoriesResource' => CategoryResource::collection($planer->categories),
         ];
         if (isset($planer->meta)) {
             if (isset($planer->meta['brochureUrl'])) {
@@ -36,17 +40,25 @@ class PriorLearningController extends Controller
         $validated = $request->validated();
         $priorLearningsData = $validated['priorLearnings'];
         DB::transaction(function () use ($priorLearningsData, $plan) {
+            $ids = [];
             foreach ($priorLearningsData as $data) {
                 $id = isset($data['id']) ? $data['id'] : null;
                 $priorLearning = $plan->priorLearnings()->firstOrNew(['id' => $id]);
                 $priorLearning->name = $data['name'];
-                $priorLearning->ects = $data['ects'];
                 if (isset($data['countsAsModuleId'])) {
                     $priorLearning->counts_as_module_id = $data['countsAsModuleId'];
                 }
+                if (isset($data['countsAsCategoryId'])) {
+                    $priorLearning->counts_as_category_id = $data['countsAsCategoryId'];
+                }
+                if (isset($data['ects'])) {
+                    $priorLearning->ects = $data['ects'];
+                }
                 $priorLearning->save();
+                $ids[] = $priorLearning->id;
             }
+            $plan->priorLearnings()->whereNotIn('id', $ids)->delete();
         });
-        return response()->noContent();
+        return response()->json(PriorLearningResource::collection($plan->priorLearnings));
     }
 }

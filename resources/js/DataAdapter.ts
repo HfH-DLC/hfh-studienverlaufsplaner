@@ -4,6 +4,7 @@ import {
     FocusSelection,
     PlacementParams,
     PriorLearning,
+    PriorLearningParams,
 } from "./types";
 import { Placement } from "./types";
 
@@ -65,9 +66,11 @@ export default class DataAdapter {
         });
     }
 
-    async savePriorLearnings(priorLearnings: Array<PriorLearning>) {
-        await axios.put(this.getEndpointUrl("vorleistungen"), {
+    async savePriorLearnings(priorLearnings: Array<PriorLearningParams>) {
+        const response = await axios.put(this.getEndpointUrl("vorleistungen"), {
             priorLearnings,
         });
+        const result = response.data as Array<PriorLearning>;
+        return result;
     }
 }
