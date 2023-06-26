@@ -1,13 +1,20 @@
 import { expect, test, describe, beforeEach, vi, Mocked } from "vitest";
 import { setActivePinia, createPinia } from "pinia";
 import { useScheduleStore } from "@/Store/schedule";
-import { Placement, SaveStatus, ScheduleInitParams } from "@/types";
+import {
+    Placement,
+    SaveStatus,
+    ScheduleInitParams,
+    ScheduleModule,
+} from "@/types";
 import DataAdapter from "@/DataAdapter";
 import Validator from "@/Validator";
 import { placementFactory } from "../factories/PlacementFactory";
 import { dayTimeFactory } from "../factories/DayTimeFactory";
 import { locationFactory } from "../factories/LocationFactory";
 import { priorLearnignFactory } from "../factories/PriorLearningFactory";
+import { eventFactory } from "../factories/EventFactory";
+import { scheduleModuleFactory } from "../factories/ScheduleModuleFactory";
 vi.mock("@/DataAdapter");
 
 function getInitializedStore(
@@ -276,5 +283,111 @@ describe("Schedule Store", () => {
         vi.spyOn(validator, "validate");
         store.validate();
         expect(validator.validate).toHaveBeenCalledOnce();
+    });
+
+    /**
+     ** getters
+     **/
+    test("getter tourSelectedModule", () => {
+        it("returns null if tour does not exist", () => {
+            const { store } = getInitializedStore({
+                tour: undefined,
+            });
+
+            expect(store.tourSelectedModule).toBeNull;
+        });
+
+        it("returns null if tour is not active", () => {
+            const { store } = getInitializedStore({
+                tour: {
+                    steps: [
+                        {
+                            title: "Step 1",
+                            content: "Step 1 content",
+                        },
+                    ],
+                },
+            });
+
+            expect(store.tourSelectedModule).toBeNull;
+        });
+
+        it("returns null if current step index > tour.steps.length", () => {
+            const { store } = getInitializedStore({
+                tour: {
+                    steps: [
+                        {
+                            title: "Step 1",
+                            content: "Step 1 content",
+                        },
+                    ],
+                },
+            });
+            store.tourActive = true;
+            store.tourCurrentStepIndex = 2;
+
+            expect(store.tourSelectedModule).toBeNull;
+        });
+
+        it("returns the default module if no module is set on the tour step", () => {
+            const defaultModule: ScheduleModule = {
+                id: "",
+                name: "",
+                infos: [],
+                misplaced: false,
+                placement: undefined,
+                selected: false,
+                events: [],
+                ects: 0,
+                prerequisites: [],
+            };
+
+            const { store } = getInitializedStore({
+                tour: {
+                    steps: [
+                        {
+                            title: "Step 1",
+                            content: "Step 1 content",
+                        },
+                    ],
+                },
+            });
+            store.tourActive = true;
+
+            expect(store.tourSelectedModule).toStrictEqual(defaultModule);
+        });
+
+        it("returns the specified module if a module is set on the tour step", () => {
+            const selectedModule: ScheduleModule = {
+                id: "selected_module",
+                name: "My selected module",
+                infos: [
+                    {
+                        label: "SomeErrorMessage",
+                    },
+                ],
+                misplaced: true,
+                placement: placementFactory.build(),
+                selected: true,
+                events: [eventFactory.build()],
+                ects: 9,
+                prerequisites: [scheduleModuleFactory.build()],
+            };
+
+            const { store } = getInitializedStore({
+                tour: {
+                    steps: [
+                        {
+                            title: "Step 1",
+                            content: "Step 1 content",
+                            selectedModule,
+                        },
+                    ],
+                },
+            });
+            store.tourActive = true;
+
+            expect(store.tourSelectedModule).toStrictEqual(selectedModule);
+        });
     });
 });
