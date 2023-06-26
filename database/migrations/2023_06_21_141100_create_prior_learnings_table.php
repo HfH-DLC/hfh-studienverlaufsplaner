@@ -15,13 +15,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('plan_id')->constrained();
             $table->string('name');
-            $table->integer('ects');
+            $table->integer('ects')->nullable();
+            $table->unsignedBigInteger('counts_as_category_id')->nullable();
             $table->string('counts_as_module_id')->nullable();
             $table->timestamps();
         });
 
 
         Schema::table('prior_learnings', function (Blueprint $table) {
+            $table->foreign('counts_as_category_id')->references('id')->on('categories');
             $table->foreign('counts_as_module_id')->references('id')->on('modules');
         });
     }
