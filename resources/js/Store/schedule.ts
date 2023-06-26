@@ -231,18 +231,19 @@ export const useScheduleStore = defineStore("schedule", {
                             misplaced,
                         };
                     });
-                const currentECTS = categoryModules.reduce((acc, cur) => {
-                    if (
-                        cur.placement ||
-                        this.priorLearnings.some(
-                            (priorLearning) =>
-                                priorLearning.countsAsModuleId === cur.id
-                        )
-                    ) {
-                        acc += cur.ects;
-                    }
-                    return acc;
-                }, 0);
+                const currentECTS =
+                    categoryModules.reduce((acc, cur) => {
+                        if (cur.placement) {
+                            acc += cur.ects;
+                        }
+                        return acc;
+                    }, 0) +
+                    this.priorLearnings.reduce((acc, cur) => {
+                        if (cur.countsAsCategoryId === category.id) {
+                            acc += cur.ects;
+                        }
+                        return acc;
+                    }, 0);
 
                 return {
                     ...category,
