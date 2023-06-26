@@ -103,11 +103,18 @@ describe("DataAdapter", () => {
             priorLearnings,
         };
 
-        await dataAdapter.savePriorLearnings(priorLearnings);
+        const mockResponse = {
+            data: priorLearnings,
+        };
+        mockedAxios.put.mockResolvedValueOnce(mockResponse);
+        const returnedData = await dataAdapter.savePriorLearnings(
+            priorLearnings
+        );
 
         expect(mockedAxios.put).toHaveBeenCalledWith(
             getExpectedEndpointUrl("vorleistungen"),
             expectedData
         );
+        expect(returnedData).toStrictEqual(mockResponse.data);
     });
 });
