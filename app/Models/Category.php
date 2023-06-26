@@ -9,6 +9,8 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['id', 'position'];
+
     public function planer()
     {
         return $this->belongsTo(Planer::class);

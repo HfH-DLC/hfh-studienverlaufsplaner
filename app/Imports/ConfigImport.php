@@ -45,7 +45,7 @@ class ConfigImport
             if (isset($row->default)) {
                 $default = $row->default;
             }
-            $dayTime = DayTime::firstOrCreate(['id' => $row->id]);
+            $dayTime = DayTime::firstOrNew(['id' => $row->id]);
             $dayTime->day = $row->day;
             $dayTime->time = $row->time;
             $dayTime->sort_index = $row->sortIndex;
@@ -72,7 +72,7 @@ class ConfigImport
     private function insertModule($moduleData)
     {
 
-        $module = Module::firstOrCreate(['id' => $moduleData->id]);
+        $module = Module::firstOrNew(['id' => $moduleData->id]);
         $module->name = $moduleData->name;
         $module->ects = $moduleData->ects;
         $module->creditable = $moduleData->creditable;
@@ -111,7 +111,7 @@ class ConfigImport
     {
         $planerIds = [];
         foreach ($data->planers as $planerData) {
-            $planer = Planer::firstOrCreate(['id' => $planerData->slug]);
+            $planer = Planer::firstOrNew(['id' => $planerData->slug]);
             $planer->name = $planerData->name;
             $planer->required_ects = $planerData->requiredECTS;
             $planer->focus_selection_enabled = $planerData->focusSelectionEnabled;
@@ -132,7 +132,7 @@ class ConfigImport
     {
         $categoryIds = [];
         foreach ($planerData->categories as $index => $categoryData) {
-            $category = Category::firstOrCreate(['position' => $index, 'planer_id' => $planer->id]);
+            $category = Category::firstOrNew(['position' => $index, 'planer_id' => $planer->id]);
             $category->name = $categoryData->name;
             if (isset($categoryData->required)) {
                 $category->required = $categoryData->required;
@@ -159,7 +159,7 @@ class ConfigImport
         }
         $focusIds = [];
         foreach ($planerData->foci as $focusData) {
-            $focus = Focus::firstOrCreate(['id' => $focusData->id]);
+            $focus = Focus::firstOrNew(['id' => $focusData->id]);
             $focus->name = $focusData->name;
             $planer->foci()->save($focus);
             $modules = [];
@@ -217,7 +217,7 @@ class ConfigImport
             if (isset($locationData->default)) {
                 $default = $locationData->default;
             }
-            $location = Location::firstOrCreate(['id' => $locationData->id]);
+            $location = Location::firstOrNew(['id' => $locationData->id]);
             $location->name = $locationData->name;
             $location->default = $default;
             $location->save();

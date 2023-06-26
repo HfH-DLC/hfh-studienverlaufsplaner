@@ -12,6 +12,7 @@ class Module extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
+    protected $fillable = ['id'];
     protected $casts = ['category_id' => 'integer', 'ects' => 'integer', 'modifiers' => 'array'];
 
     public function categories()

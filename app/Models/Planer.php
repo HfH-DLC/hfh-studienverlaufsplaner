@@ -12,6 +12,7 @@ class Planer extends Model
 
     public $incrementing = false;
     protected $keyType = 'string';
+    protected $fillable = ['id'];
     protected $casts = [
         'required_ects' => 'integer',
         'focus_selection_enabled' => 'boolean',
