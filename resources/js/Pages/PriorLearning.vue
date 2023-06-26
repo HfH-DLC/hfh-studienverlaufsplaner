@@ -86,6 +86,10 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    focusSelectionEnabled: {
+        type: Boolean,
+        required: true,
+    },
 });
 
 const dataAdapter = new DataAdapter(

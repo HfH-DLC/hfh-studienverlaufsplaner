@@ -6,7 +6,7 @@
                 :planerSlug="planerSlug"
                 :planerName="planerName"
                 :planSlug="planResource.data.slug"
-                :showNavigation="focusSelectionEnabled"
+                :showFocusSelection="focusSelectionEnabled"
                 :showTour="!!store.tour"
                 :brochureUrl="brochureUrl"
                 :moduleDirectoryUrl="moduleDirectoryUrl"

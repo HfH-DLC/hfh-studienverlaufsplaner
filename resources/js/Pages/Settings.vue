@@ -8,7 +8,7 @@
                 :planSlug="planResource.data.slug"
                 :brochureUrl="brochureUrl"
                 :moduleDirectoryUrl="moduleDirectoryUrl"
-                :showNavigation="true"
+                :showFocusSelection="focusSelectionEnabled"
                 :showTour="false"
                 :saveStatus="SaveStatus.Saved"
             />
@@ -81,6 +81,10 @@ const props = defineProps({
     },
     dayTimesResource: {
         type: Object,
+        required: true,
+    },
+    focusSelectionEnabled: {
+        type: Boolean,
         required: true,
     },
 });

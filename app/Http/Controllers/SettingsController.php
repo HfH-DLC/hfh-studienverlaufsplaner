@@ -18,6 +18,7 @@ class SettingsController extends Controller
         $props = [
             'planerName' => $planer->name,
             'planerSlug' => $planer->id,
+            'focusSelectionEnabled' => $planer->focus_selection_enabled,
             'planResource' => new PlanResource($plan),
             'locationsResource' => LocationResource::collection($planer->getLocations()),
             'dayTimesResource' => DayTimeResource::collection($planer->getDayTimes())

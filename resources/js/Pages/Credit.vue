@@ -6,7 +6,7 @@
                 :planerSlug="planerSlug"
                 :planerName="planerName"
                 :planSlug="planResource.data.slug"
-                :showNavigation="true"
+                :showFocusSelection="focusSelectionEnabled"
                 :showTour="!!tour && planResource.data.scheduleValid"
                 :brochureUrl="brochureUrl"
                 :moduleDirectoryUrl="moduleDirectoryUrl"
@@ -177,6 +177,10 @@ const props = defineProps({
     },
     moduleDirectoryUrl: {
         type: String,
+        required: true,
+    },
+    focusSelectionEnabled: {
+        type: Boolean,
         required: true,
     },
 });

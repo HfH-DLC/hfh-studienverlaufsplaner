@@ -17,6 +17,7 @@ class PriorLearningController extends Controller
         $props = [
             'planerName' => $planer->name,
             'planerSlug' => $planer->id,
+            'focusSelectionEnabled' => $planer->focus_selection_enabled,
             'planResource' => new PlanResource($plan),
         ];
         if (isset($planer->meta)) {

@@ -12,7 +12,6 @@ use App\Http\Resources\PlanResource;
 use App\Http\Resources\RuleResource;
 use App\Http\Resources\TodoResource;
 use App\Mail\PlanCreated;
-use App\Models\DayTime;
 use App\Models\FocusSelection;
 use App\Models\Placement;
 use App\Models\Plan;
@@ -98,6 +97,7 @@ class PlanController extends Controller
         $props = [
             'planerName' => $planer->name,
             'planerSlug' => $planer->id,
+            'focusSelectionEnabled' => $planer->focus_selection_enabled,
             'planResource' => $planResource,
             'creditableModulesResource' => CreditableModuleResource::collection($modules),
             'todosResource' => TodoResource::collection($planer->getCreditTodos()),

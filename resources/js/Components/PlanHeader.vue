@@ -9,7 +9,7 @@
             class="flex justify-between items-center gap-4 text-base print:hidden"
         >
             <nav class="flex items-center">
-                <ul class="flex gap-x-4" v-if="showNavigation">
+                <ul class="flex gap-x-4">
                     <li>
                         <Link
                             :href="`/${planerSlug}/${planSlug}/einstellungen`"
@@ -22,6 +22,16 @@
                     </li>
                     <li>
                         <Link
+                            :href="`/${planerSlug}/${planSlug}/vorleistungen`"
+                            class="font-normal hover:text-thunderbird-red"
+                            :class="{
+                                active: $page.component === 'PriorLearning',
+                            }"
+                            >Vorleistungen</Link
+                        >
+                    </li>
+                    <li>
+                        <Link
                             :href="`/${planerSlug}/${planSlug}/zeitplan`"
                             class="font-normal hover:text-thunderbird-red"
                             :class="{
@@ -30,7 +40,7 @@
                             >Zeitplan</Link
                         >
                     </li>
-                    <li>
+                    <li v-if="showFocusSelection">
                         <Link
                             :href="`/${planerSlug}/${planSlug}/anrechnung`"
                             class="font-normal hover:text-thunderbird-red"
@@ -69,7 +79,7 @@ const props = defineProps({
         type: String,
         required: true,
     },
-    showNavigation: {
+    showFocusSelection: {
         type: Boolean,
         required: true,
     },
