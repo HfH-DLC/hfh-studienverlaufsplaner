@@ -17,7 +17,10 @@ class PriorLearningResource extends JsonResource
         return   [
             'id' => $this->id,
             'name' => $this->name,
-            'ects' => $this->ects,
+            'ectsRaw' => $this->ects,
+            'ects' => $this->getECTS(),
+            'countsAsCategoryIdRaw' => $this->counts_as_category_id,
+            'countsAsCategoryId' => $this->getCountsAsCategoryId(),
             'countsAsModuleId' => $this->counts_as_module_id,
         ];
     }
