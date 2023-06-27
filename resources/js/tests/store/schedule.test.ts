@@ -6,6 +6,7 @@ import {
     SaveStatus,
     ScheduleInitParams,
     ScheduleModule,
+    EventDate,
 } from "@/types";
 import DataAdapter from "@/DataAdapter";
 import Validator from "@/Validator";
@@ -14,7 +15,10 @@ import { dayTimeFactory } from "../factories/DayTimeFactory";
 import { locationFactory } from "../factories/LocationFactory";
 import { priorLearnignFactory } from "../factories/PriorLearningFactory";
 import { eventFactory } from "../factories/EventFactory";
+import { moduleFactory } from "../factories/ModuleFactory";
 import { scheduleModuleFactory } from "../factories/ScheduleModuleFactory";
+import { schedulePlacementFactory } from "../factories/SchedulePlacementFactory";
+import { scheduleCategoryFactory } from "../factories/ScheduleCategoryFactory";
 vi.mock("@/DataAdapter");
 
 function getInitializedStore(
@@ -288,7 +292,453 @@ describe("Schedule Store", () => {
     /**
      ** getters
      **/
-    test("getter tourSelectedModule", () => {
+
+    describe("getter events", () => {
+        it("returns an empty array if there are no modules", () => {
+            const { store } = getInitializedStore();
+            store.rawCategories = [
+                scheduleCategoryFactory.build({ modules: [] }),
+            ];
+            expect(store.modules).toStrictEqual([]);
+
+            expect(store.events).toStrictEqual([]);
+        });
+
+        it("returns an array of the events of all modules", () => {
+            const { store } = getInitializedStore();
+            const events = eventFactory.buildList(10);
+            store.rawCategories = [
+                scheduleCategoryFactory.build({
+                    modules: [
+                        scheduleModuleFactory.build({
+                            events: [events[0], events[1]],
+                        }),
+                        scheduleModuleFactory.build({
+                            events: [events[2], events[3], events[4]],
+                        }),
+                    ],
+                }),
+                scheduleCategoryFactory.build({
+                    modules: [
+                        scheduleModuleFactory.build({
+                            events: [events[5], events[6], events[7]],
+                        }),
+                        scheduleModuleFactory.build({
+                            events: [events[8], events[9]],
+                        }),
+                    ],
+                }),
+            ];
+
+            expect(store.events.length).toBe(10);
+            events.forEach((event) => {
+                expect(store.events.some((e) => event.id === e.id)).toBe(true);
+            });
+        });
+    });
+
+    describe("getter locationIds", () => {
+        it("returns array of the locations' ids", () => {
+            const { store } = getInitializedStore();
+            const locations = [
+                locationFactory.build({ id: "A" }),
+                locationFactory.build({ id: "B" }),
+                locationFactory.build({ id: "C" }),
+            ];
+            store.locations = locations;
+
+            expect(store.locationIds).toStrictEqual(["A", "B", "C"]);
+        });
+
+        it("returns an empty array if there are no locations", () => {
+            const { store } = getInitializedStore();
+            store.locations = [];
+
+            expect(store.locationIds).toStrictEqual([]);
+        });
+    });
+
+    describe("getter modules", () => {
+        it("returns an empty array if there are no categories", () => {
+            const { store } = getInitializedStore();
+            store.rawCategories = [];
+
+            expect(store.modules).toStrictEqual([]);
+        });
+
+        it("returns an array of the modules of all categories", () => {
+            const { store } = getInitializedStore();
+            const modules = moduleFactory.buildList(10);
+            store.rawCategories = [
+                scheduleCategoryFactory.build({
+                    modules: [modules[0], modules[1], modules[2]],
+                }),
+                scheduleCategoryFactory.build({
+                    modules: [
+                        modules[3],
+                        modules[4],
+                        modules[5],
+                        modules[6],
+                        modules[7],
+                    ],
+                }),
+                scheduleCategoryFactory.build({
+                    modules: [modules[8], modules[9]],
+                }),
+            ];
+
+            expect(store.modules.length).toBe(10);
+            modules.forEach((module) => {
+                expect(store.modules.some((m) => module.id === m.id)).toBe(
+                    true
+                );
+            });
+        });
+    });
+
+    describe("getter moduleById", () => {
+        it("returns the module with the matching id", () => {
+            const { store } = getInitializedStore();
+            const modules = scheduleModuleFactory.buildList(10);
+            store.rawCategories = [
+                scheduleCategoryFactory.build({
+                    modules: [modules[0], modules[1], modules[2]],
+                }),
+                scheduleCategoryFactory.build({
+                    modules: [
+                        modules[3],
+                        modules[4],
+                        modules[5],
+                        modules[6],
+                        modules[7],
+                    ],
+                }),
+                scheduleCategoryFactory.build({
+                    modules: [modules[8], modules[9]],
+                }),
+            ];
+
+            modules.forEach((module) => {
+                expect(store.moduleById(module.id)).toStrictEqual(module);
+            });
+        });
+
+        it("returns undefined if there is no module with a matching id", () => {
+            const { store } = getInitializedStore();
+            const modules = scheduleModuleFactory.buildList(10);
+            store.rawCategories = [
+                scheduleCategoryFactory.build({
+                    modules: [modules[0], modules[1], modules[2]],
+                }),
+                scheduleCategoryFactory.build({
+                    modules: [
+                        modules[3],
+                        modules[4],
+                        modules[5],
+                        modules[6],
+                        modules[7],
+                    ],
+                }),
+                scheduleCategoryFactory.build({
+                    modules: [modules[8], modules[9]],
+                }),
+            ];
+
+            expect(store.moduleById("some_unknown_id")).toBeUndefined();
+        });
+    });
+
+    describe("getter placements", () => {
+        it("returns an array of SchedulePlacements", () => {
+            const { store } = getInitializedStore();
+            const modules = moduleFactory.buildList(3);
+            const rawPlacements = [
+                placementFactory.build({
+                    moduleId: modules[0].id,
+                }),
+                placementFactory.build({
+                    moduleId: modules[1].id,
+                }),
+                placementFactory.build({
+                    moduleId: modules[2].id,
+                }),
+            ];
+            store.rawCategories = [
+                scheduleCategoryFactory.build({
+                    modules: [modules[0], modules[1], modules[2]],
+                }),
+            ];
+            store.rawPlacements = [
+                rawPlacements[0],
+                rawPlacements[1],
+                rawPlacements[2],
+            ];
+            store.placementErrors.set(rawPlacements[0].id, [
+                {
+                    label: "Error Message 1",
+                },
+                {
+                    label: "Error Message 2",
+                },
+            ]);
+            store.placementErrors.set(rawPlacements[2].id, [
+                {
+                    label: "Error Message 4",
+                },
+                {
+                    label: "Error Message 5",
+                },
+                {
+                    label: "Error Message 6",
+                },
+            ]);
+
+            expect(store.placements.length).toBe(3);
+            rawPlacements.forEach((rawPlacement, index) => {
+                const placement = store.placements[index];
+                expect(placement.id).toBe(rawPlacement.id);
+                expect(placement.year).toBe(rawPlacement.year);
+                expect(placement.semester).toBe(rawPlacement.semester);
+                expect(placement.dayTime).toStrictEqual(rawPlacement.dayTime);
+                expect(placement.timeWindow).toBe(rawPlacement.timeWindow);
+                expect(placement.moduleId).toBe(rawPlacement.moduleId);
+                expect(placement.location).toStrictEqual(rawPlacement.location);
+                expect(placement.module.id).toBe(rawPlacement.moduleId);
+                expect(placement.errors).toStrictEqual(
+                    store.placementErrors.get(placement.id) || []
+                );
+            });
+        });
+
+        it("returns an empty array if there are no placements", () => {
+            const { store } = getInitializedStore();
+            store.rawPlacements = [];
+
+            expect(store.placements).toStrictEqual([]);
+        });
+    });
+
+    describe("getter placementById", () => {
+        it("returns the placement with the matching id", () => {
+            const { store } = getInitializedStore();
+            const modules = moduleFactory.buildList(3);
+            const rawPlacements = [
+                placementFactory.build({
+                    id: 1,
+                    moduleId: modules[0].id,
+                }),
+                placementFactory.build({
+                    id: 2,
+                    moduleId: modules[1].id,
+                }),
+                placementFactory.build({
+                    id: 3,
+                    moduleId: modules[2].id,
+                }),
+            ];
+            store.rawCategories = [
+                scheduleCategoryFactory.build({
+                    modules: [modules[0], modules[1], modules[2]],
+                }),
+            ];
+            store.rawPlacements = [
+                rawPlacements[0],
+                rawPlacements[1],
+                rawPlacements[2],
+            ];
+            store.placementErrors.set(rawPlacements[0].id, [
+                {
+                    label: "Error Message 1",
+                },
+                {
+                    label: "Error Message 2",
+                },
+            ]);
+            store.placementErrors.set(rawPlacements[2].id, [
+                {
+                    label: "Error Message 4",
+                },
+                {
+                    label: "Error Message 5",
+                },
+                {
+                    label: "Error Message 6",
+                },
+            ]);
+
+            rawPlacements.forEach((rawPlacement) => {
+                const placement = store.placementById(rawPlacement.id);
+                expect(placement).not.toBeUndefined;
+                expect(placement!.id).toBe(rawPlacement.id);
+                expect(placement!.id).toBe(rawPlacement.id);
+                expect(placement!.year).toBe(rawPlacement.year);
+                expect(placement!.semester).toBe(rawPlacement.semester);
+                expect(placement!.dayTime).toStrictEqual(rawPlacement.dayTime);
+                expect(placement!.timeWindow).toBe(rawPlacement.timeWindow);
+                expect(placement!.moduleId).toBe(rawPlacement.moduleId);
+                expect(placement!.location).toStrictEqual(
+                    rawPlacement.location
+                );
+                expect(placement!.module.id).toBe(rawPlacement.moduleId);
+                expect(placement!.errors).toStrictEqual(
+                    store.placementErrors.get(placement!.id) || []
+                );
+            });
+        });
+
+        it("returns undefined if there is no placement with a matching id", () => {
+            const { store } = getInitializedStore();
+            const module = moduleFactory.build();
+            const rawPlacements = [
+                placementFactory.build({
+                    id: 1,
+                    moduleId: module.id,
+                }),
+            ];
+            store.rawCategories = [
+                scheduleCategoryFactory.build({
+                    modules: [module],
+                }),
+            ];
+            store.rawPlacements = [rawPlacements[0]];
+
+            expect(store.placementById(42)).toBe(undefined);
+        });
+    });
+
+    describe("getter placementByDate", () => {
+        it("returns the placement with the matching date", () => {
+            const { store } = getInitializedStore();
+            const modules = moduleFactory.buildList(3);
+            const rawPlacements = [
+                placementFactory.build({
+                    id: 1,
+                    moduleId: modules[0].id,
+                    year: 2001,
+                    semester: "HS",
+                    dayTime: {
+                        id: "a",
+                        day: "Montag",
+                        time: "Morgen",
+                    },
+                    timeWindow: "A",
+                }),
+                placementFactory.build({
+                    id: 2,
+                    moduleId: modules[1].id,
+                    dayTime: {
+                        id: "f",
+                        day: "Donnerstag",
+                        time: "Nachmittag",
+                    },
+                    timeWindow: "B",
+                }),
+                placementFactory.build({
+                    id: 3,
+                    moduleId: modules[2].id,
+                    dayTime: {
+                        id: "d",
+                        day: "Dienstag",
+                        time: "Nachmittag",
+                    },
+                    timeWindow: "C",
+                }),
+            ];
+            store.rawCategories = [
+                scheduleCategoryFactory.build({
+                    modules: [modules[0], modules[1], modules[2]],
+                }),
+            ];
+            store.rawPlacements = [
+                rawPlacements[0],
+                rawPlacements[1],
+                rawPlacements[2],
+            ];
+            store.placementErrors.set(rawPlacements[0].id, [
+                {
+                    label: "Error Message 1",
+                },
+                {
+                    label: "Error Message 2",
+                },
+            ]);
+            store.placementErrors.set(rawPlacements[2].id, [
+                {
+                    label: "Error Message 4",
+                },
+                {
+                    label: "Error Message 5",
+                },
+                {
+                    label: "Error Message 6",
+                },
+            ]);
+
+            rawPlacements.forEach((rawPlacement) => {
+                const date: EventDate = {
+                    year: rawPlacement.year,
+                    semester: rawPlacement.semester,
+                    dayTime: rawPlacement.dayTime,
+                    timeWindow: rawPlacement.timeWindow,
+                };
+                const placement = store.placementByDate(date);
+                expect(placement).not.toBeUndefined;
+                expect(placement!.id).toBe(rawPlacement.id);
+                expect(placement!.id).toBe(rawPlacement.id);
+                expect(placement!.year).toBe(rawPlacement.year);
+                expect(placement!.semester).toBe(rawPlacement.semester);
+                expect(placement!.dayTime).toStrictEqual(rawPlacement.dayTime);
+                expect(placement!.timeWindow).toBe(rawPlacement.timeWindow);
+                expect(placement!.moduleId).toBe(rawPlacement.moduleId);
+                expect(placement!.location).toStrictEqual(
+                    rawPlacement.location
+                );
+                expect(placement!.module.id).toBe(rawPlacement.moduleId);
+                expect(placement!.errors).toStrictEqual(
+                    store.placementErrors.get(placement!.id) || []
+                );
+            });
+        });
+
+        it("returns undefined if there is no placement with a matching date", () => {
+            const { store } = getInitializedStore();
+            const module = moduleFactory.build();
+            const rawPlacements = [
+                placementFactory.build({
+                    id: 1,
+                    moduleId: module.id,
+                    year: 2001,
+                    semester: "HS",
+                    dayTime: {
+                        id: "a",
+                        day: "Montag",
+                        time: "Morgen",
+                    },
+                    timeWindow: "A",
+                }),
+            ];
+            store.rawCategories = [
+                scheduleCategoryFactory.build({
+                    modules: [module],
+                }),
+            ];
+            store.rawPlacements = [rawPlacements[0]];
+
+            const otherDate: EventDate = {
+                year: 2004,
+                semester: "FS",
+                dayTime: dayTimeFactory.build({
+                    id: "g",
+                    day: "Freitag",
+                    time: "Morgen",
+                }),
+                timeWindow: "D",
+            };
+            expect(store.placementByDate(otherDate)).toBe(undefined);
+        });
+    });
+
+    describe("getter tourSelectedModule", () => {
         it("returns null if tour does not exist", () => {
             const { store } = getInitializedStore({
                 tour: undefined,
@@ -329,19 +779,7 @@ describe("Schedule Store", () => {
             expect(store.tourSelectedModule).toBeNull;
         });
 
-        it("returns the default module if no module is set on the tour step", () => {
-            const defaultModule: ScheduleModule = {
-                id: "",
-                name: "",
-                infos: [],
-                misplaced: false,
-                placement: undefined,
-                selected: false,
-                events: [],
-                ects: 0,
-                prerequisites: [],
-            };
-
+        it("returns null if no module is set on the tour step", () => {
             const { store } = getInitializedStore({
                 tour: {
                     steps: [
@@ -353,8 +791,9 @@ describe("Schedule Store", () => {
                 },
             });
             store.tourActive = true;
+            store.tourCurrentStepIndex = 0;
 
-            expect(store.tourSelectedModule).toStrictEqual(defaultModule);
+            expect(store.tourSelectedModule).toStrictEqual(null);
         });
 
         it("returns the specified module if a module is set on the tour step", () => {
@@ -386,8 +825,58 @@ describe("Schedule Store", () => {
                 },
             });
             store.tourActive = true;
+            store.tourCurrentStepIndex = 0;
 
             expect(store.tourSelectedModule).toStrictEqual(selectedModule);
         });
     });
+
+    describe("getter valid", () => {
+        it("should return true if there are no todoEntries and placements", () => {
+            const { store } = getInitializedStore();
+            store.todoEntries = [];
+            store.rawPlacements = [];
+
+            expect(store.valid).toBe(true);
+        });
+
+        it("should return false if there are unchecked todoEntries", () => {
+            const { store } = getInitializedStore();
+            store.todoEntries = [
+                {
+                    progressLabel: "some label",
+                    checked: false,
+                },
+                {
+                    progressLabel: "some label",
+                    checked: true,
+                },
+            ];
+            store.rawPlacements = [];
+
+            expect(store.valid).toBe(false);
+        });
+
+        it("should return false if there are placements with errors", () => {
+            const { store } = getInitializedStore();
+            store.todoEntries = [];
+            const schedulePlacement = schedulePlacementFactory.build();
+            store.rawPlacements = [schedulePlacement];
+            store.placementErrors.set(schedulePlacement.id, [
+                {
+                    label: "Some error message",
+                },
+            ]);
+            expect(store.valid).toBe(false);
+        });
+    });
+
+    // describe("getter selectableEvents", () => {
+    //     it("returns an empty array if there is no selected module", () => {
+    //         const { store } = getInitializedStore();
+    //         expect(store.selectedModule).toBeUndefined();
+
+    //         expect(store.selectableEvents).toStrictEqual([]);
+    //     });
+    // });
 });
