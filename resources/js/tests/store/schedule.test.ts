@@ -18,7 +18,7 @@ import { eventFactory } from "../factories/EventFactory";
 import { moduleFactory } from "../factories/ModuleFactory";
 import { scheduleModuleFactory } from "../factories/ScheduleModuleFactory";
 import { schedulePlacementFactory } from "../factories/SchedulePlacementFactory";
-import { scheduleCategoryFactory } from "../factories/ScheduleCategoryFactory";
+import { categoryFactory } from "../factories/CategoryFactory";
 vi.mock("@/DataAdapter");
 
 function getInitializedStore(
@@ -296,9 +296,7 @@ describe("Schedule Store", () => {
     describe("getter events", () => {
         it("returns an empty array if there are no modules", () => {
             const { store } = getInitializedStore();
-            store.rawCategories = [
-                scheduleCategoryFactory.build({ modules: [] }),
-            ];
+            store.rawCategories = [categoryFactory.build({ modules: [] })];
             expect(store.modules).toStrictEqual([]);
 
             expect(store.events).toStrictEqual([]);
@@ -308,7 +306,7 @@ describe("Schedule Store", () => {
             const { store } = getInitializedStore();
             const events = eventFactory.buildList(10);
             store.rawCategories = [
-                scheduleCategoryFactory.build({
+                categoryFactory.build({
                     modules: [
                         scheduleModuleFactory.build({
                             events: [events[0], events[1]],
@@ -318,7 +316,7 @@ describe("Schedule Store", () => {
                         }),
                     ],
                 }),
-                scheduleCategoryFactory.build({
+                categoryFactory.build({
                     modules: [
                         scheduleModuleFactory.build({
                             events: [events[5], events[6], events[7]],
@@ -370,10 +368,10 @@ describe("Schedule Store", () => {
             const { store } = getInitializedStore();
             const modules = moduleFactory.buildList(10);
             store.rawCategories = [
-                scheduleCategoryFactory.build({
+                categoryFactory.build({
                     modules: [modules[0], modules[1], modules[2]],
                 }),
-                scheduleCategoryFactory.build({
+                categoryFactory.build({
                     modules: [
                         modules[3],
                         modules[4],
@@ -382,7 +380,7 @@ describe("Schedule Store", () => {
                         modules[7],
                     ],
                 }),
-                scheduleCategoryFactory.build({
+                categoryFactory.build({
                     modules: [modules[8], modules[9]],
                 }),
             ];
@@ -401,10 +399,10 @@ describe("Schedule Store", () => {
             const { store } = getInitializedStore();
             const modules = scheduleModuleFactory.buildList(10);
             store.rawCategories = [
-                scheduleCategoryFactory.build({
+                categoryFactory.build({
                     modules: [modules[0], modules[1], modules[2]],
                 }),
-                scheduleCategoryFactory.build({
+                categoryFactory.build({
                     modules: [
                         modules[3],
                         modules[4],
@@ -413,7 +411,7 @@ describe("Schedule Store", () => {
                         modules[7],
                     ],
                 }),
-                scheduleCategoryFactory.build({
+                categoryFactory.build({
                     modules: [modules[8], modules[9]],
                 }),
             ];
@@ -427,10 +425,10 @@ describe("Schedule Store", () => {
             const { store } = getInitializedStore();
             const modules = scheduleModuleFactory.buildList(10);
             store.rawCategories = [
-                scheduleCategoryFactory.build({
+                categoryFactory.build({
                     modules: [modules[0], modules[1], modules[2]],
                 }),
-                scheduleCategoryFactory.build({
+                categoryFactory.build({
                     modules: [
                         modules[3],
                         modules[4],
@@ -439,7 +437,7 @@ describe("Schedule Store", () => {
                         modules[7],
                     ],
                 }),
-                scheduleCategoryFactory.build({
+                categoryFactory.build({
                     modules: [modules[8], modules[9]],
                 }),
             ];
@@ -464,7 +462,7 @@ describe("Schedule Store", () => {
                 }),
             ];
             store.rawCategories = [
-                scheduleCategoryFactory.build({
+                categoryFactory.build({
                     modules: [modules[0], modules[1], modules[2]],
                 }),
             ];
@@ -537,7 +535,7 @@ describe("Schedule Store", () => {
                 }),
             ];
             store.rawCategories = [
-                scheduleCategoryFactory.build({
+                categoryFactory.build({
                     modules: [modules[0], modules[1], modules[2]],
                 }),
             ];
@@ -596,7 +594,7 @@ describe("Schedule Store", () => {
                 }),
             ];
             store.rawCategories = [
-                scheduleCategoryFactory.build({
+                categoryFactory.build({
                     modules: [module],
                 }),
             ];
@@ -645,7 +643,7 @@ describe("Schedule Store", () => {
                 }),
             ];
             store.rawCategories = [
-                scheduleCategoryFactory.build({
+                categoryFactory.build({
                     modules: [modules[0], modules[1], modules[2]],
                 }),
             ];
@@ -718,7 +716,7 @@ describe("Schedule Store", () => {
                 }),
             ];
             store.rawCategories = [
-                scheduleCategoryFactory.build({
+                categoryFactory.build({
                     modules: [module],
                 }),
             ];
@@ -735,6 +733,34 @@ describe("Schedule Store", () => {
                 timeWindow: "D",
             };
             expect(store.placementByDate(otherDate)).toBe(undefined);
+        });
+    });
+
+    describe("getter selectedModule", () => {
+        it("returns the selected module", () => {
+            const { store } = getInitializedStore();
+            const selectedModule = moduleFactory.build();
+            store.rawCategories = [
+                categoryFactory.build({
+                    modules: [selectedModule],
+                }),
+            ];
+            store.selectionStatus.moduleId = selectedModule.id;
+
+            expect(store.selectedModule?.id).toBe(selectedModule.id);
+        });
+
+        it("returns undefined if there is no selected module", () => {
+            const { store } = getInitializedStore();
+            const selectedModule = moduleFactory.build();
+            store.rawCategories = [
+                categoryFactory.build({
+                    modules: [selectedModule],
+                }),
+            ];
+            store.selectionStatus.moduleId = null;
+
+            expect(store.selectedModule).toBeUndefined();
         });
     });
 
