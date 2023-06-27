@@ -293,6 +293,46 @@ describe("Schedule Store", () => {
      ** getters
      **/
 
+    describe("getter ects", () => {
+        it("returns the sum of the ects of all placements and prior learnings", () => {
+            const { store } = getInitializedStore();
+            const modules = [
+                moduleFactory.build({ ects: 3 }),
+                moduleFactory.build({ ects: 4 }),
+            ];
+            const placements = [
+                placementFactory.build({
+                    moduleId: modules[0].id,
+                }),
+                placementFactory.build({
+                    moduleId: modules[1].id,
+                }),
+            ];
+            const priorLearnings = [
+                priorLearnignFactory.build({
+                    ects: 5,
+                }),
+                priorLearnignFactory.build({
+                    ects: 10,
+                }),
+            ];
+
+            store.rawCategories = [
+                categoryFactory.build({
+                    modules: modules,
+                }),
+            ];
+            store.rawPlacements = placements;
+            store.priorLearnings = priorLearnings;
+
+            const sum =
+                modules.reduce((acc, cur) => acc + cur.ects, 0) +
+                priorLearnings.reduce((acc, cur) => acc + cur.ects, 0);
+
+            expect(store.ects).toBe(sum);
+        });
+    });
+
     describe("getter events", () => {
         it("returns an empty array if there are no modules", () => {
             const { store } = getInitializedStore();
