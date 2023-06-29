@@ -1,14 +1,14 @@
 import PrerequisitesRule from "@/Models/Rules/Schedule/PrerequisitesRule";
 import { describe, it, expect } from "vitest";
 import { ref } from "vue";
-import { ErrorMessage, SchedulePlacement } from "@/types";
+import { Message, SchedulePlacement } from "@/types";
 import { schedulePlacementFactory } from "@/tests/factories/SchedulePlacementFactory";
 import { scheduleModuleFactory } from "@/tests/factories/ScheduleModuleFactory";
 import { eventFactory } from "@/tests/factories/EventFactory";
 import { priorLearnignFactory } from "@/tests/factories/PriorLearningFactory";
 
 describe("PrerequisitesRule", () => {
-    describe("validatePlacements", () => {
+    describe("getPlacementErrors", () => {
         it("should return an error if none of a placement's prerequisites are met", () => {
             const rule = new PrerequisitesRule();
             const errorMessages = new Map();
@@ -31,7 +31,7 @@ describe("PrerequisitesRule", () => {
                 priorLearnings: ref([]),
             };
 
-            rule.validatePlacements(data, errorMessages);
+            rule.getPlacementErrors(data, errorMessages);
 
             expect(
                 errorMessages.get(placementWithPrerequisites.id)?.length
@@ -70,7 +70,7 @@ describe("PrerequisitesRule", () => {
                 priorLearnings: ref([]),
             };
 
-            rule.validatePlacements(data, errorMessages);
+            rule.getPlacementErrors(data, errorMessages);
 
             expect(
                 errorMessages.get(placementWithPrerequisites.id)?.length
@@ -107,7 +107,7 @@ describe("PrerequisitesRule", () => {
                 priorLearnings: ref([]),
             };
 
-            rule.validatePlacements(data, errorMessages);
+            rule.getPlacementErrors(data, errorMessages);
 
             expect(
                 errorMessages.get(placementWithPrerequisites.id)?.length
@@ -144,7 +144,7 @@ describe("PrerequisitesRule", () => {
                 priorLearnings: ref([]),
             };
 
-            rule.validatePlacements(data, errorMessages);
+            rule.getPlacementErrors(data, errorMessages);
 
             expect(
                 errorMessages.get(placementWithPrerequisites.id)?.length
@@ -181,7 +181,7 @@ describe("PrerequisitesRule", () => {
                 priorLearnings: ref([]),
             };
 
-            rule.validatePlacements(data, errorMessages);
+            rule.getPlacementErrors(data, errorMessages);
 
             expect(
                 errorMessages.get(placementWithPrerequisites.id)?.length
@@ -228,7 +228,7 @@ describe("PrerequisitesRule", () => {
                 priorLearnings: ref([]),
             };
 
-            rule.validatePlacements(data, errorMessages);
+            rule.getPlacementErrors(data, errorMessages);
 
             expect(errorMessages.size).toBe(0);
         });
@@ -268,7 +268,7 @@ describe("PrerequisitesRule", () => {
                 ]),
             };
 
-            rule.validatePlacements(data, errorMessages);
+            rule.getPlacementErrors(data, errorMessages);
 
             expect(errorMessages.size).toBe(0);
         });
@@ -300,7 +300,7 @@ describe("PrerequisitesRule", () => {
                 ]),
             };
 
-            rule.validatePlacements(data, errorMessages);
+            rule.getPlacementErrors(data, errorMessages);
 
             expect(errorMessages.size).toBe(0);
         });
@@ -314,41 +314,41 @@ describe("PrerequisitesRule", () => {
                 priorLearnings: ref([]),
             };
 
-            rule.validatePlacements(data, errorMessages);
+            rule.getPlacementErrors(data, errorMessages);
 
             expect(errorMessages.size).toBe(0);
         });
     });
 
-    describe("validateModule", () => {
+    describe("getModuleErrors", () => {
         it("should return no errors if the module has no prerequisites", () => {
             const rule = new PrerequisitesRule();
-            const errorMessages = new Array<ErrorMessage>();
+            const errorMessages = new Array<Message>();
             const data = { placements: ref([]), priorLearnings: ref([]) };
             const module = scheduleModuleFactory.build({ prerequisites: [] });
 
-            rule.validateModule(module, data, errorMessages);
+            rule.getModuleErrors(module, data, errorMessages);
 
             expect(errorMessages.length).toBe(0);
         });
 
         it("should return an error if a module with prerequisites has no events", () => {
             const rule = new PrerequisitesRule();
-            const errorMessages = new Array<ErrorMessage>();
+            const errorMessages = new Array<Message>();
             const data = { placements: ref([]), priorLearnings: ref([]) };
             const prerequisite = scheduleModuleFactory.build();
             const moduleWithPrerequisites = scheduleModuleFactory.build({
                 prerequisites: [prerequisite],
             });
 
-            rule.validateModule(moduleWithPrerequisites, data, errorMessages);
+            rule.getModuleErrors(moduleWithPrerequisites, data, errorMessages);
 
             expect(errorMessages.length).toBe(1);
         });
 
         it("should return no error if some of a module's events meet the module's prerequisites", () => {
             const rule = new PrerequisitesRule();
-            const errorMessages = new Array<ErrorMessage>();
+            const errorMessages = new Array<Message>();
 
             const prerequisite = scheduleModuleFactory.build();
             const prerequisitePlacement: SchedulePlacement =
@@ -377,14 +377,14 @@ describe("PrerequisitesRule", () => {
                 ],
             });
 
-            rule.validateModule(moduleWithPrerequisites, data, errorMessages);
+            rule.getModuleErrors(moduleWithPrerequisites, data, errorMessages);
 
             expect(errorMessages.length).toBe(0);
         });
 
         it("should return no error if the prerequisite is met by prior learnings", () => {
             const rule = new PrerequisitesRule();
-            const errorMessages = new Array<ErrorMessage>();
+            const errorMessages = new Array<Message>();
 
             const prerequisite = scheduleModuleFactory.build();
             const data = {
@@ -409,14 +409,14 @@ describe("PrerequisitesRule", () => {
                 ],
             });
 
-            rule.validateModule(moduleWithPrerequisites, data, errorMessages);
+            rule.getModuleErrors(moduleWithPrerequisites, data, errorMessages);
 
             expect(errorMessages.length).toBe(0);
         });
 
         it("should return an error if none of a module's events meets the module's prerequisites", () => {
             const rule = new PrerequisitesRule();
-            const errorMessages = new Array<ErrorMessage>();
+            const errorMessages = new Array<Message>();
 
             const prerequisite = scheduleModuleFactory.build();
             const prerequisitePlacement: SchedulePlacement =
@@ -449,13 +449,13 @@ describe("PrerequisitesRule", () => {
                 ],
             });
 
-            rule.validateModule(moduleWithPrerequisites, data, errorMessages);
+            rule.getModuleErrors(moduleWithPrerequisites, data, errorMessages);
 
             expect(errorMessages.length).toBe(1);
         });
     });
 
-    describe("validateSelection", () => {
+    describe("getSelectionStatus", () => {
         it("should return nothing if the module has no prerequisites", () => {
             const rule = new PrerequisitesRule();
             const infos = new Map();
@@ -465,7 +465,7 @@ describe("PrerequisitesRule", () => {
             };
             const module = scheduleModuleFactory.build({ prerequisites: [] });
 
-            rule.validateSelection(module, data, infos);
+            rule.getSelectionStatus(module, data, infos);
 
             expect(infos.size).toBe(0);
         });
@@ -499,7 +499,7 @@ describe("PrerequisitesRule", () => {
                 ],
             });
 
-            rule.validateSelection(moduleWithPrerequisites, data, infos);
+            rule.getSelectionStatus(moduleWithPrerequisites, data, infos);
 
             expect(infos.size).toBe(0);
         });
@@ -529,7 +529,7 @@ describe("PrerequisitesRule", () => {
                 ],
             });
 
-            rule.validateSelection(moduleWithPrerequisites, data, infos);
+            rule.getSelectionStatus(moduleWithPrerequisites, data, infos);
 
             expect(infos.size).toBe(0);
         });
@@ -569,7 +569,7 @@ describe("PrerequisitesRule", () => {
                 ],
             });
 
-            rule.validateSelection(
+            rule.getSelectionStatus(
                 moduleWithPrerequisites,
                 data,
                 errorMessages

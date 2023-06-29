@@ -7,7 +7,7 @@ export const scheduleModuleFactory = Factory.Sync.makeFactory<ScheduleModule>({
     events: [],
     ects: 5,
     prerequisites: [],
-    infos: [],
+    errors: [],
     misplaced: false,
     placement: undefined,
     selected: false,

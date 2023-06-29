@@ -4,10 +4,10 @@
             Zurück
         </button>
         <h2 class="text-xl">{{ selectedModule.name }}</h2>
-        <ErrorList
+        <MessageList
             class="mt-4 space-y-2"
-            v-if="selectedModule.infos.length > 0"
-            :errors="selectedModule.infos"
+            v-if="selectedModule.errors.length > 0"
+            :messages="selectedModule.errors"
         />
         <dl class="mt-4">
             <dt class="hfh-label">Modulnummer</dt>
@@ -33,7 +33,7 @@
 
 <script lang="ts" setup>
 import { useScheduleStore } from "../Store/schedule";
-import ErrorList from "../Components/ErrorList.vue";
+import MessageList from "./MessageList.vue";
 import { ScheduleModule } from "@/types";
 import { PropType } from "vue";
 

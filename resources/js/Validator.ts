@@ -1,3 +1,4 @@
+import { joinStrings, pluralize } from "./helpers";
 import {
     ChecklistEntryData,
     Event,
@@ -5,7 +6,7 @@ import {
     Rule,
     Todo,
     ScheduleModule,
-    ErrorMessage,
+    Message,
 } from "./types";
 import { Ref } from "vue";
 
@@ -20,13 +21,22 @@ export default class Validator {
 
     validate(data: Record<string, Ref<any>>) {
         return {
-            todoEntries: this.validateTodos(data),
-            moduleInfos: this.validateModules(data),
-            placementErrors: this.validatePlacements(data),
+            todoEntries: this.getTodoEntries(data),
+            moduleErrors: this.getModuleErrors(data),
+            placementErrors: this.getPlacementErrors(data),
+            globalInfos: this.getGlobalInfos(data),
         };
     }
 
-    validateTodos(data: Record<string, any>): Array<ChecklistEntryData> {
+    getGlobalInfos(data: Record<string, Ref<any>>): Array<Message> {
+        const infos: Array<Message> = [];
+        this.rules.forEach((rule) => {
+            rule.getGlobalInfos(data, infos);
+        });
+        return infos;
+    }
+
+    getTodoEntries(data: Record<string, any>): Array<ChecklistEntryData> {
         return this.todos.reduce(
             (acc: Array<ChecklistEntryData>, cur: Todo) => {
                 acc.push(...cur.getEntries(data));
@@ -35,34 +45,36 @@ export default class Validator {
             []
         );
     }
-    validateModules(
+
+    getModuleErrors(
         data: Record<string, Ref<any>>
-    ): Map<string, Array<ErrorMessage>> {
-        const moduleInfos = new Map();
+    ): Map<string, Array<Message>> {
+        const moduleErrors = new Map();
         data.modules.value.forEach((module: ScheduleModule) => {
-            moduleInfos.set(module.id, []);
+            moduleErrors.set(module.id, []);
             this.rules.forEach((rule) => {
-                let errorMessages = moduleInfos.get(module.id);
+                let errorMessages = moduleErrors.get(module.id);
                 if (!errorMessages) {
                     errorMessages = [];
-                    moduleInfos.set(module.id, errorMessages);
+                    moduleErrors.set(module.id, errorMessages);
                 }
-                rule.validateModule(module, data, errorMessages);
+                rule.getModuleErrors(module, data, errorMessages);
             });
         });
-        return moduleInfos;
+        return moduleErrors;
     }
-    validatePlacements(
+
+    getPlacementErrors(
         data: Record<string, Ref<any>>
-    ): Map<number, Array<ErrorMessage>> {
+    ): Map<number, Array<Message>> {
         const placementErrors = new Map();
         this.rules.forEach((rule) => {
-            rule.validatePlacements(data, placementErrors);
+            rule.getPlacementErrors(data, placementErrors);
         });
         return placementErrors;
     }
 
-    validateSelection(
+    getSelectionStatus(
         module: ScheduleModule,
         data: Record<string, Ref<any>>
     ): {
@@ -80,7 +92,7 @@ export default class Validator {
             new Map()
         );
         this.rules.forEach((rule) => {
-            rule.validateSelection(module, data, selectionEventInfos);
+            rule.getSelectionStatus(module, data, selectionEventInfos);
         });
         return {
             moduleId: module.id,

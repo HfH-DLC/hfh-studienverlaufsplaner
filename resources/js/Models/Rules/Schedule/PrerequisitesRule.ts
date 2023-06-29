@@ -1,17 +1,19 @@
 import PrerequisitesRuleLabel from "@/Components/Rules/Schedule/PrerequisitesRuleLabel.vue";
 import {
-    ErrorMessage,
+    Message,
     Event,
     Module,
     PriorLearning,
     ScheduleModule,
     SchedulePlacement,
     SelectionEventInfo,
+    MessageType,
+    Rule,
 } from "@/types";
 import { markRaw, Ref } from "vue";
 import { isPreviousSemester, isSameDate } from "../../../helpers";
-export default class PrerequisitesRule {
-    validatePlacements(
+export default class PrerequisitesRule implements Rule {
+    getPlacementErrors(
         {
             placements,
             priorLearnings,
@@ -19,7 +21,7 @@ export default class PrerequisitesRule {
             placements: Ref<Array<SchedulePlacement>>;
             priorLearnings: Ref<Array<PriorLearning>>;
         },
-        errors: Map<number, Array<ErrorMessage>>
+        errors: Map<number, Array<Message>>
     ) {
         placements.value.forEach((placement: SchedulePlacement) => {
             const missingPrerequisites: Array<Module> = [];
@@ -63,12 +65,13 @@ export default class PrerequisitesRule {
                         missingPrerequisites,
                         module: placement.module,
                     },
+                    type: MessageType.Error,
                 });
             }
         });
     }
 
-    validateModule(
+    getModuleErrors(
         module: ScheduleModule,
         {
             placements,
@@ -77,7 +80,7 @@ export default class PrerequisitesRule {
             placements: Ref<Array<SchedulePlacement>>;
             priorLearnings: Ref<Array<PriorLearning>>;
         },
-        errors: Array<ErrorMessage>
+        errors: Array<Message>
     ): void {
         const prerequisites = module.prerequisites;
         if (prerequisites.length == 0) {
@@ -100,11 +103,14 @@ export default class PrerequisitesRule {
                     missingPrerequisites: module.prerequisites,
                     module,
                 },
+                type: MessageType.Error,
             });
         }
     }
 
-    validateSelection(
+    getGlobalInfos(data: Record<string, any>, infos: Message[]): void {}
+
+    getSelectionStatus(
         module: ScheduleModule,
         {
             placements,

@@ -1,7 +1,14 @@
 import { Ref } from "vue";
-import { DayTime, ErrorMessage, Rule, SchedulePlacement } from "@/types";
+import {
+    DayTime,
+    Message,
+    MessageType,
+    Rule,
+    SchedulePlacement,
+} from "@/types";
+
 export default class SettingsRule implements Rule {
-    validatePlacements(
+    getPlacementErrors(
         {
             placements,
             locationIds,
@@ -11,12 +18,13 @@ export default class SettingsRule implements Rule {
             locationIds: Ref<Array<string>>;
             dayTimes: Ref<Array<DayTime>>;
         },
-        errors: Map<number, Array<ErrorMessage>>
+        errors: Map<number, Array<Message>>
     ) {
         placements.value.forEach((placement: SchedulePlacement) => {
             if (!locationIds.value.includes(placement.location.id)) {
                 this.addErrorMessage(errors, placement.id, {
                     label: `Die aktuelle Platzierung des Modules ${placement.module.id} liegt ausserhalb Ihrer gewählten Standorte. `,
+                    type: MessageType.Error,
                 });
             }
             if (
@@ -26,15 +34,16 @@ export default class SettingsRule implements Rule {
             ) {
                 this.addErrorMessage(errors, placement.id, {
                     label: `Die aktuelle Platzierung des Modules ${placement.module.id} liegt ausserhalb Ihrer gewählten Zeitpunkte. `,
+                    type: MessageType.Error,
                 });
             }
         });
     }
 
     addErrorMessage(
-        errors: Map<number, Array<ErrorMessage>>,
+        errors: Map<number, Array<Message>>,
         placementId: number,
-        message: ErrorMessage
+        message: Message
     ) {
         let errorMessages = errors.get(placementId);
         if (!errorMessages) {
@@ -44,7 +53,9 @@ export default class SettingsRule implements Rule {
         errorMessages.push(message);
     }
 
-    validateModule() {}
+    getGlobalInfos(data: Record<string, any>, infos: Message[]): void {}
 
-    validateSelection() {}
+    getModuleErrors() {}
+
+    getSelectionStatus() {}
 }

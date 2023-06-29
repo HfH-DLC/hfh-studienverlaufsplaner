@@ -2,11 +2,11 @@ import { defineStore } from "pinia";
 import { toRefs } from "vue";
 import DataAdapter from "../DataAdapter";
 import Validator from "../Validator";
-import { getNestedDates, isSameDate, joinStrings, pluralize } from "../helpers";
+import { getNestedDates, isSameDate } from "../helpers";
 import {
     Category,
     ChecklistEntryData,
-    ErrorMessage,
+    Message,
     Event,
     EventDate,
     FlashType,
@@ -51,13 +51,14 @@ const initialState = {
     foci: [] as Array<Focus>,
     focusSelections: [] as Array<FocusSelection>,
     initialized: false,
+    infos: [] as Array<Message>,
     locations: [] as Array<Location>,
     dayTimes: [] as Array<DayTime>,
-    moduleInfos: new Map<string, Array<ErrorMessage>>(),
     requiredECTS: null as number | null,
     rawCategories: [] as Array<Category>,
+    moduleErrors: new Map<string, Array<Message>>(),
     rawPlacements: [] as Array<Placement>,
-    placementErrors: new Map<number, Array<ErrorMessage>>(),
+    placementErrors: new Map<number, Array<Message>>(),
     priorLearnings: [] as Array<PriorLearning>,
     readOnly: false,
     rules: [] as Array<Rule>,
@@ -121,7 +122,7 @@ export const useScheduleStore = defineStore("schedule", {
         selectModule(moduleId: string) {
             const module = this.moduleById(moduleId);
             if (module) {
-                this.selectionStatus = validator.validateSelection(
+                this.selectionStatus = validator.getSelectionStatus(
                     module,
                     toRefs(this)
                 );
@@ -190,8 +191,9 @@ export const useScheduleStore = defineStore("schedule", {
         validate(): void {
             const validationResult = validator.validate(toRefs(this));
             this.todoEntries = validationResult.todoEntries;
-            this.moduleInfos = validationResult.moduleInfos;
+            this.moduleErrors = validationResult.moduleErrors;
             this.placementErrors = validationResult.placementErrors;
+            this.infos = validationResult.globalInfos;
         },
         startTour() {
             this.tourActive = true;
@@ -203,36 +205,36 @@ export const useScheduleStore = defineStore("schedule", {
         },
     },
     getters: {
-        categories(): Array<ScheduleCategory> {
-            return this.rawCategories.map((category) => {
-                const categoryModules: Array<ScheduleModule> =
-                    category.modules.map((module): ScheduleModule => {
-                        const moduleInfos =
-                            this.moduleInfos.get(module.id) || [];
-                        const placement = this.rawPlacements.find(
-                            (placement) => placement.moduleId == module.id
-                        );
-                        let misplaced = false;
-                        if (placement) {
-                            const errors = this.placementErrors.get(
-                                placement.id
-                            );
-                            if (errors) {
-                                misplaced = errors.length > 0;
-                            }
+        categoryModules(): (category: Category) => Array<ScheduleModule> {
+            return (category: Category): Array<ScheduleModule> => {
+                return category.modules.map((module): ScheduleModule => {
+                    const moduleErrors = this.moduleErrors.get(module.id) || [];
+                    const placement = this.rawPlacements.find(
+                        (placement) => placement.moduleId == module.id
+                    );
+                    let misplaced = false;
+                    if (placement) {
+                        const errors = this.placementErrors.get(placement.id);
+                        if (errors) {
+                            misplaced = errors.length > 0;
                         }
-                        return {
-                            ...module,
-                            infos: moduleInfos,
-                            selected:
-                                this.selectionStatus &&
-                                this.selectionStatus.moduleId == module.id,
-                            placement: placement,
-                            misplaced,
-                        };
-                    });
-                const currentECTS =
-                    categoryModules.reduce((acc, cur) => {
+                    }
+                    return {
+                        ...module,
+                        errors: moduleErrors,
+                        selected:
+                            this.selectionStatus &&
+                            this.selectionStatus.moduleId == module.id,
+                        placement: placement,
+                        misplaced,
+                    };
+                });
+            };
+        },
+        categoryETCS(): (category: Category) => number {
+            return (category: Category) => {
+                return (
+                    this.categoryModules(category).reduce((acc, cur) => {
                         if (cur.placement) {
                             acc += cur.ects;
                         }
@@ -243,13 +245,17 @@ export const useScheduleStore = defineStore("schedule", {
                             acc += cur.ects;
                         }
                         return acc;
-                    }, 0);
-
+                    }, 0)
+                );
+            };
+        },
+        categories(): Array<ScheduleCategory> {
+            return this.rawCategories.map((category) => {
+                const categoryModules: Array<ScheduleModule> =
+                    this.categoryModules(category);
+                const currentECTS = this.categoryETCS(category);
                 return {
                     ...category,
-                    placedNumber: categoryModules.filter(
-                        (module) => module.placement
-                    ).length,
                     modules: categoryModules,
                     currentECTS,
                 };
@@ -321,17 +327,14 @@ export const useScheduleStore = defineStore("schedule", {
                     isSameDate(placement, date)
                 );
         },
-        placementErrorMessages(): Array<ErrorMessage> {
-            const result: Array<ErrorMessage> = [];
-            this.placementErrors.forEach((errors, placementId) => {
-                const placement = this.placementById(placementId);
-                if (placement) {
-                    errors.forEach((error) => {
-                        result.push(error);
-                    });
-                }
-            });
-            return result;
+        placementErrorMessages(): Array<Message> {
+            return Array.from(this.placementErrors.values()).reduce(
+                (acc, cur) => {
+                    acc.push(...cur);
+                    return acc;
+                },
+                []
+            );
         },
         nestedDates() {
             const dates: Array<EventDate> = [
@@ -381,56 +384,6 @@ export const useScheduleStore = defineStore("schedule", {
                     isSameDate(event, date)
                 );
         },
-        infos(): Array<string> {
-            let infos: Array<string> = [];
-            this.focusSelections.forEach((focusSelection) => {
-                const modules = [
-                    ...focusSelection.focus.requiredModules,
-                    ...focusSelection.focus.optionalModules,
-                ];
-                const moduleIds = modules.map((module) => module.id);
-                const notAvailableModuleIds = moduleIds.filter((id) => {
-                    const module = this.moduleById(id);
-                    if (module) {
-                        return !module.events.find((event) => {
-                            return this.locationIds.includes(event.location.id);
-                        });
-                    }
-                    return true;
-                });
-                if (notAvailableModuleIds.length > 0) {
-                    const moduleString = pluralize(
-                        notAvailableModuleIds.length,
-                        "ist das Modul",
-                        "sind die Module"
-                    );
-                    const locationString = pluralize(
-                        this.locationIds.length,
-                        "am Standort",
-                        "an den Standorten"
-                    );
-
-                    const locationNames: Array<string> = this.locations.map(
-                        (location) => location.name
-                    );
-
-                    infos.push(
-                        `Für den SSP "${
-                            focusSelection.focus.name
-                        }" ${moduleString} ${joinStrings(
-                            notAvailableModuleIds.map((id) => {
-                                return `<button data-action="focus-module" data-module=${id}>${id}</button>`;
-                            }),
-                            "und"
-                        )} ${locationString} ${joinStrings(
-                            locationNames,
-                            "und"
-                        )} nicht verfügbar.`
-                    );
-                }
-            });
-            return infos;
-        },
         valid(): boolean {
             return (
                 this.todoEntries.every((todo) => todo.checked) &&
@@ -448,7 +401,7 @@ export const useScheduleStore = defineStore("schedule", {
                 const defaultModule: ScheduleModule = {
                     id: "",
                     name: "",
-                    infos: [],
+                    errors: [],
                     misplaced: false,
                     placement: undefined,
                     selected: false,

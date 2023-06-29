@@ -43,11 +43,17 @@ export interface DayTime {
     sortIndex: number;
 }
 
-export type ErrorMessage = {
+export enum MessageType {
+    Error,
+    Info,
+}
+
+export interface Message {
     label?: string;
     component?: Component;
     labelProps?: Record<any, any>;
-};
+    type: MessageType;
+}
 
 export interface EventDate {
     year: number;
@@ -163,16 +169,17 @@ export interface RuleData {
 }
 
 export interface Rule {
-    validatePlacements(
+    getPlacementErrors(
         data: Record<string, any>,
-        errors: Map<number, ErrorMessage[]>
+        errors: Map<number, Message[]>
     ): void;
-    validateModule(
+    getModuleErrors(
         module: ScheduleModule,
         data: Record<string, any>,
-        errors: Array<ErrorMessage>
+        errors: Array<Message>
     ): void;
-    validateSelection(
+    getGlobalInfos(data: Record<string, any>, infos: Array<Message>): void;
+    getSelectionStatus(
         module: ScheduleModule,
         data: Record<string, any>,
         selectionEventInfos: Map<number, SelectionEventInfo>
@@ -201,7 +208,7 @@ export interface ScheduleInitParams {
 }
 
 export interface ScheduleModule extends Module {
-    infos: Array<ErrorMessage>;
+    errors: Array<Message>;
     misplaced: boolean;
     placement: Placement | undefined;
     selected: boolean;
@@ -209,7 +216,7 @@ export interface ScheduleModule extends Module {
 
 export interface SchedulePlacement extends Placement {
     module: ScheduleModule;
-    errors: Array<ErrorMessage>;
+    errors: Array<Message>;
 }
 
 export interface Selection {

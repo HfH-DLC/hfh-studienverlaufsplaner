@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import Validator from "@/Validator";
-import { Rule, ScheduleModule, Todo } from "@/types";
-import { ChecklistEntryData, ErrorMessage } from "@/types";
+import { MessageType, Rule, ScheduleModule, Todo } from "@/types";
+import { ChecklistEntryData, Message } from "@/types";
 import { Ref, ref } from "vue";
 import { scheduleModuleFactory } from "@/tests/factories/ScheduleModuleFactory";
 
@@ -36,7 +36,7 @@ describe("Validator", () => {
             placements: { value: [] },
         };
 
-        const checklistEntries = validator.validateTodos(data);
+        const checklistEntries = validator.getTodoEntries(data);
 
         expect(todo1.getEntries).toHaveBeenCalledOnce();
         expect(todo2.getEntries).toHaveBeenCalledOnce();
@@ -54,42 +54,44 @@ describe("Validator", () => {
     it("should validate modules", () => {
         const modules = scheduleModuleFactory.buildList(5);
         const expectedErrorMessages = [
-            { label: "error1.1" },
-            { label: "error1.2" },
-            { label: "error2.1" },
-            { label: "error2.2" },
+            { label: "error1.1", type: MessageType.Error },
+            { label: "error1.2", type: MessageType.Error },
+            { label: "error2.1", type: MessageType.Error },
+            { label: "error2.2", type: MessageType.Error },
         ];
         const rule1: Rule = {
-            validateModule: vi
+            getModuleErrors: vi
                 .fn()
                 .mockImplementation(
                     (
                         module: ScheduleModule,
                         data: Record<string, any>,
-                        errors: Array<ErrorMessage>
+                        errors: Array<Message>
                     ) => {
                         errors.push(expectedErrorMessages[0]);
                         errors.push(expectedErrorMessages[1]);
                     }
                 ),
-            validatePlacements: vi.fn,
-            validateSelection: vi.fn,
+            getGlobalInfos: vi.fn,
+            getPlacementErrors: vi.fn,
+            getSelectionStatus: vi.fn,
         };
         const rule2: Rule = {
-            validateModule: vi
+            getModuleErrors: vi
                 .fn()
                 .mockImplementation(
                     (
                         module: ScheduleModule,
                         data: Record<string, any>,
-                        errors: Array<ErrorMessage>
+                        errors: Array<Message>
                     ) => {
                         errors.push(expectedErrorMessages[2]);
                         errors.push(expectedErrorMessages[3]);
                     }
                 ),
-            validatePlacements: vi.fn,
-            validateSelection: vi.fn,
+            getGlobalInfos: vi.fn,
+            getPlacementErrors: vi.fn,
+            getSelectionStatus: vi.fn,
         };
         const rules: Array<Rule> = [rule1, rule2];
         const validator = new Validator([], rules);
@@ -97,10 +99,10 @@ describe("Validator", () => {
             modules: ref(modules),
         };
 
-        const errorMessages = validator.validateModules(data);
+        const errorMessages = validator.getModuleErrors(data);
 
         rules.forEach((rule) => {
-            expect(rule.validateModule).toHaveBeenCalledTimes(modules.length);
+            expect(rule.getModuleErrors).toHaveBeenCalledTimes(modules.length);
         });
         modules.forEach((module) => {
             let moduleErrorMessages = errorMessages.get(module.id);
@@ -111,27 +113,41 @@ describe("Validator", () => {
     });
 
     it("should validate placements", () => {
-        const expectedErrorMessages: Array<Array<ErrorMessage>> = [
-            [{ label: "error0.1" }, { label: "error0.2" }],
-            [{ label: "error1.1" }, { label: "error1.2" }],
-            [{ label: "error2.1" }, { label: "error2.2" }],
-            [{ label: "error3.1" }, { label: "error3.2" }],
+        const expectedErrorMessages: Array<Array<Message>> = [
+            [
+                { label: "error0.1", type: MessageType.Error },
+                { label: "error0.2", type: MessageType.Error },
+            ],
+            [
+                { label: "error1.1", type: MessageType.Error },
+                { label: "error1.2", type: MessageType.Error },
+            ],
+            [
+                { label: "error2.1", type: MessageType.Error },
+                { label: "error2.2", type: MessageType.Error },
+            ],
+            [
+                { label: "error3.1", type: MessageType.Error },
+                { label: "error3.2", type: MessageType.Error },
+            ],
         ];
         const rule1: Rule = {
-            validatePlacements: vi.fn().mockImplementation((data, errors) => {
+            getPlacementErrors: vi.fn().mockImplementation((data, errors) => {
                 errors.set(0, expectedErrorMessages[0]);
                 errors.set(1, expectedErrorMessages[1]);
             }),
-            validateModule: vi.fn,
-            validateSelection: vi.fn,
+            getGlobalInfos: vi.fn,
+            getModuleErrors: vi.fn,
+            getSelectionStatus: vi.fn,
         };
         const rule2: Rule = {
-            validatePlacements: vi.fn().mockImplementation((data, errors) => {
+            getPlacementErrors: vi.fn().mockImplementation((data, errors) => {
                 errors.set(2, expectedErrorMessages[2]);
                 errors.set(3, expectedErrorMessages[3]);
             }),
-            validateModule: vi.fn,
-            validateSelection: vi.fn,
+            getGlobalInfos: vi.fn,
+            getModuleErrors: vi.fn,
+            getSelectionStatus: vi.fn,
         };
         const rules: Array<Rule> = [rule1, rule2];
         const validator = new Validator([], rules);
@@ -140,10 +156,10 @@ describe("Validator", () => {
             placements: ref([]),
         };
 
-        const errorMessages = validator.validatePlacements(data);
+        const errorMessages = validator.getPlacementErrors(data);
 
         rules.forEach((rule) => {
-            expect(rule.validatePlacements).toHaveBeenCalledOnce();
+            expect(rule.getPlacementErrors).toHaveBeenCalledOnce();
         });
         for (let i = 0; i < expectedErrorMessages.length; i++) {
             expect(errorMessages.get(i)).toBe(expectedErrorMessages[i]);
@@ -152,9 +168,9 @@ describe("Validator", () => {
 
     it("should validate", () => {
         const validator = new Validator([], []);
-        const todosSpy = vi.spyOn(validator, "validateTodos");
-        const modulesSpy = vi.spyOn(validator, "validateModules");
-        const placementsSpy = vi.spyOn(validator, "validatePlacements");
+        const todosSpy = vi.spyOn(validator, "getTodoEntries");
+        const modulesSpy = vi.spyOn(validator, "getModuleErrors");
+        const placementsSpy = vi.spyOn(validator, "getPlacementErrors");
 
         validator.validate({
             modules: ref([]),
@@ -168,21 +184,23 @@ describe("Validator", () => {
 
     it("should validate selection", () => {
         const rule1: Rule = {
-            validatePlacements: () => {},
-            validateModule: () => {},
-            validateSelection: () => {},
+            getGlobalInfos: () => {},
+            getPlacementErrors: () => {},
+            getModuleErrors: () => {},
+            getSelectionStatus: () => {},
         };
         const rule2: Rule = {
-            validatePlacements: () => {},
-            validateModule: () => {},
-            validateSelection: () => {},
+            getGlobalInfos: () => {},
+            getPlacementErrors: () => {},
+            getModuleErrors: () => {},
+            getSelectionStatus: () => {},
         };
-        const spy1 = vi.spyOn(rule1, "validateSelection");
-        const spy2 = vi.spyOn(rule2, "validateSelection");
+        const spy1 = vi.spyOn(rule1, "getSelectionStatus");
+        const spy2 = vi.spyOn(rule2, "getSelectionStatus");
         const validator = new Validator([], [rule1, rule2]);
         const module = scheduleModuleFactory.build();
 
-        const result = validator.validateSelection(module, {});
+        const result = validator.getSelectionStatus(module, {});
 
         expect(result.moduleId).toBe(module.id);
         expect(spy1).toHaveBeenCalledOnce();

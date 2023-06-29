@@ -21,7 +21,7 @@ vi.mock("@/Validator");
 function getInitializedStore(params: Partial<CreditInitParams> | null = null) {
     const store = useCreditStore();
     const defaultValidator = new Validator([], []);
-    defaultValidator.validateTodos = vi.fn().mockImplementation(() => []);
+    defaultValidator.getTodoEntries = vi.fn().mockImplementation(() => []);
 
     const defaultParams: CreditInitParams = {
         dataAdapter: new DataAdapter("test-planer", "test-plan"),
@@ -38,7 +38,7 @@ function getInitializedStore(params: Partial<CreditInitParams> | null = null) {
     store.init(mergedParams);
     const dataAdapter = mergedParams.dataAdapter;
     const validator = mergedParams.validator;
-    (validator.validateTodos as Mock).mockClear();
+    (validator.getTodoEntries as Mock).mockClear();
     return { store, dataAdapter, validator };
 }
 
@@ -64,7 +64,7 @@ describe("CreditStore", () => {
                 progressLabel: "2/2",
             },
         ];
-        validator.validateTodos = vi.fn(() => mockTodoResults);
+        validator.getTodoEntries = vi.fn(() => mockTodoResults);
         const store = useCreditStore();
         const params: CreditInitParams = {
             dataAdapter,
@@ -107,7 +107,7 @@ describe("CreditStore", () => {
 
         store.creditModuleAgainstFocusSelection(moduleId, focusSelectionId);
 
-        expect(validator.validateTodos).toHaveBeenCalledOnce();
+        expect(validator.getTodoEntries).toHaveBeenCalledOnce();
         expect(dataAdapter.saveCredit).toHaveBeenCalledOnce();
         const module = store.modules.find((module) => module.id == moduleId);
         expect(module?.creditedAgainst).toBe(focusSelectionId);
@@ -164,14 +164,14 @@ describe("CreditStore", () => {
                 checklistEntryDataFactory.build({ checked: false }),
                 checklistEntryDataFactory.build({ checked: false }),
             ];
-            (validator.validateTodos as Mock).mockImplementation(() => {
+            (validator.getTodoEntries as Mock).mockImplementation(() => {
                 return mockTodoEntries;
             });
             store.valid = true;
 
             store.validate();
 
-            expect(validator.validateTodos).toHaveBeenCalledOnce();
+            expect(validator.getTodoEntries).toHaveBeenCalledOnce();
             expect(store.todoEntries).toStrictEqual(mockTodoEntries);
             expect(store.valid).toBe(false);
         });
@@ -181,14 +181,14 @@ describe("CreditStore", () => {
                 checklistEntryDataFactory.build({ checked: false }),
                 checklistEntryDataFactory.build({ checked: true }),
             ];
-            (validator.validateTodos as Mock).mockImplementation(() => {
+            (validator.getTodoEntries as Mock).mockImplementation(() => {
                 return mockTodoEntries;
             });
             store.valid = true;
 
             store.validate();
 
-            expect(validator.validateTodos).toHaveBeenCalledOnce();
+            expect(validator.getTodoEntries).toHaveBeenCalledOnce();
             expect(store.todoEntries).toStrictEqual(mockTodoEntries);
             expect(store.valid).toBe(false);
         });
@@ -198,14 +198,14 @@ describe("CreditStore", () => {
                 checklistEntryDataFactory.build({ checked: true }),
                 checklistEntryDataFactory.build({ checked: true }),
             ];
-            (validator.validateTodos as Mock).mockImplementation(() => {
+            (validator.getTodoEntries as Mock).mockImplementation(() => {
                 return mockTodoEntries;
             });
             store.valid = false;
 
             store.validate();
 
-            expect(validator.validateTodos).toHaveBeenCalledOnce();
+            expect(validator.getTodoEntries).toHaveBeenCalledOnce();
             expect(store.todoEntries).toStrictEqual(mockTodoEntries);
             expect(store.valid).toBe(true);
         });

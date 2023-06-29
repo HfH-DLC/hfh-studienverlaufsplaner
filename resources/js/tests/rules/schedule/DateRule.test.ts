@@ -1,5 +1,5 @@
 import DateRule from "@/Models/Rules/Schedule/DateRule";
-import { ErrorMessage, SchedulePlacement } from "@/types";
+import { Message, SchedulePlacement } from "@/types";
 import { describe, it, expect } from "vitest";
 import { ref } from "vue";
 import { scheduleModuleFactory } from "@/tests/factories/ScheduleModuleFactory";
@@ -8,7 +8,7 @@ import { placementFactory } from "@/tests/factories/PlacementFactory";
 import { dayTimeFactory } from "@/tests/factories/DayTimeFactory";
 
 describe("DateRule", () => {
-    describe("validatePlacements", () => {
+    describe("getPlacementErrors", () => {
         it("should return an error for each invalid placement", () => {
             const rule = new DateRule();
             const errorMessages = new Map();
@@ -62,7 +62,7 @@ describe("DateRule", () => {
                 placements: ref(placements),
             };
 
-            rule.validatePlacements(data, errorMessages);
+            rule.getPlacementErrors(data, errorMessages);
 
             expect(errorMessages.get(validatePlacement.id)).toBeUndefined();
             expect(errorMessages.get(invalidPlacement1.id)?.length).toBe(1);
@@ -70,7 +70,7 @@ describe("DateRule", () => {
         });
     });
 
-    describe("validateModule", () => {
+    describe("getModuleErrors", () => {
         it("should return an error if there are no free events for an unplaced module", () => {
             const rule = new DateRule();
             const event = eventFactory.build();
@@ -94,9 +94,9 @@ describe("DateRule", () => {
             const data = {
                 placements: ref(placements),
             };
-            const errorMessages: Array<ErrorMessage> = [];
+            const errorMessages: Array<Message> = [];
 
-            rule.validateModule(module, data, errorMessages);
+            rule.getModuleErrors(module, data, errorMessages);
 
             expect(errorMessages.length).toBe(1);
         });
@@ -127,9 +127,9 @@ describe("DateRule", () => {
             const data = {
                 placements: ref(placements),
             };
-            const errorMessages: Array<ErrorMessage> = [];
+            const errorMessages: Array<Message> = [];
 
-            rule.validateModule(module, data, errorMessages);
+            rule.getModuleErrors(module, data, errorMessages);
 
             expect(errorMessages.length).toBe(0);
         });
@@ -175,9 +175,9 @@ describe("DateRule", () => {
             const data = {
                 placements: ref(placements),
             };
-            const errorMessages: Array<ErrorMessage> = [];
+            const errorMessages: Array<Message> = [];
 
-            rule.validateModule(module, data, errorMessages);
+            rule.getModuleErrors(module, data, errorMessages);
 
             expect(errorMessages.length).toBe(0);
         });

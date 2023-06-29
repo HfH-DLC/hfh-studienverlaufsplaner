@@ -1,4 +1,4 @@
-import { ErrorMessage, SchedulePlacement } from "@/types";
+import { Message, SchedulePlacement } from "@/types";
 import * as Factory from "factory.ts";
 import { scheduleModuleFactory } from "./ScheduleModuleFactory";
 import { locationFactory } from "./LocationFactory";
@@ -18,7 +18,7 @@ const schedulePlacementPartialFactory =
                 id: `test_module_${i}`,
             })
         ),
-        errors: [] as Array<ErrorMessage>,
+        errors: [] as Array<Message>,
     });
 
 export const schedulePlacementFactory =

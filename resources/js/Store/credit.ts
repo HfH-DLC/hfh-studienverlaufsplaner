@@ -93,7 +93,7 @@ export const useCreditStore = defineStore("credit", {
             }
         },
         validate() {
-            this.todoEntries = validator.validateTodos(toRefs(this));
+            this.todoEntries = validator.getTodoEntries(toRefs(this));
             this.valid = this.todoEntries.every((todo) => todo.checked);
         },
     },

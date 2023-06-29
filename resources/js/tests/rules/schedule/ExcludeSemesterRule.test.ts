@@ -3,7 +3,7 @@ import {
     SelectionEventInfo,
     ScheduleModule,
     SchedulePlacement,
-    ErrorMessage,
+    Message,
 } from "@/types";
 import { describe, expect, it } from "vitest";
 import { ref } from "vue";
@@ -38,10 +38,10 @@ describe("ExcludeSemesterRule", () => {
                 startYear: ref(startYear),
                 placements: ref(placements),
             };
-            const errorMessages: Map<number, Array<ErrorMessage>> = new Map();
+            const errorMessages: Map<number, Array<Message>> = new Map();
             const rule = new ExcludeSemesterRule(params);
 
-            rule.validatePlacements(data, errorMessages);
+            rule.getPlacementErrors(data, errorMessages);
 
             expect(errorMessages.get(invalidPlacement.id)?.length).toBe(1);
         });
@@ -70,10 +70,10 @@ describe("ExcludeSemesterRule", () => {
                 startYear: ref(startYear),
                 placements: ref(placements),
             };
-            const errorMessages: Map<number, Array<ErrorMessage>> = new Map();
+            const errorMessages: Map<number, Array<Message>> = new Map();
             const rule = new ExcludeSemesterRule(params);
 
-            rule.validatePlacements(data, errorMessages);
+            rule.getPlacementErrors(data, errorMessages);
 
             expect(errorMessages.size).toBe(0);
         });
@@ -102,16 +102,16 @@ describe("ExcludeSemesterRule", () => {
                 startYear: ref(startYear),
                 placements: ref(placements),
             };
-            const errorMessages: Map<number, Array<ErrorMessage>> = new Map();
+            const errorMessages: Map<number, Array<Message>> = new Map();
             const rule = new ExcludeSemesterRule(params);
 
-            rule.validatePlacements(data, errorMessages);
+            rule.getPlacementErrors(data, errorMessages);
 
             expect(errorMessages.size).toBe(0);
         });
     });
 
-    describe("validateModule", () => {
+    describe("getModuleErrors", () => {
         it("should return an error if there are no free events for the module within the allowed semesters", () => {
             const params = {
                 excludePositions: [2],
@@ -151,9 +151,9 @@ describe("ExcludeSemesterRule", () => {
                 startYear: ref(startYear),
                 placements: ref(placements),
             };
-            const errorMessages: Array<ErrorMessage> = [];
+            const errorMessages: Array<Message> = [];
 
-            rule.validateModule(module, data, errorMessages);
+            rule.getModuleErrors(module, data, errorMessages);
 
             expect(errorMessages.length).toBe(1);
         });
@@ -179,9 +179,9 @@ describe("ExcludeSemesterRule", () => {
                 startYear: ref(startYear),
                 placements: ref(placements),
             };
-            const errorMessages: Array<ErrorMessage> = [];
+            const errorMessages: Array<Message> = [];
 
-            rule.validateModule(module, data, errorMessages);
+            rule.getModuleErrors(module, data, errorMessages);
 
             expect(errorMessages.length).toBe(0);
         });
@@ -225,15 +225,15 @@ describe("ExcludeSemesterRule", () => {
                 startYear: ref(startYear),
                 placements: ref(placements),
             };
-            const errorMessages: Array<ErrorMessage> = [];
+            const errorMessages: Array<Message> = [];
 
-            rule.validateModule(module, data, errorMessages);
+            rule.getModuleErrors(module, data, errorMessages);
 
             expect(errorMessages.length).toBe(0);
         });
     });
 
-    describe("validateSelection", () => {
+    describe("getSelectionStatus", () => {
         it("should return dateAllowed: false for events in excluded semesters", () => {
             const startYear = 2023;
             const module: ScheduleModule = scheduleModuleFactory.build({
@@ -263,7 +263,7 @@ describe("ExcludeSemesterRule", () => {
             const selectionEventInfos: Map<number, SelectionEventInfo> =
                 new Map();
 
-            rule.validateSelection(
+            rule.getSelectionStatus(
                 module,
                 { startYear: ref(startYear) },
                 selectionEventInfos
@@ -297,7 +297,7 @@ describe("ExcludeSemesterRule", () => {
             const selectionEventInfos: Map<number, SelectionEventInfo> =
                 new Map();
 
-            rule.validateSelection(
+            rule.getSelectionStatus(
                 module,
                 { startYear: ref(startYear) },
                 selectionEventInfos

@@ -25,16 +25,16 @@
                             store.infos.length > 0
                         "
                     >
-                        <InfoList
+                        <MessageList
                             class="space-y-2"
                             v-if="store.infos.length > 0"
-                            :infos="store.infos"
+                            :messages="store.infos"
                             aria-live="polite"
                         />
-                        <ErrorList
+                        <MessageList
                             class="space-y-2"
                             v-if="store.placementErrorMessages.length > 0"
-                            :errors="store.placementErrorMessages"
+                            :messages="store.placementErrorMessages"
                             aria-live="polite"
                         />
                     </div>
@@ -110,8 +110,7 @@
 import { onBeforeUnmount, computed } from "vue";
 import { useScheduleStore } from "../Store/schedule";
 // Components
-import ErrorList from "../Components/ErrorList.vue";
-import InfoList from "../Components/InfoList.vue";
+import MessageList from "@/Components/MessageList.vue";
 import FocusSelection from "../Components/FocusSelection.vue";
 import ModuleInformation from "../Components/ModuleInformation.vue";
 import ModuleList from "../Components/ModuleList.vue";

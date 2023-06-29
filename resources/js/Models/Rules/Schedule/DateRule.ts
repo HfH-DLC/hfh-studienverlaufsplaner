@@ -1,11 +1,17 @@
 import { markRaw, Ref } from "vue";
-import { ErrorMessage, Rule, ScheduleModule, SchedulePlacement } from "@/types";
+import {
+    Message,
+    MessageType,
+    Rule,
+    ScheduleModule,
+    SchedulePlacement,
+} from "@/types";
 import { isSameDate } from "../../../helpers";
 import DateRulePlacementLabel from "@/Components/Rules/Schedule/DateRulePlacementLabel.vue";
 export default class DateRule implements Rule {
-    validatePlacements(
+    getPlacementErrors(
         { placements }: { placements: Ref<Array<SchedulePlacement>> },
-        errors: Map<number, Array<ErrorMessage>>
+        errors: Map<number, Array<Message>>
     ) {
         placements.value.forEach((placement: SchedulePlacement) => {
             if (
@@ -24,15 +30,18 @@ export default class DateRule implements Rule {
                     labelProps: {
                         placement,
                     },
+                    type: MessageType.Error,
                 });
             }
         });
     }
 
-    validateModule(
+    getGlobalInfos(data: Record<string, any>, infos: Message[]): void {}
+
+    getModuleErrors(
         module: ScheduleModule,
         { placements }: { placements: Ref<Array<SchedulePlacement>> },
-        errors: Array<ErrorMessage>
+        errors: Array<Message>
     ): void {
         if (
             !module.placement &&
@@ -44,9 +53,10 @@ export default class DateRule implements Rule {
         ) {
             errors.push({
                 label: "Alle Termine für dieses Modul sind bereits besetzt.",
+                type: MessageType.Error,
             });
         }
     }
 
-    validateSelection() {}
+    getSelectionStatus() {}
 }

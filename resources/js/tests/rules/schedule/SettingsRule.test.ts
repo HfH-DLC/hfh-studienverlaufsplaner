@@ -7,7 +7,7 @@ import { locationFactory } from "@/tests/factories/LocationFactory";
 import { dayTimeFactory } from "@/tests/factories/DayTimeFactory";
 
 describe("SettingsRule", () => {
-    describe("validatePlacements", () => {
+    describe("getPlacementErrors", () => {
         it("should return an error for a placement with an invalid location", () => {
             const rule = new SettingsRule();
             const errors = new Map();
@@ -34,7 +34,7 @@ describe("SettingsRule", () => {
                 dayTimes: ref([validDayTime]),
             };
 
-            rule.validatePlacements(data, errors);
+            rule.getPlacementErrors(data, errors);
 
             expect(errors.get(invalidPlacement.id).length).toBe(1);
         });
@@ -61,7 +61,7 @@ describe("SettingsRule", () => {
                 dayTimes: ref([validDayTime]),
             };
 
-            rule.validatePlacements(data, errors);
+            rule.getPlacementErrors(data, errors);
 
             expect(errors.size).toBe(0);
         });
@@ -91,7 +91,7 @@ describe("SettingsRule", () => {
                 dayTimes: ref([validDayTime]),
             };
 
-            rule.validatePlacements(data, errors);
+            rule.getPlacementErrors(data, errors);
 
             expect(errors.get(invalidPlacement.id).length).toBe(1);
         });
@@ -118,7 +118,7 @@ describe("SettingsRule", () => {
                 dayTimes: ref([validDayTime]),
             };
 
-            rule.validatePlacements(data, errors);
+            rule.getPlacementErrors(data, errors);
 
             expect(errors.size).toBe(0);
         });

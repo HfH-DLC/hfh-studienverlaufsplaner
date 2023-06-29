@@ -7,6 +7,7 @@ import {
     ScheduleInitParams,
     ScheduleModule,
     EventDate,
+    MessageType,
 } from "@/types";
 import DataAdapter from "@/DataAdapter";
 import Validator from "@/Validator";
@@ -514,20 +515,25 @@ describe("Schedule Store", () => {
             store.placementErrors.set(rawPlacements[0].id, [
                 {
                     label: "Error Message 1",
+                    type: MessageType.Error,
                 },
                 {
                     label: "Error Message 2",
+                    type: MessageType.Error,
                 },
             ]);
             store.placementErrors.set(rawPlacements[2].id, [
                 {
                     label: "Error Message 4",
+                    type: MessageType.Error,
                 },
                 {
                     label: "Error Message 5",
+                    type: MessageType.Error,
                 },
                 {
                     label: "Error Message 6",
+                    type: MessageType.Error,
                 },
             ]);
 
@@ -587,20 +593,25 @@ describe("Schedule Store", () => {
             store.placementErrors.set(rawPlacements[0].id, [
                 {
                     label: "Error Message 1",
+                    type: MessageType.Error,
                 },
                 {
                     label: "Error Message 2",
+                    type: MessageType.Error,
                 },
             ]);
             store.placementErrors.set(rawPlacements[2].id, [
                 {
                     label: "Error Message 4",
+                    type: MessageType.Error,
                 },
                 {
                     label: "Error Message 5",
+                    type: MessageType.Error,
                 },
                 {
                     label: "Error Message 6",
+                    type: MessageType.Error,
                 },
             ]);
 
@@ -695,20 +706,25 @@ describe("Schedule Store", () => {
             store.placementErrors.set(rawPlacements[0].id, [
                 {
                     label: "Error Message 1",
+                    type: MessageType.Error,
                 },
                 {
                     label: "Error Message 2",
+                    type: MessageType.Error,
                 },
             ]);
             store.placementErrors.set(rawPlacements[2].id, [
                 {
                     label: "Error Message 4",
+                    type: MessageType.Error,
                 },
                 {
                     label: "Error Message 5",
+                    type: MessageType.Error,
                 },
                 {
                     label: "Error Message 6",
+                    type: MessageType.Error,
                 },
             ]);
 
@@ -773,6 +789,38 @@ describe("Schedule Store", () => {
                 timeWindow: "D",
             };
             expect(store.placementByDate(otherDate)).toBe(undefined);
+        });
+    });
+
+    describe("getter placementErrorMessages", () => {
+        it("returns an array of all placement error messages", () => {
+            const { store } = getInitializedStore();
+            for (let i = 0; i < 10; i++) {
+                const messages = [];
+                for (let j = 0; j < 10; j++) {
+                    messages.push({
+                        label: `Placement ${i}, Message ${j}`,
+                        type: MessageType.Error,
+                    });
+                }
+                store.placementErrors.set(i, messages);
+            }
+
+            expect(store.placementErrorMessages.length).toBe(100);
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    expect(store.placementErrorMessages[i * 10 + j].label).toBe(
+                        `Placement ${i}, Message ${j}`
+                    );
+                }
+            }
+        });
+
+        it("returns an empty array if there are no placement errors", () => {
+            const { store } = getInitializedStore();
+            store.placementErrors = new Map();
+
+            expect(store.placementErrorMessages.length).toBe(0);
         });
     });
 
@@ -866,9 +914,10 @@ describe("Schedule Store", () => {
             const selectedModule: ScheduleModule = {
                 id: "selected_module",
                 name: "My selected module",
-                infos: [
+                errors: [
                     {
                         label: "SomeErrorMessage",
+                        type: MessageType.Error,
                     },
                 ],
                 misplaced: true,
@@ -931,6 +980,7 @@ describe("Schedule Store", () => {
             store.placementErrors.set(schedulePlacement.id, [
                 {
                     label: "Some error message",
+                    type: MessageType.Error,
                 },
             ]);
             expect(store.valid).toBe(false);
