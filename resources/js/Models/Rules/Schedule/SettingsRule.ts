@@ -24,7 +24,6 @@ export default class SettingsRule implements Rule {
             if (!locationIds.value.includes(placement.location.id)) {
                 this.addErrorMessage(errors, placement.id, {
                     label: `Die aktuelle Platzierung des Modules ${placement.module.id} liegt ausserhalb Ihrer gewählten Standorte. `,
-                    type: MessageType.Error,
                 });
             }
             if (
@@ -34,7 +33,6 @@ export default class SettingsRule implements Rule {
             ) {
                 this.addErrorMessage(errors, placement.id, {
                     label: `Die aktuelle Platzierung des Modules ${placement.module.id} liegt ausserhalb Ihrer gewählten Zeitpunkte. `,
-                    type: MessageType.Error,
                 });
             }
         });
@@ -43,14 +41,14 @@ export default class SettingsRule implements Rule {
     addErrorMessage(
         errors: Map<number, Array<Message>>,
         placementId: number,
-        message: Message
+        message: Partial<Message>
     ) {
         let errorMessages = errors.get(placementId);
         if (!errorMessages) {
             errorMessages = [];
             errors.set(placementId, errorMessages);
         }
-        errorMessages.push(message);
+        errorMessages.push({ ...message, type: MessageType.Error });
     }
 
     getGlobalInfos(data: Record<string, any>, infos: Message[]): void {}
