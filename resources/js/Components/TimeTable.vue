@@ -152,16 +152,14 @@ const showLocations = computed(() => {
     if (store.locationIds.length > 1) {
         return true;
     }
-    const placedLocations = new Set(
-        store.placements.map((placement) => placement.location)
+
+    const placedLocationIds = new Set(
+        store.placements.map((placement) => placement.location.id)
     );
-    if (placedLocations.size > 1) {
-        return true;
-    }
     if (
-        [...placedLocations].filter((location) =>
-            store.locationIds.includes(location.id)
-        ).length < placedLocations.size
+        [...placedLocationIds].filter((locationId) =>
+            store.locationIds.includes(locationId)
+        ).length < placedLocationIds.size
     ) {
         return true;
     }
