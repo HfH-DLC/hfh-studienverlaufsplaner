@@ -88,6 +88,21 @@
                                     >Weiter zur Anrechnung.
                                 </HfhLink>
                             </p>
+                            <Info
+                                v-if="store.priorLearnings.length > 0"
+                                class="mb-4"
+                            >
+                                Sie haben
+                                {{ store.priorLearnings.length }}
+                                {{
+                                    pluralize(
+                                        store.priorLearnings.length,
+                                        "Vorleistung",
+                                        "Vorleistungen"
+                                    )
+                                }}
+                                erfasst.
+                            </Info>
                             <Checklist :entries="store.todoEntries" />
                         </StickyColumn>
                     </div>
@@ -110,6 +125,7 @@
 import { onBeforeUnmount, computed } from "vue";
 import { useScheduleStore } from "../Store/schedule";
 // Components
+import Info from "@/Components/Info.vue";
 import MessageList from "@/Components/MessageList.vue";
 import FocusSelection from "../Components/FocusSelection.vue";
 import ModuleInformation from "../Components/ModuleInformation.vue";
@@ -134,6 +150,7 @@ import { getTodos } from "@/Models/Todos/Schedule/TodoFactory";
 import SettingsRule from "@/Models/Rules/Schedule/SettingsRule";
 import DateRule from "@/Models/Rules/Schedule/DateRule";
 import PrerequisitesRule from "@/Models/Rules/Schedule/PrerequisitesRule";
+import { pluralize } from "@/helpers";
 
 defineOptions({ layout: MainLayout });
 
