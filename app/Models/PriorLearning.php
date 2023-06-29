@@ -36,11 +36,12 @@ class PriorLearning extends Model
         if ($this->counts_as_module_id) {
             $module = Module::findOrFail($this->counts_as_module_id);
             $planer = $this->plan->planer;
-            $category = $planer->categories()->with([
-                'modules' => function ($query) use ($module) {
+            $category = $planer->categories()->whereHas(
+                'modules',
+                function ($query) use ($module) {
                     $query->where('id', $module->id);
                 }
-            ])->first();
+            )->first();
             if ($category) {
                 return $category->id;
             }

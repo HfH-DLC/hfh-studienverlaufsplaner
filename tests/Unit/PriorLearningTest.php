@@ -49,11 +49,13 @@ class PriorLearningTest extends TestCase
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create();
         $priorLearning = PriorLearning::factory()->create(['plan_id' => $plan->id]);
-        $category = Category::factory()->create(['id' => 42, 'planer_id' => $planer->id]);
+        Category::factory()->create(['id' => 21, 'planer_id' => $planer->id, 'position' => 0]);
+        $correctCategory = Category::factory()->create(['id' => 42, 'planer_id' => $planer->id, 'position' => 1]);
+        Category::factory()->create(['id' => 53, 'planer_id' => $planer->id, 'position' => 2]);
         $module = Module::factory()->create(['id' => 13]);
-        $category->modules()->attach($module);
+        $correctCategory->modules()->attach($module);
         $priorLearning->counts_as_module_id = $module->id;
 
-        $this->assertEquals($category->id, $priorLearning->getCountsAsCategoryId());
+        $this->assertEquals($correctCategory->id, $priorLearning->getCountsAsCategoryId());
     }
 }

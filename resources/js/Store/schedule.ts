@@ -241,6 +241,8 @@ export const useScheduleStore = defineStore("schedule", {
                         return acc;
                     }, 0) +
                     this.priorLearnings.reduce((acc, cur) => {
+                        console.log(cur.countsAsCategoryId === category.id);
+                        console.log(category.name);
                         if (cur.countsAsCategoryId === category.id) {
                             acc += cur.ects;
                         }
