@@ -123,7 +123,7 @@
 
 <script lang="ts" setup>
 import { onBeforeUnmount, computed } from "vue";
-import { useScheduleStore } from "../Store/schedule";
+import { getInitializedScheduleStore } from "../Store/schedule";
 // Components
 import Info from "@/Components/Info.vue";
 import MessageList from "@/Components/MessageList.vue";
@@ -143,13 +143,6 @@ import { FlashType, TourData } from "@/types";
 import AppHead from "@/Components/AppHead.vue";
 import { PropType } from "vue";
 import { useEmitter } from "@/composables/useEmitter";
-import DataAdapter from "@/DataAdapter";
-import Validator from "@/Validator";
-import { getRules } from "@/Models/Rules/Schedule/RuleFactory";
-import { getTodos } from "@/Models/Todos/Schedule/TodoFactory";
-import SettingsRule from "@/Models/Rules/Schedule/SettingsRule";
-import DateRule from "@/Models/Rules/Schedule/DateRule";
-import PrerequisitesRule from "@/Models/Rules/Schedule/PrerequisitesRule";
 import { pluralize } from "@/helpers";
 
 defineOptions({ layout: MainLayout });
@@ -205,27 +198,18 @@ const props = defineProps({
     },
 });
 
-const defaultRules = [
-    new SettingsRule(),
-    new PrerequisitesRule(),
-    new DateRule(),
-];
+const propsClone = JSON.parse(JSON.stringify(props));
 
-const store = useScheduleStore();
-store.init({
-    dataAdapter: new DataAdapter(
-        props.planerSlug,
-        props.planResource.data.slug
-    ),
-    validator: new Validator(getTodos(props.todosResource.data), [
-        ...getRules(props.rulesResource.data),
-        ...defaultRules,
-    ]),
-    categories: props.categoriesResource.data,
-    plan: props.planResource.data,
-    foci: props.fociResource.data,
-    requiredECTS: props.requiredECTS,
-    tour: props.tourData,
+const store = getInitializedScheduleStore({
+    planerSlug: propsClone.planerSlug,
+    planSlug: propsClone.planResource.data.slug,
+    todosData: propsClone.todosResource.data,
+    rulesData: propsClone.rulesResource.data,
+    categories: propsClone.categoriesResource.data,
+    plan: propsClone.planResource.data,
+    foci: propsClone.fociResource.data,
+    requiredECTS: propsClone.requiredECTS,
+    tourData: propsClone.tourData,
 });
 
 const emitter = useEmitter();
