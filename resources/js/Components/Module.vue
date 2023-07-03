@@ -19,8 +19,8 @@
             class="inline-block w-5 h-5 shrink-0 text-green-700"
         />
         <span
-            ><strong v-if="hasPriorLearning">(Vorleistung)</strong>
-            {{ module.id }} {{ module.name }}</span
+            ><span v-if="hasPriorLearning">(Vorleistung)</span> {{ module.id }}
+            {{ module.name }}</span
         >
     </button>
 </template>
