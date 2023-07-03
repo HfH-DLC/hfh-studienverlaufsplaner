@@ -5,11 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePlanRequest;
 use App\Http\Requests\UpdateFocusCreditRequest;
 use App\Http\Requests\UpdateScheduleRequest;
-use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CreditableModuleResource;
-use App\Http\Resources\FocusResource;
 use App\Http\Resources\PlanResource;
-use App\Http\Resources\RuleResource;
 use App\Http\Resources\TodoResource;
 use App\Mail\PlanCreated;
 use App\Models\FocusSelection;
@@ -31,42 +28,7 @@ class PlanController extends Controller
 
     public function showSchedule(Planer $planer, Plan $plan)
     {
-        $plan->load(
-            'locations',
-            'dayTimes',
-            'placements',
-            'placements.dayTime',
-            'placements.location',
-            'focusSelections',
-            'focusSelections.focus',
-            'focusSelections.focus.requiredModules',
-            'focusSelections.focus.requiredModules.events',
-            'focusSelections.focus.requiredModules.events.location',
-            'focusSelections.focus.requiredModules.events.dayTime',
-            'focusSelections.focus.optionalModules.events',
-            'focusSelections.focus.optionalModules.events',
-            'focusSelections.focus.optionalModules.events.location',
-            'focusSelections.focus.optionalModules.events.dayTime'
-        );
-        $planResource = new PlanResource($plan);
-        $categoriesResource = CategoryResource::collection($plan->getCategoriesWithAllModules());
-        $rulesResource = RuleResource::collection($planer->getScheduleRules());
-        $todosResource = TodoResource::collection($planer->getScheduleTodos());
-        $fociResource = FocusResource::collection($planer->getFoci());
-        $tour = $planer->getScheduleTour();
-
-        $props = [
-            'planerName' => $planer->name,
-            'planerSlug' => $planer->id,
-            'planResource' => $planResource,
-            'categoriesResource' => $categoriesResource,
-            'focusSelectionEnabled' => $planer->focus_selection_enabled,
-            'fociResource' => $fociResource,
-            'rulesResource' => $rulesResource,
-            'todosResource' => $todosResource,
-            'requiredECTS' => $planer->required_ects,
-            'tourData' => $tour,
-        ];
+        $props = getScheduleData($planer, $plan);
 
         if (isset($planer->meta)) {
             if (isset($planer->meta['brochureUrl'])) {
