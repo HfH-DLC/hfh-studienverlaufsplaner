@@ -946,47 +946,6 @@ describe("Schedule Store", () => {
         });
     });
 
-    describe("getter valid", () => {
-        it("should return true if there are no todoEntries and placements", () => {
-            const { store } = getInitializedStore();
-            store.todoEntries = [];
-            store.rawPlacements = [];
-
-            expect(store.valid).toBe(true);
-        });
-
-        it("should return false if there are unchecked todoEntries", () => {
-            const { store } = getInitializedStore();
-            store.todoEntries = [
-                {
-                    progressLabel: "some label",
-                    checked: false,
-                },
-                {
-                    progressLabel: "some label",
-                    checked: true,
-                },
-            ];
-            store.rawPlacements = [];
-
-            expect(store.valid).toBe(false);
-        });
-
-        it("should return false if there are placements with errors", () => {
-            const { store } = getInitializedStore();
-            store.todoEntries = [];
-            const schedulePlacement = schedulePlacementFactory.build();
-            store.rawPlacements = [schedulePlacement];
-            store.placementErrors.set(schedulePlacement.id, [
-                {
-                    label: "Some error message",
-                    type: MessageType.Error,
-                },
-            ]);
-            expect(store.valid).toBe(false);
-        });
-    });
-
     // describe("getter selectableEvents", () => {
     //     it("returns an empty array if there is no selected module", () => {
     //         const { store } = getInitializedStore();

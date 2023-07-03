@@ -71,6 +71,7 @@ const initialState = {
     tourActive: false,
     tourCompleted: false,
     tourCurrentStepIndex: 0,
+    valid: false,
 };
 
 export const useScheduleStore = defineStore("schedule", {
@@ -194,6 +195,7 @@ export const useScheduleStore = defineStore("schedule", {
             this.moduleErrors = validationResult.moduleErrors;
             this.placementErrors = validationResult.placementErrors;
             this.infos = validationResult.globalInfos;
+            this.valid = validationResult.valid;
         },
         startTour() {
             this.tourActive = true;
@@ -385,14 +387,6 @@ export const useScheduleStore = defineStore("schedule", {
                 this.selectableEvents.filter((event) =>
                     isSameDate(event, date)
                 );
-        },
-        valid(): boolean {
-            return (
-                this.todoEntries.every((todo) => todo.checked) &&
-                this.placements.every(
-                    (placement) => placement.errors.length == 0
-                )
-            );
         },
         tourSelectedModule(): ScheduleModule | null {
             if (
