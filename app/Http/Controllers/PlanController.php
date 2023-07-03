@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateFocusCreditRequest;
 use App\Http\Requests\UpdateScheduleRequest;
 use App\Http\Resources\CreditableModuleResource;
 use App\Http\Resources\PlanResource;
+use App\Http\Resources\PriorLearningResource;
 use App\Http\Resources\TodoResource;
 use App\Mail\PlanCreated;
 use App\Models\FocusSelection;
@@ -63,6 +64,7 @@ class PlanController extends Controller
             'planResource' => $planResource,
             'creditableModulesResource' => CreditableModuleResource::collection($modules),
             'todosResource' => TodoResource::collection($planer->getCreditTodos()),
+            'priorLearningsResource' => PriorLearningResource::collection($plan->priorLearnings),
             'tourData' => $tour,
         ];
 

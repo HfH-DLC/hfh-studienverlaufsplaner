@@ -48,9 +48,16 @@
                             >
                                 <tr class="divide-x divide-gray-300">
                                     <td class="p-4">
-                                        <label :for="`credit-${module.id}`"
-                                            >{{ module.id }}
-                                            {{ module.name }}</label
+                                        <label :for="`credit-${module.id}`">
+                                            <strong
+                                                v-if="
+                                                    isPriorLearning(module.id)
+                                                "
+                                                >(Vorleistung) </strong
+                                            ><span
+                                                >{{ module.id }}
+                                                {{ module.name }}</span
+                                            ></label
                                         >
                                     </td>
                                     <td class="p-4">
@@ -100,6 +107,21 @@
                         >
                             Ihre Planung erfüllt alle Anforderungen.
                         </p>
+                        <Info
+                            v-if="priorLearningsResource.data.length > 0"
+                            class="mb-4"
+                        >
+                            Sie haben
+                            {{ priorLearningsResource.data.length }}
+                            {{
+                                pluralize(
+                                    priorLearningsResource.data.length,
+                                    "Vorleistung",
+                                    "Vorleistungen"
+                                )
+                            }}
+                            erfasst.
+                        </Info>
                         <Checklist :entries="todoEntries" id="todos" />
                     </div>
                 </template>
@@ -137,10 +159,12 @@ import Flash from "../Components/Flash.vue";
 import PlanHeader from "../Components/PlanHeader.vue";
 import Tour from "../Components/Tour.vue";
 import MainLayout from "../Layouts/MainLayout.vue";
-import { FlashType, TourData } from "@/types";
+import { FlashType, PriorLearning, TourData } from "@/types";
 import DataAdapter from "@/DataAdapter";
 import Validator from "@/Validator";
 import { getTodos } from "@/Models/Todos/Credit/TodoFactory";
+import { pluralize } from "@/helpers";
+import Info from "@/Components/Info.vue";
 
 defineOptions({
     layout: MainLayout,
@@ -181,6 +205,10 @@ const props = defineProps({
     },
     focusSelectionEnabled: {
         type: Boolean,
+        required: true,
+    },
+    priorLearningsResource: {
+        type: Object,
         required: true,
     },
 });
@@ -234,6 +262,13 @@ const {
     readOnly,
     saveStatus,
 } = storeToRefs(store);
+
+const isPriorLearning = (moduleId: string) => {
+    return props.priorLearningsResource.data.some(
+        (priorLearning: PriorLearning) =>
+            priorLearning.countsAsModuleId === moduleId
+    );
+};
 
 const focusOptions = computed(() => {
     return focusSelections.value.map((focusSelection) => ({
