@@ -24,13 +24,14 @@ class UpdatePriorLearningsRequest extends FormRequest
         return [
             'priorLearnings' => 'array',
             'priorLearnings.*.id' => 'exists:prior_learnings,id',
-            'priorLearnings.*.name' => 'required',
+            'priorLearnings.*.name' => 'required|string',
             'priorLearnings.*.ects' => ['required_without:priorLearnings.*.countsAsModuleId', 'prohibits:priorLearnings.*.countsAsModuleId', 'integer', 'min:1'],
             'priorLearnings.*.countsAsCategoryId' => ['exists:categories,id', 'prohibits:priorLearnings.*.countsAsModuleId'],
             'priorLearnings.*.countsAsModuleId' => [
                 'exists:modules,id',
                 'required_without:priorLearnings.*.ects', 'prohibits:priorLearnings.*.ects', 'prohibits:priorLearnings.*.countsAsCategoryId'
             ],
+            'isScheduleValid' => ['required', 'bool']
         ];
     }
 }

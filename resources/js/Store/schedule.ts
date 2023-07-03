@@ -27,8 +27,16 @@ import {
     DayTime,
     EventDateWithOptionalTimeWindow,
     PriorLearning,
+    TodoData,
+    RuleData,
+    Plan,
 } from "@/types";
 import { useEmitter } from "@/composables/useEmitter";
+import SettingsRule from "@/Models/Rules/Schedule/SettingsRule";
+import PrerequisitesRule from "@/Models/Rules/Schedule/PrerequisitesRule";
+import DateRule from "@/Models/Rules/Schedule/DateRule";
+import { getTodos } from "@/Models/Todos/Schedule/TodoFactory";
+import { getRules } from "@/Models/Rules/Schedule/RuleFactory";
 
 let dataAdapter: DataAdapter;
 let validator: Validator;
@@ -243,8 +251,6 @@ export const useScheduleStore = defineStore("schedule", {
                         return acc;
                     }, 0) +
                     this.priorLearnings.reduce((acc, cur) => {
-                        console.log(cur.countsAsCategoryId === category.id);
-                        console.log(category.name);
                         if (cur.countsAsCategoryId === category.id) {
                             acc += cur.ects;
                         }
@@ -416,3 +422,37 @@ export const useScheduleStore = defineStore("schedule", {
         },
     },
 });
+
+export const getInitializedScheduleStore = (data: {
+    planerSlug: string;
+    planSlug: string;
+    todosData: Array<TodoData>;
+    rulesData: Array<RuleData>;
+    categories: Array<Category>;
+    plan: Plan;
+    foci: Array<Focus>;
+    requiredECTS: number;
+    tourData: TourData;
+}) => {
+    const defaultRules = [
+        new SettingsRule(),
+        new PrerequisitesRule(),
+        new DateRule(),
+    ];
+
+    const store = useScheduleStore();
+    store.init({
+        dataAdapter: new DataAdapter(data.planerSlug, data.planSlug),
+        validator: new Validator(getTodos(data.todosData), [
+            ...getRules(data.rulesData),
+            ...defaultRules,
+        ]),
+        categories: data.categories,
+        plan: data.plan,
+        foci: data.foci,
+        requiredECTS: data.requiredECTS,
+        tour: data.tourData,
+    });
+
+    return store;
+};

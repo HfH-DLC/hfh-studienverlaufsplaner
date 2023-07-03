@@ -115,13 +115,16 @@ import {
     Module,
     Category,
     PriorLearningParams,
+    Rule,
+    Todo,
+    TourData,
 } from "@/types";
 import AppHead from "@/Components/AppHead.vue";
 import PlanHeader from "@/Components/PlanHeader.vue";
 import Flash from "@/Components/Flash.vue";
 import DataAdapter from "@/DataAdapter";
 import MainLayout from "@/Layouts/MainLayout.vue";
-import { Ref, computed, ref } from "vue";
+import { PropType, Ref, computed, ref } from "vue";
 import {
     HfhButton,
     HfhInput,
@@ -129,11 +132,23 @@ import {
     HfhSelect,
 } from "@hfh-dlc/hfh-styleguide";
 import type { SelectOption } from "@hfh-dlc/hfh-styleguide/types";
-import { idText } from "typescript";
+import { getInitializedScheduleStore } from "@/Store/schedule";
 
 defineOptions({ layout: MainLayout });
 
 const props = defineProps({
+    categoriesResource: {
+        type: Object,
+        required: true,
+    },
+    focusSelectionEnabled: {
+        type: Boolean,
+        required: true,
+    },
+    fociResource: {
+        type: Object,
+        required: true,
+    },
     planerSlug: {
         type: String,
         required: true,
@@ -146,12 +161,20 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    modulesResource: {
+    requiredECTS: {
+        type: Number,
+        required: true,
+    },
+    rulesResource: {
         type: Object,
         required: true,
     },
-    categoriesResource: {
+    todosResource: {
         type: Object,
+        required: true,
+    },
+    tourData: {
+        type: Object as PropType<TourData>,
         required: true,
     },
     brochureUrl: {
@@ -160,10 +183,6 @@ const props = defineProps({
     },
     moduleDirectoryUrl: {
         type: String,
-        required: true,
-    },
-    focusSelectionEnabled: {
-        type: Boolean,
         required: true,
     },
 });
@@ -203,10 +222,16 @@ const createPriorLearning = async () => {
     if (Number.isNaN(ects)) {
         ects = undefined;
     }
+    let categoryId = parseInt(priorLearningCategoryId.value) as
+        | number
+        | undefined;
+    if (Number.isNaN(ects)) {
+        categoryId = undefined;
+    }
     const newPiorLearning = {} as PriorLearning;
     newPiorLearning.name = priorLearningName.value;
-    newPiorLearning.ectsRaw = priorLearningECTS.value;
-    newPiorLearning.countsAsCategoryIdRaw = priorLearningCategoryId.value;
+    newPiorLearning.ectsRaw = ects;
+    newPiorLearning.countsAsCategoryIdRaw = categoryId;
     newPiorLearning.countsAsModuleId = priorLearningModuleId.value;
     const priorLearningsToBeSaved: Array<PriorLearning> = [
         ...priorLearnings.value,
@@ -232,7 +257,47 @@ const deletePriorLearning = async (id: number) => {
     priorLearnings.value = await save(priorLearningsToBeSaved);
 };
 
+const propsClone = JSON.parse(JSON.stringify(props));
+const scheduleStore = getInitializedScheduleStore({
+    planerSlug: propsClone.planerSlug,
+    planSlug: propsClone.planResource.data.slug,
+    todosData: propsClone.todosResource.data,
+    rulesData: propsClone.rulesResource.data,
+    categories: propsClone.categoriesResource.data,
+    plan: propsClone.planResource.data,
+    foci: propsClone.fociResource.data,
+    requiredECTS: propsClone.requiredECTS,
+    tourData: propsClone.tourData,
+});
+
 const save = (priorLearningsToBeSaved: Array<PriorLearning>) => {
+    scheduleStore.priorLearnings = priorLearningsToBeSaved.map(
+        (priorLearning) => {
+            let ects = priorLearning.ectsRaw || 0;
+            let countsAsCategoryId = priorLearning.countsAsCategoryIdRaw;
+            if (priorLearning.countsAsModuleId) {
+                const module = scheduleStore.moduleById(
+                    priorLearning!.countsAsModuleId
+                );
+                if (module) {
+                    ects = module.ects;
+                    const category = scheduleStore.categories.find((category) =>
+                        category.modules.some((m) => m.id === module.id)
+                    );
+                    if (category) {
+                        countsAsCategoryId = category.id;
+                    }
+                }
+            }
+
+            return {
+                ...priorLearning,
+                ects,
+                countsAsCategoryId,
+            };
+        }
+    );
+    scheduleStore.validate();
     return dataAdapter.savePriorLearnings(
         priorLearningsToBeSaved.map((priorLearning: PriorLearning) => {
             const params: PriorLearningParams = {
@@ -253,23 +318,22 @@ const save = (priorLearningsToBeSaved: Array<PriorLearning>) => {
                 params.countsAsModuleId = priorLearning.countsAsModuleId;
             }
             return params;
-        })
+        }),
+        scheduleStore.valid
     );
 };
 
 const categoryOptions = computed((): Array<SelectOption> => {
-    return props.categoriesResource.data.map(
-        (category: Category): SelectOption => {
-            return {
-                label: `${category.name}`,
-                value: `${category.id}`,
-            };
-        }
-    );
+    return scheduleStore.categories.map((category: Category): SelectOption => {
+        return {
+            label: `${category.name}`,
+            value: `${category.id}`,
+        };
+    });
 });
 
 const moduleOptions = computed((): Array<SelectOption> => {
-    return props.modulesResource.data.map((module: Module): SelectOption => {
+    return scheduleStore.modules.map((module: Module): SelectOption => {
         return {
             label: `${module.id} ${module.name}`,
             value: module.id,

@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdatePriorLearningsRequest;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\ModuleResource;
-use App\Http\Resources\PlanResource;
 use App\Http\Resources\PriorLearningResource;
 use App\Models\Plan;
 use App\Models\Planer;
@@ -16,14 +13,8 @@ class PriorLearningController extends Controller
 {
     function show(Planer $planer, Plan $plan)
     {
-        $props = [
-            'planerName' => $planer->name,
-            'planerSlug' => $planer->id,
-            'focusSelectionEnabled' => $planer->focus_selection_enabled,
-            'planResource' => new PlanResource($plan),
-            'modulesResource' => ModuleResource::collection($planer->getModules()),
-            'categoriesResource' => CategoryResource::collection($planer->categories),
-        ];
+        $props = getScheduleData($planer, $plan);
+
         if (isset($planer->meta)) {
             if (isset($planer->meta['brochureUrl'])) {
                 $props['brochureUrl'] = $planer->meta['brochureUrl'];
@@ -39,7 +30,8 @@ class PriorLearningController extends Controller
     {
         $validated = $request->validated();
         $priorLearningsData = $validated['priorLearnings'];
-        DB::transaction(function () use ($priorLearningsData, $plan) {
+        $isScheduleValid = $validated['isScheduleValid'];
+        DB::transaction(function () use ($priorLearningsData, $isScheduleValid, $plan) {
             $ids = [];
             foreach ($priorLearningsData as $data) {
                 $id = isset($data['id']) ? $data['id'] : null;
@@ -58,6 +50,8 @@ class PriorLearningController extends Controller
                 $ids[] = $priorLearning->id;
             }
             $plan->priorLearnings()->whereNotIn('id', $ids)->delete();
+            $plan->schedule_valid = $isScheduleValid;
+            $plan->save();
         });
         return response()->json(PriorLearningResource::collection($plan->priorLearnings));
     }

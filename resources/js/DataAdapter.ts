@@ -66,9 +66,13 @@ export default class DataAdapter {
         });
     }
 
-    async savePriorLearnings(priorLearnings: Array<PriorLearningParams>) {
+    async savePriorLearnings(
+        priorLearnings: Array<PriorLearningParams>,
+        isScheduleValid: boolean
+    ) {
         const response = await axios.put(this.getEndpointUrl("vorleistungen"), {
             priorLearnings,
+            isScheduleValid,
         });
         const result = response.data as Array<PriorLearning>;
         return result;

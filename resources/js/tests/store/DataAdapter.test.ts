@@ -99,8 +99,10 @@ describe("DataAdapter", () => {
             priorLearnignFactory.build(),
             priorLearnignFactory.build(),
         ];
+        const isScheduleValid = true;
         const expectedData = {
             priorLearnings,
+            isScheduleValid,
         };
 
         const mockResponse = {
@@ -108,7 +110,8 @@ describe("DataAdapter", () => {
         };
         mockedAxios.put.mockResolvedValueOnce(mockResponse);
         const returnedData = await dataAdapter.savePriorLearnings(
-            priorLearnings
+            priorLearnings,
+            isScheduleValid
         );
 
         expect(mockedAxios.put).toHaveBeenCalledWith(
