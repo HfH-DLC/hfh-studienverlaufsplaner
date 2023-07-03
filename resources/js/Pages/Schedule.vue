@@ -93,14 +93,16 @@
                                 class="mb-4"
                             >
                                 Sie haben
-                                {{ store.priorLearnings.length }}
-                                {{
-                                    pluralize(
-                                        store.priorLearnings.length,
-                                        "Vorleistung",
-                                        "Vorleistungen"
-                                    )
-                                }}
+                                <HfhLink :component="Link" href="vorleistungen">
+                                    {{ store.priorLearnings.length }}
+                                    {{
+                                        pluralize(
+                                            store.priorLearnings.length,
+                                            "Vorleistung",
+                                            "Vorleistungen"
+                                        )
+                                    }}
+                                </HfhLink>
                                 erfasst.
                             </Info>
                             <Checklist :entries="store.todoEntries" />
