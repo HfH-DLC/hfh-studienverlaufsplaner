@@ -49,11 +49,11 @@
                                 <tr class="divide-x divide-gray-300">
                                     <td class="p-4">
                                         <label :for="`credit-${module.id}`">
-                                            <strong
+                                            <span
                                                 v-if="
                                                     isPriorLearning(module.id)
                                                 "
-                                                >(Vorleistung) </strong
+                                                >(Vorleistung) </span
                                             ><span
                                                 >{{ module.id }}
                                                 {{ module.name }}</span
@@ -107,19 +107,18 @@
                         >
                             Ihre Planung erfüllt alle Anforderungen.
                         </p>
-                        <Info
-                            v-if="priorLearningsResource.data.length > 0"
-                            class="mb-4"
-                        >
+                        <Info v-if="priorLearnings.length > 0" class="mb-4">
                             Sie haben
-                            {{ priorLearningsResource.data.length }}
-                            {{
-                                pluralize(
-                                    priorLearningsResource.data.length,
-                                    "Vorleistung",
-                                    "Vorleistungen"
-                                )
-                            }}
+                            <HfhLink :component="Link" href="vorleistungen">
+                                {{ priorLearnings.length }}
+                                {{
+                                    pluralize(
+                                        priorLearnings.length,
+                                        "Vorleistung",
+                                        "Vorleistungen"
+                                    )
+                                }}
+                            </HfhLink>
                             erfasst.
                         </Info>
                         <Checklist :entries="todoEntries" id="todos" />
@@ -263,8 +262,10 @@ const {
     saveStatus,
 } = storeToRefs(store);
 
+const priorLearnings = computed(() => props.planResource.data.priorLearnings);
+
 const isPriorLearning = (moduleId: string) => {
-    return props.priorLearningsResource.data.some(
+    return priorLearnings.value.some(
         (priorLearning: PriorLearning) =>
             priorLearning.countsAsModuleId === moduleId
     );

@@ -64,7 +64,6 @@ class PlanController extends Controller
             'planResource' => $planResource,
             'creditableModulesResource' => CreditableModuleResource::collection($modules),
             'todosResource' => TodoResource::collection($planer->getCreditTodos()),
-            'priorLearningsResource' => PriorLearningResource::collection($plan->priorLearnings),
             'tourData' => $tour,
         ];
 
