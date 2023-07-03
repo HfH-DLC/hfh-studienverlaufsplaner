@@ -36,7 +36,7 @@ export default class DateRule implements Rule {
         });
     }
 
-    getGlobalInfos(data: Record<string, any>, infos: Message[]): void {}
+    getGlobalInfos() {}
 
     getModuleErrors(
         module: ScheduleModule,

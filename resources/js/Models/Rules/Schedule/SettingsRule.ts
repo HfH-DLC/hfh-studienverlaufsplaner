@@ -51,7 +51,7 @@ export default class SettingsRule implements Rule {
         errorMessages.push({ ...message, type: MessageType.Error });
     }
 
-    getGlobalInfos(data: Record<string, any>, infos: Message[]): void {}
+    getGlobalInfos(): void {}
 
     getModuleErrors() {}
 

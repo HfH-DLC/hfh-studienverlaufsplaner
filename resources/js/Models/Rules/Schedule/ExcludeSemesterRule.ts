@@ -88,7 +88,7 @@ export default class ExcludeSemesterRule implements Rule {
         }
     }
 
-    getGlobalInfos(data: Record<string, any>, infos: Message[]): void {}
+    getGlobalInfos() {}
 
     getSelectionStatus(
         module: ScheduleModule,
