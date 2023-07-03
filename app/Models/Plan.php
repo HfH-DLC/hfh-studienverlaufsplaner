@@ -55,32 +55,28 @@ class Plan extends Model
 
     public function getCreditableModules()
     {
-        $key = $this->getCacheKey("creditableModules");
-        if (!Cache::has($key)) {
-            $placedModuleIds = $this->placements()->pluck('module_id')->all();
-            $query = function ($query) use ($placedModuleIds) {
-                $query->where('creditable', true);
-                $query->whereIn('id', $placedModuleIds);
-            };
-            $modules = $this->planer->getModules($query);
-            $modules = $modules->map(function ($module) {
-                $focusSelectionId = $this->focusSelections()->whereHas('focus.requiredModules', function ($query) use ($module) {
+        $placedModuleIds = $this->placements()->pluck('module_id')->all();
+        $priorLearningModuleIds = $this->priorLearnings()->pluck('counts_as_module_id')->all();
+        $query = function ($query) use ($placedModuleIds, $priorLearningModuleIds) {
+            $query->where('creditable', true);
+            $query->whereIn('id', array_merge($placedModuleIds, $priorLearningModuleIds));
+        };
+        $modules = $this->planer->getModules($query);
+        $modules = $modules->map(function ($module) {
+            $focusSelectionId = $this->focusSelections()->whereHas('focus.requiredModules', function ($query) use ($module) {
+                $query->where('id', $module->id);
+            })->pluck('id')->first();
+            if (!$focusSelectionId) {
+                $focusSelectionId = $this->focusSelections()->whereHas('creditedModules', function ($query) use ($module) {
                     $query->where('id', $module->id);
                 })->pluck('id')->first();
-                if (!$focusSelectionId) {
-                    $focusSelectionId = $this->focusSelections()->whereHas('creditedModules', function ($query) use ($module) {
-                        $query->where('id', $module->id);
-                    })->pluck('id')->first();
-                } else {
-                    $module->required_credit = true;
-                }
-                $module->credited_against = $focusSelectionId;
-                return $module;
-            });
-            Cache::put($key, $modules);
-            return $modules;
-        }
-        return Cache::get($key);
+            } else {
+                $module->required_credit = true;
+            }
+            $module->credited_against = $focusSelectionId;
+            return $module;
+        });
+        return $modules;
     }
 
     public function getCategoriesWithAllModules()

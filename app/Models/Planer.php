@@ -48,20 +48,15 @@ class Planer extends Model
 
     public function getModules($query = NULL)
     {
-        $key = $this->getCacheKey("modules");
-        if (!Cache::has($key)) {
-            $modules = collect();
-            $withParam = ['modules'];
-            if ($query !== NULL) {
-                $withParam = ['modules' => $query];
-            }
-            foreach ($this->categories()->with($withParam)->get() as $category) {
-                $modules = $modules->merge($category->modules);
-            }
-            Cache::put($key, $modules);
-            return $modules;
+        $modules = collect();
+        $withParam = ['modules'];
+        if ($query !== NULL) {
+            $withParam = ['modules' => $query];
         }
-        return Cache::get($key);
+        foreach ($this->categories()->with($withParam)->get() as $category) {
+            $modules = $modules->merge($category->modules);
+        }
+        return $modules;
     }
 
     public function getEvents()
