@@ -20,11 +20,23 @@ export default class Validator {
     }
 
     validate(data: Record<string, Ref<any>>) {
+        const todoEntries = this.getTodoEntries(data);
+        const moduleErrors = this.getModuleErrors(data);
+        const placementErrors = this.getPlacementErrors(data);
+        const globalInfos = this.getGlobalInfos(data);
+
+        const valid =
+            todoEntries.every((entry) => entry.checked) &&
+            [...placementErrors.values()].every(
+                (errorArray) => errorArray.length == 0
+            );
+
         return {
-            todoEntries: this.getTodoEntries(data),
-            moduleErrors: this.getModuleErrors(data),
-            placementErrors: this.getPlacementErrors(data),
-            globalInfos: this.getGlobalInfos(data),
+            todoEntries,
+            moduleErrors,
+            placementErrors,
+            globalInfos,
+            valid,
         };
     }
 

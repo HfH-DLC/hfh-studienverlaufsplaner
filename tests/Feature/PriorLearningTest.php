@@ -39,7 +39,7 @@ class PriorLearningTest extends TestCase
         $module = Module::factory()->create(['id' => 'module1Id', 'ects' => 4,]);
         $url = "/$planer->id/$plan->slug/vorleistungen";
         $priorLearning =  array('name' => 'my_prior_learing_1',  'countsAsModuleId' => $module->id);
-        $params = ['priorLearnings' => [$priorLearning]];
+        $params = ['priorLearnings' => [$priorLearning], 'isScheduleValid' => true];
 
         $response = $this->put($url, $params);
 
@@ -67,7 +67,7 @@ class PriorLearningTest extends TestCase
         $plan = Plan::factory()->for($planer)->create();
         $url = "/$planer->id/$plan->slug/vorleistungen";
         $priorLearning =  array('name' => 'my_prior_learing_1');
-        $params = ['priorLearnings' => [$priorLearning]];
+        $params = ['priorLearnings' => [$priorLearning], 'isScheduleValid' => true];
 
         $response = $this->put($url, $params);
 
@@ -87,7 +87,7 @@ class PriorLearningTest extends TestCase
         $category = Category::factory()->create(['planer_id' =>  $planer->id]);
         $url = "/$planer->id/$plan->slug/vorleistungen";
         $priorLearning =  array('name' => 'my_prior_learing_1',  'countsAsCategoryId' => $category->id, 'ects' => 4);
-        $params = ['priorLearnings' => [$priorLearning]];
+        $params = ['priorLearnings' => [$priorLearning], 'isScheduleValid' => true];
 
         $response = $this->put($url, $params);
 
@@ -115,7 +115,7 @@ class PriorLearningTest extends TestCase
         $category = Category::factory()->create(['planer_id' =>  $planer->id]);
         $url = "/$planer->id/$plan->slug/vorleistungen";
         $priorLearning =  array('name' => 'my_prior_learing_1',  'countsAsCategoryId' => $category->id);
-        $params = ['priorLearnings' => [$priorLearning]];
+        $params = ['priorLearnings' => [$priorLearning], 'isScheduleValid' => true];
 
         $response = $this->put($url, $params);
 
@@ -134,7 +134,7 @@ class PriorLearningTest extends TestCase
         $plan = Plan::factory()->for($planer)->create();
         $url = "/$planer->id/$plan->slug/vorleistungen";
         $priorLearning =  array('name' => 'my_prior_learing_1', 'ects' => 4);
-        $params = ['priorLearnings' => [$priorLearning]];
+        $params = ['priorLearnings' => [$priorLearning], 'isScheduleValid' => true];
 
         $response = $this->put($url, $params);
 
@@ -162,7 +162,7 @@ class PriorLearningTest extends TestCase
         $module = Module::factory()->create(['id' => 'module1Id', 'ects' => 4,]);
         $url = "/$planer->id/$plan->slug/vorleistungen";
         $priorLearning =  array('name' => 'my_prior_learing_1',  'countsAsModuleId' => $module->id, 'ects' => 5);
-        $params = ['priorLearnings' => [$priorLearning]];
+        $params = ['priorLearnings' => [$priorLearning], 'isScheduleValid' => true];
 
         $response = $this->put($url, $params);
 
@@ -182,7 +182,7 @@ class PriorLearningTest extends TestCase
         $module = Module::factory()->create(['id' => 'module1Id', 'ects' => 4,]);
         $url = "/$planer->id/$plan->slug/vorleistungen";
         $priorLearning =  array('name' => 'my_prior_learing_1',  'countsAsModuleId' => $module->id, 'countsAsCategoryId' => $module->id,);
-        $params = ['priorLearnings' => [$priorLearning]];
+        $params = ['priorLearnings' => [$priorLearning], 'isScheduleValid' => true];
 
         $response = $this->put($url, $params);
 
@@ -202,7 +202,7 @@ class PriorLearningTest extends TestCase
         $module = Module::factory()->create(['id' => 'module1Id', 'ects' => 4,]);
         $url = "/$planer->id/$plan->slug/vorleistungen";
         $priorLearning =  array('name' => 'my_prior_learing_1',  'countsAsModuleId' => $module->id, 'countsAsCategoryId' => $module->id, 'ects' => 5);
-        $params = ['priorLearnings' => [$priorLearning]];
+        $params = ['priorLearnings' => [$priorLearning], 'isScheduleValid' => true];
 
         $response = $this->put($url, $params);
 
@@ -226,7 +226,7 @@ class PriorLearningTest extends TestCase
 
         $params = ['priorLearnings' => [
             array('id' => $priorLearning->id, 'name' => 'test2', 'ects' => $priorLearning->ects)
-        ]];
+        ], 'isScheduleValid' => true];
 
         $response = $this->put($url, $params);
 
@@ -250,7 +250,7 @@ class PriorLearningTest extends TestCase
 
         $params = ['priorLearnings' => [
             array('id' => $priorLearning->id, 'name' => $priorLearning->name, 'ects' => 6)
-        ]];
+        ], 'isScheduleValid' => true];
 
         $response = $this->put($url, $params);
 
@@ -276,7 +276,7 @@ class PriorLearningTest extends TestCase
 
         $params = ['priorLearnings' => [
             array('id' => $priorLearning->id, 'name' => $priorLearning->name, 'ects' => $priorLearning->ects, 'countsAsCategoryId' => $category2->id)
-        ]];
+        ], 'isScheduleValid' => true];
 
         $response = $this->put($url, $params);
 
@@ -310,7 +310,7 @@ class PriorLearningTest extends TestCase
 
         $params = ['priorLearnings' => [
             array('id' => $priorLearning->id, 'name' => $priorLearning->name, 'countsAsModuleId' => $module2->id)
-        ]];
+        ], 'isScheduleValid' => true];
 
         $response = $this->put($url, $params);
 
