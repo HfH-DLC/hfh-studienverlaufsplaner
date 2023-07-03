@@ -118,6 +118,7 @@ import {
     Rule,
     Todo,
     TourData,
+    ScheduleModule,
 } from "@/types";
 import AppHead from "@/Components/AppHead.vue";
 import PlanHeader from "@/Components/PlanHeader.vue";
@@ -333,12 +334,14 @@ const categoryOptions = computed((): Array<SelectOption> => {
 });
 
 const moduleOptions = computed((): Array<SelectOption> => {
-    return scheduleStore.modules.map((module: Module): SelectOption => {
-        return {
-            label: `${module.id} ${module.name}`,
-            value: module.id,
-        };
-    });
+    return scheduleStore.modules
+        .filter((moduel) => !moduel.placement)
+        .map((module: ScheduleModule): SelectOption => {
+            return {
+                label: `${module.id} ${module.name}`,
+                value: module.id,
+            };
+        });
 });
 </script>
 
