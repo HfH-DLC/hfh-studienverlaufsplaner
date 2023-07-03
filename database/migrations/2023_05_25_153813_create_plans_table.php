@@ -23,7 +23,6 @@ class CreatePlansTable extends Migration
             $table->boolean('schedule_tour_completed')->default(false);
             $table->boolean('credit_tour_completed')->default(false);
             $table->boolean('schedule_valid')->default(false);
-            $table->boolean('credit_valid')->default(false);
             $table->boolean('read_only')->default(false);
         });
 

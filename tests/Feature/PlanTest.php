@@ -304,21 +304,6 @@ class PlanTest extends TestCase
     }
 
     /** @test */
-    public function can_update_credits_valid()
-    {
-        $planer = Planer::factory()->create();
-        $plan = Plan::factory()->for($planer)->create(['credit_valid' => false]);
-        $url = "/$planer->id/$plan->slug/anrechnung";
-        $params = ['focusCredits' => [], 'valid' => true, 'tourCompleted' => false];
-
-        $response = $this->put($url, $params);
-
-        $response->assertSuccessful();
-        $plan = $plan->fresh();
-        $this->assertTrue($plan->credit_valid);
-    }
-
-    /** @test */
     public function focus_credits_is_required_to_update_credits()
     {
         $planer = Planer::factory()->create();

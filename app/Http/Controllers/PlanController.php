@@ -201,7 +201,6 @@ class PlanController extends Controller
                 $focusSelection->save();
             }
             $plan->credit_tour_completed = $validated['tourCompleted'];
-            $plan->credit_valid = $validated['valid'];
             $plan->save();
         });
         return response()->noContent();
