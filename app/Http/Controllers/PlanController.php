@@ -7,7 +7,6 @@ use App\Http\Requests\UpdateFocusCreditRequest;
 use App\Http\Requests\UpdateScheduleRequest;
 use App\Http\Resources\CreditableModuleResource;
 use App\Http\Resources\PlanResource;
-use App\Http\Resources\PriorLearningResource;
 use App\Http\Resources\TodoResource;
 use App\Mail\PlanCreated;
 use App\Models\FocusSelection;
