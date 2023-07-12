@@ -94,16 +94,16 @@
                             >
                                 Sie haben
                                 <HfhLink :component="Link" href="vorleistungen">
-                                    {{ store.priorLearnings.length }}
-                                    {{
-                                        pluralize(
-                                            store.priorLearnings.length,
-                                            "Vorleistung",
-                                            "Vorleistungen"
-                                        )
-                                    }}
+                                    Vorleistungen
                                 </HfhLink>
-                                erfasst.
+                                im Umfang von
+                                {{
+                                    store.priorLearnings.reduce(
+                                        (acc, cur) => acc + cur.ects,
+                                        0
+                                    )
+                                }}
+                                ECTS erfasst.
                             </Info>
                             <Checklist :entries="store.todoEntries" />
                         </StickyColumn>

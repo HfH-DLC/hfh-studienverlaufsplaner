@@ -109,20 +109,6 @@
                         >
                             Ihre Planung erfüllt alle Anforderungen.
                         </p>
-                        <Info v-if="priorLearnings.length > 0" class="mb-4">
-                            Sie haben
-                            <HfhLink :component="Link" href="vorleistungen">
-                                {{ priorLearnings.length }}
-                                {{
-                                    pluralize(
-                                        priorLearnings.length,
-                                        "Vorleistung",
-                                        "Vorleistungen"
-                                    )
-                                }}
-                            </HfhLink>
-                            erfasst.
-                        </Info>
                         <Checklist :entries="todoEntries" id="todos" />
                     </div>
                 </template>
@@ -151,7 +137,7 @@ import AppHead from "@/Components/AppHead.vue";
 import { HfhSelect, HfhLink } from "@hfh-dlc/hfh-styleguide";
 import { Link } from "@inertiajs/vue3";
 import { storeToRefs } from "pinia";
-import { PropType, computed, onBeforeUnmount } from "vue";
+import { ComputedRef, PropType, computed, onBeforeUnmount } from "vue";
 import { useEmitter } from "@/composables/useEmitter";
 
 import { useCreditStore } from "../Store/credit";
@@ -164,7 +150,6 @@ import { FlashType, PriorLearning, TourData } from "@/types";
 import DataAdapter from "@/DataAdapter";
 import Validator from "@/Validator";
 import { getTodos } from "@/Models/Todos/Credit/TodoFactory";
-import { pluralize } from "@/helpers";
 import Info from "@/Components/Info.vue";
 import { SelectOption } from "@hfh-dlc/hfh-styleguide/types/types";
 
@@ -265,7 +250,9 @@ const {
     saveStatus,
 } = storeToRefs(store);
 
-const priorLearnings = computed(() => props.planResource.data.priorLearnings);
+const priorLearnings: ComputedRef<Array<PriorLearning>> = computed(
+    () => props.planResource.data.priorLearnings
+);
 
 const isPriorLearning = (moduleId: string) => {
     return priorLearnings.value.some(
