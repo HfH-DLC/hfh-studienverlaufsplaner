@@ -72,7 +72,9 @@
                                         <HfhSelect
                                             v-else
                                             :id="`credit-${module.id}`"
-                                            :options="focusOptions"
+                                            :options="
+                                                getFocusOptions(module.id)
+                                            "
                                             :modelValue="
                                                 module.creditedAgainst
                                                     ? `${module.creditedAgainst}`
@@ -164,6 +166,7 @@ import Validator from "@/Validator";
 import { getTodos } from "@/Models/Todos/Credit/TodoFactory";
 import { pluralize } from "@/helpers";
 import Info from "@/Components/Info.vue";
+import { SelectOption } from "@hfh-dlc/hfh-styleguide/types/types";
 
 defineOptions({
     layout: MainLayout,
@@ -271,12 +274,32 @@ const isPriorLearning = (moduleId: string) => {
     );
 };
 
-const focusOptions = computed(() => {
-    return focusSelections.value.map((focusSelection) => ({
-        label: "SSP " + focusSelection.focus.name,
-        value: focusSelection.id.toString(),
-    }));
-});
+const getFocusOptions = (moduleId: string): Array<SelectOption> => {
+    if (!isPriorLearning(moduleId)) {
+        return focusSelections.value.map((focusSelection) => ({
+            label: "SSP " + focusSelection.focus.name,
+            value: focusSelection.id.toString(),
+        }));
+    }
+
+    return focusSelections.value
+        .filter((focusSelection) => {
+            return (
+                focusSelection.focus.requiredModules
+                    .map((module) => module.id)
+                    .includes(moduleId) ||
+                focusSelection.focus.optionalModules
+                    .map((module) => module.id)
+                    .includes(moduleId)
+            );
+        })
+        .map((focusSelection) => {
+            return {
+                label: "SSP " + focusSelection.focus.name,
+                value: focusSelection.id.toString(),
+            };
+        });
+};
 
 const getFocusName = (focusSelectionId: number | null) => {
     return focusSelections.value.find(

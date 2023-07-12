@@ -56,10 +56,15 @@ class Plan extends Model
     public function getCreditableModules()
     {
         $placedModuleIds = $this->placements()->pluck('module_id')->all();
-        $priorLearningModuleIds = $this->priorLearnings()->pluck('counts_as_module_id')->all();
-        $query = function ($query) use ($placedModuleIds, $priorLearningModuleIds) {
+
+        $focus_ids = $this->focusSelections()->get()->pluck('focus_id');
+        $focusModuleIds = Module::whereHas('foci', function ($q) use ($focus_ids) {
+            $q->whereIn('id', $focus_ids);
+        })->pluck('id');
+        $allowedPriorLearningModuleIds = $this->priorLearnings()->whereIn('counts_as_module_id', $focusModuleIds)->pluck('counts_as_module_id')->all();
+        $query = function ($query) use ($placedModuleIds, $allowedPriorLearningModuleIds) {
             $query->where('creditable', true);
-            $query->whereIn('id', array_merge($placedModuleIds, $priorLearningModuleIds));
+            $query->whereIn('id', array_merge($placedModuleIds, $allowedPriorLearningModuleIds));
         };
         $modules = $this->planer->getModules($query);
         $modules = $modules->map(function ($module) {
