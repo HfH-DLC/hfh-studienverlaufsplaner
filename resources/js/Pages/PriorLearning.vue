@@ -36,7 +36,7 @@
                         v-model="priorLearningReplacesModule"
                     ></HfhRadioButton>
                     <HfhInput
-                        v-if="priorLearningReplacesModule === 'no'"
+                        v-if="!replacesModule"
                         v-model="priorLearningECTS"
                         id="prior-learning-ects"
                         label="ECTS"
@@ -45,7 +45,7 @@
                         :required="true"
                     ></HfhInput>
                     <HfhSelect
-                        v-if="priorLearningReplacesModule === 'no'"
+                        v-if="!replacesModule"
                         v-model="priorLearningCategoryId"
                         id="prior-learning-category"
                         :options="categoryOptions"
@@ -54,7 +54,7 @@
                     >
                     </HfhSelect>
                     <HfhSelect
-                        v-if="priorLearningReplacesModule === 'yes'"
+                        v-if="replacesModule"
                         v-model="priorLearningModuleId"
                         id="prior-learning-module"
                         :options="moduleOptions"
@@ -112,11 +112,8 @@
 import {
     PriorLearning,
     SaveStatus,
-    Module,
     Category,
     PriorLearningParams,
-    Rule,
-    Todo,
     TourData,
     ScheduleModule,
 } from "@/types";
@@ -218,22 +215,29 @@ const priorLearningCategoryId = ref();
 const priorLearningReplacesModule = ref("yes");
 const priorLearningModuleId = ref();
 
+const replacesModule = computed(() => {
+    return priorLearningReplacesModule.value === "yes";
+});
+
 const createPriorLearning = async () => {
-    let ects = parseInt(priorLearningECTS.value) as number | undefined;
-    if (Number.isNaN(ects)) {
-        ects = undefined;
-    }
-    let categoryId = parseInt(priorLearningCategoryId.value) as
-        | number
-        | undefined;
-    if (Number.isNaN(ects)) {
-        categoryId = undefined;
-    }
     const newPiorLearning = {} as PriorLearning;
     newPiorLearning.name = priorLearningName.value;
-    newPiorLearning.ectsRaw = ects;
-    newPiorLearning.countsAsCategoryIdRaw = categoryId;
-    newPiorLearning.countsAsModuleId = priorLearningModuleId.value;
+    if (replacesModule.value) {
+        newPiorLearning.countsAsModuleId = priorLearningModuleId.value;
+    } else {
+        let ects = parseInt(priorLearningECTS.value) as number | undefined;
+        if (Number.isNaN(ects)) {
+            ects = undefined;
+        }
+        let categoryId = parseInt(priorLearningCategoryId.value) as
+            | number
+            | undefined;
+        if (Number.isNaN(ects)) {
+            categoryId = undefined;
+        }
+        newPiorLearning.ectsRaw = ects;
+        newPiorLearning.countsAsCategoryIdRaw = categoryId;
+    }
     const priorLearningsToBeSaved: Array<PriorLearning> = [
         ...priorLearnings.value,
         newPiorLearning,
