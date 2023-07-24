@@ -17,6 +17,7 @@
                             :class="{
                                 active: $page.component === 'Settings',
                             }"
+                            id="settings"
                             >Einstellungen</Link
                         >
                     </li>
@@ -27,6 +28,7 @@
                             :class="{
                                 active: $page.component === 'PriorLearning',
                             }"
+                            id="prior-learning"
                             >Vorleistungen</Link
                         >
                     </li>
