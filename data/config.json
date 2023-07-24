@@ -755,7 +755,7 @@
             "day": "Montag",
             "time": "Abend",
             "sortIndex": 2,
-            "default": true
+            "default": false
         },
         {
             "id": "c",
@@ -776,7 +776,7 @@
             "day": "Dienstag",
             "time": "Abend",
             "sortIndex": 5,
-            "default": true
+            "default": false
         },
         {
             "id": "e",
@@ -797,7 +797,7 @@
             "day": "Donnerstag",
             "time": "Abend",
             "sortIndex": 8,
-            "default": true
+            "default": false
         },
         {
             "id": "g",
@@ -818,7 +818,7 @@
             "day": "Freitag",
             "time": "Abend",
             "sortIndex": 11,
-            "default": true
+            "default": false
         }
     ],
     "locations": [
@@ -829,7 +829,8 @@
         },
         {
             "id": "GR",
-            "name": "Chur"
+            "name": "Chur",
+            "default": false
         }
     ]
 }
