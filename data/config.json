@@ -562,6 +562,18 @@
                             "placement": "left-start"
                         },
                         {
+                            "title": "Einstellungen",
+                            "content": "In den Einstellungen können Sie festlegen, welche Standorte und Tageszeiten Ihnen angezeigt werden.",
+                            "ref": "settings",
+                            "placement": "bottom"
+                        },
+                        {
+                            "title": "Vorleistungen",
+                            "content": "Unter Vorleistungen können Sie ihre bereits erbrachten Studienleistungen erfassen.",
+                            "ref": "prior-learning",
+                            "placement": "bottom"
+                        },
+                        {
                             "title": "Tour «Einführung»",
                             "content": "Um diese Einführung später erneut anzuschauen, klicken Sie auf das Fragezeichen. Viel Erfolg beim Planen!",
                             "ref": "start-tour",
@@ -594,7 +606,7 @@
             },
             "meta": {
                 "moduleDirectoryUrl": "https://daylightweb.hfh.ch/modulverzeichnis",
-                "brochureUrl": "https://www.hfh.ch/sites/default/files/documents/StudienbroschuereMA_SHP_23_web.pdf"
+                "brochureUrl": "https://www.hfh.ch/sites/default/files/documents/StudienbroschuereMA_SHP_23_web_1.pdf"
             }
         },
         {
