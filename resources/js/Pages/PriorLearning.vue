@@ -16,7 +16,12 @@
         <div>
             <main class="flex-1 flex flex-col p-4 hfh-content">
                 <Flash class="fixed top-4 left-1/2 -translate-x-1/2" />
-                <h1>Vorleistungen</h1>
+                <h2>Bereits erbrachte Studienleistungen (Vorleistungen)</h2>
+                <p>
+                    Wurden Ihnen bereits erbrachte Studienleistungen anerkannt,
+                    können Sie diese hier erfassen. (Die ECTS können auf mehrere
+                    Bereiche aufgeteilt werden.)
+                </p>
                 <form @submit.prevent="createPriorLearning">
                     <HfhInput
                         v-model="priorLearningName"
@@ -24,48 +29,57 @@
                         label="Name"
                         :required="true"
                         type="text"
+                        placeholder="MA Erziehungswissenschaften oder P1_02"
                     ></HfhInput>
                     <HfhRadioButton
-                        id="prior-learning-replaces-module"
-                        name="prior-learning-replaces-module"
-                        legend="Ersetzt Modul"
+                        class="mt-4"
+                        id="prior-learning-type"
+                        name="prior-learning-type"
+                        legend="Anrechnungsart"
                         :options="[
-                            { label: 'Ja', value: 'yes' },
-                            { label: 'Nein', value: 'no' },
+                            { label: 'Modul', value: 'module' },
+                            {
+                                label: 'Pauschalanrechnung (ECTS)',
+                                value: 'ects',
+                            },
                         ]"
                         v-model="priorLearningReplacesModule"
                     ></HfhRadioButton>
-                    <HfhInput
-                        v-if="!replacesModule"
-                        v-model="priorLearningECTS"
-                        id="prior-learning-ects"
-                        label="ECTS"
-                        type="number"
-                        min="1"
-                        :required="true"
-                    ></HfhInput>
                     <HfhSelect
-                        v-if="!replacesModule"
-                        v-model="priorLearningCategoryId"
-                        id="prior-learning-category"
-                        :options="categoryOptions"
-                        label="Zählt zum Bereich"
-                        defaultOption="Auswählen..."
-                    >
-                    </HfhSelect>
-                    <HfhSelect
+                        class="mt-4"
                         v-if="replacesModule"
                         v-model="priorLearningModuleId"
                         id="prior-learning-module"
                         :options="moduleOptions"
-                        label="Welches Modul wird ersetzt?"
+                        label="Welches Modul wird angerechnet?"
                         defaultOption="Auswählen..."
                         :required="true"
                     >
                     </HfhSelect>
-                    <HfhButton class="mt-4" type="submit"
-                        >Vorleistung erstellen</HfhButton
-                    >
+                    <template v-else>
+                        <div class="mt-4">
+                            <HfhInput
+                                v-model="priorLearningECTS"
+                                id="prior-learning-ects"
+                                label="ECTS"
+                                type="number"
+                                min="1"
+                                :required="true"
+                            ></HfhInput>
+                        </div>
+                        <HfhSelect
+                            class="mt-4"
+                            v-model="priorLearningCategoryId"
+                            id="prior-learning-category"
+                            :options="categoryOptions"
+                            label="Zählt zum Bereich"
+                            defaultOption="Auswählen..."
+                            :required="true"
+                        >
+                        </HfhSelect>
+                    </template>
+
+                    <HfhButton class="mt-4" type="submit">Erfassen</HfhButton>
                 </form>
                 <div class="mt-8" v-if="tableData.length > 0">
                     <table>
@@ -73,7 +87,7 @@
                             <tr>
                                 <th>Name</th>
                                 <th>ECTS</th>
-                                <th>Kategorie</th>
+                                <th>Bereich</th>
                                 <th>Modul</th>
                                 <th>Aktionen</th>
                             </tr>
@@ -95,8 +109,9 @@
                                 <td>
                                     <button
                                         @click="deletePriorLearning(row.id)"
+                                        class="hover:text-[var(--c-thunderbird-red)]"
                                     >
-                                        Vorleistung löschen
+                                        Eintrag löschen
                                     </button>
                                 </td>
                             </tr>
@@ -212,11 +227,11 @@ const tableData = computed(() => {
 const priorLearningName = ref("");
 const priorLearningECTS = ref();
 const priorLearningCategoryId = ref();
-const priorLearningReplacesModule = ref("yes");
+const priorLearningReplacesModule = ref("module");
 const priorLearningModuleId = ref();
 
 const replacesModule = computed(() => {
-    return priorLearningReplacesModule.value === "yes";
+    return priorLearningReplacesModule.value === "module";
 });
 
 const createPriorLearning = async () => {
@@ -252,6 +267,7 @@ const resetForm = () => {
     priorLearningECTS.value = undefined;
     priorLearningCategoryId.value = undefined;
     priorLearningModuleId.value = undefined;
+    priorLearningReplacesModule.value = "module";
 };
 
 const deletePriorLearning = async (id: number) => {
