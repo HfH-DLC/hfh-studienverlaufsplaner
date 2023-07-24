@@ -14,15 +14,19 @@
             />
         </header>
         <div>
-            <main class="flex-1 flex flex-col p-4">
+            <main class="flex-1 flex flex-col p-4 hfh-content">
+                <h2>Einstellungen</h2>
+                <div class="hfh-label">Wann möchten Sie Module besuchen?</div>
                 <Flash class="fixed top-4 left-1/2 -translate-x-1/2" />
                 <div>
                     <div class="grid grid-cols-4 mb-8">
                         <HfhCheckbox
+                            v-for="day in dayNames"
+                            :key="day"
                             :id="`filter-day-time`"
-                            legend="Wann möchten Sie Module besuchen?"
-                            :options="dayTimeOptions"
-                            v-model="dayTimeFilter"
+                            :legend="day"
+                            :options="dayTimeOptionsPerDay[day]"
+                            v-model="dayTimeFilterPerDay[day]"
                             orientation="vertical"
                             @update:model-value="save"
                         ></HfhCheckbox>
@@ -92,9 +96,26 @@ const props = defineProps({
 const locationFilter: Ref<Array<string>> = ref(
     props.planResource.data.locations.map((location: Location) => location.id)
 );
-const dayTimeFilter: Ref<Array<string>> = ref(
-    props.planResource.data.dayTimes.map((dayTime: DayTime) => dayTime.id)
+const dayTimeFilterPerDay: Ref<Record<string, Array<string>>> = ref(
+    props.planResource.data.dayTimes.reduce(
+        (acc: Record<string, Array<string>>, cur: DayTime) => {
+            if (!acc[cur.day]) {
+                acc[cur.day] = [];
+            }
+            acc[cur.day].push(cur.id);
+            return acc;
+        },
+        {}
+    )
 );
+
+const dayTimeFilter: ComputedRef<Array<string>> = computed(() => {
+    const result: Array<string> = [];
+    Object.values(dayTimeFilterPerDay.value).forEach((value) => {
+        result.push(...value);
+    });
+    return result;
+});
 
 const locationOptions: ComputedRef<Array<CheckboxOption>> = computed(() => {
     return props.locationsResource.data.map(
@@ -108,26 +129,43 @@ const locationOptions: ComputedRef<Array<CheckboxOption>> = computed(() => {
     );
 });
 
-const dayTimeOptions: ComputedRef<Array<CheckboxOption>> = computed(() => {
-    return props.dayTimesResource.data
-        .sort(
-            (a: { sortIndex: number }, b: { sortIndex: number }) =>
-                a.sortIndex - b.sortIndex
-        )
-        .map(
-            (dayTime: {
-                id: string;
-                day: string;
-                time: string;
-            }): CheckboxOption => {
-                return {
-                    name: dayTime.id,
-                    label: `${dayTime.day}${dayTime.time.toLowerCase()}`,
-                    value: dayTime.id,
-                };
-            }
-        );
+const dayNames: ComputedRef<Array<string>> = computed(() => {
+    return Array.from(
+        props.dayTimesResource.data
+            .sort(
+                (a: { sortIndex: number }, b: { sortIndex: number }) =>
+                    a.sortIndex - b.sortIndex
+            )
+            .reduce((acc: Set<string>, cur: DayTime) => {
+                acc.add(cur.day);
+                return acc;
+            }, new Set<string>())
+    );
 });
+
+const dayTimeOptionsPerDay: ComputedRef<Record<string, Array<CheckboxOption>>> =
+    computed(() => {
+        return props.dayTimesResource.data
+            .sort(
+                (a: { sortIndex: number }, b: { sortIndex: number }) =>
+                    a.sortIndex - b.sortIndex
+            )
+            .reduce(
+                (acc: Record<string, Array<CheckboxOption>>, cur: DayTime) => {
+                    const option: CheckboxOption = {
+                        name: cur.id,
+                        label: cur.time,
+                        value: cur.id,
+                    };
+                    if (!acc[cur.day]) {
+                        acc[cur.day] = [];
+                    }
+                    acc[cur.day].push(option);
+                    return acc;
+                },
+                []
+            );
+    });
 
 const dataAdapter = new DataAdapter(
     props.planerSlug,
