@@ -128,7 +128,7 @@ class PriorLearningTest extends TestCase
     /**
      * @test
      */
-    public function can_create_prior_learning_with_just_ects()
+    public function cannot_create_prior_learning_with_just_ects()
     {
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create();
@@ -138,18 +138,10 @@ class PriorLearningTest extends TestCase
 
         $response = $this->put($url, $params);
 
-        $response->assertSuccessful();
+        $response->assertRedirect('/');
+        $response->assertSessionHasErrors(['priorLearnings.0.countsAsCategoryId']);
         $plan = $plan->fresh();
-        $this->assertEquals(1, $plan->priorLearnings->count());
-        $this->assertEquals(
-            1,
-            $plan->priorLearnings
-                ->where('name', $priorLearning['name'])
-                ->where('ects',  $priorLearning['ects'])
-                ->where('counts_as_category_id', null)
-                ->where('counts_as_module_id', null)
-                ->count()
-        );
+        $this->assertEquals(0, $plan->priorLearnings->count());
     }
 
     /**
@@ -215,114 +207,48 @@ class PriorLearningTest extends TestCase
     /**
      * @test
      */
-    public function can_update_name()
+    public function can_remove_prior_learning()
     {
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create();
-        $priorLearning = PriorLearning::factory()->create([
-            'name' => 'some_name', 'ects' => 3, 'plan_id' => $plan->id
+        $category = Category::factory()->create(['planer_id' =>  $planer->id]);
+        $priorLearning1 = PriorLearning::factory()->create([
+            'name' => 'my_first_prior_learning', 'ects' => 3, 'counts_as_category_id' => $category->id, 'plan_id' => $plan->id
         ]);
+        $priorLearning2 = PriorLearning::factory()->create([
+            'name' => 'my_second_prior_learning', 'ects' => 3,  'counts_as_category_id' => $category->id,  'plan_id' => $plan->id
+        ]);
+        $priorLearning3 = PriorLearning::factory()->create([
+            'name' => 'my_third_prior_learning', 'ects' => 3,  'counts_as_category_id' => $category->id,  'plan_id' => $plan->id
+        ]);
+        $this->assertEquals(3, $plan->priorLearnings->count());
+
         $url = "/$planer->id/$plan->slug/vorleistungen";
-
         $params = ['priorLearnings' => [
-            array('id' => $priorLearning->id, 'name' => 'test2', 'ects' => $priorLearning->ects)
+            array('id' => $priorLearning1->id, 'name' => $priorLearning1->name, 'ects' => $priorLearning1->ects, 'countsAsCategoryId' => $priorLearning1->counts_as_category_id),
+            array('id' => $priorLearning3->id, 'name' => $priorLearning3->name, 'ects' => $priorLearning3->ects, 'countsAsCategoryId' => $priorLearning3->counts_as_category_id),
         ], 'isScheduleValid' => true];
-
         $response = $this->put($url, $params);
 
         $response->assertSuccessful();
         $plan = $plan->fresh();
-        $this->assertEquals(1, $plan->priorLearnings->count());
-        $this->assertEquals(1, $plan->priorLearnings->where('id', $priorLearning->id)->where('name', 'test2')->where('ects', $priorLearning->ects)->count());
-    }
-
-    /**
-     * @test
-     */
-    public function can_update_ects()
-    {
-        $planer = Planer::factory()->create();
-        $plan = Plan::factory()->for($planer)->create();
-        $priorLearning = PriorLearning::factory()->create([
-            'name' => 'some_name', 'ects' => 3, 'plan_id' => $plan->id
-        ]);
-        $url = "/$planer->id/$plan->slug/vorleistungen";
-
-        $params = ['priorLearnings' => [
-            array('id' => $priorLearning->id, 'name' => $priorLearning->name, 'ects' => 6)
-        ], 'isScheduleValid' => true];
-
-        $response = $this->put($url, $params);
-
-        $response->assertSuccessful();
-        $plan = $plan->fresh();
-        $this->assertEquals(1, $plan->priorLearnings->count());
-        $this->assertEquals(1, $plan->priorLearnings->where('id', $priorLearning->id)->where('name', $priorLearning->name)->where('ects', 6)->count());
-    }
-
-    /**
-     * @test
-     */
-    public function can_update_category()
-    {
-        $planer = Planer::factory()->create();
-        $plan = Plan::factory()->for($planer)->create();
-        $category1 = Category::factory()->create(['id' => 1, 'planer_id' => $planer, 'position' => 0]);
-        $category2 = Category::factory()->create(['id' => 2, 'planer_id' => $planer,  'position' => 1]);
-        $priorLearning = PriorLearning::factory()->create([
-            'name' => 'some_name', 'ects' => 3, 'plan_id' => $plan->id, 'counts_as_category_id' => $category1->id
-        ]);
-        $url = "/$planer->id/$plan->slug/vorleistungen";
-
-        $params = ['priorLearnings' => [
-            array('id' => $priorLearning->id, 'name' => $priorLearning->name, 'ects' => $priorLearning->ects, 'countsAsCategoryId' => $category2->id)
-        ], 'isScheduleValid' => true];
-
-        $response = $this->put($url, $params);
-
-        $response->assertSuccessful();
-        $plan = $plan->fresh();
-        $this->assertEquals(1, $plan->priorLearnings->count());
+        $this->assertEquals(2, $plan->priorLearnings->count());
         $this->assertEquals(
             1,
             $plan->priorLearnings
-                ->where('id', $priorLearning->id)
-                ->where('name', $priorLearning->name)
-                ->where('ects', $priorLearning->ects)
-                ->where('counts_as_category_id', $category2->id)
+                ->where('name', $priorLearning1['name'])
+                ->where('ects',  $priorLearning1['ects'])
+                ->where('counts_as_category_id', $priorLearning1['counts_as_category_id'])
+                ->where('counts_as_module_id', null)
                 ->count()
         );
-    }
-
-    /**
-     * @test
-     */
-    public function can_update_module()
-    {
-        $planer = Planer::factory()->create();
-        $plan = Plan::factory()->for($planer)->create();
-        $module1 = Module::factory()->create(['id' => 1,]);
-        $module2 = Module::factory()->create(['id' => 2]);
-        $priorLearning = PriorLearning::factory()->create([
-            'name' => 'some_name', 'plan_id' => $plan->id, 'counts_as_module_id' => $module1->id
-        ]);
-        $url = "/$planer->id/$plan->slug/vorleistungen";
-
-        $params = ['priorLearnings' => [
-            array('id' => $priorLearning->id, 'name' => $priorLearning->name, 'countsAsModuleId' => $module2->id)
-        ], 'isScheduleValid' => true];
-
-        $response = $this->put($url, $params);
-
-        $response->assertSuccessful();
-        $plan = $plan->fresh();
-        $this->assertEquals(1, $plan->priorLearnings->count());
         $this->assertEquals(
             1,
             $plan->priorLearnings
-                ->where('id', $priorLearning->id)
-                ->where('name', $priorLearning->name)
-                ->where('counts_as_module_id', $module2->id)
+                ->where('name', $priorLearning3['name'])
+                ->where('ects',  $priorLearning3['ects'])
+                ->where('counts_as_category_id', $priorLearning3['counts_as_category_id'])
+                ->where('counts_as_module_id', null)
                 ->count()
         );
     }
