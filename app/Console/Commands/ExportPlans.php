@@ -78,6 +78,18 @@ class ExportPLans extends Command
         }
         $planData['location_ids'] = $plan->locations()->pluck('id');
 
+        $planData['focusSelections'] = [];
+        foreach ($plan->focusSelections as $focusSelection) {
+            $focusSelectionData = [
+                'id' =>  $focusSelection->id,
+                'created_at' => $focusSelection->created_at,
+                'focus_id' => $focusSelection->focus_id,
+                'position' => $focusSelection->position,
+                'creditedModules' => $focusSelection->creditedModules->pluck('id')
+            ];
+            array_push($planData['focusSelections'], $focusSelectionData);
+        }
+
         return $planData;
     }
 }
