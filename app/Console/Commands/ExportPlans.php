@@ -69,7 +69,7 @@ class ExportPLans extends Command
                 'year' =>  $placement->year,
                 'semester' => $placement->semester,
                 'time_window' =>    $placement->time_window,
-                'location_id' =>   $placement->location_id,
+                'location_id' =>   $placement->location,
                 'day' => $placement->day,
                 'time' =>  $placement->time,
             ];
