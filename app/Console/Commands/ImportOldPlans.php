@@ -83,7 +83,7 @@ class ImportOldPlans extends Command
             $focusSelection->created_at = $focusSelectionData->created_at;
             $focusSelection->focus_id = $focusSelectionData->focus_id;
             $focusSelection->position = $focusSelectionData->position;
-            $focusSelection->save();
+            $plan->focusSelections()->save($focusSelection);
 
             $focusSelection->creditedModules()->sync($focusSelectionData->creditedModules);
         }
