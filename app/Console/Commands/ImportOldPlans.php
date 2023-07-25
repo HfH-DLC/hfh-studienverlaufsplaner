@@ -54,11 +54,13 @@ class ImportOldPlans extends Command
         $plan->planer_id = $planData->planer_slug;
         $plan->email = $planData->email;
         $plan->start_year = $planData->start_year;
-        $plan->slug = $planData->slug;
         $plan->schedule_tour_completed = $planData->schedule_tour_completed;
         $plan->credit_tour_completed = $planData->credit_tour_completed;
         $plan->schedule_valid = $planData->schedule_valid;
         $plan->read_only = $planData->read_only;
+        $plan->save();
+
+        $plan->slug = $planData->slug;
         $plan->save();
 
         foreach ($planData->placements as $placementData) {
