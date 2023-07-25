@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\DayTime;
+use App\Models\FocusSelection;
 use App\Models\Placement;
 use App\Models\Plan;
 use App\Models\Planer;
@@ -74,6 +75,17 @@ class ImportOldPlans extends Command
             $placement->location_id = $placementData->location_id;
             $placement->day_time_id = $this->getDateTimeId($dayTimes, $placementData->day, $placementData->time);
             $plan->placements()->save($placement);
+        }
+
+        foreach ($planData->focusSelections as $focusSelectionData) {
+            $focusSelection = new FocusSelection();
+            $focusSelection->id = $focusSelectionData->id;
+            $focusSelection->created_at = $focusSelectionData->created_at;
+            $focusSelection->focus_id = $focusSelectionData->focus_id;
+            $focusSelection->position = $focusSelectionData->position;
+            $focusSelection->save();
+
+            $focusSelection->creditedModules()->sync($focusSelectionData->creditedModules);
         }
 
         $plan->locations()->sync($planData->location_ids);
