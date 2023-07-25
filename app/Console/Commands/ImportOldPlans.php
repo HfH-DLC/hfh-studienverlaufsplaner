@@ -35,7 +35,7 @@ class ImportOldPlans extends Command
         $json = file_get_contents($path);
         $data = json_decode($json);
         $count = 0;
-        DB::transaction(function () use ($data, $count) {
+        DB::transaction(function () use ($data, &$count) {
             $dayTimes = DayTime::all();
             foreach ($data->plans as $planData) {
                 $this->createPlan($planData, $dayTimes);
@@ -79,10 +79,7 @@ class ImportOldPlans extends Command
 
     private function getDateTimeId(Collection $dayTimes, string $day, string $time)
     {
-        $dayTime = $dayTimes->firstOrFail(function (DayTime $value, int $key) use ($day, $time) {
-            $value->day === $day;
-            $value->time === $time;
-        });
+        $dayTime = $dayTimes->where('day', $day)->where('time', $time)->firstOrFail();
 
         return $dayTime->id;
     }
