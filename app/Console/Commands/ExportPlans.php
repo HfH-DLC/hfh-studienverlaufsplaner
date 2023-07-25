@@ -49,6 +49,7 @@ class ExportPLans extends Command
     {
         $planData = [
             'id' => $plan->id,
+            'slug' => $plan->slug,
             'created_at' => $plan->created_at,
             'planer_slug' => $plan->planer->slug,
             'email' => $plan->email,
