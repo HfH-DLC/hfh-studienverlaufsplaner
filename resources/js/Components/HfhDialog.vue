@@ -6,7 +6,7 @@
     >
         <DialogOverlay class="fixed inset-0 pointer-events-none bg-black/60" />
         <div
-            class="max-w-2xl absolute bg-white shadow-lg p-4 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            class="max-w-2xl absolute bg-white shadow-lg p-4 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hfh-content"
         >
             <DialogTitle class="mr-12">{{ title }}</DialogTitle>
             <button @click="onClose" class="absolute top-2 right-2 p-2">
