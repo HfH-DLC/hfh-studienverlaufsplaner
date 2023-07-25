@@ -13,8 +13,7 @@
 
 <script lang="ts" setup>
 import { ChecklistEntryData } from "@/types";
-import { PropType } from "@vue/runtime-core";
-import { computed } from "vue";
+import { computed, PropType } from "vue";
 import ChecklistEntry from "./ChecklistEntry.vue";
 
 const props = defineProps({

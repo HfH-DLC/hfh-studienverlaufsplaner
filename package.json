@@ -33,6 +33,7 @@
         "@headlessui/vue": "^1.7.10",
         "@heroicons/vue": "^2.0.15",
         "@hfh-dlc/hfh-styleguide": "^1.1.14",
+        "@inertiajs/core": "^1.0.9",
         "@popperjs/core": "^2.11.6",
         "@types/lodash.throttle": "^4.1.7",
         "lodash.throttle": "^4.1.1",

@@ -4,8 +4,7 @@
 
 <script lang="ts" setup>
 import { Head } from "@inertiajs/vue3";
-import { PropType } from "@vue/runtime-core";
-import { computed } from "vue";
+import { PropType, computed } from "vue";
 
 const props = defineProps({
     title: { type: String as PropType<string>, default: "" },
