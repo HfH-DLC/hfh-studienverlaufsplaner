@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\DayTime;
 use App\Models\Placement;
 use App\Models\Plan;
+use App\Models\Planer;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -50,7 +51,7 @@ class ImportOldPlans extends Command
         $plan = new Plan();
         $plan->id = $planData->id;
         $plan->created_at = $planData->created_at;
-        $plan->planer_id = $planData->planer_id;
+        $plan->planer_id = $planData->planer_slug;
         $plan->email = $planData->email;
         $plan->start_year = $planData->start_year;
         $plan->slug = $planData->slug;
