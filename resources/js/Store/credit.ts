@@ -3,33 +3,29 @@ import {
     ChecklistEntryData,
     CreditInitParams,
     CreditModule,
-    ErrorMessage,
     FocusSelection,
     FlashType,
-    ModuleIdsByFocusSelection,
+    FocusCredit,
     SaveStatus,
-    Todo,
-    TodoData,
     TourData,
 } from "@/types";
 import { defineStore } from "pinia";
 import { toRefs } from "vue";
 
 import DataAdapter from "../DataAdapter";
-import { getTodo } from "../Models/Todos/Credit/TodoFactory";
+import Validator from "@/Validator";
 
 let dataAdapter: DataAdapter;
+let validator: Validator;
 const emitter = useEmitter();
 
 export const useCreditStore = defineStore("credit", {
     state: () => ({
         focusSelections: [] as Array<FocusSelection>,
-        errors: [] as Array<ErrorMessage>,
         initialized: false,
         modules: [] as Array<CreditModule>,
         readOnly: false,
         saveStatus: SaveStatus.Saved,
-        todos: [] as Array<Todo>,
         todoEntries: [] as Array<ChecklistEntryData>,
         tour: null as TourData | null,
         tourActive: false,
@@ -38,22 +34,15 @@ export const useCreditStore = defineStore("credit", {
         valid: false,
     }),
     actions: {
-        init({
-            planerSlug,
-            plan,
-            modules,
-            focusSelections,
-            todos,
-            tour,
-        }: CreditInitParams) {
-            dataAdapter = new DataAdapter(planerSlug, plan.slug);
+        init(params: CreditInitParams) {
             this.$reset();
-            this.readOnly = plan.readOnly;
-            this.focusSelections = focusSelections;
-            this.modules = modules;
-            this.setTodos(todos);
-            this.tour = tour;
-            this.tourCompleted = plan.creditTourCompleted;
+            dataAdapter = params.dataAdapter;
+            validator = params.validator;
+            this.readOnly = params.readOnly;
+            this.focusSelections = params.focusSelections;
+            this.modules = params.modules;
+            this.tour = params.tour;
+            this.tourCompleted = params.tourCompleted;
             this.validate();
             this.initialized = true;
         },
@@ -72,19 +61,8 @@ export const useCreditStore = defineStore("credit", {
                 );
             }
         },
-        setTodos(todos: Array<TodoData>) {
-            this.todos = todos.reduce((array: Array<Todo>, todo) => {
-                try {
-                    array.push(getTodo(todo.name, todo.params));
-                } catch (error) {
-                    console.error(error);
-                }
-                return array;
-            }, [] as Array<Todo>);
-        },
         startTour() {
             this.tourActive = true;
-            this.save();
         },
         completeTour() {
             this.tourActive = false;
@@ -115,20 +93,12 @@ export const useCreditStore = defineStore("credit", {
             }
         },
         validate() {
-            this.validateTodos();
-            this.valid =
-                this.errors.length == 0 &&
-                this.todoEntries.every((todo) => todo.checked);
-        },
-        validateTodos() {
-            this.todoEntries = this.todos.reduce((acc, cur) => {
-                acc.push(...cur.getEntries(toRefs(this)));
-                return acc;
-            }, [] as Array<ChecklistEntryData>);
+            this.todoEntries = validator.getTodoEntries(toRefs(this));
+            this.valid = this.todoEntries.every((todo) => todo.checked);
         },
     },
     getters: {
-        creditedModulesByFocusSelection(): Array<ModuleIdsByFocusSelection> {
+        creditedModulesByFocusSelection(): Array<FocusCredit> {
             return this.focusSelections.reduce((acc, cur) => {
                 const modulesByFocusSelection = {
                     focusSelectionId: cur.id,
@@ -138,7 +108,7 @@ export const useCreditStore = defineStore("credit", {
                 };
                 acc.push(modulesByFocusSelection);
                 return acc;
-            }, [] as Array<ModuleIdsByFocusSelection>);
+            }, [] as Array<FocusCredit>);
         },
     },
 });

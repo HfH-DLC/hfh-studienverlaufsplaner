@@ -31,7 +31,7 @@
                             v-for="timeWindow in semester.timeWindows"
                             :key="timeWindow"
                         >
-                            <div class="flex items-center">
+                            <div class="flex items-center justify-center">
                                 <span>{{ timeWindow }}</span>
                                 <button
                                     class="p-2 flex items-center gap-1 hover:text-thunderbird-red"
@@ -51,17 +51,26 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-300">
-                    <template v-for="day in semester.days" :key="day">
+                    <template
+                        v-for="dayTime in semester.dayTimes"
+                        :key="dayTime"
+                    >
                         <tr
-                            v-for="time in semester.times"
-                            :key="time"
+                            v-if="
+                                showTimetableRow(
+                                    year.value,
+                                    semester.value,
+                                    dayTime
+                                )
+                            "
                             class="divide-x divide-gray-300"
                         >
                             <th
                                 scope="row"
                                 class="px-4 py-2 text-base text-left bg-gray-50 text-gray-600 w-px font-normal"
                             >
-                                {{ day }}: {{ time }}
+                                <div>{{ dayTime.day }}:</div>
+                                <div>{{ dayTime.time }}</div>
                             </th>
                             <td
                                 v-for="timeWindow in semester.timeWindows"
@@ -70,31 +79,28 @@
                                 <TimeSlot
                                     :showLocation="showLocations"
                                     :events="
-                                        store.selectableEventsByDate(
-                                            year.value,
-                                            semester.value,
+                                        store.selectableEventsByDate({
+                                            year: year.value,
+                                            semester: semester.value,
+                                            dayTime,
                                             timeWindow,
-                                            day,
-                                            time
-                                        )
+                                        })
                                     "
                                     :placement="
-                                        store.placementByDate(
-                                            year.value,
-                                            semester.value,
+                                        store.placementByDate({
+                                            year: year.value,
+                                            semester: semester.value,
+                                            dayTime,
                                             timeWindow,
-                                            day,
-                                            time
-                                        )
+                                        })
                                     "
                                     :availableModulesGroupedByLocations="
-                                        store.modulesByDateGroupedByLocations(
-                                            year.value,
-                                            semester.value,
+                                        store.modulesByDateGroupedByLocations({
+                                            year: year.value,
+                                            semester: semester.value,
+                                            dayTime,
                                             timeWindow,
-                                            day,
-                                            time
-                                        )
+                                        })
                                     "
                                 />
                             </td>
@@ -109,6 +115,7 @@
         :open="isDialogVisible"
         :title="dialogInfo.title"
         @closed="onDialogClosed"
+        class="hfh-content"
     >
         <div v-html="dialogInfo.content"></div>
     </HfhDialog>
@@ -120,6 +127,7 @@ import TimeSlot from "./TimeSlot.vue";
 import { useScheduleStore } from "../Store/schedule";
 import { InformationCircleIcon } from "@heroicons/vue/24/outline";
 import HfhDialog from "./HfhDialog.vue";
+import { DayTime, Semester } from "@/types";
 
 const isDialogVisible = ref(false);
 const timeWindowContentList = [
@@ -141,25 +149,17 @@ const dialogInfo = ref() as Ref<{ title: string; content: string } | undefined>;
 const store = useScheduleStore();
 
 const showLocations = computed(() => {
-    const checkedLocations = new Set(
-        store.locations
-            .filter((location) => location.checked)
-            .map((location) => location.id)
+    if (store.locationIds.length > 1) {
+        return true;
+    }
+
+    const placedLocationIds = new Set(
+        store.placements.map((placement) => placement.location.id)
     );
-    if (checkedLocations.size > 1) {
-        return true;
-    }
-    const placedLocations = store.placements.reduce((acc, cur) => {
-        acc.add(cur.location);
-        return acc;
-    }, new Set<string>());
-    if (placedLocations.size > 1) {
-        return true;
-    }
     if (
-        [...placedLocations].filter((location) =>
-            checkedLocations.has(location)
-        ).length < placedLocations.size
+        [...placedLocationIds].filter((locationId) =>
+            store.locationIds.includes(locationId)
+        ).length < placedLocationIds.size
     ) {
         return true;
     }
@@ -175,13 +175,29 @@ const setTimeWindowInfo = (timeWindow: string) => {
 const onDialogClosed = () => {
     isDialogVisible.value = false;
 };
-const getSemesterString = (count: number, semester: string, year: number) => {
+const getSemesterString = (count: number, semester: Semester, year: number) => {
+    let semesterName;
     if (semester == "HS") {
-        semester = "Herbst";
+        semesterName = "Herbst";
     } else if (semester == "FS") {
-        semester = "Frühling";
+        semesterName = "Frühling";
     }
-    return `${count}. Semester (${semester} ${year})`;
+    return `${count}. Semester (${semesterName} ${year})`;
+};
+
+const showTimetableRow = (
+    year: number,
+    semester: Semester,
+    dayTime: DayTime
+): boolean => {
+    const placement = store.placementByDate({ year, semester, dayTime });
+    if (placement) {
+        return true;
+    }
+    return (
+        store.modulesByDateGroupedByLocations({ year, semester, dayTime })
+            .size > 0
+    );
 };
 
 watch(

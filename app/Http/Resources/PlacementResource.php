@@ -20,9 +20,8 @@ class PlacementResource extends JsonResource
             'year' => intval($this->year),
             'semester' => $this->semester,
             'timeWindow' => $this->time_window,
-            'day' => $this->day,
-            'time' => $this->time,
-            'location' => $this->location,
+            'dayTime' => new DayTimeResource($this->dayTime),
+            'location' => new LocationResource($this->location),
         ];
     }
 }

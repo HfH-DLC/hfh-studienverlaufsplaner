@@ -5,16 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePlanRequest;
 use App\Http\Requests\UpdateFocusCreditRequest;
 use App\Http\Requests\UpdateScheduleRequest;
-use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CreditableModuleResource;
-use App\Http\Resources\FocusResource;
-use App\Http\Resources\LocationResource;
 use App\Http\Resources\PlanResource;
-use App\Http\Resources\RuleResource;
 use App\Http\Resources\TodoResource;
 use App\Mail\PlanCreated;
 use App\Models\FocusSelection;
-use App\Models\Location;
 use App\Models\Placement;
 use App\Models\Plan;
 use App\Models\Planer;
@@ -33,27 +28,7 @@ class PlanController extends Controller
 
     public function showSchedule(Planer $planer, Plan $plan)
     {
-        $planResource = new PlanResource($plan->load('placements'));
-        $categoriesResource = CategoryResource::collection($plan->getCategoriesWithAllModules());
-        $rulesResource = RuleResource::collection($planer->rules()->where('type', 'Schedule')->get());
-        $todosResource = TodoResource::collection($planer->todos()->where('type', 'Schedule')->get());
-        $fociResource = FocusResource::collection($planer->foci()->get());
-        $locationsResource = LocationResource::collection(Location::all());
-        $tour = $tour = isset($planer->tour["schedule"]) ? $planer->tour["schedule"] : null;
-
-        $props = [
-            'planerName' => $planer->name,
-            'planerSlug' => $planer->slug,
-            'planResource' => $planResource,
-            'categoriesResource' => $categoriesResource,
-            'focusSelectionEnabled' => $planer->focus_selection_enabled,
-            'fociResource' => $fociResource,
-            'rulesResource' => $rulesResource,
-            'todosResource' => $todosResource,
-            'locationsResource' => $locationsResource,
-            'requiredECTS' => $planer->required_ects,
-            'tourData' => $tour,
-        ];
+        $props = getScheduleData($planer, $plan);
 
         if (isset($planer->meta)) {
             if (isset($planer->meta['brochureUrl'])) {
@@ -83,10 +58,11 @@ class PlanController extends Controller
 
         $props = [
             'planerName' => $planer->name,
-            'planerSlug' => $planer->slug,
+            'planerSlug' => $planer->id,
+            'focusSelectionEnabled' => $planer->focus_selection_enabled,
             'planResource' => $planResource,
             'creditableModulesResource' => CreditableModuleResource::collection($modules),
-            'todosResource' => TodoResource::collection($planer->todos()->where('type', 'credit')->get()),
+            'todosResource' => TodoResource::collection($planer->getCreditTodos()),
             'tourData' => $tour,
         ];
 
@@ -115,6 +91,12 @@ class PlanController extends Controller
         DB::transaction(function () use ($plan, $planer) {
             $planer->plans()->save($plan);
             $plan->save();
+            $plan->dayTimes()->saveMany(array_filter($planer->getDayTimes(), function ($dayTime) {
+                return $dayTime->default;
+            }));
+            $plan->locations()->saveMany(array_filter($planer->getLocations(), function ($location) {
+                return $location->default;
+            }));
         });
 
         Mail::to($validated['email'])
@@ -135,9 +117,8 @@ class PlanController extends Controller
                     $placement->year = $placement_data['year'];
                     $placement->semester = $placement_data['semester'];
                     $placement->time_window = $placement_data['timeWindow'];
-                    $placement->day = $placement_data['day'];
-                    $placement->time = $placement_data['time'];
-                    $placement->location = $placement_data['location'];
+                    $placement->day_time_id = $placement_data['dayTimeId'];
+                    $placement->location_id = $placement_data['locationId'];
                     $placement->module()->associate($placement_data['moduleId']);
                     $plan->placements()->save($placement);
                 });
@@ -163,9 +144,6 @@ class PlanController extends Controller
                     $focusSelection->save();
                 }
             }
-            if (Arr::exists($validated, 'locations')) {
-                $plan->locations()->sync($validated['locations']);
-            }
             $plan->schedule_tour_completed = $validated['tourCompleted'];
             $plan->schedule_valid = $validated['valid'];
             $plan->save();
@@ -185,7 +163,6 @@ class PlanController extends Controller
                 $focusSelection->save();
             }
             $plan->credit_tour_completed = $validated['tourCompleted'];
-            $plan->credit_valid = $validated['valid'];
             $plan->save();
         });
         return response()->noContent();

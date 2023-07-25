@@ -29,17 +29,14 @@ class UpdateScheduleRequest extends FormRequest
             'placements.*.year' => 'required',
             'placements.*.semester' => 'required',
             'placements.*.timeWindow' => 'required',
-            'placements.*.day' => 'required',
-            'placements.*.time' => 'required',
-            'placements.*.location' => 'required|exists:locations,id',
+            'placements.*.dayTimeId' => 'required|exists:day_times,id',
+            'placements.*.locationId' => 'required|exists:locations,id',
             'placements.*.moduleId' => 'required|exists:modules,id',
             'focusSelections' => 'array',
             'focusSelections.*.focusId' => 'required|string|exists:foci,id',
             'focusSelections.*.position' => 'required|integer|min:0',
             'tourCompleted' => 'required|boolean',
             'valid' => 'required|boolean',
-            'locations' => 'array',
-            'locations.*' => 'required|exists:locations,id',
         ];
     }
 }

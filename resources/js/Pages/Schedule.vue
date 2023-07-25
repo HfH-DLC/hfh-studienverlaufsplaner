@@ -6,7 +6,7 @@
                 :planerSlug="planerSlug"
                 :planerName="planerName"
                 :planSlug="planResource.data.slug"
-                :showNavigation="focusSelectionEnabled"
+                :showFocusSelection="focusSelectionEnabled"
                 :showTour="!!store.tour"
                 :brochureUrl="brochureUrl"
                 :moduleDirectoryUrl="moduleDirectoryUrl"
@@ -25,16 +25,16 @@
                             store.infos.length > 0
                         "
                     >
-                        <InfoList
+                        <MessageList
                             class="space-y-2"
                             v-if="store.infos.length > 0"
-                            :infos="store.infos"
+                            :messages="store.infos"
                             aria-live="polite"
                         />
-                        <ErrorList
+                        <MessageList
                             class="space-y-2"
                             v-if="store.placementErrorMessages.length > 0"
-                            :errors="store.placementErrorMessages"
+                            :messages="store.placementErrorMessages"
                             aria-live="polite"
                         />
                     </div>
@@ -54,16 +54,8 @@
                                 :selectedModule="selectedOrTourModule"
                             />
                             <div v-show="!selectedOrTourModule">
-                                <h2 class="hfh-sr-only">Standort-Auswahl</h2>
-                                <LocationSelect
-                                    v-if="store.selectableLocations.length > 1"
-                                    class="mb-4"
-                                />
                                 <h2 class="hfh-sr-only">Modul-Liste</h2>
-                                <ModuleList
-                                    :hashModuleId="hashModuleId"
-                                    :hashCategoryId="hashCategoryId"
-                                />
+                                <ModuleList />
                             </div>
                         </StickyColumn>
                         <StickyColumn
@@ -96,6 +88,23 @@
                                     >Weiter zur Anrechnung.
                                 </HfhLink>
                             </p>
+                            <Info
+                                v-if="store.priorLearnings.length > 0"
+                                class="mb-4"
+                            >
+                                Sie haben
+                                <HfhLink :component="Link" href="vorleistungen">
+                                    Vorleistungen
+                                </HfhLink>
+                                im Umfang von
+                                {{
+                                    store.priorLearnings.reduce(
+                                        (acc, cur) => acc + cur.ects,
+                                        0
+                                    )
+                                }}
+                                ECTS erfasst.
+                            </Info>
                             <Checklist :entries="store.todoEntries" />
                         </StickyColumn>
                     </div>
@@ -115,11 +124,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onBeforeUnmount, computed } from "vue";
-import { useScheduleStore } from "../Store/schedule";
+import { onBeforeUnmount, computed } from "vue";
+import { getInitializedScheduleStore } from "../Store/schedule";
 // Components
-import ErrorList from "../Components/ErrorList.vue";
-import InfoList from "../Components/InfoList.vue";
+import Info from "@/Components/Info.vue";
+import MessageList from "@/Components/MessageList.vue";
 import FocusSelection from "../Components/FocusSelection.vue";
 import ModuleInformation from "../Components/ModuleInformation.vue";
 import ModuleList from "../Components/ModuleList.vue";
@@ -129,7 +138,6 @@ import PlanHeader from "../Components/PlanHeader.vue";
 import Flash from "../Components/Flash.vue";
 import StickyColumn from "../Components/StickyColumn.vue";
 import Checklist from "../Components/Checklist.vue";
-import LocationSelect from "../Components/LocationSelect.vue";
 import MainLayout from "../Layouts/MainLayout.vue";
 import { HfhLink } from "@hfh-dlc/hfh-styleguide";
 import { Link } from "@inertiajs/vue3";
@@ -137,6 +145,7 @@ import { FlashType, TourData } from "@/types";
 import AppHead from "@/Components/AppHead.vue";
 import { PropType } from "vue";
 import { useEmitter } from "@/composables/useEmitter";
+import { pluralize } from "@/helpers";
 
 defineOptions({ layout: MainLayout });
 
@@ -177,10 +186,6 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    locationsResource: {
-        type: Object,
-        required: true,
-    },
     tourData: {
         type: Object as PropType<TourData>,
         required: true,
@@ -195,20 +200,18 @@ const props = defineProps({
     },
 });
 
-const hashModuleId = ref();
-const hashCategoryId = ref();
+const propsClone = JSON.parse(JSON.stringify(props));
 
-const store = useScheduleStore();
-store.init({
-    categories: props.categoriesResource.data,
-    plan: props.planResource.data,
-    planerSlug: props.planerSlug,
-    rules: props.rulesResource.data,
-    todos: props.todosResource.data,
-    foci: props.fociResource.data,
-    locations: props.locationsResource.data,
-    requiredECTS: props.requiredECTS,
-    tour: props.tourData,
+const store = getInitializedScheduleStore({
+    planerSlug: propsClone.planerSlug,
+    planSlug: propsClone.planResource.data.slug,
+    todosData: propsClone.todosResource.data,
+    rulesData: propsClone.rulesResource.data,
+    categories: propsClone.categoriesResource.data,
+    plan: propsClone.planResource.data,
+    foci: propsClone.fociResource.data,
+    requiredECTS: propsClone.requiredECTS,
+    tourData: propsClone.tourData,
 });
 
 const emitter = useEmitter();

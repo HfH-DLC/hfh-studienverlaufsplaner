@@ -6,12 +6,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Hashids\Hashids;
+use Illuminate\Support\Facades\Cache;
 
 class Plan extends Model
 {
     use HasFactory;
 
-    protected $casts = ['start_year' => 'integer', 'schedule_tour_completed' => 'boolean', 'credit_tour_completed' => 'boolean',  'read_only' => 'boolean', 'schedule_valid' => 'boolean',  'credit_valid' => 'boolean'];
+    protected $casts = ['start_year' => 'integer', 'schedule_tour_completed' => 'boolean', 'credit_tour_completed' => 'boolean',  'read_only' => 'boolean', 'schedule_valid' => 'boolean'];
 
     public function planer()
     {
@@ -23,6 +24,11 @@ class Plan extends Model
         return $this->hasMany(Placement::class);
     }
 
+    public function dayTimes()
+    {
+        return $this->belongsToMany(DayTime::class);
+    }
+
     public function focusSelections()
     {
         return $this->hasMany(FocusSelection::class);
@@ -31,6 +37,11 @@ class Plan extends Model
     public function locations()
     {
         return $this->belongsToMany(Location::class);
+    }
+
+    public function priorLearnings()
+    {
+        return $this->hasMany(PriorLearning::class);
     }
 
     public function setSlug($value)
@@ -45,9 +56,15 @@ class Plan extends Model
     public function getCreditableModules()
     {
         $placedModuleIds = $this->placements()->pluck('module_id')->all();
-        $query = function ($query) use ($placedModuleIds) {
+
+        $focus_ids = $this->focusSelections()->get()->pluck('focus_id');
+        $focusModuleIds = Module::whereHas('foci', function ($q) use ($focus_ids) {
+            $q->whereIn('id', $focus_ids);
+        })->pluck('id');
+        $allowedPriorLearningModuleIds = $this->priorLearnings()->whereIn('counts_as_module_id', $focusModuleIds)->pluck('counts_as_module_id')->all();
+        $query = function ($query) use ($placedModuleIds, $allowedPriorLearningModuleIds) {
             $query->where('creditable', true);
-            $query->whereIn('id', $placedModuleIds);
+            $query->whereIn('id', array_merge($placedModuleIds, $allowedPriorLearningModuleIds));
         };
         $modules = $this->planer->getModules($query);
         $modules = $modules->map(function ($module) {
@@ -69,14 +86,22 @@ class Plan extends Model
 
     public function getCategoriesWithAllModules()
     {
-        $filter = $this->getFilter();
-        return $this->planer->categories()->with([
-            'modules' => function ($query) use ($filter) {
-                $query->whereHas('events', $filter);
-            },
-            'modules.events' => $filter,
-            'modules.prerequisites'
-        ])->get()->sortBy('position');
+        $key = $this->getCacheKey("categoriesWithAllModules");
+        if (!Cache::has($key)) {
+            $filter = $this->getFilter();
+            $categories = $this->planer->categories()->with([
+                'modules' => function ($query) use ($filter) {
+                    $query->whereHas('events', $filter);
+                },
+                'modules.events' => $filter,
+                'modules.events.location',
+                'modules.events.dayTime',
+                'modules.prerequisites',
+            ])->get()->sortBy('position');
+            Cache::put($key, $categories);
+            return $categories;
+        }
+        return Cache::get($key);
     }
 
     private function getFilter()
@@ -87,7 +112,7 @@ class Plan extends Model
             $years[] = $this->start_year + $i;
         }
         return function ($query) use ($years) {
-            $query->where('planer', $this->planer->slug);
+            $query->where('planer_id', $this->planer->id);
             $query->whereIn('year', $years);
         };
     }
@@ -105,5 +130,10 @@ class Plan extends Model
             $plan->slug = $slug;
             $plan->save();
         });
+    }
+
+    private function getCacheKey($name)
+    {
+        return "plan/" . $this->id . "/" . $name;
     }
 }

@@ -1,3 +1,5 @@
+import DataAdapter from "@/DataAdapter";
+import Validator from "@/Validator";
 import { EmitterEvents } from "@/composables/useEmitter";
 import { Placement as PopperPlacement } from "@popperjs/core";
 import { Component } from "vue";
@@ -19,36 +21,55 @@ export type ChecklistEntryData = {
     labelProps?: Record<any, any>;
 };
 export interface CreditInitParams {
-    planerSlug: string;
-    plan: Plan;
+    dataAdapter: DataAdapter;
+    validator: Validator;
+    readOnly: boolean;
     modules: Array<CreditModule>;
     focusSelections: Array<FocusSelection>;
-    todos: Array<TodoData>;
     tour: TourData;
+    tourCompleted: boolean;
 }
 
 export interface CreditModule extends Module {
-    creditedAgainst: number;
+    creditedAgainst: number | null;
     requiredCredit: boolean;
 }
 
-export type ErrorMessage = {
+export interface DayTime {
+    id: string;
+    day: string;
+    time: string;
+    default: boolean;
+    sortIndex: number;
+}
+
+export enum MessageType {
+    Error,
+    Info,
+}
+
+export interface Message {
     label?: string;
     component?: Component;
     labelProps?: Record<any, any>;
-};
+    type: MessageType;
+}
 
 export interface EventDate {
     year: number;
-    semester: string;
+    semester: Semester;
+    dayTime: DayTime;
     timeWindow: string;
-    day: string;
-    time: string;
+}
+
+export interface EventDateWithOptionalTimeWindow
+    extends Omit<EventDate, "timeWindow"> {
+    timeWindow?: string;
 }
 
 export interface Event extends EventDate {
     id: number;
-    location: string;
+    location: Location;
 }
 
 export enum FlashType {
@@ -71,8 +92,6 @@ export interface Focus {
     optionalModules: Array<Module>;
 }
 
-export interface FocusCredit {}
-
 export interface FocusSelection {
     id: number;
     position: number;
@@ -88,7 +107,6 @@ export interface Location {
     id: string;
     name: string;
     default: boolean;
-    checked: boolean;
 }
 
 export interface Module {
@@ -99,16 +117,18 @@ export interface Module {
     prerequisites: Array<Module>;
 }
 
-export interface ModuleIdsByFocusSelection {
+export interface FocusCredit {
     focusSelectionId: number;
     moduleIds: Array<string>;
 }
 
 export interface Plan {
     creditTourCompleted: boolean;
+    dayTimes: Array<DayTime>;
     focusSelections: Array<FocusSelection>;
     locations: Array<Location>;
     placements: Array<Placement>;
+    priorLearnings: Array<PriorLearning>;
     scheduleTourCompleted: boolean;
     slug: string;
     startYear: number;
@@ -119,24 +139,47 @@ export interface Placement extends Event {
     moduleId: string;
 }
 
-export interface PlacementParams extends Omit<Placement, "id"> {}
+export interface PlacementParams
+    extends Omit<Placement, "id" | "location" | "dayTime"> {
+    locationId: string;
+    dayTimeId: string;
+}
+
+export interface PriorLearning {
+    id: number;
+    name: string;
+    ects: number;
+    ectsRaw?: number;
+    countsAsCategoryId?: number;
+    countsAsCategoryIdRaw?: number;
+    countsAsModuleId?: string;
+}
+
+export interface PriorLearningParams {
+    id?: number;
+    name: string;
+    ects?: number;
+    countsAsCategoryId?: number;
+    countsAsModuleId?: string;
+}
 
 export interface RuleData {
     name: string;
-    params: Record<string, any>;
+    params: Record<string, any> | undefined;
 }
 
 export interface Rule {
-    validatePlacements(
+    getPlacementErrors(
         data: Record<string, any>,
-        errors: Map<number, ErrorMessage[]>
+        errors: Map<number, Message[]>
     ): void;
-    validateModule(
+    getModuleErrors(
         module: ScheduleModule,
         data: Record<string, any>,
-        errors: Array<ErrorMessage>
+        errors: Array<Message>
     ): void;
-    validateSelection(
+    getGlobalInfos(data: Record<string, any>, infos: Array<Message>): void;
+    getSelectionStatus(
         module: ScheduleModule,
         data: Record<string, any>,
         selectionEventInfos: Map<number, SelectionEventInfo>
@@ -155,19 +198,17 @@ export interface ScheduleCategory extends Category {
 }
 
 export interface ScheduleInitParams {
-    planerSlug: string;
+    dataAdapter: DataAdapter;
+    validator: Validator;
     plan: Plan;
     categories: Array<Category>;
-    rules: Array<RuleData>;
-    todos: Array<TodoData>;
     foci: Array<Focus>;
-    locations: Array<Location>;
     requiredECTS: number;
     tour: TourData;
 }
 
 export interface ScheduleModule extends Module {
-    infos: Array<ErrorMessage>;
+    errors: Array<Message>;
     misplaced: boolean;
     placement: Placement | undefined;
     selected: boolean;
@@ -175,7 +216,7 @@ export interface ScheduleModule extends Module {
 
 export interface SchedulePlacement extends Placement {
     module: ScheduleModule;
-    errors: Array<ErrorMessage>;
+    errors: Array<Message>;
 }
 
 export interface Selection {
@@ -192,13 +233,21 @@ export interface SelectableEvent extends Event {
     valid: boolean;
 }
 
+export type Semester = "HS" | "FS";
+
 export interface TodoData {
     name: string;
-    params: Record<any, any>;
+    params?: Record<any, any>;
 }
 
 export interface Todo {
     getEntries(data: Record<string, any>): Array<ChecklistEntryData>;
+}
+
+export interface TodoMappingType {
+    [key: string]:
+        | { Class: new (params?: any) => any; paramsRequired: boolean }
+        | undefined;
 }
 
 export interface TourData {
@@ -210,5 +259,5 @@ export interface TourStep {
     content: string;
     ref?: string;
     placement?: PopperPlacement;
-    selectedModule: ScheduleModule;
+    selectedModule?: ScheduleModule;
 }

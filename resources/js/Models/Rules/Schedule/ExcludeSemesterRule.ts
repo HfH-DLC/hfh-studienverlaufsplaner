@@ -1,15 +1,17 @@
 import ExcludeSemesterRulePlacementLabel from "@/Components/Rules/Schedule/ExcludeSemesterRulePlacementLabel.vue";
 import {
-    ErrorMessage,
+    Message,
     EventDate,
     Placement,
     ScheduleModule,
     SchedulePlacement,
     SelectionEventInfo,
+    MessageType,
+    Rule,
 } from "@/types";
 import { markRaw, Ref } from "vue";
 import { isSameDate, semesterCount, semesterPosition } from "../../../helpers";
-export default class ExcludeSemesterRule {
+export default class ExcludeSemesterRule implements Rule {
     private excludePositions: Array<Number>;
     private moduleId: string;
 
@@ -18,7 +20,7 @@ export default class ExcludeSemesterRule {
         this.moduleId = params.moduleId;
     }
 
-    validatePlacements(
+    getPlacementErrors(
         {
             placements,
             startYear,
@@ -26,7 +28,7 @@ export default class ExcludeSemesterRule {
             placements: Ref<Array<SchedulePlacement>>;
             startYear: Ref<number>;
         },
-        errors: Map<number, Array<ErrorMessage>>
+        errors: Map<number, Array<Message>>
     ): void {
         placements.value
             .filter(
@@ -45,12 +47,13 @@ export default class ExcludeSemesterRule {
                             excludePositions: this.excludePositions,
                             placement,
                         },
+                        type: MessageType.Error,
                     });
                 }
             });
     }
 
-    validateModule(
+    getModuleErrors(
         module: ScheduleModule,
         {
             startYear,
@@ -59,28 +62,35 @@ export default class ExcludeSemesterRule {
             placements: Ref<Array<SchedulePlacement>>;
             startYear: Ref<number>;
         },
-        errors: Array<ErrorMessage>
+        errors: Array<Message>
     ): void {
         if (module.id !== this.moduleId) {
             return;
         }
+        if (module.placement) {
+            return;
+        }
         if (
-            !module.placement &&
-            module.events.every(
-                (event) =>
-                    this.isAllowedSemester(event, startYear.value) ||
-                    placements.value.find((placement: Placement) =>
+            module.events
+                .filter((event) =>
+                    this.isAllowedSemester(event, startYear.value)
+                )
+                .every((event) => {
+                    return placements.value.find((placement: Placement) =>
                         isSameDate(placement, event)
-                    )
-            )
+                    );
+                })
         ) {
             errors.push({
                 label: "Alle Termine in den erlaubten Semestern für dieses Modul sind bereits besetzt.",
+                type: MessageType.Error,
             });
         }
     }
 
-    validateSelection(
+    getGlobalInfos() {}
+
+    getSelectionStatus(
         module: ScheduleModule,
         { startYear }: { startYear: Ref<number> },
         selectionEventInfos: Map<number, SelectionEventInfo>
@@ -107,7 +117,7 @@ export default class ExcludeSemesterRule {
     isAllowedSemester(date: EventDate, startYear: number) {
         const yearDiff = date.year - startYear;
         const position =
-            yearDiff * semesterCount() + semesterPosition(date.semester);
+            yearDiff * semesterCount + semesterPosition(date.semester);
         return !this.excludePositions.includes(position);
     }
 }

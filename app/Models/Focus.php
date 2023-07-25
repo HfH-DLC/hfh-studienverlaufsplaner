@@ -10,6 +10,7 @@ class Focus extends Model
     use HasFactory;
 
     public $incrementing = false;
+    protected $fillable = ['id'];
     protected $keyType = 'string';
 
     public function planer()

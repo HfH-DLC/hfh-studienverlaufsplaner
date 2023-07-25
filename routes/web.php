@@ -5,6 +5,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ModuleFilterController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PlanerController;
+use App\Http\Controllers\PriorLearningController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -28,17 +30,21 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'show'])->name('admin');
     Route::post('/logout', [AdminController::class, 'logout']);
     Route::get('/data', [AdminController::class, 'showData'])->name('admin-data');
-    Route::post('/data', [AdminController::class, 'import']);
-    Route::get('/export', [AdminController::class, 'exportPlans']);
+    Route::post('/import/config', [AdminController::class, 'importConfig']);
+    Route::post('/import/events', [AdminController::class, 'importEvents']);
 });
 
-Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {
+Route::prefix('/{planer:id}')->scopeBindings()->group(function () {
     Route::get('/', [PlanerController::class, 'show'])->name('planer');
     Route::get('/modulfilter', [ModuleFilterController::class, 'show'])->name('modulefilter');
     Route::post('/plans', [PlanController::class, 'store']);
     Route::get('/{plan:slug}', [PlanController::class, 'show'])->name('plan');
     Route::get('/{plan:slug}/anrechnung', [PlanController::class, 'showCredit'])->name('plan-credit');
     Route::put('/{plan:slug}/anrechnung', [PlanController::class, 'updateCredit']);
+    Route::get('/{plan:slug}/einstellungen', [SettingsController::class, 'show'])->name('plan-settings');
+    Route::put('/{plan:slug}/einstellungen', [SettingsController::class, 'update']);
+    Route::get('/{plan:slug}/vorleistungen', [PriorLearningController::class, 'show'])->name('plan-prior-learning');
+    Route::put('/{plan:slug}/vorleistungen', [PriorLearningController::class, 'update']);
     Route::get('/{plan:slug}/zeitplan', [PlanController::class, 'showSchedule'])->name('plan-schedule');
     Route::put('/{plan:slug}/zeitplan', [PlanController::class, 'updateSchedule']);
 });

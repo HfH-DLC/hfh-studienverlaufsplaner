@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\DayTime;
 use App\Models\Focus;
 use App\Models\FocusSelection;
 use App\Models\Location;
@@ -25,7 +26,7 @@ class PlanTest extends TestCase
     {
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create();
-        $url = "/$planer->slug/$plan->slug/zeitplan";
+        $url = "/$planer->id/$plan->slug/zeitplan";
 
         $response = $this->get($url);
 
@@ -34,14 +35,13 @@ class PlanTest extends TestCase
             fn (Assert $page) => $page
                 ->component('Schedule')
                 ->where('planerName', $planer->name)
-                ->where('planerSlug', $planer->slug)
+                ->where('planerSlug', $planer->id)
                 ->has('planResource')
                 ->has('categoriesResource')
                 ->has('focusSelectionEnabled')
                 ->has('fociResource')
                 ->has('rulesResource')
                 ->has('todosResource')
-                ->has('locationsResource')
                 ->has('requiredECTS')
                 ->has('tourData')
                 ->has('brochureUrl')
@@ -56,7 +56,7 @@ class PlanTest extends TestCase
     {
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create();
-        $url = "/$planer->slug/$plan->slug/anrechnung";
+        $url = "/$planer->id/$plan->slug/anrechnung";
 
         $response = $this->get($url);
 
@@ -65,7 +65,7 @@ class PlanTest extends TestCase
             fn (Assert $page) => $page
                 ->component('Credit')
                 ->where('planerName', $planer->name)
-                ->where('planerSlug', $planer->slug)
+                ->where('planerSlug', $planer->id)
                 ->has('planResource')
                 ->has('creditableModulesResource')
                 ->has('todosResource')
@@ -79,7 +79,7 @@ class PlanTest extends TestCase
     public function store_plan()
     {
         $planer = Planer::factory()->create();
-        $url = "/$planer->slug/plans";
+        $url = "/$planer->id/plans";
         $params = ['startYear' => 2022, 'email' => 'jane.doe@example.com'];
         $response = $this->post($url, $params);
 
@@ -87,14 +87,14 @@ class PlanTest extends TestCase
 
         $this->assertDatabaseCount('plans', 1);
         $plan = $planer->plans()->first();
-        $response->assertRedirect("/$planer->slug/$plan->slug");
+        $response->assertRedirect("/$planer->id/$plan->slug");
     }
 
     /** @test */
     public function cannot_store_plan_without_start_year()
     {
         $planer = Planer::factory()->create();
-        $url = "/$planer->slug/plans";
+        $url = "/$planer->id/plans";
         $params = ['email' => 'jane.doe@example.com'];
 
         $response = $this->post($url, $params);
@@ -107,7 +107,7 @@ class PlanTest extends TestCase
     public function cannot_store_plan_without_email()
     {
         $planer = Planer::factory()->create();
-        $url = "/$planer->slug/plans";
+        $url = "/$planer->id/plans";
         $params = ['startYear' => '2020'];
 
         $response = $this->post($url, $params);
@@ -121,7 +121,7 @@ class PlanTest extends TestCase
     {
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create();
-        $url = "/$planer->slug/$plan->slug/zeitplan";
+        $url = "/$planer->id/$plan->slug/zeitplan";
         $params = ['valid' => false];
 
         $response = $this->put($url, $params);
@@ -135,7 +135,7 @@ class PlanTest extends TestCase
     {
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create();
-        $url = "/$planer->slug/$plan->slug/zeitplan";
+        $url = "/$planer->id/$plan->slug/zeitplan";
         $params = ['tourCompleted' => false];
 
         $response = $this->put($url, $params);
@@ -149,7 +149,7 @@ class PlanTest extends TestCase
     {
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create(['schedule_tour_completed' => false]);
-        $url = "/$planer->slug/$plan->slug/zeitplan";
+        $url = "/$planer->id/$plan->slug/zeitplan";
         $params = ['valid' => false, 'tourCompleted' => true];
 
         $response = $this->put($url, $params);
@@ -164,7 +164,7 @@ class PlanTest extends TestCase
     {
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create(['schedule_valid' => false]);
-        $url = "/$planer->slug/$plan->slug/zeitplan";
+        $url = "/$planer->id/$plan->slug/zeitplan";
         $params = ['valid' => true, 'tourCompleted' => false];
 
         $response = $this->put($url, $params);
@@ -172,25 +172,6 @@ class PlanTest extends TestCase
         $response->assertSuccessful();
         $plan = $plan->fresh();
         $this->assertTrue($plan->schedule_valid);
-    }
-
-    /** @test */
-    public function can_update_schedule_locations()
-    {
-        $planer = Planer::factory()->create();
-        $plan = Plan::factory()->for($planer)->create();
-        Location::factory()->create(['id' => 'ZH', 'name' => 'Zürich', 'default' => true]);
-        Location::factory()->create(['id' => 'GR', 'name' => 'Chur']);
-        $this->assertTrue($plan->locations->isEmpty());
-
-        $url = "/$planer->slug/$plan->slug/zeitplan";
-        $params = ['valid' => true, 'tourCompleted' => false, 'locations' => ['ZH', 'GR']];
-
-        $response = $this->put($url, $params);
-
-        $response->assertSuccessful();
-        $plan = $plan->fresh();
-        $this->assertEqualsCanonicalizing(['ZH', 'GR'], $plan->locations->pluck('id')->all());
     }
 
     /** @test */
@@ -202,7 +183,7 @@ class PlanTest extends TestCase
         Focus::factory()->create(['id' => 'SSP_B',  'name' => 'Studienschwerpunkt B', 'planer_id' => $planer->id]);
         Focus::factory()->create(['id' => 'SSP_C',  'name' => 'Studienschwerpunkt C', 'planer_id' => $planer->id]);
         $this->assertTrue($plan->focusSelections->isEmpty());
-        $url = "/$planer->slug/$plan->slug/zeitplan";
+        $url = "/$planer->id/$plan->slug/zeitplan";
         $params = [
             'valid' => true,
             'tourCompleted' => false,
@@ -224,10 +205,11 @@ class PlanTest extends TestCase
     {
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create();
+        $dayTime = DayTime::factory()->create(['id' => 'a', 'day' => 'Montag', 'time' => 'Morgen', 'sort_index' => 0, 'default' => false]);
         $location = Location::factory()->create(['id' => 'ZH', 'name' => 'Zürich', 'default' => true]);
         $module = Module::factory()->create();
         $this->assertTrue($plan->placements->isEmpty());
-        $url = "/$planer->slug/$plan->slug/zeitplan";
+        $url = "/$planer->id/$plan->slug/zeitplan";
         $params = [
             'valid' => true,
             'tourCompleted' => false,
@@ -236,18 +218,16 @@ class PlanTest extends TestCase
                     'year' => 1999,
                     'semester' => 'XY',
                     'timeWindow' => 'Zeitfenster YZ',
-                    'day' => 'Montag',
-                    'time' => 'Nachmittag',
-                    'location' => $location->id,
+                    'dayTimeId' => $dayTime->id,
+                    'locationId' => $location->id,
                     'moduleId' => $module->id
                 ],
                 [
                     'year' => 2023,
                     'semester' => 'AB',
                     'timeWindow' => 'Zeitfenster UV',
-                    'day' => 'Montag',
-                    'time' => 'Nachmittag',
-                    'location' => $location->id,
+                    'dayTimeId' => $dayTime->id,
+                    'locationId' => $location->id,
                     'moduleId' => $module->id
                 ]
             ]
@@ -261,18 +241,16 @@ class PlanTest extends TestCase
             ->where('year', '1999')
             ->where('semester', 'XY')
             ->where('time_window', 'Zeitfenster YZ')
-            ->where('day', 'Montag')
-            ->where('time', 'Nachmittag')
-            ->where('location', $location->id)
+            ->where('day_time_id', $dayTime->id)
+            ->where('location_id', $location->id)
             ->where('module_id', $module->id)
             ->count());
         $this->assertEquals(1, $plan->placements
             ->where('year', '2023')
             ->where('semester', 'AB')
             ->where('time_window', 'Zeitfenster UV')
-            ->where('day', 'Montag')
-            ->where('time', 'Nachmittag')
-            ->where('location', $location->id)
+            ->where('day_time_id', $dayTime->id)
+            ->where('location_id', $location->id)
             ->where('module_id', $module->id)
             ->count());
     }
@@ -290,7 +268,7 @@ class PlanTest extends TestCase
         $module2 = Module::factory()->create([
             'id' => 'P_CD'
         ]);
-        $url = "/$planer->slug/$plan->slug/anrechnung";
+        $url = "/$planer->id/$plan->slug/anrechnung";
         $params = [
             'focusCredits' => [
                 [
@@ -315,7 +293,7 @@ class PlanTest extends TestCase
     {
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create(['credit_tour_completed' => false]);
-        $url = "/$planer->slug/$plan->slug/anrechnung";
+        $url = "/$planer->id/$plan->slug/anrechnung";
         $params = ['focusCredits' => [], 'valid' => false, 'tourCompleted' => true];
 
         $response = $this->put($url, $params);
@@ -326,26 +304,11 @@ class PlanTest extends TestCase
     }
 
     /** @test */
-    public function can_update_credits_valid()
-    {
-        $planer = Planer::factory()->create();
-        $plan = Plan::factory()->for($planer)->create(['credit_valid' => false]);
-        $url = "/$planer->slug/$plan->slug/anrechnung";
-        $params = ['focusCredits' => [], 'valid' => true, 'tourCompleted' => false];
-
-        $response = $this->put($url, $params);
-
-        $response->assertSuccessful();
-        $plan = $plan->fresh();
-        $this->assertTrue($plan->credit_valid);
-    }
-
-    /** @test */
     public function focus_credits_is_required_to_update_credits()
     {
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create();
-        $url = "/$planer->slug/$plan->slug/anrechnung";
+        $url = "/$planer->id/$plan->slug/anrechnung";
         $params = ['tourCompleted' => false, 'valid' => false];
 
         $response = $this->put($url, $params);
@@ -359,7 +322,7 @@ class PlanTest extends TestCase
     {
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create();
-        $url = "/$planer->slug/$plan->slug/anrechnung";
+        $url = "/$planer->id/$plan->slug/anrechnung";
         $params = ['focusCredits' => [], 'valid' => false];
 
         $response = $this->put($url, $params);
@@ -373,7 +336,7 @@ class PlanTest extends TestCase
     {
         $planer = Planer::factory()->create();
         $plan = Plan::factory()->for($planer)->create();
-        $url = "/$planer->slug/$plan->slug/anrechnung";
+        $url = "/$planer->id/$plan->slug/anrechnung";
         $params = ['focusCredits' => [], 'tourCompleted' => false];
 
         $response = $this->put($url, $params);

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Imports\JSONImport;
-use Illuminate\Support\Facades\Artisan;
+use App\Imports\ConfigImport;
+use App\Imports\EventsImport;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -50,22 +51,31 @@ class AdminController extends Controller
         return Redirect::route('login');
     }
 
-    public function import()
+    public function importConfig()
     {
         $attributes = request()->validate([
             'import' => ['required', 'mimes:json'],
         ]);
         $file = $attributes['import'];
         DB::transaction(function () use ($file) {
-            $import = new JSONImport($file);
+            $import = new ConfigImport($file);
             $import->run();
+            Cache::flush();
         });
         return Redirect::route('admin-data');
     }
 
-    public function exportPlans()
+    public function importEvents()
     {
-        $exitCode = Artisan::call('export:plans');
-        return response()->json(['code' => $exitCode]);
+        $attributes = request()->validate([
+            'import' => ['required', 'mimes:json'],
+        ]);
+        $file = $attributes['import'];
+        DB::transaction(function () use ($file) {
+            $import = new EventsImport($file);
+            $import->run();
+            Cache::flush();
+        });
+        return Redirect::route('admin-data');
     }
 }

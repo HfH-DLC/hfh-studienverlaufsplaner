@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Import;
+use App\Models\EventsImportRecord;
 use App\Models\Planer;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PlanerController extends Controller
 {
     public function show(Planer $planer)
     {
-        $allowedYears = range(Import::getOldestImportYear(), Import::getNewestImportedYear());
+        $allowedYears = range(EventsImportRecord::getOldestImportYear(), EventsImportRecord::getNewestImportedYear());
 
         $props =  array(
-            'slug' => $planer->slug,
+            'slug' => $planer->id,
             'name' => $planer->name,
             'allowedYears' => $allowedYears
         );

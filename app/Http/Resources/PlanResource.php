@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\FocusSelection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PlanResource extends JsonResource
@@ -21,11 +20,12 @@ class PlanResource extends JsonResource
             'startYear' => $this->start_year,
             'scheduleTourCompleted' => $this->schedule_tour_completed,
             'creditTourCompleted' => $this->credit_tour_completed,
-            'creditValid' => $this->credit_valid,
             'scheduleValid' => $this->schedule_valid,
             'focusSelections' => FocusSelectionResource::collection($this->focusSelections),
             'locations' => LocationResource::collection($this->locations),
-            'readOnly' => $this->read_only
+            'dayTimes' => DayTimeResource::collection($this->dayTimes),
+            'readOnly' => $this->read_only,
+            'priorLearnings' => PriorLearningResource::collection($this->priorLearnings)
         ];
     }
 }

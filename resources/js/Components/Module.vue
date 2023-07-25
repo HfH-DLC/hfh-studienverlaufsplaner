@@ -3,8 +3,8 @@
         class="text-left mb-2 p-1 w-full rounded disabled:cursor-default"
         :class="{
             'module--selected': module.selected,
-            'module--placed': module.placement && !module.misplaced,
-            'module--disabled': disabled,
+            'module--placed':
+                (module.placement && !module.misplaced) || hasPriorLearning,
             'module--error': module.misplaced,
         }"
         :disabled="disabled"
@@ -15,15 +15,18 @@
             class="inline-block w-5 h-5 shrink-0 text-red-600"
         />
         <CheckCircleIcon
-            v-if="module.placement && !module.misplaced"
+            v-if="showCheckmark"
             class="inline-block w-5 h-5 shrink-0 text-green-700"
         />
-        {{ module.id }} {{ module.name }}
+        <span
+            ><span v-if="hasPriorLearning">(Vorleistung)</span> {{ module.id }}
+            {{ module.name }}</span
+        >
     </button>
 </template>
 
 <script lang="ts" setup>
-import { PropType } from "vue";
+import { PropType, computed } from "vue";
 import { XCircleIcon, CheckCircleIcon } from "@heroicons/vue/24/outline";
 import { useScheduleStore } from "../Store/schedule";
 import { ScheduleModule } from "@/types";
@@ -32,10 +35,6 @@ const props = defineProps({
     module: {
         type: Object as PropType<ScheduleModule>,
         required: true,
-    },
-    disabled: {
-        type: Boolean,
-        default: false,
     },
 });
 
@@ -48,6 +47,23 @@ const onClick = () => {
         store.selectModule(props.module.id);
     }
 };
+
+const hasPriorLearning = computed(() => {
+    return store.priorLearnings.some(
+        (priorLearning) => priorLearning.countsAsModuleId === props.module.id
+    );
+});
+
+const showCheckmark = computed(() => {
+    if (hasPriorLearning.value) {
+        return true;
+    }
+    if (props.module.placement && !props.module.misplaced) {
+        return true;
+    }
+});
+
+const disabled = hasPriorLearning;
 </script>
 
 <style lang="scss" scoped>
@@ -62,9 +78,5 @@ const onClick = () => {
 
 .module--placed {
     @apply text-green-700;
-}
-
-.module--disabled {
-    @apply text-gray-400;
 }
 </style>

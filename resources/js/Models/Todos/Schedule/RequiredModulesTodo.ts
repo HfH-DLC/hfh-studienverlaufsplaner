@@ -1,9 +1,20 @@
 import RequiredModulesLabel from "@/Components/Todos/Schedule/RequiredModulesLabel.vue";
-import { ChecklistEntryData, ScheduleCategory, Todo } from "@/types";
+import {
+    ChecklistEntryData,
+    PriorLearning,
+    ScheduleCategory,
+    Todo,
+} from "@/types";
 import { markRaw, Ref } from "vue";
 
 export default class RequiredModulesTodo implements Todo {
-    getEntries({ categories }: { categories: Ref<Array<ScheduleCategory>> }) {
+    getEntries({
+        categories,
+        priorLearnings,
+    }: {
+        categories: Ref<Array<ScheduleCategory>>;
+        priorLearnings: Ref<Array<PriorLearning>>;
+    }) {
         const requiredCategories = categories.value.filter(
             (category) => category.required
         );
@@ -14,22 +25,41 @@ export default class RequiredModulesTodo implements Todo {
                 labelProps: {
                     category,
                 },
-                checked: this.validate(category),
-                progressLabel: this.getProgressLabel(category),
+                checked: this.validate(category, priorLearnings.value),
+                progressLabel: this.getProgressLabel(
+                    category,
+                    priorLearnings.value
+                ),
             });
         });
         return entries;
     }
 
-    validate(category: ScheduleCategory) {
-        return !category.modules.some((module) => !module.placement);
+    validate(category: ScheduleCategory, priorLearnings: Array<PriorLearning>) {
+        return !category.modules.some(
+            (module) =>
+                !module.placement &&
+                !priorLearnings.some(
+                    (priorLearning) =>
+                        priorLearning.countsAsModuleId === module.id
+                )
+        );
     }
 
-    getProgressLabel(category: ScheduleCategory) {
+    getProgressLabel(
+        category: ScheduleCategory,
+        priorLearnings: Array<PriorLearning>
+    ) {
         const total = category.modules.length;
-        const current = category.modules.filter(
-            (module) => module.placement
-        ).length;
+        const current = category.modules.filter((module) => {
+            return (
+                module.placement ||
+                priorLearnings.some(
+                    (priorLearning) =>
+                        module.id == priorLearning.countsAsModuleId
+                )
+            );
+        }).length;
         return `${current} / ${total}`;
     }
 }

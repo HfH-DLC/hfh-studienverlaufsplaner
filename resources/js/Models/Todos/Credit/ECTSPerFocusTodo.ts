@@ -4,7 +4,7 @@ import {
     Focus,
     FocusSelection,
     Module,
-    ModuleIdsByFocusSelection,
+    FocusCredit,
     Todo,
 } from "@/types";
 import { Ref } from "vue";
@@ -25,12 +25,12 @@ export default class ECTSPerFocusTodo implements Todo {
     }: {
         focusSelections: Ref<Array<FocusSelection>>;
         modules: Ref<Array<CreditModule>>;
-        creditedModulesByFocusSelection: Ref<Array<ModuleIdsByFocusSelection>>;
+        creditedModulesByFocusSelection: Ref<Array<FocusCredit>>;
     }): Array<ChecklistEntryData> {
         return creditedModulesByFocusSelection.value.reduce(
             (
                 acc: Array<ChecklistEntryData>,
-                { focusSelectionId, moduleIds }: ModuleIdsByFocusSelection
+                { focusSelectionId, moduleIds }: FocusCredit
             ) => {
                 const focusSelection = focusSelections.value.find(
                     (focusSelection: FocusSelection) =>

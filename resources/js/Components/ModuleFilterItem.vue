@@ -4,7 +4,7 @@
             <div>
                 {{ semester }}
             </div>
-            <div>{{ `${day}${time.toLocaleLowerCase()}` }}</div>
+            <div>{{ `${dayTime.day}${dayTime.time.toLocaleLowerCase()}` }}</div>
         </h3>
         <div class="border-t-2 border-fantasy-light border-t-fantasy-plain">
             <ul>
@@ -22,6 +22,7 @@
 </template>
 
 <script setup lang="ts">
+import { DayTime } from "@/types";
 import { PropType } from "vue";
 
 const props = defineProps({
@@ -29,12 +30,8 @@ const props = defineProps({
         type: String,
         required: true,
     },
-    day: {
-        type: String,
-        required: true,
-    },
-    time: {
-        type: String,
+    dayTime: {
+        type: Object as PropType<DayTime>,
         required: true,
     },
     modules: {
