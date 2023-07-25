@@ -2,12 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\DayTime;
-use App\Models\Placement;
 use App\Models\Plan;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
 
 class ExportPLans extends Command
 {

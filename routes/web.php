@@ -29,6 +29,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::post('/logout', [AdminController::class, 'logout']);
     Route::get('/data', [AdminController::class, 'showData'])->name('admin-data');
     Route::post('/data', [AdminController::class, 'import']);
+    Route::get('/export', [AdminController::class, 'exportPlans']);
 });
 
 Route::prefix('/{planer:slug}')->scopeBindings()->group(function () {

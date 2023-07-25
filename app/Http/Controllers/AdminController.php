@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Imports\JSONImport;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -60,5 +61,11 @@ class AdminController extends Controller
             $import->run();
         });
         return Redirect::route('admin-data');
+    }
+
+    public function exportPlans()
+    {
+        $exitCode = Artisan::call('export:plans');
+        return response()->json(['code' => $exitCode]);
     }
 }
