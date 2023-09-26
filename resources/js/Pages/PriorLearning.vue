@@ -26,8 +26,8 @@
                     <HfhInput
                         v-model="priorLearningName"
                         id="prior-learning-name"
-                        label="Name"
-                        :required="true"
+                        label="Optionaler Name"
+                        :required="false"
                         type="text"
                         placeholder="MA Erziehungswissenschaften oder P1_02"
                     ></HfhInput>
@@ -95,7 +95,7 @@
                         <tbody>
                             <tr v-for="row in tableData">
                                 <th>
-                                    {{ row.name }}
+                                    {{ row.name || "-" }}
                                 </th>
                                 <td>
                                     {{ row.ects }}

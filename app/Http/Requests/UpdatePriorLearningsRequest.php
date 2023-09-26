@@ -24,7 +24,7 @@ class UpdatePriorLearningsRequest extends FormRequest
         return [
             'priorLearnings' => 'array',
             'priorLearnings.*.id' => 'exists:prior_learnings,id',
-            'priorLearnings.*.name' => 'required|string',
+            'priorLearnings.*.name' => ['string', 'nullable'],
             'priorLearnings.*.ects' => ['required_without:priorLearnings.*.countsAsModuleId', 'prohibits:priorLearnings.*.countsAsModuleId', 'integer', 'min:1'],
             'priorLearnings.*.countsAsCategoryId' => ['required_without:priorLearnings.*.countsAsModuleId', 'prohibits:priorLearnings.*.countsAsModuleId', 'exists:categories,id', 'prohibits:priorLearnings.*.countsAsModuleId'],
             'priorLearnings.*.countsAsModuleId' => [

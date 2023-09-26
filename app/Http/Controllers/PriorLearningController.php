@@ -36,7 +36,9 @@ class PriorLearningController extends Controller
             foreach ($priorLearningsData as $data) {
                 $id = isset($data['id']) ? $data['id'] : null;
                 $priorLearning = $plan->priorLearnings()->firstOrNew(['id' => $id]);
-                $priorLearning->name = $data['name'];
+                if (isset($data['name'])) {
+                    $priorLearning->name = $data['name'];
+                }
                 if (isset($data['countsAsModuleId'])) {
                     $priorLearning->counts_as_module_id = $data['countsAsModuleId'];
                 }
