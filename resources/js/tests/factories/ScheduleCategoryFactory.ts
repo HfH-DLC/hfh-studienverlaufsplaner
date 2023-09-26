@@ -10,4 +10,5 @@ export const scheduleCategoryFactory =
         maxECTS: 0,
         required: false,
         currentECTS: 0,
+        selectableForPriorLearning: false,
     });

@@ -8,4 +8,5 @@ export const categoryFactory = Factory.Sync.makeFactory<Category>({
     minECTS: 0,
     maxECTS: 0,
     required: false,
+    selectableForPriorLearning: false,
 });

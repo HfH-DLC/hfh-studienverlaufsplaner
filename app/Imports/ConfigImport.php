@@ -144,6 +144,7 @@ class ConfigImport
                 $category->max_ects = $categoryData->maxECTS;
             }
             $category->required = isset($category->required) && $category->required == true;
+            $category->selectable_for_prior_learning = $categoryData->selectableForPriorLearning;
             $planer->categories()->save($category);
             $category->modules()->sync($categoryData->modules);
             $category->save();

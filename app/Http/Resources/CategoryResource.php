@@ -20,7 +20,8 @@ class CategoryResource extends JsonResource
             'required' => $this->required,
             'minECTS' => $this->min_ects,
             'maxECTS' => $this->max_ects,
-            'modules' => ModuleResource::collection($this->whenLoaded('modules'))
+            'modules' => ModuleResource::collection($this->whenLoaded('modules')),
+            'selectableForPriorLearning' => $this->selectable_for_prior_learning
         ];
     }
 }

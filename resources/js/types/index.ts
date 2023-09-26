@@ -11,6 +11,7 @@ export interface Category {
     minECTS: number;
     maxECTS: number;
     required: boolean;
+    selectableForPriorLearning: boolean;
 }
 
 export type ChecklistEntryData = {

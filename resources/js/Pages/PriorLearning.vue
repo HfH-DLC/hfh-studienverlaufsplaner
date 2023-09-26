@@ -345,12 +345,14 @@ const save = (priorLearningsToBeSaved: Array<PriorLearning>) => {
 };
 
 const categoryOptions = computed((): Array<SelectOption> => {
-    return scheduleStore.categories.map((category: Category): SelectOption => {
-        return {
-            label: `${category.name}`,
-            value: `${category.id}`,
-        };
-    });
+    return scheduleStore.categories
+        .filter((category) => category.selectableForPriorLearning)
+        .map((category: Category): SelectOption => {
+            return {
+                label: `${category.name}`,
+                value: `${category.id}`,
+            };
+        });
 });
 
 const moduleOptions = computed((): Array<SelectOption> => {

@@ -11,6 +11,11 @@ class Category extends Model
 
     protected $fillable = ['id', 'position'];
 
+    protected $casts = [
+        'selectable_for_prior_learning' => 'boolean',
+        'required' =>  'boolean'
+    ];
+
     public function planer()
     {
         return $this->belongsTo(Planer::class);

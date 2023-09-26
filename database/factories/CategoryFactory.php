@@ -16,7 +16,8 @@ class CategoryFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'position' => 0,
-            'required' => false
+            'required' => false,
+            'selectable_for_prior_learning' => false,
         ];
     }
 }
