@@ -54,8 +54,8 @@ class PlanTest extends TestCase
      */
     public function can_show_credit_page()
     {
-        $planer = Planer::factory()->create();
-        $plan = Plan::factory()->for($planer)->create();
+        $planer = Planer::factory()->create(['focus_selection_enabled' => true]);
+        $plan = Plan::factory()->for($planer)->create(['start_year' => 2023]);
         $url = "/$planer->id/$plan->slug/anrechnung";
 
         $response = $this->get($url);
@@ -255,11 +255,10 @@ class PlanTest extends TestCase
             ->count());
     }
 
-    /** @test */
     public function can_update_credit_focus_credits()
     {
-        $planer = Planer::factory()->create();
-        $plan = Plan::factory()->for($planer)->create();
+        $planer = Planer::factory()->create(['focus_selection_enabled' => true]);
+        $plan = Plan::factory()->for($planer)->create(['start_year' => 2023]);
         $focus =  Focus::factory()->create(['planer_id' => $planer->id]);
         $focusSelection =  FocusSelection::factory()->for($plan)->for($focus)->create(['position' => 0]);
         $module1 = Module::factory()->create([
@@ -288,11 +287,76 @@ class PlanTest extends TestCase
         $this->assertEqualsCanonicalizing(['P_AB', 'P_CD'], $focusSelection->creditedModules->pluck('id')->all());
     }
 
+
+    /** @test */
+    public function cannot_update_credit_if_focus_selection_disabled()
+    {
+        $planer = Planer::factory()->create(['focus_selection_enabled' => false]);
+        $plan = Plan::factory()->for($planer)->create();
+        $focus =  Focus::factory()->create(['planer_id' => $planer->id]);
+        $focusSelection =  FocusSelection::factory()->for($plan)->for($focus)->create(['position' => 0]);
+        $module1 = Module::factory()->create([
+            'id' => 'P_AB'
+        ]);
+        $module2 = Module::factory()->create([
+            'id' => 'P_CD'
+        ]);
+        $url = "/$planer->id/$plan->slug/anrechnung";
+        $params = [
+            'focusCredits' => [
+                [
+                    'focusSelectionId' => $focusSelection->id,
+                    'moduleIds' => [$module1->id, $module2->id]
+                ]
+            ],
+            'tourCompleted' => false,
+            'valid' => false
+        ];
+
+        $response = $this->put($url, $params);
+
+        $response->assertNotFound();
+        $focusSelection = $focusSelection->fresh();
+        $this->assertCount(0, $focusSelection->creditedModules);
+    }
+
+    /** @test */
+    public function cannot_update_credit_if_start_year_after_2023()
+    {
+        $planer = Planer::factory()->create(['focus_selection_enabled' => true]);
+        $plan = Plan::factory()->for($planer)->create(['start_year' => 2024]);
+        $focus =  Focus::factory()->create(['planer_id' => $planer->id]);
+        $focusSelection =  FocusSelection::factory()->for($plan)->for($focus)->create(['position' => 0]);
+        $module1 = Module::factory()->create([
+            'id' => 'P_AB'
+        ]);
+        $module2 = Module::factory()->create([
+            'id' => 'P_CD'
+        ]);
+        $url = "/$planer->id/$plan->slug/anrechnung";
+        $params = [
+            'focusCredits' => [
+                [
+                    'focusSelectionId' => $focusSelection->id,
+                    'moduleIds' => [$module1->id, $module2->id]
+                ]
+            ],
+            'tourCompleted' => false,
+            'valid' => false
+        ];
+
+        $response = $this->put($url, $params);
+
+        $response->assertNotFound();
+        $focusSelection = $focusSelection->fresh();
+        $this->assertCount(0, $focusSelection->creditedModules);
+    }
+
     /** @test */
     public function can_update_credits_tourCompleted()
     {
-        $planer = Planer::factory()->create();
-        $plan = Plan::factory()->for($planer)->create(['credit_tour_completed' => false]);
+        $planer = Planer::factory()->create(['focus_selection_enabled' => true]);
+        $plan = Plan::factory()->for($planer)->create(['credit_tour_completed' => false, 'start_year' => 2023]);
         $url = "/$planer->id/$plan->slug/anrechnung";
         $params = ['focusCredits' => [], 'valid' => false, 'tourCompleted' => true];
 
@@ -304,17 +368,18 @@ class PlanTest extends TestCase
     }
 
     /** @test */
-    public function focus_credits_is_required_to_update_credits()
+    public function cannot_update_credits_tourCompleted()
     {
-        $planer = Planer::factory()->create();
-        $plan = Plan::factory()->for($planer)->create();
+        $planer = Planer::factory()->create(['focus_selection_enabled' => true]);
+        $plan = Plan::factory()->for($planer)->create(['credit_tour_completed' => false, 'start_year' => 2023]);
         $url = "/$planer->id/$plan->slug/anrechnung";
-        $params = ['tourCompleted' => false, 'valid' => false];
+        $params = ['focusCredits' => [], 'valid' => false, 'tourCompleted' => true];
 
         $response = $this->put($url, $params);
 
-        $response->assertRedirect('/');
-        $response->assertSessionHasErrors("focusCredits");
+        $response->assertSuccessful();
+        $plan = $plan->fresh();
+        $this->assertTrue($plan->credit_tour_completed);
     }
 
     /** @test */

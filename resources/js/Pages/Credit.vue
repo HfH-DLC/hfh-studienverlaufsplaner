@@ -6,7 +6,12 @@
                 :planerSlug="planerSlug"
                 :planerName="planerName"
                 :planSlug="planResource.data.slug"
-                :showFocusSelection="focusSelectionEnabled"
+                :showCreditPage="
+                    showCreditPage(
+                        focusSelectionEnabled,
+                        planResource.data.startYear
+                    )
+                "
                 :showTour="!!tour && planResource.data.scheduleValid"
                 :brochureUrl="brochureUrl"
                 :moduleDirectoryUrl="moduleDirectoryUrl"
@@ -150,8 +155,8 @@ import { FlashType, PriorLearning, TourData } from "@/types";
 import DataAdapter from "@/DataAdapter";
 import Validator from "@/Validator";
 import { getTodos } from "@/Models/Todos/Credit/TodoFactory";
-import Info from "@/Components/Info.vue";
 import { SelectOption } from "@hfh-dlc/hfh-styleguide/types/types";
+import { showCreditPage } from "@/helpers";
 
 defineOptions({
     layout: MainLayout,

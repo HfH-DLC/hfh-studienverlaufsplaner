@@ -12,6 +12,16 @@
                 <ul class="flex gap-x-4">
                     <li>
                         <Link
+                            :href="`/${planerSlug}/${planSlug}/zeitplan`"
+                            class="font-normal hover:text-thunderbird-red"
+                            :class="{
+                                active: $page.component === 'Schedule',
+                            }"
+                            >Zeitplan</Link
+                        >
+                    </li>
+                    <li>
+                        <Link
                             :href="`/${planerSlug}/${planSlug}/einstellungen`"
                             class="font-normal hover:text-thunderbird-red"
                             :class="{
@@ -32,17 +42,7 @@
                             >Vorleistungen</Link
                         >
                     </li>
-                    <li>
-                        <Link
-                            :href="`/${planerSlug}/${planSlug}/zeitplan`"
-                            class="font-normal hover:text-thunderbird-red"
-                            :class="{
-                                active: $page.component === 'Schedule',
-                            }"
-                            >Zeitplan</Link
-                        >
-                    </li>
-                    <li v-if="showFocusSelection">
+                    <li v-if="showCreditPage">
                         <Link
                             :href="`/${planerSlug}/${planSlug}/anrechnung`"
                             class="font-normal hover:text-thunderbird-red"
@@ -55,8 +55,8 @@
                 </ul>
             </nav>
             <SaveStatusIndicator :saveStatus="saveStatus" />
-            <StartTourButton v-if="showTour" />
             <PrintButton />
+            <StartTourButton v-if="showTour" id="start-tour" />
         </div>
     </PageHeader>
 </template>
@@ -81,7 +81,7 @@ const props = defineProps({
         type: String,
         required: true,
     },
-    showFocusSelection: {
+    showCreditPage: {
         type: Boolean,
         required: true,
     },

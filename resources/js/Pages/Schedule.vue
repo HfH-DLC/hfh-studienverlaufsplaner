@@ -6,7 +6,12 @@
                 :planerSlug="planerSlug"
                 :planerName="planerName"
                 :planSlug="planResource.data.slug"
-                :showFocusSelection="focusSelectionEnabled"
+                :showCreditPage="
+                    showCreditPage(
+                        focusSelectionEnabled,
+                        planResource.data.startYear
+                    )
+                "
                 :showTour="!!store.tour"
                 :brochureUrl="brochureUrl"
                 :moduleDirectoryUrl="moduleDirectoryUrl"
@@ -82,7 +87,10 @@
                             >
                                 Ihre Planung erfüllt alle Anforderungen.
                                 <HfhLink
-                                    v-if="focusSelectionEnabled"
+                                    v-if="
+                                        focusSelectionEnabled &&
+                                        planResource.data.startYear < 2024
+                                    "
                                     href="anrechnung"
                                     :component="Link"
                                     >Weiter zur Anrechnung.
@@ -145,7 +153,7 @@ import { FlashType, TourData } from "@/types";
 import AppHead from "@/Components/AppHead.vue";
 import { PropType } from "vue";
 import { useEmitter } from "@/composables/useEmitter";
-import { pluralize } from "@/helpers";
+import { pluralize, showCreditPage } from "@/helpers";
 
 defineOptions({ layout: MainLayout });
 

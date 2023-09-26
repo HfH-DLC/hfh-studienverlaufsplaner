@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PlanController extends Controller
 {
@@ -47,6 +48,9 @@ class PlanController extends Controller
 
     public function showCredit(Planer $planer, Plan $plan)
     {
+        if ($this->isCreditFeatureActive($planer, $plan)) {
+            throw new NotFoundHttpException();
+        }
         $plan->load('focusSelections.focus');
         $planResource = new PlanResource($plan);
         $modules = $plan->getCreditableModules();
@@ -154,6 +158,9 @@ class PlanController extends Controller
 
     public function updateCredit(UpdateFocusCreditRequest $request, Planer $planer, Plan $plan)
     {
+        if ($this->isCreditFeatureActive($planer, $plan)) {
+            throw new NotFoundHttpException();
+        }
         $validated = $request->validated();
         $focusCredits = $validated['focusCredits'];
         DB::transaction(function () use ($focusCredits, $validated, $plan) {
@@ -166,5 +173,10 @@ class PlanController extends Controller
             $plan->save();
         });
         return response()->noContent();
+    }
+
+    private function isCreditFeatureActive(Planer $planer, Plan $plan)
+    {
+        return !$planer->focus_selection_enabled || $plan->start_year >= 2024;
     }
 }

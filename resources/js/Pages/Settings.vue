@@ -8,7 +8,12 @@
                 :planSlug="planResource.data.slug"
                 :brochureUrl="brochureUrl"
                 :moduleDirectoryUrl="moduleDirectoryUrl"
-                :showFocusSelection="focusSelectionEnabled"
+                :showCreditPage="
+                    showCreditPage(
+                        focusSelectionEnabled,
+                        planResource.data.startYear
+                    )
+                "
                 :showTour="false"
                 :saveStatus="SaveStatus.Saved"
             />
@@ -55,6 +60,7 @@ import Flash from "@/Components/Flash.vue";
 import DataAdapter from "@/DataAdapter";
 import type { CheckboxOption } from "@hfh-dlc/hfh-styleguide/types";
 import MainLayout from "@/Layouts/MainLayout.vue";
+import { showCreditPage } from "@/helpers";
 
 defineOptions({ layout: MainLayout });
 

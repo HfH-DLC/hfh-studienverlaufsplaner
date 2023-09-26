@@ -1,8 +1,9 @@
+import { start } from "@popperjs/core";
 import { EventDate, EventDateWithOptionalTimeWindow, Semester } from "./types";
 
 /**
  * Compares two EventDateWithOptionalTimeWindow objects.
- * Important: The timeWindow property is only considered in the comparison, if both objects have it.
+ * Important: The timeWindow property is only considered in the comparison if both objects have it.
  */
 export const isSameDate = (
     a: EventDateWithOptionalTimeWindow,
@@ -114,4 +115,14 @@ export const joinStrings = (strings: string[], connector: string) => {
         ` ${connector} ` +
         strings[strings.length - 1]
     );
+};
+
+/**
+ * Determines whether the credit page should be visible. From HS 2024 onwards the crediting is fixed and thus needs no planing.
+ */
+export const showCreditPage = (
+    focusSelectionEnabled: boolean,
+    startYear: number
+) => {
+    return focusSelectionEnabled && startYear < 2024;
 };

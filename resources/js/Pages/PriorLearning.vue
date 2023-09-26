@@ -8,7 +8,12 @@
                 :planSlug="planResource.data.slug"
                 :brochureUrl="brochureUrl"
                 :moduleDirectoryUrl="moduleDirectoryUrl"
-                :showFocusSelection="focusSelectionEnabled"
+                :showCreditPage="
+                    showCreditPage(
+                        focusSelectionEnabled,
+                        planResource.data.startYear
+                    )
+                "
                 :showTour="false"
                 :saveStatus="SaveStatus.Saved"
             />
@@ -146,6 +151,7 @@ import {
 } from "@hfh-dlc/hfh-styleguide";
 import type { SelectOption } from "@hfh-dlc/hfh-styleguide/types";
 import { getInitializedScheduleStore } from "@/Store/schedule";
+import { showCreditPage } from "@/helpers";
 
 defineOptions({ layout: MainLayout });
 
