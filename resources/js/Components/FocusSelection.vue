@@ -14,6 +14,7 @@
         </div>
         <div class="max-w-64">
             <HfhSelect
+                v-if="firstFocusId"
                 id="second-focus"
                 name="second-focus"
                 :label="secondFocusLabel"
