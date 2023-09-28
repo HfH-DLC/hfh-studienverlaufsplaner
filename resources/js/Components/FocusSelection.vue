@@ -4,7 +4,7 @@
             <HfhSelect
                 id="first-focus"
                 name="first-focus"
-                label="Erster Studienschwerpunkt"
+                :label="firstFocusLabel"
                 :required="true"
                 :options="firstOptions"
                 v-model="firstFocusId"
@@ -16,7 +16,7 @@
             <HfhSelect
                 id="second-focus"
                 name="second-focus"
-                label="Zweiter Studienschwerpunkt (Optional)"
+                :label="secondFocusLabel"
                 defaultOption="Bitte auswählen..."
                 :options="secondOptions"
                 v-model="secondFocusId"
@@ -75,6 +75,16 @@ const secondOptions = computed(() => {
     return options.value.filter(
         (option) => option.value !== firstFocusId.value
     );
+});
+const firstFocusLabel = computed(() => {
+    return store.startYear! < 2024
+        ? "Erster Studienschwerpunkt"
+        : "Major-Studienschwerpunkt";
+});
+const secondFocusLabel = computed(() => {
+    return store.startYear! < 2024
+        ? "Zweiter Studienschwerpunkt (Optional)"
+        : "Minor-Studienschwerpunkt (Optional)";
 });
 </script>
 
