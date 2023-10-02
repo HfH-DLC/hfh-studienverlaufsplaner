@@ -34,6 +34,7 @@
                             v-model="dayTimeFilterPerDay[day]"
                             orientation="vertical"
                             @update:model-value="save"
+                            :disabled="planResource.data.readOnly"
                         ></HfhCheckbox>
                     </div>
                     <HfhCheckbox
@@ -43,6 +44,7 @@
                         v-model="locationFilter"
                         orientation="vertical"
                         @update:model-value="save"
+                        :disabled="planResource.data.readOnly"
                     ></HfhCheckbox>
                 </div>
             </main>

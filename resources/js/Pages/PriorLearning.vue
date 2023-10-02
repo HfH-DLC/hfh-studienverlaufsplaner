@@ -27,7 +27,10 @@
                     können Sie diese hier erfassen. (Die ECTS können auf mehrere
                     Bereiche aufgeteilt werden.)
                 </p>
-                <form @submit.prevent="createPriorLearning">
+                <form
+                    @submit.prevent="createPriorLearning"
+                    v-if="!scheduleStore.readOnly"
+                >
                     <HfhInput
                         v-model="priorLearningName"
                         id="prior-learning-name"
@@ -94,7 +97,7 @@
                                 <th>ECTS</th>
                                 <th>Bereich</th>
                                 <th>Modul</th>
-                                <th>Aktionen</th>
+                                <th v-if="!scheduleStore.readOnly">Aktionen</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -111,7 +114,7 @@
                                 <td>
                                     {{ row.countsAsModuleId || "-" }}
                                 </td>
-                                <td>
+                                <td v-if="!scheduleStore.readOnly">
                                     <button
                                         @click="deletePriorLearning(row.id)"
                                         class="hover:text-[var(--c-thunderbird-red)]"
