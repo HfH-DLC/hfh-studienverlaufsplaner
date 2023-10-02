@@ -11,7 +11,7 @@ class UpdatePriorLearningsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return !$this->plan->read_only;
     }
 
     /**

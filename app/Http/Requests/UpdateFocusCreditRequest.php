@@ -13,7 +13,7 @@ class UpdateFocusCreditRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return !$this->plan->read_only;
     }
 
     /**
