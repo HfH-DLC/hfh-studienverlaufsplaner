@@ -14,9 +14,10 @@ class PlanerResource extends JsonResource
      */
     public function toArray($request)
     {
-        $categories = $this->categories()->with(['modules', 'modules.events' => function ($q) {
-            $q->where('planer_id', $this->id);
-        }])->get();
+        $categories = $this->categories()
+            ->with(['modules', 'modules.events' => function ($q) {
+                $q->where('planer_id', $this->id);
+            }, 'modules.events.dayTime', 'modules.events.location'])->get();
 
         return [
             'name' => $this->name,
