@@ -854,6 +854,11 @@
             "id": "GR",
             "name": "Chur",
             "default": false
+        },
+        {
+            "id": "SG",
+            "name": "Rorschach",
+            "default": false
         }
     ]
 }
