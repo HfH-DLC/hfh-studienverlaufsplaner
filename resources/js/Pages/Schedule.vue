@@ -153,7 +153,7 @@ import { FlashType, TourData } from "@/types";
 import AppHead from "@/Components/AppHead.vue";
 import { PropType } from "vue";
 import { useEmitter } from "@/composables/useEmitter";
-import { pluralize, showCreditPage } from "@/helpers";
+import { showCreditPage } from "@/helpers";
 
 defineOptions({ layout: MainLayout });
 
