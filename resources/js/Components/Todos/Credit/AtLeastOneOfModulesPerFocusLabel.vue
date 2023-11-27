@@ -2,7 +2,7 @@
     <div>
         Rechnen Sie mindestens eines der Module
         <template v-for="(moduleId, index) in moduleIds" :key="moduleId">
-            <span class="whitespace-nowrap"
+            <span class="whitespace-nowrap inline-block"
                 ><button @click="focusModule(moduleId)">
                     {{ moduleId }}</button
                 ><template v-if="index < moduleIds.length - 2"

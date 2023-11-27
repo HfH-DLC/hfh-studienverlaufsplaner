@@ -3,7 +3,7 @@
         Belegen Sie für den SSP "{{ focusName }}" {{ countString }}
         <template v-for="(module, index) in modules" :key="module.id">
             <template v-if="index < modules.length - 1">
-                <span class="whitespace-nowrap">
+                <span class="whitespace-nowrap inline-block">
                     <button
                         @click="focusModule(module)"
                         role="button"
@@ -15,7 +15,7 @@
                     >,</span
                 >
             </template>
-            <span v-else class="whitespace-nowrap">
+            <span v-else class="whitespace-nowrap inline-block">
                 <button
                     @click="focusModule(module)"
                     role="button"

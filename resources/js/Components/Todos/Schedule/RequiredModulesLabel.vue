@@ -1,7 +1,7 @@
 <template>
     <div>
         Belegen Sie alle Module des Bereiches
-        <span class="whitespace-nowrap"
+        <span class="whitespace-nowrap inline-block"
             ><button @click="focusCategory()">"{{ category.name }}"</button
             >.</span
         >
