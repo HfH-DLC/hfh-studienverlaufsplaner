@@ -299,6 +299,144 @@
                 }
             ]
         },
+
+        {
+            "id": "BP5_01.1.Pilot.L",
+            "name": "Berufspraxis 1 & Portfolio",
+            "ects": 5,
+            "creditable": true,
+            "modifiers": [
+                {
+                    "page": "credit",
+                    "values": {
+                        "name": "Berufspraxis 1"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "BP5_01.2.Pilot.L",
+            "name": "Berufspraxis 2 & Portfolio",
+            "ects": 5,
+            "creditable": true,
+            "prerequisites": ["BP5_01.1.Pilot.L"],
+            "modifiers": [
+                {
+                    "page": "credit",
+                    "values": {
+                        "name": "Berufspraxis 2"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "BP5_01.3.Pilot.L",
+            "name": "Berufspraxis 3 & Portfolio",
+            "ects": 10,
+            "creditable": true,
+            "prerequisites": ["BP5_01.1.Pilot.L", "BP5_01.2.Pilot.L"],
+            "modifiers": [
+                {
+                    "page": "credit",
+                    "values": {
+                        "name": "Berufspraxis 3",
+                        "ects": 5
+                    }
+                }
+            ]
+        },
+        {
+            "id": "BP5_01.1.Pilot.GE",
+            "name": "Berufspraxis 1 & Portfolio",
+            "ects": 5,
+            "creditable": true,
+            "modifiers": [
+                {
+                    "page": "credit",
+                    "values": {
+                        "name": "Berufspraxis 1"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "BP5_01.2.Pilot.GE",
+            "name": "Berufspraxis 2 & Portfolio",
+            "ects": 5,
+            "creditable": true,
+            "prerequisites": ["BP5_01.1.Pilot.GE"],
+            "modifiers": [
+                {
+                    "page": "credit",
+                    "values": {
+                        "name": "Berufspraxis 2"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "BP5_01.3.Pilot.GE",
+            "name": "Berufspraxis 3 & Portfolio",
+            "ects": 10,
+            "creditable": true,
+            "prerequisites": ["BP5_01.1.Pilot.GE", "BP5_01.2.Pilot.GE"],
+            "modifiers": [
+                {
+                    "page": "credit",
+                    "values": {
+                        "name": "Berufspraxis 3",
+                        "ects": 5
+                    }
+                }
+            ]
+        },
+
+        {
+            "id": "BP5_01.1.Pilot.V",
+            "name": "Berufspraxis 1 & Portfolio",
+            "ects": 5,
+            "creditable": true,
+            "modifiers": [
+                {
+                    "page": "credit",
+                    "values": {
+                        "name": "Berufspraxis 1"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "BP5_01.2.Pilot.V",
+            "name": "Berufspraxis 2 & Portfolio",
+            "ects": 5,
+            "creditable": true,
+            "prerequisites": ["BP5_01.1.Pilot.V"],
+            "modifiers": [
+                {
+                    "page": "credit",
+                    "values": {
+                        "name": "Berufspraxis 2"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "BP5_01.3.Pilot.V",
+            "name": "Berufspraxis 3 & Portfolio",
+            "ects": 10,
+            "creditable": true,
+            "prerequisites": ["BP5_01.1.Pilot.V", "BP5_01.2.Pilot.V"],
+            "modifiers": [
+                {
+                    "page": "credit",
+                    "values": {
+                        "name": "Berufspraxis 3",
+                        "ects": 5
+                    }
+                }
+            ]
+        },
+
         {
             "id": "BP5_01.1.HFE",
             "name": "Berufspraxis 1 & Portfolio",
@@ -440,8 +578,21 @@
                 },
                 {
                     "name": "Berufspraxis und Portfolio",
-                    "modules": ["BP5_01.1.SHP", "BP5_01.2.SHP", "BP5_01.3.SHP"],
-                    "required": true,
+                    "modules": [
+                        "BP5_01.1.SHP",
+                        "BP5_01.2.SHP",
+                        "BP5_01.3.SHP",
+                        "BP5_01.1.Pilot.L",
+                        "BP5_01.2.Pilot.L",
+                        "BP5_01.3.Pilot.L",
+                        "BP5_01.1.Pilot.GE",
+                        "BP5_01.2.Pilot.GE",
+                        "BP5_01.3.Pilot.GE",
+                        "BP5_01.1.Pilot.V",
+                        "BP5_01.2.Pilot.V",
+                        "BP5_01.3.Pilot.V"
+                    ],
+                    "required": false,
                     "selectableForPriorLearning": false
                 },
                 {
@@ -471,8 +622,40 @@
                     "type": "schedule"
                 },
                 {
-                    "name": "ECTSPerCategoryTodo",
-                    "type": "schedule"
+                    "name": "ExactlyOneOfModulesTodo",
+                    "type": "schedule",
+                    "params": {
+                        "moduleIds": [
+                            "BP5_01.1.SHP",
+                            "BP5_01.1.Pilot.L",
+                            "BP5_01.1.Pilot.GE",
+                            "BP5_01.1.Pilot.V"
+                        ]
+                    }
+                },
+                {
+                    "name": "ExactlyOneOfModulesTodo",
+                    "type": "schedule",
+                    "params": {
+                        "moduleIds": [
+                            "BP5_01.2.SHP",
+                            "BP5_01.2.Pilot.L",
+                            "BP5_01.2.Pilot.GE",
+                            "BP5_01.2.Pilot.V"
+                        ]
+                    }
+                },
+                {
+                    "name": "ExactlyOneOfModulesTodo",
+                    "type": "schedule",
+                    "params": {
+                        "moduleIds": [
+                            "BP5_01.3.SHP",
+                            "BP5_01.3.Pilot.L",
+                            "BP5_01.3.Pilot.GE",
+                            "BP5_01.3.Pilot.V"
+                        ]
+                    }
                 },
                 {
                     "name": "FocusRequiredModulesTodo",
@@ -480,6 +663,10 @@
                 },
                 {
                     "name": "FocusOptionalModulesTodo",
+                    "type": "schedule"
+                },
+                {
+                    "name": "ECTSPerCategoryTodo",
                     "type": "schedule"
                 },
                 {
