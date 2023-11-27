@@ -37,16 +37,6 @@ export default class AtLeastOneOfModulesPerFocusTodo {
         });
     }
 
-    getLabel(focus: Focus): string {
-        const moduleString = joinStrings(
-            this.moduleIds.map((id) => {
-                return `<label for=credit-${id}>${id}</label>`;
-            }),
-            "oder"
-        );
-        return `Rechnen Sie mindestens eines der Module ${moduleString} an den SSP ${focus.name} an.`;
-    }
-
     validate(
         focusSelection: FocusSelection,
         modules: Array<CreditModule>
