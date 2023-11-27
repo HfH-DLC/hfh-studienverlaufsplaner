@@ -48,7 +48,7 @@ class PlanController extends Controller
 
     public function showCredit(Planer $planer, Plan $plan)
     {
-        if ($this->isCreditFeatureActive($planer, $plan)) {
+        if (!$this->isCreditFeatureActive($planer, $plan)) {
             throw new NotFoundHttpException();
         }
         $plan->load('focusSelections.focus');
@@ -158,7 +158,7 @@ class PlanController extends Controller
 
     public function updateCredit(UpdateFocusCreditRequest $request, Planer $planer, Plan $plan)
     {
-        if ($this->isCreditFeatureActive($planer, $plan)) {
+        if (!$this->isCreditFeatureActive($planer, $plan)) {
             throw new NotFoundHttpException();
         }
         $validated = $request->validated();
@@ -177,6 +177,6 @@ class PlanController extends Controller
 
     private function isCreditFeatureActive(Planer $planer, Plan $plan)
     {
-        return !$planer->focus_selection_enabled || $plan->start_year >= 2024;
+        return $planer->focus_selection_enabled && $plan->start_year < 2024;
     }
 }
