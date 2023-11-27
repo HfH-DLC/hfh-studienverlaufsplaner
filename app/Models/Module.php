@@ -15,6 +15,18 @@ class Module extends Model
     protected $fillable = ['id'];
     protected $casts = ['category_id' => 'integer', 'ects' => 'integer', 'modifiers' => 'array'];
 
+    protected static function booted()
+    {
+        static::deleting(function ($module) {
+            $module->categories()->detach();
+            $module->prerequisites()->detach();
+            $module->dependencies()->detach();
+            foreach ($module->events as $event) {
+                $event->delete();
+            }
+        });
+    }
+
     public function categories()
     {
         return $this->belongsToMany(Category::class);

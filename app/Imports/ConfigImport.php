@@ -63,7 +63,10 @@ class ConfigImport
             $id = $this->insertModule($moduleData);
             $moduleIds[] = $id;
         }
-        Module::whereNotIn('id', $moduleIds)->delete();
+        $modules = Module::whereNotIn('id', $moduleIds)->get();
+        foreach ($modules as $module) {
+            $module->delete();
+        }
         foreach ($data->modules as $moduleData) {
             $this->setPrerequisites($moduleData);
         }
@@ -146,6 +149,12 @@ class ConfigImport
             $category->required = isset($category->required) && $category->required == true;
             $category->selectable_for_prior_learning = $categoryData->selectableForPriorLearning;
             $planer->categories()->save($category);
+            $modules = [];
+            $position = 0;
+            foreach ($categoryData->modules as $moduleId) {
+                $modules[$moduleId] = ['position' => $position++];
+            }
+            $category->modules()->sync($modules);
             $category->modules()->sync($categoryData->modules);
             $category->save();
             $categoryIds[] = $category->id;
