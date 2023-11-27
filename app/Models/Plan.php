@@ -92,12 +92,13 @@ class Plan extends Model
             $categories = $this->planer->categories()->with([
                 'modules' => function ($query) use ($filter) {
                     $query->whereHas('events', $filter);
+                    $query->orderBy('position');
                 },
                 'modules.events' => $filter,
                 'modules.events.location',
                 'modules.events.dayTime',
                 'modules.prerequisites',
-            ])->get()->sortBy('position');
+            ])->orderBy('position')->get();
             Cache::put($key, $categories);
             return $categories;
         }
