@@ -5,6 +5,7 @@ import FocusOptionalModulesTodo from "@/Models/Todos/Schedule/FocusOptionalModul
 import RequiredModulesTodo from "@/Models/Todos/Schedule/RequiredModulesTodo";
 import TotalECTSTodo from "@/Models/Todos/Schedule/TotalECTSTodo";
 import { TodoMappingType } from "@/types";
+import ExactlyOneOfModulesTodo from "./ExactlyOneOfModulesTodo";
 
 const TodoMapping: TodoMappingType = {
     AtLeastOneFocusTodo: {
@@ -30,6 +31,10 @@ const TodoMapping: TodoMappingType = {
     TotalECTSTodo: {
         Class: TotalECTSTodo,
         paramsRequired: false,
+    },
+    ExactlyOneOfModulesTodo: {
+        Class: ExactlyOneOfModulesTodo,
+        paramsRequired: true,
     },
 };
 

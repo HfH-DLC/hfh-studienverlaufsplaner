@@ -12,10 +12,15 @@ export const getTodos = (todosData: Array<TodoData>) => {
     }, []);
 };
 
-export const getTodo = ({ name }: TodoData): Todo => {
+const getTodo = ({ name, params }: TodoData): Todo => {
     const TodoDetails = TodoMapping[name];
     if (TodoDetails) {
-        return new TodoDetails.Class();
+        console.log(name, TodoDetails.paramsRequired, params);
+        if (TodoDetails.paramsRequired) {
+            return new TodoDetails.Class(params);
+        } else {
+            return new TodoDetails.Class();
+        }
     } else {
         throw "Unknown todo: " + name;
     }
