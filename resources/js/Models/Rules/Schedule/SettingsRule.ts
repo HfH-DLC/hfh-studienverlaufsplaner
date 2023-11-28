@@ -23,7 +23,7 @@ export default class SettingsRule implements Rule {
         placements.value.forEach((placement: SchedulePlacement) => {
             if (!locationIds.value.includes(placement.location.id)) {
                 this.addErrorMessage(errors, placement.id, {
-                    label: `Die aktuelle Platzierung des Modules ${placement.module.id} liegt ausserhalb Ihrer gewählten Standorte. `,
+                    label: `Die aktuelle Platzierung des Moduls ${placement.module.id} liegt ausserhalb Ihrer gewählten Standorte. `,
                 });
             }
             if (
@@ -32,7 +32,7 @@ export default class SettingsRule implements Rule {
                 )
             ) {
                 this.addErrorMessage(errors, placement.id, {
-                    label: `Die aktuelle Platzierung des Modules ${placement.module.id} liegt ausserhalb Ihrer gewählten Zeitpunkte. `,
+                    label: `Die aktuelle Platzierung des Moduls ${placement.module.id} liegt ausserhalb Ihrer gewählten Zeitpunkte. `,
                 });
             }
         });
