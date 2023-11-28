@@ -227,6 +227,14 @@
             "locations": ["GR"]
         },
         {
+            "module": "WP2_02.1",
+            "planers": ["shp"],
+            "semesters": ["HS"],
+            "timeWindow": 1,
+            "dayTimes": ["b"],
+            "locations": ["SG"]
+        },
+        {
             "module": "WP2_02.2",
             "planers": ["shp"],
             "semesters": ["HS"],
@@ -562,6 +570,14 @@
             "timeWindow": 2,
             "dayTimes": ["a", "c", "e", "g"],
             "locations": ["ZH"]
+        },
+        {
+            "module": "BP5_01.2.SHP",
+            "planers": ["shp"],
+            "semesters": ["FS"],
+            "timeWindow": 2,
+            "dayTimes": ["a"],
+            "locations": ["SG"]
         },
         {
             "module": "BP5_01.2.SHP",
