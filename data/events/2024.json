@@ -544,7 +544,7 @@
             "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 2,
-            "dayTimes": ["b", "f"],
+            "dayTimes": ["a", "f"],
             "locations": ["ZH"]
         },
         {
@@ -560,7 +560,7 @@
             "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 2,
-            "dayTimes": ["b", "d", "f", "h"],
+            "dayTimes": ["a", "c", "f", "h"],
             "locations": ["ZH"]
         },
         {
@@ -600,7 +600,7 @@
             "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 2,
-            "dayTimes": ["b", "d", "f", "h"],
+            "dayTimes": ["a", "c", "f", "h"],
             "locations": ["ZH"]
         },
 
@@ -609,7 +609,7 @@
             "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 2,
-            "dayTimes": ["a"],
+            "dayTimes": ["b"],
             "locations": ["ZH"]
         },
         {
@@ -617,7 +617,7 @@
             "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 2,
-            "dayTimes": ["a"],
+            "dayTimes": ["b"],
             "locations": ["ZH"]
         },
         {
@@ -634,7 +634,7 @@
             "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 2,
-            "dayTimes": ["a"],
+            "dayTimes": ["b"],
             "locations": ["ZH"]
         },
         {
@@ -642,7 +642,7 @@
             "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 2,
-            "dayTimes": ["a"],
+            "dayTimes": ["b"],
             "locations": ["ZH"]
         },
         {
@@ -659,7 +659,7 @@
             "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 2,
-            "dayTimes": ["a"],
+            "dayTimes": ["b"],
             "locations": ["ZH"]
         },
         {
@@ -667,7 +667,7 @@
             "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 2,
-            "dayTimes": ["a"],
+            "dayTimes": ["b"],
             "locations": ["ZH"]
         },
         {
@@ -684,7 +684,7 @@
             "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 2,
-            "dayTimes": ["a"],
+            "dayTimes": ["b"],
             "locations": ["ZH"]
         },
         {
@@ -692,7 +692,7 @@
             "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 2,
-            "dayTimes": ["a"],
+            "dayTimes": ["b"],
             "locations": ["ZH"]
         },
         {
@@ -747,7 +747,7 @@
         {
             "module": "M5_03",
             "planers": ["shp"],
-            "semesters": ["HS", "FS"],
+            "semesters": ["FS"],
             "timeWindow": 2,
             "dayTimes": ["g"],
             "locations": ["GR"]
