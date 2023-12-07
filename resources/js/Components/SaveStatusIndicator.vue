@@ -1,7 +1,7 @@
 <template>
     <div class="flex gap-1 items-center" :class="messageClass">
         <CheckCircleIcon
-            class="inline-block w-5 h-5 shrink-0 text-green-700"
+            class="inline-block w-5 h-5 shrink-0 text-hfh-green"
             v-if="saved"
         />
         <XCircleIcon
@@ -55,7 +55,7 @@ const messageClass = computed(() => {
         return "";
     }
     if (saved.value) {
-        return "text-green-700";
+        return "text-hfh-green";
     }
     if (error.value) {
         return "text-thunderbird-red";

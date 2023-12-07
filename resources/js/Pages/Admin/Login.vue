@@ -14,7 +14,9 @@
         </div>
         <form @submit.prevent="submit" class="max-w-xs mx-auto mt-8">
             <div class="mt-4">
-                <label for="email" class="block mb-2 text-sm text-gray-600"
+                <label
+                    for="email"
+                    class="block mb-2 text-sm text-hfh-gray-darkest"
                     >Email</label
                 >
                 <input
@@ -28,7 +30,9 @@
                 />
             </div>
             <div class="mt-6">
-                <label for="password" class="block-mb-2 text-sm text-gray-600"
+                <label
+                    for="password"
+                    class="block-mb-2 text-sm text-hfh-gray-darkest"
                     >Passwort</label
                 >
                 <input

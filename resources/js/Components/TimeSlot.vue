@@ -5,7 +5,7 @@
         <template v-if="placement">
             <button
                 ref="placementElement"
-                class="placement text-sm text-left disabled:cursor-default w-full p-4 border border-gray-300 rounded 'bg-gray-50' transition-all"
+                class="placement text-sm text-left disabled:cursor-default w-full p-4 border border-hfh-gray-medium rounded"
                 :class="{
                     'slot--invalid': invalidPlacement,
                 }"
@@ -14,7 +14,7 @@
                 <div class="flex items-start">
                     <XCircleIcon
                         v-if="invalidPlacement"
-                        class="text-red-600 mr-2 w-5 h-5 shrink-0"
+                        class="text-thunderbird-red mr-2 w-5 h-5 shrink-0"
                     />
                     <div class="overflow-hidden">
                         <div class="truncate">
@@ -41,7 +41,7 @@
             <template v-for="event in filteredEvents" :key="event.id">
                 <button
                     :data-valid-slot="event.valid"
-                    class="slot text-sm text-left disabled:cursor-default w-full p-4 border border-gray-300 rounded bg-white transition-all shadow-inner grow-1 shrink-1 min-w-content"
+                    class="slot text-sm text-left disabled:cursor-default w-full p-4 border rounded bg-white transition-all shadow-inner grow-1 shrink-1 min-w-content"
                     :class="event.valid ? 'slot--valid' : 'slot--invalid'"
                     @click="onPlaceModule(event)"
                 >
@@ -49,11 +49,11 @@
                     <span class="flex items-center gap-x-2">
                         <CheckCircleIcon
                             v-if="event.valid"
-                            class="text-green-700 w-5 h-5 shrink-0"
+                            class="text-hfh-green w-5 h-5 shrink-0"
                         />
                         <XCircleIcon
                             v-else
-                            class="text-red-600 w-5 h-5 shrink-0"
+                            class="text-thunderbird-red w-5 h-5 shrink-0"
                         />
                         <span v-if="showLocation"
                             >Standort: {{ event.location.name }}</span
@@ -74,7 +74,7 @@
                 @click="openDialog"
             >
                 <InformationCircleIcon
-                    class="w-5 h-5 text-gray-600"
+                    class="w-5 h-5 text-hfh-gray-darkest"
                     aria-hidden="true"
                 />
                 <span class="sr-only">Verfügbare Module anzeigen</span>
@@ -219,15 +219,18 @@ const getLocationName = (id: string) => {
 
 <style lang="scss" scoped>
 .slot--invalid {
-    @apply bg-red-50 text-red-600;
+    @apply bg-fantasy-pastel text-thunderbird-red;
+    @apply border-fantasy-dark;
 }
 
 .slot--valid {
-    @apply bg-green-50;
+    @apply bg-hfh-green-light;
+    @apply border-hfh-green-medium;
 }
 
 .placement:focus,
 .slot:focus {
+    border-color: transparent;
     outline: 2px solid var(--c-blue);
     outline-offset: 0;
 }

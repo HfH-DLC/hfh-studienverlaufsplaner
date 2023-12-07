@@ -26,32 +26,30 @@
                         Anrechnung an die Studienschwerpunkte
                     </h2>
                     <table
-                        class="w-9/12 print:w-full divide-y divide-gray-300 border border-gray-300 text-left layout-fixed"
+                        class="w-9/12 print:w-full divide-y divide-fantasy-plain border border-fantasy-plain text-left layout-fixed"
                         id="modules"
                     >
                         <caption
-                            class="text-white py-2 bg-gray-900 print:bg-transparent print:text-black print:border-t print:border-r print:border-l print:border-gray-300"
+                            class="text-white py-2 bg-thunderbird-red print:bg-transparent print:text-black print:border-t print:border-r print:border-l print:border-fantasy-plain"
                         >
                             Anrechnung an die Studienschwerpunkte
                         </caption>
-                        <thead class="bg-gray-50">
-                            <tr class="divide-x divide-gray-300">
-                                <th
-                                    class="px-4 py-2 text-sm text-gray-600 w-2/3"
-                                >
-                                    Modul
-                                </th>
-                                <th class="px-4 py-2 text-sm text-gray-600">
+                        <thead class="bg-fantasy-pastel">
+                            <tr
+                                class="divide-x divide-fantasy-plain text-base text-hfh-gray-darkest"
+                            >
+                                <th class="px-4 py-2 font-normal">Modul</th>
+                                <th class="px-4 py-2 font-normal">
                                     Anrechnung
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-300">
+                        <tbody class="bg-white divide-y divide-fantasy-plain">
                             <template
                                 v-for="module in modules"
                                 :key="module.id"
                             >
-                                <tr class="divide-x divide-gray-300">
+                                <tr class="divide-x divide-fantasy-plain">
                                     <td class="p-4">
                                         <label :for="`credit-${module.id}`">
                                             <span

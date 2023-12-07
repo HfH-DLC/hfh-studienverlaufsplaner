@@ -22,7 +22,7 @@
 import { router } from "@inertiajs/vue3";
 import { Link } from "@/types";
 import { PropType } from "vue";
-import NavLink from "../NavLink.vue";
+import NavLink from "./NavLink.vue";
 
 const props = defineProps({
     links: {

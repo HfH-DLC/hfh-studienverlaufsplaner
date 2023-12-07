@@ -12,11 +12,11 @@
     >
         <XCircleIcon
             v-if="module.misplaced"
-            class="inline-block w-5 h-5 shrink-0 text-red-600"
+            class="inline-block w-5 h-5 shrink-0 text-thunderbird-red"
         />
         <CheckCircleIcon
             v-if="showCheckmark"
-            class="inline-block w-5 h-5 shrink-0 text-green-700"
+            class="inline-block w-5 h-5 shrink-0 text-hfh-green"
         />
         <span
             ><span v-if="hasPriorLearning">(Vorleistung)</span> {{ module.id }}
@@ -73,10 +73,10 @@ const disabled = hasPriorLearning;
 }
 
 .module--error {
-    @apply text-red-600;
+    @apply text-thunderbird-red;
 }
 
 .module--placed {
-    @apply text-green-700;
+    @apply text-hfh-green;
 }
 </style>

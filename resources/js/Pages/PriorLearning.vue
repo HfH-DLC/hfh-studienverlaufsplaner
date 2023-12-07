@@ -117,7 +117,7 @@
                                 <td v-if="!scheduleStore.readOnly">
                                     <button
                                         @click="deletePriorLearning(row.id)"
-                                        class="hover:text-[var(--c-thunderbird-red)]"
+                                        class="hover:text-thunderbird-red"
                                     >
                                         Eintrag löschen
                                     </button>

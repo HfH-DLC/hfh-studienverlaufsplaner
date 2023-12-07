@@ -3,11 +3,11 @@
         <span class="hfh-sr-only">{{ entryCheckedText }}</span>
         <div class="flex gap-x-1 items-top">
             <CheckCircleIcon
-                class="w-5 h-5 shrink-0 mt-0.5 text-green-700"
+                class="w-5 h-5 shrink-0 mt-0.5 text-hfh-green"
                 v-if="entry.checked"
             />
             <CircleIcon class="inline-block w-5 h-5 shrink-0 mt-0.5" v-else />
-            <div :class="{ 'text-green-700': entry.checked }">
+            <div :class="{ 'text-hfh-green': entry.checked }">
                 <component
                     v-if="entry.component && entry.labelProps"
                     :is="entry.component"

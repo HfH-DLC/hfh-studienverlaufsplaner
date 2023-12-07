@@ -6,12 +6,14 @@
             :key="semesterIndex"
         >
             <table
-                class="w-full divide-y divide-gray-300 table-fixed text-left border border-gray-300"
+                class="w-full divide-y divide-fantasy-plain table-fixed text-left border border-fantasy-plain"
             >
                 <caption
-                    class="text-white py-2 print:border-t print:border-l print:border-r print:text-black print:border-gray-300 print:bg-transparent"
+                    class="text-white py-2 print:border-t print:border-l print:border-r print:text-black print:border-fantasy-plain print:bg-transparent"
                     :class="[
-                        semesterIndex % 2 === 0 ? 'bg-gray-900' : 'bg-gray-600',
+                        semesterIndex % 2 === 0
+                            ? 'bg-thunderbird-red'
+                            : 'bg-thunderbird-red-light',
                     ]"
                 >
                     {{
@@ -22,12 +24,12 @@
                         )
                     }}
                 </caption>
-                <thead class="bg-gray-50">
-                    <tr class="divide-x divide-gray-300">
+                <thead class="bg-fantasy-light">
+                    <tr class="divide-x divide-fantasy-plain">
                         <th id="blank" class="w-1/5"></th>
                         <th
                             scope="col"
-                            class="px-4 py-2 text-base text-gray-600 font-normal"
+                            class="px-4 py-2 text-base text-hfh-gray-darkest font-normal"
                             v-for="timeWindow in semester.timeWindows"
                             :key="timeWindow"
                         >
@@ -50,7 +52,7 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-300">
+                <tbody class="bg-white divide-y divide-fantasy-plain">
                     <template
                         v-for="dayTime in semester.dayTimes"
                         :key="dayTime"
@@ -63,11 +65,11 @@
                                     dayTime
                                 )
                             "
-                            class="divide-x divide-gray-300"
+                            class="divide-x divide-fantasy-plain"
                         >
                             <th
                                 scope="row"
-                                class="px-4 py-2 text-base text-left bg-gray-50 text-gray-600 w-px font-normal"
+                                class="px-4 py-2 text-base text-left bg-fantasy-light text-hfh-gray-darkest w-px font-normal"
                             >
                                 <div>{{ dayTime.day }}:</div>
                                 <div>{{ dayTime.time }}</div>

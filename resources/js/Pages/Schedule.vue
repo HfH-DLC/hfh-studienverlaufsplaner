@@ -23,7 +23,7 @@
             <template v-if="store.initialized">
                 <div>
                     <div
-                        class="p-4 border-b border-gray-300 space-y-4"
+                        class="p-4 space-y-4"
                         role="alert"
                         v-if="
                             store.placementErrorMessages.length > 0 ||
@@ -101,7 +101,11 @@
                                 class="mb-4"
                             >
                                 Sie haben
-                                <HfhLink :component="Link" href="vorleistungen">
+                                <HfhLink
+                                    :component="Link"
+                                    href="vorleistungen"
+                                    class="text-hfh-turqoise"
+                                >
                                     Vorleistungen
                                 </HfhLink>
                                 im Umfang von

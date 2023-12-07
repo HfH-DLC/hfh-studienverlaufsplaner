@@ -72,10 +72,10 @@ const onCallback = () => {
 const typeClasses = computed(() => {
     switch (type.value) {
         case FlashType.Error: {
-            return "bg-red-50 text-red-600 border border-red-300";
+            return "bg-fantasy-pastel text-thunderbird-red border border-fantasy-plain";
         }
         case FlashType.Success: {
-            return "bg-green-50 text-green-600 border border-green-300";
+            return "bg-hfh-green-light text-hfh-green border border-hfh-green-medium";
         }
         default:
             return "";
