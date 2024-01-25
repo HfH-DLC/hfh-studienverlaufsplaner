@@ -153,7 +153,7 @@ import { FlashType, PriorLearning, TourData } from "@/types";
 import DataAdapter from "@/DataAdapter";
 import Validator from "@/Validator";
 import { getTodos } from "@/Models/Todos/Credit/TodoFactory";
-import { SelectOption } from "@hfh-dlc/hfh-styleguide/types/types";
+import type { SelectOption } from "@hfh-dlc/hfh-styleguide/types";
 import { showCreditPage } from "@/helpers";
 
 defineOptions({
