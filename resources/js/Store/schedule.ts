@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { toRefs } from "vue";
 import DataAdapter from "../DataAdapter";
 import Validator from "../Validator";
-import { getNestedDates, isSameDate, isPrerequisitesRule } from "../helpers";
+import { getNestedDates, isSameDate } from "../helpers";
 import {
     Category,
     ChecklistEntryData,
@@ -14,7 +14,6 @@ import {
     FocusSelection,
     Location,
     Placement,
-    Rule,
     SaveStatus,
     ScheduleInitParams,
     ScheduleCategory,
@@ -462,4 +461,8 @@ export const getInitializedScheduleStore = (data: {
     });
 
     return store;
+};
+
+const isPrerequisitesRule = (rule: any): rule is PrerequisitesRule => {
+    return rule instanceof PrerequisitesRule;
 };
