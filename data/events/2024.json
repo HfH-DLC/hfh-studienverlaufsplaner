@@ -1,6 +1,6 @@
 {
     "year": 2024,
-    "version": 2,
+    "version": 3,
     "events": [
         {
             "module": "P1_01",
@@ -599,7 +599,7 @@
         {
             "module": "BP5_01.1.Pilot.L",
             "planers": ["shp"],
-            "semesters": ["HS"],
+            "semesters": ["HS", "FS"],
             "timeWindow": 2,
             "dayTimes": ["b"],
             "locations": ["ZH"]
@@ -607,7 +607,7 @@
         {
             "module": "BP5_01.1.Pilot.GE",
             "planers": ["shp"],
-            "semesters": ["HS"],
+            "semesters": ["HS", "FS"],
             "timeWindow": 2,
             "dayTimes": ["b"],
             "locations": ["ZH"]
@@ -615,7 +615,7 @@
         {
             "module": "BP5_01.1.Pilot.V",
             "planers": ["shp"],
-            "semesters": ["HS"],
+            "semesters": ["HS", "FS"],
             "timeWindow": 2,
             "dayTimes": ["d"],
             "locations": ["ZH"]
