@@ -925,7 +925,7 @@ describe("Schedule Store", () => {
                 selected: true,
                 events: [eventFactory.build()],
                 ects: 9,
-                prerequisites: [scheduleModuleFactory.build()],
+                prerequisiteGroups: [],
             };
 
             const { store } = getInitializedStore({

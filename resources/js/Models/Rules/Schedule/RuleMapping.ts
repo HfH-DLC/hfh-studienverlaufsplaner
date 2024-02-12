@@ -1,4 +1,5 @@
 import ExcludeSemesterRule from "./ExcludeSemesterRule";
+import PrerequisitesRule from "./PrerequisitesRule";
 
 interface RuleMappingType {
     [key: string]:
@@ -9,6 +10,10 @@ interface RuleMappingType {
 const RuleMapping: RuleMappingType = {
     ExcludeSemesterRule: {
         Class: ExcludeSemesterRule,
+        paramsRequired: true,
+    },
+    PrerequisitesRule: {
+        Class: PrerequisitesRule,
         paramsRequired: true,
     },
 };

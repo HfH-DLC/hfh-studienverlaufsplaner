@@ -115,7 +115,6 @@ export interface Module {
     name: string;
     events: Array<Event>;
     ects: number;
-    prerequisites: Array<Module>;
 }
 
 export interface FocusCredit {
@@ -144,6 +143,11 @@ export interface PlacementParams
     extends Omit<Placement, "id" | "location" | "dayTime"> {
     locationId: string;
     dayTimeId: string;
+}
+
+export interface PrerequisiteGroup {
+    requiredCount?: number;
+    prerequisiteIds: Array<string>;
 }
 
 export interface PriorLearning {
@@ -213,6 +217,7 @@ export interface ScheduleModule extends Module {
     misplaced: boolean;
     placement: Placement | undefined;
     selected: boolean;
+    prerequisiteGroups: Array<PrerequisiteGroup>;
 }
 
 export interface SchedulePlacement extends Placement {

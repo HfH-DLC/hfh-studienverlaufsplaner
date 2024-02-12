@@ -21,6 +21,6 @@ const getRule = ({ name, params }: RuleData): Rule => {
             return new RuleDetails.Class();
         }
     } else {
-        throw "Unknown todo: " + name;
+        throw "Unknown rule: " + name;
     }
 };

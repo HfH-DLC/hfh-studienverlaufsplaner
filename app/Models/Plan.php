@@ -97,7 +97,6 @@ class Plan extends Model
                 'modules.events' => $filter,
                 'modules.events.location',
                 'modules.events.dayTime',
-                'modules.prerequisites',
             ])->orderBy('position')->get();
             Cache::put($key, $categories);
             return $categories;

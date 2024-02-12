@@ -19,8 +19,6 @@ class Module extends Model
     {
         static::deleting(function ($module) {
             $module->categories()->detach();
-            $module->prerequisites()->detach();
-            $module->dependencies()->detach();
             foreach ($module->events as $event) {
                 $event->delete();
             }
@@ -35,16 +33,6 @@ class Module extends Model
     public function events()
     {
         return $this->hasMany(Event::class);
-    }
-
-    public function prerequisites()
-    {
-        return $this->belongsToMany('App\Models\Module', 'module_prerequisite', 'module_id', 'prerequisite_id');
-    }
-
-    public function dependencies()
-    {
-        return $this->belongsToMany('App\Models\Module', 'module_prerequisite', 'prerequisite_id', 'module_id');
     }
 
     public function plans()

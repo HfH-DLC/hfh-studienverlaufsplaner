@@ -1,10 +1,10 @@
 <template>
     <div>
-        <template v-if="missingPrerequisites.length === 1">
+        <template v-if="prerequisites.length === 1">
             Das Modul
-            <button @click="focusModule(missingPrerequisites[0])">
-                {{ missingPrerequisites[0].id }}
-                {{ missingPrerequisites[0].name }}
+            <button @click="focusModule(prerequisites[0])">
+                {{ prerequisites[0].id }}
+                {{ prerequisites[0].name }}
             </button>
             muss vor
             <button @click="focusModule(module)">
@@ -13,20 +13,24 @@
             belegt werden.
         </template>
         <template v-else>
-            Die Module
+            <template v-if="prerequisiteGroup.requiredCount">
+                {{ prerequisiteGroup.requiredCount }} der Module
+            </template>
+            <template v-else>Die Module</template>
             <template
-                v-for="(prerequisite, index) in missingPrerequisites"
+                v-for="(prerequisite, index) in prerequisites"
                 :key="prerequisite.id"
             >
                 <button @click="focusModule(prerequisite)">
                     {{ prerequisite.id }} {{ prerequisite.name }}
                 </button>
-                <span v-if="index < missingPrerequisites.length - 3">, </span>
-                <span v-if="index == missingPrerequisites.length - 2">
-                    und
-                </span>
+                <span v-if="index < prerequisites.length - 2">, </span>
+                <span v-if="index == prerequisites.length - 2"> und </span>
             </template>
-            müssen vor
+            <template v-if="prerequisiteGroup.requiredCount === 1">
+                muss vor
+            </template>
+            <template v-else> müssen vor </template>
             <button @click="focusModule(module)">
                 {{ module.id }} {{ module.name }}
             </button>
@@ -36,19 +40,36 @@
 </template>
 
 <script lang="ts" setup>
+import { useScheduleStore } from "@/Store/schedule";
 import { useEmitter } from "@/composables/useEmitter";
-import { ScheduleModule } from "@/types";
-import { PropType } from "vue";
+import { PrerequisiteGroup, ScheduleModule } from "@/types";
+import { ComputedRef, PropType, computed } from "vue";
 
 const props = defineProps({
     module: {
         type: Object as PropType<ScheduleModule>,
         required: true,
     },
-    missingPrerequisites: {
-        type: Array as PropType<Array<ScheduleModule>>,
+    prerequisiteGroup: {
+        type: Object as PropType<PrerequisiteGroup>,
         required: true,
     },
+});
+
+const store = useScheduleStore();
+
+const prerequisites: ComputedRef<Array<ScheduleModule>> = computed(() => {
+    const result = props.prerequisiteGroup.prerequisiteIds.reduce(
+        (acc, cur) => {
+            const module = store.moduleById(cur);
+            if (module) {
+                acc.push(module);
+            }
+            return acc;
+        },
+        [] as Array<ScheduleModule>
+    );
+    return result;
 });
 
 const focusModule = (module: ScheduleModule) => {

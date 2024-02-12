@@ -6,5 +6,4 @@ export const moduleFactory = Factory.Sync.makeFactory<Module>({
     name: Factory.each((i) => `Testmodule_${i}`),
     events: [],
     ects: 5,
-    prerequisites: [],
 });

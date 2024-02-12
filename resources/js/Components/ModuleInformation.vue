@@ -12,16 +12,33 @@
         <dl class="mt-4">
             <dt class="hfh-label">Modulnummer</dt>
             <dd>{{ selectedModule.id }}</dd>
-            <template v-if="selectedModule.prerequisites.length > 0">
+            <template v-if="selectedModule.prerequisiteGroups.length > 0">
                 <dt class="hfh-label mt-4">Voraussetzungen</dt>
                 <dd>
-                    <ul>
-                        <li
-                            v-for="prerequisite in selectedModule.prerequisites"
-                            :key="prerequisite.id"
+                    <ul class="grid gap-y-2">
+                        <template
+                            v-for="prerequisiteGroup in selectedModule.prerequisiteGroups"
                         >
-                            {{ prerequisite.id }} {{ prerequisite.name }}
-                        </li>
+                            <template v-if="prerequisiteGroup.requiredCount">
+                                <li>
+                                    {{ prerequisiteGroup.requiredCount }} der
+                                    Module
+                                    {{
+                                        joinStrings(
+                                            prerequisiteGroup.prerequisiteIds,
+                                            ", "
+                                        )
+                                    }}
+                                </li>
+                            </template>
+                            <template v-else>
+                                <li
+                                    v-for="prerequisite in prerequisiteGroup.prerequisiteIds"
+                                >
+                                    {{ prerequisite }}
+                                </li>
+                            </template>
+                        </template>
                     </ul>
                 </dd>
             </template>
@@ -32,6 +49,7 @@
 </template>
 
 <script lang="ts" setup>
+import { joinStrings } from "@/helpers";
 import { useScheduleStore } from "../Store/schedule";
 import MessageList from "./MessageList.vue";
 import { ScheduleModule } from "@/types";

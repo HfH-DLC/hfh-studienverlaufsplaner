@@ -2,17 +2,26 @@ import PrerequisitesRuleLabel from "@/Components/Rules/Schedule/PrerequisitesRul
 import {
     Message,
     Event,
-    Module,
     PriorLearning,
     ScheduleModule,
     SchedulePlacement,
     SelectionEventInfo,
     MessageType,
     Rule,
+    PrerequisiteGroup,
 } from "@/types";
 import { markRaw, Ref } from "vue";
 import { isPreviousSemester, isSameDate } from "../../../helpers";
+
 export default class PrerequisitesRule implements Rule {
+    private moduleId: string;
+    private groups: Array<PrerequisiteGroup>;
+
+    constructor(params: Record<string, any>) {
+        this.moduleId = params.moduleId;
+        this.groups = params.groups;
+    }
+
     getPlacementErrors(
         {
             placements,
@@ -23,37 +32,24 @@ export default class PrerequisitesRule implements Rule {
         },
         errors: Map<number, Array<Message>>
     ) {
-        placements.value.forEach((placement: SchedulePlacement) => {
-            const missingPrerequisites: Array<Module> = [];
-            const prerequisites = placement.module?.prerequisites || [];
-            if (prerequisites.length == 0) {
-                return;
-            }
-            prerequisites.forEach((prerequisite) => {
-                const meetsPrerequisite =
-                    priorLearnings.value.some(
-                        (priorLearning) =>
-                            priorLearning.countsAsModuleId == prerequisite.id
-                    ) ||
-                    placements.value
-                        .filter((prerequisitePlacement: SchedulePlacement) => {
-                            return (
-                                prerequisitePlacement.moduleId ==
-                                prerequisite.id
-                            );
-                        })
-                        .some((prerequisitePlacement: SchedulePlacement) => {
-                            return isPreviousSemester(
-                                prerequisitePlacement,
-                                placement
-                            );
-                        });
-                if (!meetsPrerequisite) {
-                    missingPrerequisites.push(prerequisite);
-                }
-            });
+        const placement = placements.value.find(
+            (placement: SchedulePlacement) =>
+                placement.moduleId === this.moduleId
+        );
 
-            if (missingPrerequisites.length > 0) {
+        if (!placement) {
+            return;
+        }
+
+        this.groups.forEach((prerequisiteGroup) => {
+            if (
+                !this.checkGroup(
+                    placement,
+                    prerequisiteGroup,
+                    placements.value,
+                    priorLearnings.value
+                )
+            ) {
                 let errorMessages = errors.get(placement.id);
                 if (!errorMessages) {
                     errorMessages = [];
@@ -62,7 +58,7 @@ export default class PrerequisitesRule implements Rule {
                 errorMessages.push({
                     component: markRaw(PrerequisitesRuleLabel),
                     labelProps: {
-                        missingPrerequisites,
+                        prerequisiteGroup,
                         module: placement.module,
                     },
                     type: MessageType.Error,
@@ -82,30 +78,34 @@ export default class PrerequisitesRule implements Rule {
         },
         errors: Array<Message>
     ): void {
-        const prerequisites = module.prerequisites;
-        if (prerequisites.length == 0) {
+        if (module.id !== this.moduleId) {
             return;
         }
 
-        const prerequisitesMet = module.events.some(
-            (event) =>
-                this.eventMeetsPrerequisites(
-                    event,
-                    placements.value,
-                    priorLearnings.value,
-                    prerequisites
-                ) && this.timeSlotIsFree(module.id, event, placements.value)
-        );
-        if (!prerequisitesMet) {
-            errors.push({
-                component: markRaw(PrerequisitesRuleLabel),
-                labelProps: {
-                    missingPrerequisites: module.prerequisites,
-                    module,
-                },
-                type: MessageType.Error,
+        this.groups.forEach((prerequisiteGroup: PrerequisiteGroup) => {
+            const groupFulfilled = module.events.some((event) => {
+                return (
+                    this.timeSlotIsFree(module.id, event, placements.value) &&
+                    this.checkGroup(
+                        event,
+                        prerequisiteGroup,
+                        placements.value,
+                        priorLearnings.value
+                    )
+                );
             });
-        }
+
+            if (!groupFulfilled) {
+                errors.push({
+                    component: markRaw(PrerequisitesRuleLabel),
+                    labelProps: {
+                        prerequisiteGroup,
+                        module,
+                    },
+                    type: MessageType.Error,
+                });
+            }
+        });
     }
 
     getGlobalInfos(data: Record<string, any>, infos: Message[]): void {}
@@ -121,53 +121,66 @@ export default class PrerequisitesRule implements Rule {
         },
         selectionEventInfos: Map<number, SelectionEventInfo>
     ): void {
-        const prerequisites = module.prerequisites;
-        if (prerequisites.length == 0) {
+        if (module.id !== this.moduleId) {
             return;
         }
         module.events.forEach((event) => {
-            if (
-                !this.eventMeetsPrerequisites(
+            let prerequisitesMet = !this.groups.some((prerequisiteGroup) => {
+                return !this.checkGroup(
                     event,
+                    prerequisiteGroup,
                     placements.value,
-                    priorLearnings.value,
-                    prerequisites
-                )
-            ) {
+                    priorLearnings.value
+                );
+            });
+            if (!prerequisitesMet) {
                 let selectionEventInfo = selectionEventInfos.get(event.id);
                 if (!selectionEventInfo) {
                     selectionEventInfo = {
                         valid: true,
-                        dateAllowed: true,
+                        dateAllowed: false,
                     };
                     selectionEventInfos.set(event.id, selectionEventInfo);
+                } else {
+                    selectionEventInfo.dateAllowed = false;
                 }
-                selectionEventInfo.dateAllowed = false;
             }
         });
     }
 
-    eventMeetsPrerequisites(
+    private checkGroup(
         event: Event,
+        group: PrerequisiteGroup,
         placements: Array<SchedulePlacement>,
-        priorLearnings: Array<PriorLearning>,
-        prerequisites: Array<Module>
-    ) {
-        return prerequisites.every((prerequisite) => {
-            return (
+        priorLearnings: Array<PriorLearning>
+    ): boolean {
+        const requiredCount: number =
+            group.requiredCount || group.prerequisiteIds.length;
+
+        let actualCount = 0;
+        let unfulfilledPrerequisites: Array<string> = [];
+
+        group.prerequisiteIds.forEach((prerequisiteId) => {
+            const meetsPrerequisite =
                 priorLearnings.some(
                     (priorLearning) =>
-                        priorLearning.countsAsModuleId === prerequisite.id
+                        priorLearning.countsAsModuleId == prerequisiteId
                 ) ||
                 placements
-                    .filter((placement) => {
-                        return placement.moduleId == prerequisite.id;
+                    .filter((prerequisitePlacement: SchedulePlacement) => {
+                        return prerequisitePlacement.moduleId == prerequisiteId;
                     })
-                    .some((placement) => {
-                        return isPreviousSemester(placement, event);
-                    })
-            );
+                    .some((prerequisitePlacement: SchedulePlacement) => {
+                        return isPreviousSemester(prerequisitePlacement, event);
+                    });
+            if (meetsPrerequisite) {
+                actualCount++;
+            } else {
+                unfulfilledPrerequisites.push(prerequisiteId);
+            }
         });
+
+        return actualCount === requiredCount;
     }
 
     timeSlotIsFree(
@@ -182,5 +195,13 @@ export default class PrerequisitesRule implements Rule {
             return true;
         }
         return placement.moduleId == moduleId;
+    }
+
+    getModuleId() {
+        return this.moduleId;
+    }
+
+    getPrerequisiteGroups(): Array<PrerequisiteGroup> {
+        return this.groups;
     }
 }

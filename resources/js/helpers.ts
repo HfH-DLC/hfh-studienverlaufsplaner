@@ -1,4 +1,4 @@
-import { start } from "@popperjs/core";
+import PrerequisitesRule from "./Models/Rules/Schedule/PrerequisitesRule";
 import { EventDate, EventDateWithOptionalTimeWindow, Semester } from "./types";
 
 /**
@@ -125,4 +125,8 @@ export const showCreditPage = (
     startYear: number
 ) => {
     return focusSelectionEnabled && startYear < 2024;
+};
+
+export const isPrerequisitesRule = (rule: any): rule is PrerequisitesRule => {
+    return rule instanceof PrerequisitesRule;
 };

@@ -18,7 +18,6 @@ class ModuleResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'ects' => $this->ects,
-            'prerequisites' => PrerequisiteResource::collection($this->whenLoaded('prerequisites')),
             'events' => EventResource::collection($this->whenLoaded('events')),
             'creditable' => $this->creditable
         ];

@@ -6,9 +6,9 @@ export const scheduleModuleFactory = Factory.Sync.makeFactory<ScheduleModule>({
     name: Factory.each((i) => `Testmodule_${i}`),
     events: [],
     ects: 5,
-    prerequisites: [],
     errors: [],
     misplaced: false,
     placement: undefined,
     selected: false,
+    prerequisiteGroups: [],
 });

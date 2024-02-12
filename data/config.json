@@ -1,5 +1,5 @@
 {
-    "version": 1,
+    "version": 2,
     "modules": [
         {
             "id": "P1_01",
@@ -47,15 +47,13 @@
             "id": "P4_07",
             "name": "Entwicklungsorientierte Intervention in der Heilpädagogischen Früherziehung",
             "ects": 5,
-            "creditable": false,
-            "prerequisites": ["P4_02"]
+            "creditable": false
         },
         {
             "id": "P4_08",
             "name": "Beratung und Begleitung von Eltern und weiteren Bezugs- und Fachpersonen in der Heilpädagogischen Früherziehung",
             "ects": 5,
-            "creditable": false,
-            "prerequisites": ["P4_02"]
+            "creditable": false
         },
         {
             "id": "P4_09",
@@ -85,8 +83,7 @@
             "id": "WP2_02.2",
             "name": "Heilpädagogik im Bereich sozial-emotionale Entwicklung und Verhalten 2",
             "ects": 5,
-            "creditable": true,
-            "prerequisites": ["WP2_02.1"]
+            "creditable": true
         },
         {
             "id": "WP2_03.1",
@@ -98,8 +95,7 @@
             "id": "WP2_03.2",
             "name": "Heilpädagogik im Bereich geistige Entwicklung 2",
             "ects": 5,
-            "creditable": true,
-            "prerequisites": ["WP2_03.1"]
+            "creditable": true
         },
         {
             "id": "WP2_04.1",
@@ -111,8 +107,7 @@
             "id": "WP2_04.2",
             "name": "Heilpädagogik im Bereich Hören 2",
             "ects": 5,
-            "creditable": true,
-            "prerequisites": ["WP2_04.1"]
+            "creditable": true
         },
         {
             "id": "WP2_05.1",
@@ -124,8 +119,7 @@
             "id": "WP2_05.2",
             "name": "Heilpädagogik im Bereich Sehen 2",
             "ects": 5,
-            "creditable": true,
-            "prerequisites": ["WP2_05.1"]
+            "creditable": true
         },
         {
             "id": "WP2_06.1",
@@ -233,8 +227,7 @@
             "id": "WP4_05.2",
             "name": "Schul- und Organisationsentwicklung in heilpädagogischen Berufsfeldern 2",
             "ects": 5,
-            "creditable": true,
-            "prerequisites": ["WP4_05.1"]
+            "creditable": true
         },
         {
             "id": "W3_07",
@@ -273,7 +266,6 @@
             "name": "Berufspraxis 2 & Portfolio",
             "ects": 5,
             "creditable": true,
-            "prerequisites": ["BP5_01.1.SHP"],
             "modifiers": [
                 {
                     "page": "credit",
@@ -288,7 +280,6 @@
             "name": "Berufspraxis 3 & Portfolio",
             "ects": 10,
             "creditable": true,
-            "prerequisites": ["BP5_01.1.SHP", "BP5_01.2.SHP"],
             "modifiers": [
                 {
                     "page": "credit",
@@ -299,7 +290,6 @@
                 }
             ]
         },
-
         {
             "id": "BP5_01.1.Pilot.L",
             "name": "Berufspraxis 1 & Portfolio",
@@ -319,7 +309,6 @@
             "name": "Berufspraxis 2 & Portfolio",
             "ects": 5,
             "creditable": true,
-            "prerequisites": ["BP5_01.1.Pilot.L"],
             "modifiers": [
                 {
                     "page": "credit",
@@ -334,7 +323,6 @@
             "name": "Berufspraxis 3 & Portfolio",
             "ects": 10,
             "creditable": true,
-            "prerequisites": ["BP5_01.1.Pilot.L", "BP5_01.2.Pilot.L"],
             "modifiers": [
                 {
                     "page": "credit",
@@ -364,7 +352,6 @@
             "name": "Berufspraxis 2 & Portfolio",
             "ects": 5,
             "creditable": true,
-            "prerequisites": ["BP5_01.1.Pilot.GE"],
             "modifiers": [
                 {
                     "page": "credit",
@@ -379,7 +366,6 @@
             "name": "Berufspraxis 3 & Portfolio",
             "ects": 10,
             "creditable": true,
-            "prerequisites": ["BP5_01.1.Pilot.GE", "BP5_01.2.Pilot.GE"],
             "modifiers": [
                 {
                     "page": "credit",
@@ -390,7 +376,6 @@
                 }
             ]
         },
-
         {
             "id": "BP5_01.1.Pilot.V",
             "name": "Berufspraxis 1 & Portfolio",
@@ -410,7 +395,6 @@
             "name": "Berufspraxis 2 & Portfolio",
             "ects": 5,
             "creditable": true,
-            "prerequisites": ["BP5_01.1.Pilot.V"],
             "modifiers": [
                 {
                     "page": "credit",
@@ -425,7 +409,6 @@
             "name": "Berufspraxis 3 & Portfolio",
             "ects": 10,
             "creditable": true,
-            "prerequisites": ["BP5_01.1.Pilot.V", "BP5_01.2.Pilot.V"],
             "modifiers": [
                 {
                     "page": "credit",
@@ -436,7 +419,6 @@
                 }
             ]
         },
-
         {
             "id": "BP5_01.1.HFE",
             "name": "Berufspraxis 1 & Portfolio",
@@ -447,15 +429,13 @@
             "id": "BP5_01.2.HFE",
             "name": "Berufspraxis 2 & Portfolio",
             "ects": 5,
-            "creditable": true,
-            "prerequisites": ["BP5_01.1.HFE"]
+            "creditable": true
         },
         {
             "id": "BP5_01.3.HFE",
             "name": "Berufspraxis 3 & Portfolio",
             "ects": 10,
-            "creditable": true,
-            "prerequisites": ["BP5_01.1.HFE", "BP5_01.2.HFE"]
+            "creditable": true
         },
         {
             "id": "M5_03",
@@ -609,6 +589,258 @@
                     "params": {
                         "excludePositions": [0],
                         "moduleId": "M5_03"
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "BP5_01.2.SHP",
+                        "groups": [
+                            {
+                                "requiredCount": 1,
+                                "prerequisiteIds": [
+                                    "BP5_01.1.SHP",
+                                    "BP5_01.1.Pilot.GE",
+                                    "BP5_01.1.Pilot.L",
+                                    "BP5_01.1.Pilot.V"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "WP2_02.2",
+                        "groups": [
+                            {
+                                "prerequisiteIds": ["WP2_02.1"]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "WP2_03.2",
+                        "groups": [
+                            {
+                                "prerequisiteIds": ["WP2_03.1"]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "WP2_04.2",
+                        "groups": [
+                            {
+                                "prerequisiteIds": ["WP2_04.1"]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "WP2_05.2",
+                        "groups": [
+                            {
+                                "prerequisiteIds": ["WP2_05.1"]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "WP4_05.2",
+                        "groups": [
+                            {
+                                "prerequisiteIds": ["WP4_05.1"]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "BP5_01.2.SHP",
+                        "groups": [
+                            {
+                                "requiredCount": 1,
+                                "prerequisiteIds": [
+                                    "BP5_01.1.SHP",
+                                    "BP5_01.1.Pilot.GE",
+                                    "BP5_01.1.Pilot.L",
+                                    "BP5_01.1.Pilot.V"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "BP5_01.3.SHP",
+                        "groups": [
+                            {
+                                "requiredCount": 1,
+                                "prerequisiteIds": [
+                                    "BP5_01.1.SHP",
+                                    "BP5_01.1.Pilot.GE",
+                                    "BP5_01.1.Pilot.L",
+                                    "BP5_01.1.Pilot.V"
+                                ]
+                            },
+                            {
+                                "requiredCount": 1,
+                                "prerequisiteIds": [
+                                    "BP5_01.2.SHP",
+                                    "BP5_01.2.Pilot.GE",
+                                    "BP5_01.2.Pilot.L",
+                                    "BP5_01.2.Pilot.V"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "BP5_01.2.Pilot.L",
+                        "groups": [
+                            {
+                                "requiredCount": 1,
+                                "prerequisiteIds": [
+                                    "BP5_01.1.SHP",
+                                    "BP5_01.1.Pilot.GE",
+                                    "BP5_01.1.Pilot.L",
+                                    "BP5_01.1.Pilot.V"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "BP5_01.3.Pilot.L",
+                        "groups": [
+                            {
+                                "requiredCount": 1,
+                                "prerequisiteIds": [
+                                    "BP5_01.1.SHP",
+                                    "BP5_01.1.Pilot.GE",
+                                    "BP5_01.1.Pilot.L",
+                                    "BP5_01.1.Pilot.V"
+                                ]
+                            },
+                            {
+                                "requiredCount": 1,
+                                "prerequisiteIds": [
+                                    "BP5_01.2.SHP",
+                                    "BP5_01.2.Pilot.L"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "BP5_01.2.Pilot.GE",
+                        "groups": [
+                            {
+                                "requiredCount": 1,
+                                "prerequisiteIds": [
+                                    "BP5_01.1.SHP",
+                                    "BP5_01.1.Pilot.GE",
+                                    "BP5_01.1.Pilot.L",
+                                    "BP5_01.1.Pilot.V"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "BP5_01.3.Pilot.GE",
+                        "groups": [
+                            {
+                                "requiredCount": 1,
+                                "prerequisiteIds": [
+                                    "BP5_01.1.SHP",
+                                    "BP5_01.1.Pilot.GE",
+                                    "BP5_01.1.Pilot.L",
+                                    "BP5_01.1.Pilot.V"
+                                ]
+                            },
+                            {
+                                "requiredCount": 1,
+                                "prerequisiteIds": [
+                                    "BP5_01.2.SHP",
+                                    "BP5_01.2.Pilot.GE"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "BP5_01.2.Pilot.V",
+                        "groups": [
+                            {
+                                "requiredCount": 1,
+                                "prerequisiteIds": [
+                                    "BP5_01.1.SHP",
+                                    "BP5_01.1.Pilot.GE",
+                                    "BP5_01.1.Pilot.L",
+                                    "BP5_01.1.Pilot.V"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "BP5_01.3.Pilot.V",
+                        "groups": [
+                            {
+                                "requiredCount": 1,
+                                "prerequisiteIds": [
+                                    "BP5_01.1.SHP",
+                                    "BP5_01.1.Pilot.GE",
+                                    "BP5_01.1.Pilot.L",
+                                    "BP5_01.1.Pilot.V"
+                                ]
+                            },
+                            {
+                                "requiredCount": 1,
+                                "prerequisiteIds": [
+                                    "BP5_01.2.SHP",
+                                    "BP5_01.2.Pilot.V"
+                                ]
+                            }
+                        ]
                     }
                 }
             ],
@@ -866,6 +1098,81 @@
                     "params": {
                         "excludePositions": [0],
                         "moduleId": "M5_03"
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "P4_07",
+                        "groups": [
+                            {
+                                "prerequisiteIds": ["P4_02"]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "P4_08",
+                        "groups": [
+                            {
+                                "prerequisiteIds": ["P4_02"]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "WP2_04.2",
+                        "groups": [
+                            {
+                                "prerequisiteIds": ["WP2_04.1"]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "WP2_05.2",
+                        "groups": [
+                            {
+                                "prerequisiteIds": ["WP2_05.1"]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "BP5_01.2.HFE",
+                        "groups": [
+                            {
+                                "prerequisiteIds": ["BP5_01.1.HFE"]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "PrerequisitesRule",
+                    "type": "schedule",
+                    "params": {
+                        "moduleId": "BP5_01.3.HFE",
+                        "groups": [
+                            {
+                                "prerequisiteIds": [
+                                    "BP5_01.1.HFE",
+                                    "BP5_01.2.HFE"
+                                ]
+                            }
+                        ]
                     }
                 }
             ],

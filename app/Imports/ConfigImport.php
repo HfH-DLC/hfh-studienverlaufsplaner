@@ -67,9 +67,6 @@ class ConfigImport
         foreach ($modules as $module) {
             $module->delete();
         }
-        foreach ($data->modules as $moduleData) {
-            $this->setPrerequisites($moduleData);
-        }
     }
 
     private function insertModule($moduleData)
@@ -85,29 +82,6 @@ class ConfigImport
         $module->save();
         $this->modulesCache[$module->id] = $module;
         return $module->id;
-    }
-
-    private function setPrerequisites($moduleData)
-    {
-        $prerequisites = [];
-        if (isset($moduleData->prerequisites)) {
-            $module = $this->getModule($moduleData->id);
-            foreach ($moduleData->prerequisites as $prerequisiteId) {
-                $prerequisites[] = $this->getModule($prerequisiteId)->id;
-            }
-            $module->prerequisites()->sync($prerequisites);
-        }
-    }
-
-    private function getModule($id)
-    {
-        if (array_key_exists($id, $this->modulesCache)) {
-            $module = $this->modulesCache[$id];
-        } else {
-            $module = Module::findOrFail($id);
-            $this->modulesCache[$id] = $module;
-        }
-        return $module;
     }
 
     private function importPlaners($data)

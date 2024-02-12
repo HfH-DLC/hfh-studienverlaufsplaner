@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { toRefs } from "vue";
 import DataAdapter from "../DataAdapter";
 import Validator from "../Validator";
-import { getNestedDates, isSameDate } from "../helpers";
+import { getNestedDates, isSameDate, isPrerequisitesRule } from "../helpers";
 import {
     Category,
     ChecklistEntryData,
@@ -30,13 +30,14 @@ import {
     TodoData,
     RuleData,
     Plan,
+    PrerequisiteGroup,
 } from "@/types";
 import { useEmitter } from "@/composables/useEmitter";
 import SettingsRule from "@/Models/Rules/Schedule/SettingsRule";
-import PrerequisitesRule from "@/Models/Rules/Schedule/PrerequisitesRule";
 import DateRule from "@/Models/Rules/Schedule/DateRule";
 import { getTodos } from "@/Models/Todos/Schedule/TodoFactory";
 import { getRules } from "@/Models/Rules/Schedule/RuleFactory";
+import PrerequisitesRule from "@/Models/Rules/Schedule/PrerequisitesRule";
 
 let dataAdapter: DataAdapter;
 let validator: Validator;
@@ -69,7 +70,6 @@ const initialState = {
     placementErrors: new Map<number, Array<Message>>(),
     priorLearnings: [] as Array<PriorLearning>,
     readOnly: false,
-    rules: [] as Array<Rule>,
     saveStatus: SaveStatus.Saved,
     selectionStatus: {} as Selection,
     startYear: null as number | null,
@@ -229,6 +229,16 @@ export const useScheduleStore = defineStore("schedule", {
                             misplaced = errors.length > 0;
                         }
                     }
+                    const prerequisiteGroups: Array<PrerequisiteGroup> = [];
+                    const prerequisteRules: Array<PrerequisitesRule> =
+                        validator.rules.filter(isPrerequisitesRule);
+                    prerequisteRules.forEach((rule) => {
+                        if (rule.getModuleId() === module.id) {
+                            prerequisiteGroups.push(
+                                ...rule.getPrerequisiteGroups()
+                            );
+                        }
+                    });
                     return {
                         ...module,
                         errors: moduleErrors,
@@ -237,6 +247,7 @@ export const useScheduleStore = defineStore("schedule", {
                             this.selectionStatus.moduleId == module.id,
                         placement: placement,
                         misplaced,
+                        prerequisiteGroups,
                     };
                 });
             };
@@ -409,7 +420,7 @@ export const useScheduleStore = defineStore("schedule", {
                     selected: false,
                     events: [],
                     ects: 0,
-                    prerequisites: [],
+                    prerequisiteGroups: [],
                 };
                 const module =
                     this.tour?.steps[this.tourCurrentStepIndex].selectedModule;
@@ -434,11 +445,7 @@ export const getInitializedScheduleStore = (data: {
     requiredECTS: number;
     tourData: TourData;
 }) => {
-    const defaultRules = [
-        new SettingsRule(),
-        new PrerequisitesRule(),
-        new DateRule(),
-    ];
+    const defaultRules = [new SettingsRule(), new DateRule()];
 
     const store = useScheduleStore();
     store.init({

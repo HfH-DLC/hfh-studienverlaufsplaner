@@ -6,7 +6,6 @@ export const creditModuleFactory = Factory.Sync.makeFactory<CreditModule>({
     name: Factory.each((i) => `Testmodule_${i}`),
     events: [],
     ects: 5,
-    prerequisites: [],
     creditedAgainst: null,
     requiredCredit: false,
 });
