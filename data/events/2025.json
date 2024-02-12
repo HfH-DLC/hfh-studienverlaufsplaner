@@ -670,7 +670,7 @@
         {
             "module": "BP5_01.1.Pilot.L",
             "planers": ["shp"],
-            "semesters": ["HS"],
+            "semesters": ["HS", "FS"],
             "timeWindow": 2,
             "dayTimes": ["b"],
             "locations": ["ZH"]
@@ -678,7 +678,7 @@
         {
             "module": "BP5_01.1.Pilot.GE",
             "planers": ["shp"],
-            "semesters": ["HS"],
+            "semesters": ["HS", "FS"],
             "timeWindow": 2,
             "dayTimes": ["b"],
             "locations": ["ZH"]
@@ -686,7 +686,7 @@
         {
             "module": "BP5_01.1.Pilot.V",
             "planers": ["shp"],
-            "semesters": ["HS"],
+            "semesters": ["HS", "FS"],
             "timeWindow": 2,
             "dayTimes": ["d"],
             "locations": ["ZH"]
@@ -695,7 +695,7 @@
         {
             "module": "BP5_01.2.Pilot.L",
             "planers": ["shp"],
-            "semesters": ["HS"],
+            "semesters": ["HS", "FS"],
             "timeWindow": 2,
             "dayTimes": ["b"],
             "locations": ["ZH"]
@@ -703,7 +703,7 @@
         {
             "module": "BP5_01.2.Pilot.GE",
             "planers": ["shp"],
-            "semesters": ["HS"],
+            "semesters": ["HS", "FS"],
             "timeWindow": 2,
             "dayTimes": ["b"],
             "locations": ["ZH"]
@@ -711,32 +711,7 @@
         {
             "module": "BP5_01.2.Pilot.V",
             "planers": ["shp"],
-            "semesters": ["HS"],
-            "timeWindow": 2,
-            "dayTimes": ["d"],
-            "locations": ["ZH"]
-        },
-
-        {
-            "module": "BP5_01.2.Pilot.L",
-            "planers": ["shp"],
-            "semesters": ["FS"],
-            "timeWindow": 2,
-            "dayTimes": ["b"],
-            "locations": ["ZH"]
-        },
-        {
-            "module": "BP5_01.2.Pilot.GE",
-            "planers": ["shp"],
-            "semesters": ["FS"],
-            "timeWindow": 2,
-            "dayTimes": ["b"],
-            "locations": ["ZH"]
-        },
-        {
-            "module": "BP5_01.2.Pilot.V",
-            "planers": ["shp"],
-            "semesters": ["FS"],
+            "semesters": ["HS", "FS"],
             "timeWindow": 2,
             "dayTimes": ["d"],
             "locations": ["ZH"]
@@ -745,7 +720,7 @@
         {
             "module": "BP5_01.3.Pilot.L",
             "planers": ["shp"],
-            "semesters": ["FS"],
+            "semesters": ["HS", "FS"],
             "timeWindow": 2,
             "dayTimes": ["b"],
             "locations": ["ZH"]
@@ -753,7 +728,7 @@
         {
             "module": "BP5_01.3.Pilot.GE",
             "planers": ["shp"],
-            "semesters": ["FS"],
+            "semesters": ["HS", "FS"],
             "timeWindow": 2,
             "dayTimes": ["b"],
             "locations": ["ZH"]
@@ -761,7 +736,7 @@
         {
             "module": "BP5_01.3.Pilot.V",
             "planers": ["shp"],
-            "semesters": ["FS"],
+            "semesters": ["HS", "FS"],
             "timeWindow": 2,
             "dayTimes": ["d"],
             "locations": ["ZH"]
