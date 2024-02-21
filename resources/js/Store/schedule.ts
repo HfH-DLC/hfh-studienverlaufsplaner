@@ -37,6 +37,7 @@ import DateRule from "@/Models/Rules/Schedule/DateRule";
 import { getTodos } from "@/Models/Todos/Schedule/TodoFactory";
 import { getRules } from "@/Models/Rules/Schedule/RuleFactory";
 import PrerequisitesRule from "@/Models/Rules/Schedule/PrerequisitesRule";
+import FocusModulesLocationRule from "@/Models/Rules/Schedule/FocusModulesLocationRule";
 
 let dataAdapter: DataAdapter;
 let validator: Validator;
@@ -444,7 +445,11 @@ export const getInitializedScheduleStore = (data: {
     requiredECTS: number;
     tourData: TourData;
 }) => {
-    const defaultRules = [new SettingsRule(), new DateRule()];
+    const defaultRules = [
+        new SettingsRule(),
+        new DateRule(),
+        new FocusModulesLocationRule(),
+    ];
 
     const store = useScheduleStore();
     store.init({
