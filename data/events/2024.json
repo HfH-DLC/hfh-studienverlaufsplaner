@@ -560,7 +560,7 @@
             "planers": ["shp"],
             "semesters": ["HS"],
             "timeWindow": 2,
-            "dayTimes": ["a", "c", "f"],
+            "dayTimes": ["a", "c", "f", "h"],
             "locations": ["ZH"]
         },
         {
@@ -568,7 +568,7 @@
             "planers": ["shp"],
             "semesters": ["FS"],
             "timeWindow": 2,
-            "dayTimes": ["c", "e", "g"],
+            "dayTimes": ["a", "c", "e", "g"],
             "locations": ["ZH"]
         },
         {
